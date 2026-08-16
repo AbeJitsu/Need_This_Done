@@ -1,6 +1,6 @@
 # Step 4 staged hosted migration review — 2026-08-13
 
-This is the detailed evidence record for [launch checklist item 4](LAUNCH_CHECKLIST.md#4-run-the-hosted-migration-dry-run). It records read-only staged review and local rehearsal. It does not authorize a hosted write.
+This is the detailed evidence record for [launch checklist item 4](LAUNCH_CHECKLIST.md#4-run-the-hosted-migration-dry-run--passed). It records read-only staged review and local rehearsal. It does not authorize a hosted write.
 
 ## Outcome
 

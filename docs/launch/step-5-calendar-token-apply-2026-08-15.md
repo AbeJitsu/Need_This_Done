@@ -1,6 +1,6 @@
 # Step 5 hosted migration evidence — calendar-token-security (`073`)
 
-This is the dedicated evidence record for [launch checklist item 5](LAUNCH_CHECKLIST.md#5-apply-each-reviewed-migration-stage-to-hosted-supabase). It records one approved hosted write only. It does not approve or apply `074` or any later migration.
+This is the dedicated evidence record for [launch checklist item 5](LAUNCH_CHECKLIST.md#5-apply-each-reviewed-migration-stage-to-hosted-supabase--passed). It records one approved hosted write only. It does not approve or apply `074` or any later migration.
 
 ## Outcome
 

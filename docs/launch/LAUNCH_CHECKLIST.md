@@ -7,10 +7,10 @@ to these item numbers; they do not define a second activation order.
 **Last reviewed:** 2026-08-16
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` candidate SHA:** `80d1e74a853fcfc432c72979bb6485a8fd6f6abf`
-**Deployed application SHA:** `0aac9c144da4ea9144050003aea37d3c4cdcd3f3` (branch-alignment commit; application code is unchanged from `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`)
-**Last full local assembly proof:** `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` (2026-08-16; local migrations through `095`)
-**Final pre-apply release-control SHA:** `48ca2d52b242ca38cb4d5e75f984d213ccb89e61`
+**Current reviewed `dev` candidate SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
+**Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
+**Last full local assembly proof:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (2026-08-16; local migrations through `095`)
+**Final pre-apply release-control SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
@@ -37,6 +37,24 @@ Status values:
 - `NOT_STARTED` — no launch work has been performed.
 - `EXCEPTION` — an owner-approved, time-boxed deviation is recorded in full.
 
+## Dependency map
+
+```text
+1–6 → 7.1 → 7 → 8 → 9 → 10 → 11 → 12–14 → 15–16 → 21 → 22
+                      ├─ 17 transactional email
+                      ├─ 19 Calendar
+                      └─ 20 Stripe
+                 9 + 10 + 16 → 18 prospecting
+```
+
+Items 17, 19, and 20 are independent provider-canary lanes and may run in
+parallel once their own entry conditions are met. Item 18 remains separately
+dependent on items 9, 10, and 16.
+
+**Current gate state:** Items 1–7 and 7.1 are `PASSED`; item 8 is the active
+`BLOCKED` gate; items 9–22 are `BLOCKED`; items 23–24 are `NOT_STARTED` and
+remain separate from technical launch.
+
 ## Cutover safeguards
 
 - Keep hosted backup, migration, deployment, secret provisioning, and live provider actions as separate approvals.
@@ -45,237 +63,262 @@ Status values:
 - Send the only live messages to an owner-controlled mailbox.
 - Use only the owner-controlled Calendar and an owner-approved nominal Stripe amount, with immediate refund or void.
 - Keep OpenClaw loopback-only and approval-required. It must not send, publish, spend, change accounts, or deliver arbitrary external content.
-- The next approved Vercel deployment must include the verified contact-page correction in item 7.1. Do not configure or verify item 8 against an application version that still has the contact-page defect.
+- The corrected Vercel deployment `dpl_GVMHoCVSKiMgy2nse84zKs1cXafc` includes the verified contact-page correction in item 7.1. Configure or verify item 8 only against that corrected deployment or a reviewed replacement.
 - Preserve `8b8d429` as the application rollback reference until cutover and post-cutover checks pass.
 
 ## Launch items
 
-### 1. Freeze the release candidate — `PASSED`
+### Phase 1 — Release and hosted-data readiness
+
+#### 1. Freeze the release candidate — `PASSED`
 
 - **Owner:** Engineering owner
-- **Prerequisites:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
-- **Live procedure:** Confirm the reviewed `dev` SHA. Run `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, `cd bridge && npm test`, and `git diff --check`. Freeze code changes until cutover completes.
-- **Evidence:** On 2026-08-16, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh` passed on local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` with local migrations `001`–`095`, schema lint, 213 required unit tests, 50 accessibility checks, the 49-page production build, retained browser checks (47 passed and one intentional mobile navigation skip), real-session auth 4/4, prospecting 1/1, cockpit 1/1, and workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. `origin/dev` remains at the prior candidate until item 2 is separately completed. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
+- **Entry condition:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
+- **Exit proof:** The reviewed candidate is frozen; the provider-free local assembly, bridge tests, whitespace validation, and recorded exceptions are retained.
 - **Approval:** Recorded — the owner-authorized local model-spend change and the focused hosted-write gate repair were committed and validated. Hosted database, deployment, secret, provider, and live-canary approvals remain separate.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
+- **Evidence link:** [Final assembly](../FINAL_ASSEMBLY.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 2. Push the reviewed `dev` branch — `PASSED`
+#### 2. Push the reviewed `dev` branch — `PASSED`
 
 - **Owner:** Release owner
-- **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
-- **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-16, the verified candidate was published without force-push and `git ls-remote origin refs/heads/dev` resolved to `80d1e74a853fcfc432c72979bb6485a8fd6f6abf`. Production, Vercel, hosted Supabase, providers, and secrets remain untouched.
+- **Entry condition:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
+- **Exit proof:** The exact reviewed candidate is published to `origin/dev` without force-push, and the remote ref is recorded at the reviewed SHA; production was fast-forwarded separately under item 7.
 - **Approval:** Recorded — release-owner approval covered publishing the reviewed gate-repair commit only. It did not authorize hosted migration, deployment, provider, secret, or live-action work.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
+- **Evidence link:** [Release evidence](../RELEASE_EVIDENCE.md) and [project status](../PROJECT_STATUS.md).
 
-### 3. Back up hosted Supabase — `PASSED`
+#### 3. Back up hosted Supabase — `PASSED`
 
 - **Owner:** Database owner
-- **Prerequisites:** Item 1 passed; intended hosted project confirmed; secure backup destination and recovery operator available.
-- **Live procedure:** Capture hosted schema, data, roles/grants, Storage bucket metadata/object inventory, and checksums. Verify the files are readable and rehearse the recovery instructions without changing hosted state.
-- **Evidence:** The fresh destructive-stage recovery point is `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-089-to-090-fR5ohB`, protected mode `700` with artifacts mode `600`, pre-write history `85/089`, and checksum-manifest SHA-256 `a637cac73a1cdf63562e9c938be42d6baa4f481de5ddf46f67685c9243544995`. The latest protected recovery point is `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-094-to-095-OvpTW2`, also mode `700` with mode-`600` artifacts, pre-write history `90/094`, and checksum-manifest SHA-256 `c899f2eb7c734abc6792c0670828c48846fa5a282b954d2a395046d05739dbca`. It contains 217 metadata-only project-attachment objects and no downloaded object contents. Existing backups were not overwritten.
+- **Entry condition:** Item 1 passed; the intended hosted project is confirmed; a secure backup destination and recovery operator are available.
+- **Exit proof:** A protected, readable recovery point covers schema, data, roles/grants, Storage metadata/object inventory, and checksums; recovery instructions were rehearsed without changing hosted state.
 - **Approval:** Recorded — the requesting owner explicitly authorized completion of Step 3 on 2026-08-12. This approval covers backup capture and verification only; it does not approve migrations, deployments, provider activation, secrets, or any hosted write.
 - **Rollback:** Preserve the backup as the recovery reference. Do not delete or overwrite the old snapshot during a retry.
+- **Evidence link:** [Project status](../PROJECT_STATUS.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 4. Run the hosted migration dry run — `PASSED`
+#### 4. Run the hosted migration dry run — `PASSED`
 
 - **Owner:** Database migration/release owner
-- **Prerequisites:** Items 1–3 passed; cloud profile points to the intended Supabase project; backup checksums are recorded.
-- **Live procedure:** Run `cd app && npm run verify:hosted-migration-step4`. The gate runs the staged map verifier, invokes each allowlisted stage only with `--dry-run`, asserts 68 hosted-history rows/latest `072` before and after every check, verifies the protected eight-artifact checksum manifest, and executes the cumulative disposable-local rehearsal with explicit local-only reset acknowledgements. It must exit successfully before Step 4 passes.
-- **Evidence:** The combined command passed on 2026-08-13. Its technical pass verified the one-to-one mapping, unchanged SQL hashes, six stage selections, and unchanged hosted history. Its data-impact pass verified the protected backup, five unchanged legacy-inventory checkpoints covering legacy tables, embeddings, catalogs, carts, Medusa records, and retired buckets, the pre-cleanup `page_views` constraint, and exact retired/retained objects after `092`. The final stage-specific refresh used `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202`; `node scripts/verify-hosted-migration-stage.mjs --stage calendar-token-security --dry-run` selected exactly `073_secure_google_calendar_tokens.sql` and confirmed 68 rows/latest `072` before and after. The machine-readable map remains `docs/launch/hosted-migration-stages.json`; all review commands emitted `hosted_writes: 0` and printed no credentials. Detailed evidence is in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md).
+- **Entry condition:** Items 1–3 passed; the cloud profile points to the intended Supabase project; backup checksums are recorded.
+- **Exit proof:** The staged migration map, stage-specific dry runs, unchanged hosted history, protected-backup checksum, legacy-inventory checkpoints, and disposable-local rehearsal all pass with zero hosted writes.
 - **Approval:** `PASSED` is review confirmation only. The gate does not authorize a hosted write. The owner’s retention decision is to preserve the protected backup and defer hosted deletion authorization for the explicit `090`–`092` retirement set until a separate Step 5 decision. Step 5 remains a separate hosted-write approval for each stage.
 - **Rollback:** No hosted change has occurred. Repair or replace the migration plan and rerun the affected stage; never reset the hosted project.
+- **Evidence link:** [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md) and [hosted migration map](hosted-migration-stages.json).
 
-### 5. Apply each reviewed migration stage to hosted Supabase — `PASSED`
+#### 5. Apply each reviewed migration stage to hosted Supabase — `PASSED`
 
 - **Owner:** Database owner
-- **Prerequisites:** Items 1–4 passed; the exact stage has a new stage-specific hosted-write approval; current backup is readable; a maintenance/monitoring window and rollback owner are declared. Before `090`–`092`, the owner’s separate retention decision must be reaffirmed for that hosted write.
-- **Live procedure:** Apply only one approved stage at a time in this order: `073`, `074`, `075`–`080`, `081`, `082`–`089`, the isolated final `090`–`092` cleanup, then the separate `093`, `094`, and `095` repairs. Stop on any error. Never combine stages, use hosted `supabase db reset`, generate a broad diff, or run a destructive reverse migration.
-- **Evidence:** The [destructive-retirement evidence record](step-5-destructive-retirement-2026-08-15.md) records the approved `090`–`092` write and `88/092` result. The [Storage policy repair record](step-5-storage-policy-repair-2026-08-15.md) records the `093` write and `89/093` result. The [hosted security repair record](step-5-hosted-security-repairs-2026-08-15.md) records fresh protected backups, exact dry runs, the `094` and `095` writes, and the final `91/095` result.
+- **Entry condition:** Items 1–4 passed; the exact stage has a new stage-specific hosted-write approval; the current backup is readable; a maintenance/monitoring window and rollback owner are declared; the `090`–`092` retention decision is reaffirmed before that write.
+- **Exit proof:** Only the approved staged migrations were applied, including the tracked `090`–`092`, `093`, `094`, and `095` repairs; hosted history is through `095` and the final repair evidence is retained.
 - **Approval:** The supplied retention directive approved `090`–`092`. The owner directed the tracked forward repairs for the anonymous Storage defect, worker claim context, and verifier fixture cleanup; each stage used its own acknowledgement and protected backup. Hosted rollback remains forward-only.
 - **Rollback:** Hosted rollback is forward-only. Stop new application traffic if needed, preserve history/data, and use a separately reviewed forward fix; do not delete migrations or reset the project. If a stage fails, do not continue to the next stage.
+- **Evidence link:** [Destructive-retirement record](step-5-destructive-retirement-2026-08-15.md), [Storage policy repair](step-5-storage-policy-repair-2026-08-15.md), and [hosted security repairs](step-5-hosted-security-repairs-2026-08-15.md).
 
-### 6. Prove hosted database parity — `PASSED`
+#### 6. Prove hosted database parity — `PASSED`
 
 - **Owner:** Database and security owners
-- **Prerequisites:** Item 5 passed, including the separately approved `090`–`092` retirement decision or an owner-approved scope exception; hosted application credentials and test identities are available; no customer data is used.
-- **Live procedure:** Run hosted schema lint/manifest, RLS and tenant-isolation checks, function-grant checks, Storage privacy/size/MIME checks, planner approval/dispatch checks, provenance checks, and emergency-stop/lease/idempotency checks. Confirm Auth and Storage endpoints are the intended project.
-- **Evidence:** The final verifier passed endpoint identity, exact hosted history (`91` rows/latest `095`), hosted lint, retained/retired object inventory, 49 RLS tables, 17 policy markers, 13 service-only functions, private Storage limits/MIME rules, anonymous denial, tenant isolation, viewer read-only behavior, planner approval-before-dispatch, worker boundaries, emergency stop, lease/idempotency, and provenance isolation. It created four disposable `.invalid` identities and cleaned all four with zero errors; no external recipient or provider call was used. The passing result is [hosted-parity-report-2026-08-15.json](hosted-parity-report-2026-08-15.json); the earlier blocked result is preserved as [hosted-parity-pre-repair-report-2026-08-15.json](hosted-parity-pre-repair-report-2026-08-15.json).
+- **Entry condition:** Item 5 passed, including the separately approved `090`–`092` retirement decision or an owner-approved scope exception; hosted application credentials and disposable test identities are available; no customer data is used.
+- **Exit proof:** Endpoint identity, hosted history, schema/RLS/grants, Storage privacy/limits, planner approval boundary, worker controls, emergency stop, lease/idempotency, provenance isolation, tenant isolation, and cleanup all pass with no external provider call.
 - **Approval:** Recorded — Abe Reyes, the database/security owner, accepts the repair scope and final hosted parity evidence. This is an owner acceptance, not an independent security review.
 - **Rollback:** Keep hosted history intact. Disable new callers or use a forward repair while preserving audit and test records.
+- **Evidence link:** [Passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md).
 
-### 7. Fast-forward production to `dev` — `PASSED`
+### Phase 2 — Candidate validation and production cutover
 
-- **Owner:** Release/deployment owner
-- **Prerequisites:** Items 1–6 passed; `production` is an ancestor of the verified `dev` SHA; deployment target and rollback owner are named.
-- **Live procedure:** Move the `production` branch forward to the verified `dev` SHA using the approved repository flow. Deploy that exact SHA to Vercel production and verify the deployment identity before enabling traffic.
-- **Evidence:** The remote `production` branch moved forward from `8b8d429` to the branch-alignment commit `0aac9c144da4ea9144050003aea37d3c4cdcd3f3`; `origin/production` and `origin/dev` were directly verified at that SHA before the final evidence-only `dev` commit. The final branch-triggered Vercel deployment `dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB` is `READY` at `https://app-bvxn361zh-vision2virtual.vercel.app`, aliased to `https://needthisdone.com`; its build generated 49 pages. `/api/health` returned healthy with Redis and Supabase up, public routes returned `200`, and anonymous planner/worker POSTs returned `401`. Full evidence is in [Step 7 production cutover](step-7-production-cutover-2026-08-15.md).
-- **Approval:** Recorded — the owner explicitly authorized the fast-forward, exact-commit deployment, and post-deployment checks. This approval does not authorize step 8 secret or provider configuration.
-- **Rollback:** Re-deploy `8b8d429` as the application rollback reference if the application fails. Do not roll hosted migrations backward; preserve the forward-only database plan.
-
-### 7.1. Repair and verify the contact page — `PASSED`
+#### 7.1. Repair and verify the contact page — `PASSED`
 
 - **Owner:** Frontend and release owners
-- **Prerequisites:** Items 1–7 passed; the contact page is treated as a public conversion path; the exact release candidate and its prior deployed rollback reference are recorded.
-- **Live procedure:** Repair the context-heading layout on the release candidate so `Targeted fix context` and `Automation setup context` sit inside their fieldset panels with clear spacing and no border overlap. Keep each native `legend`/`fieldset` relationship intact. Do not change the form fields, submission API, pricing, wording, or customer-data handling.
-- **Verification:** Exercise both offer selections. Confirm the Website URL, problem, and goal fields remain correctly labeled. Run the focused ContactIntake accessibility test, the contact browser contract at desktop and mobile sizes, the heading geometry assertion, TypeScript, and `git diff --check`.
-- **Evidence:** On 2026-08-16, candidate `80d1e74a853fcfc432c72979bb6485a8fd6f6abf` (including the verified repair commit `48ca2d5`) passed the focused ContactIntake accessibility suite 2/2; lint, TypeScript, the 49-page production build, and `git diff --check` passed. The contact browser contract passed 6/6 across the public desktop and iPhone-sized mobile projects, including both offer selections and the fieldset-heading geometry assertion. The retained contact-intake contract passed 2/2 across desktop and mobile, including switching offers. The candidate is published but not deployed; no hosted, Vercel, provider, payment, or customer-data state changed.
-- **Approval:** Recorded — the requested code/test/documentation repair is complete within this release scope. This does not authorize a Vercel deployment, environment configuration, hosted migration, or provider action.
-- **Rollback:** Until the corrected deployment passes its checks, keep the prior deployed application as the immediate rollback reference. If the candidate is rejected, revert the focused code/test/documentation change; hosted database rollback remains forward-only.
+- **Entry condition:** Items 1–6 passed; the contact page is treated as a public conversion path; the exact release candidate and its prior deployed rollback reference are recorded.
+- **Exit proof:** Both offer selections retain their fields and labels; the native fieldset/legend geometry passes focused accessibility, desktop/mobile contact, retained offer-switching, type, build, and live deployment checks.
+- **Approval:** Recorded — the requested code/test/documentation repair and the separately approved corrected deployment are complete within this release scope. This does not authorize provider activation or secret provisioning.
+- **Rollback:** Keep `8b8d429` as the application rollback reference until the later launch controls pass. If the candidate is rejected, redeploy that prior application or a reviewed replacement; hosted database rollback remains forward-only.
+- **Evidence link:** [Corrected Step 7 deployment](step-7-corrected-contact-deployment-2026-08-16.md), [release evidence](../RELEASE_EVIDENCE.md), and [project status](../PROJECT_STATUS.md).
 
-### 8. Configure and verify Vercel — `BLOCKED`
+#### 7. Fast-forward production to `dev` — `PASSED`
+
+- **Owner:** Release/deployment owner
+- **Entry condition:** Items 1–6 and 7.1 passed; `production` is an ancestor of the verified `dev` SHA; the deployment target and rollback owner are named.
+- **Exit proof:** `origin/production` and `origin/dev` resolve to the reviewed candidate, and the corrected Vercel deployment identity, readiness, health, public-route, protected-route, and contact checks are retained.
+- **Approval:** Recorded — the owner explicitly authorized the fast-forward, exact-commit deployment, and post-deployment checks. This approval does not authorize step 8 secret or provider configuration.
+- **Rollback:** Re-deploy `8b8d429` as the application rollback reference if the application fails. Do not roll hosted migrations backward; preserve the forward-only database plan.
+- **Evidence link:** [Corrected Step 7 deployment](step-7-corrected-contact-deployment-2026-08-16.md) and [release evidence](../RELEASE_EVIDENCE.md).
+
+### Phase 3 — Hosted secrets, browser boundary, and authorization
+
+#### 8. Configure and verify Vercel — `BLOCKED`
 
 - **Owner:** Platform owner
-- **Prerequisites:** Items 5–7 and 7.1 approved; the next deployment contains the corrected contact page; server-only secret store access; exact environment scope (production/preview) is documented.
-- **Live procedure:** Configure server-only Supabase, Auth, OpenRouter, bridge, provider, webhook, and encryption variables. Verify HTTPS health, protected routes, logs, error reporting, deployment identity, and that no provider key or model ID appears in browser code or source maps.
-- **Names-only inventory:** Use the [environment variable inventory](ENVIRONMENT_VARIABLE_INVENTORY.md) to compare names only. Never record values or copied `.env` contents; item 8 remains blocked pending platform/security approval.
-- **Evidence:** Retain a redacted configuration manifest, deployment URL/SHA, route checks, bundle inspection, log/error-monitoring links, and secret rotation owner. Never place values in Git or this checklist.
-- **Approval:** Required — platform owner and security owner approve secret scope and browser/server boundary.
+- **Entry condition:** Items 5–7 and 7.1 approved; the corrected deployment is the target; server-only secret-store access and the exact production/preview environment scope are documented.
+- **Exit proof:** **BLOCKED** — the corrected deployment’s health, protected-route, contact, identity, and public-bundle checks pass, but the names-only inventory lacks the current secret names and retains legacy settings; no secret write has occurred.
+- **Approval:** **BLOCKED** — platform/security owner must approve the exact production/preview allowlist, source for each value, legacy-variable rotation/removal scope, and browser/server boundary before any secret write.
 - **Rollback:** Remove or rotate only the affected deployment secrets through the secret manager and redeploy the last known-good application commit. Preserve logs and audit history.
+- **Evidence link:** [Environment variable inventory](ENVIRONMENT_VARIABLE_INVENTORY.md), [corrected Step 7 deployment](step-7-corrected-contact-deployment-2026-08-16.md), and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 9. Run hosted authentication and authorization checks — `BLOCKED`
+#### 9. Run hosted authentication and authorization checks — `BLOCKED`
 
 - **Owner:** Security owner
-- **Prerequisites:** Items 6–8 passed; owner, manager, viewer, anonymous, and cross-customer test identities are controlled and disposable.
-- **Live procedure:** Verify anonymous denial, owner/manager access, viewer read-only behavior, cross-customer denial, planner approval-before-dispatch, dispatch boundary, prospect review, private Storage access, and emergency controls. Confirm no development authorization bypass is active.
-- **Evidence:** Retain sanitized browser/API results, identity/role matrix, route status codes, cleanup record, and production configuration proof.
+- **Entry condition:** Items 6–8 passed; owner, manager, viewer, anonymous, and cross-customer test identities are controlled and disposable.
+- **Exit proof:** Hosted anonymous denial, role access, viewer read-only behavior, cross-customer denial, planner approval boundary, dispatch boundary, prospect review, private Storage access, and emergency controls pass with no development bypass.
 - **Approval:** Required — security owner signs the authorization matrix.
 - **Rollback:** Disable the affected route/feature or redeploy the prior application commit; keep hosted data and audit records for investigation.
+- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 10. Activate OpenRouter with provider-owned spend limits — `BLOCKED`
+### Phase 4 — Core AI operator path
+
+#### 10. Activate OpenRouter with provider-owned spend limits — `BLOCKED`
 
 - **Owner:** AI/provider owner
-- **Prerequisites:** Items 6–9 passed; restricted provider key, spend limit, alerting, retention/training settings, and exact current model IDs are reviewed.
-- **Live procedure:** Create the restricted key and provider-side spend alerts/limits. Resolve the exact catalog model IDs. Run the sanitized fixed evaluation set and record quality, tool use, latency, provider-reported cost, failures, and repair rate. Pin the approved primary model only after the evaluation threshold passes.
-- **Evidence:** Retain provider settings, model IDs, evaluation rows/results, provider usage/cost records, alerts, and the approved primary-pin record without exposing the key.
+- **Entry condition:** Items 6–9 passed; a restricted provider key, provider-side spend limit/alert, retention/training settings, and exact current model IDs are reviewed.
+- **Exit proof:** The bounded provider configuration, fixed evaluation results, provider-reported usage/cost, failure and repair records, and approved primary-model pin are retained without exposing the key.
 - **Approval:** Required — provider owner approves the key scope, limits, retention/training settings, evaluation result, and primary model.
 - **Rollback:** Revoke/rotate the provider key, restore `evaluation-required`, unpin the primary, stop workers, and preserve evaluation/usage records.
+- **Evidence link:** [Full-stack external setup](full-stack-external-setup.md), [release evidence](../RELEASE_EVIDENCE.md), and [project status](../PROJECT_STATUS.md).
 
-### 11. Test the planner live — `BLOCKED`
+#### 11. Test the planner live — `BLOCKED`
 
 - **Owner:** Application and AI/provider owners
-- **Prerequisites:** Items 8–10 passed; a pinned model is active; authenticated owner session and disposable hosted test profile are available; no external recipient is configured.
-- **Live procedure:** Create a plan in the hosted dashboard, edit it, reject it, create/approve a fresh plan, and dispatch it. Verify frozen snapshots, idempotency, selected model identity, estimated cost, approval-before-dispatch, and bridge queue linkage. Add and pass the authenticated browser test covering the complete UI lifecycle before marking this item passed.
-- **Evidence:** Retain sanitized plan/run/task IDs, event history, frozen snapshot comparison, usage/cost ledger, browser test output, and cleanup result.
+- **Entry condition:** Items 8–10 passed; a pinned model is active; authenticated owner and disposable hosted test-profile sessions are available; no external recipient is configured.
+- **Exit proof:** A hosted plan is created, edited, rejected, recreated, approved, and dispatched with frozen snapshots, idempotency, selected-model identity, estimated cost, approval-before-dispatch, bridge queue linkage, and a passing authenticated browser lifecycle test.
 - **Approval:** Required — application owner and security owner approve the live planner lifecycle.
 - **Rollback:** Reject/stop test plans, disable the planner route or unpin the model, and preserve plan/event/run history. Do not delete audit records.
+- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 12. Onboard OpenClaw on the Mac mini — `BLOCKED`
+### Phase 5 — Mac execution and safety
+
+#### 12. Onboard OpenClaw on the Mac mini — `BLOCKED`
 
 - **Owner:** Mac runtime owner
-- **Prerequisites:** Items 10–11 passed; private Mac account, restricted provider profile, and operator approval policy are ready.
-- **Live procedure:** Bind the Gateway to loopback only, configure a private provider profile and Gateway token, use cautious approval-required execution, and run `openclaw doctor`. Prove denial of sending, publishing, spending, account changes, arbitrary delivery, and direct browser access.
-- **Evidence:** Retain redacted config fingerprints, `openclaw doctor` output, loopback listener check, approval/denial transcripts, and emergency-stop result.
+- **Entry condition:** Items 10–11 passed; the private Mac account, restricted provider profile, and approval-required operator policy are ready.
+- **Exit proof:** OpenClaw is loopback-only and cautious; its doctor, listener, approval boundary, and denial of sending, publishing, spending, account changes, arbitrary delivery, and direct browser access are recorded.
 - **Approval:** Required — Mac runtime owner approves the capability and credential boundary.
 - **Rollback:** Stop OpenClaw, revoke its token/provider profile, remove test credentials, and leave the bridge disabled. Preserve doctor and denial evidence.
+- **Evidence link:** [Full-stack external setup](full-stack-external-setup.md) and [Agent operations](../AGENT_OPERATIONS.md).
 
-### 13. Install and verify the two launchd processes — `BLOCKED`
+#### 13. Install and verify the two launchd processes — `BLOCKED`
 
 - **Owner:** Mac runtime owner
-- **Prerequisites:** Items 11–12 passed; bridge API URL/secret, owner ID, worker ID, Gateway URL/token, private artifact root, and launchd manifests are reviewed.
-- **Live procedure:** Install the loopback Gateway and signed bridge under launchd. Verify boot, restart, stop, logs, heartbeats, leases, signed callbacks, artifact boundaries, and worker identity. Run one controlled restart without external delivery.
-- **Evidence:** Retain redacted launchd manifests, job identifiers, status/log excerpts, heartbeat/lease/callback IDs, artifact-root permissions, and restart results.
+- **Entry condition:** Items 11–12 passed; bridge URL/secret, owner and worker IDs, Gateway URL/token, private artifact root, and launchd manifests are reviewed.
+- **Exit proof:** The loopback Gateway and signed bridge boot, restart, stop, log, heartbeat, lease, callback, artifact-boundary, and worker-identity checks pass without external delivery.
 - **Approval:** Required — Mac runtime owner and application owner approve daemon installation.
 - **Rollback:** Stop and unload both jobs, revoke bridge credentials, remove private runtime state only after evidence retention, and keep hosted queue records for reconciliation.
+- **Evidence link:** [Full-stack external setup](full-stack-external-setup.md) and [Agent operations](../AGENT_OPERATIONS.md).
 
-### 14. Run live safety negatives — `BLOCKED`
+#### 14. Run live safety negatives — `BLOCKED`
 
 - **Owner:** Security owner
-- **Prerequisites:** Items 9–13 passed; disposable plan/task identities and emergency-stop operator are ready.
-- **Live procedure:** Attempt unapproved claim, direct send, publish, spend, account change, and external delivery. Trigger emergency stop. Verify each unsafe path fails closed and writes durable evidence without a side effect.
-- **Evidence:** Retain sanitized request/result matrix, status codes, audit/event IDs, provider-side no-op confirmation, emergency-stop state, and cleanup record.
+- **Entry condition:** Items 9–13 passed; disposable plan/task identities and an emergency-stop operator are ready.
+- **Exit proof:** Unapproved claim, direct send, publish, spend, account change, and external delivery all fail closed; emergency stop blocks unsafe paths and durable evidence records no side effect.
 - **Approval:** Required — security owner accepts the negative-test coverage.
 - **Rollback:** Keep the emergency stop active, stop the bridge/Gateway, and investigate before any retry. Preserve all failed-attempt evidence.
+- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 15. Run one harmless live research task — `BLOCKED`
+### Phase 6 — Research and provenance proof
+
+#### 15. Run one harmless live research task — `BLOCKED`
 
 - **Owner:** Application and Mac runtime owners
-- **Prerequisites:** Items 11–14 passed; one public research task, no recipient, and an owner-approved monitoring window are ready.
-- **Live procedure:** Create and approve a public research plan in the hosted dashboard. Verify Vercel → hosted Supabase → signed Mac bridge → loopback OpenClaw → callbacks. Confirm progress, usage, cost, lease, completion, and failure records.
-- **Evidence:** Retain the plan/run/task/worker IDs, timestamps, callback signatures, usage/cost entries, lease transitions, artifacts, and final review state.
+- **Entry condition:** Items 11–14 passed; one public research task, no recipient, and an owner-approved monitoring window are ready.
+- **Exit proof:** The hosted dashboard, signed Mac bridge, loopback OpenClaw, and callbacks complete one harmless task with progress, usage, cost, lease, completion, and failure records.
 - **Approval:** Required — application and Mac runtime owners approve the harmless task scope.
 - **Rollback:** Stop the queue or emergency-stop before retrying, reconcile stale leases/callbacks, and preserve the complete task history.
+- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md), [Full-stack external setup](full-stack-external-setup.md), and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 16. Verify artifact and prospect provenance — `BLOCKED`
+#### 16. Verify artifact and prospect provenance — `BLOCKED`
 
 - **Owner:** Research and security owners
-- **Prerequisites:** Item 15 passed; private Storage and review queue are available; no outreach recipient is configured.
-- **Live procedure:** Require public HTTPS citations and evidence-backed claims. Verify exact model, worker, run, task, timestamps, and usage. Upload artifacts privately and preview them through signed URLs. Confirm valid research enters `pending_review` and no outreach is automatically created or sent.
-- **Evidence:** Retain sanitized citations, provenance rows, artifact/version IDs, signed-URL expiry proof, review status, and no-outreach assertion.
+- **Entry condition:** Item 15 passed; private Storage and the review queue are available; no outreach recipient is configured.
+- **Exit proof:** Public HTTPS citations, evidence-backed claims, exact model/worker/run/task/timestamp/usage provenance, private signed-URL artifacts, `pending_review` routing, and no automatic outreach are all recorded.
 - **Approval:** Required — research owner accepts provenance and review-queue evidence.
 - **Rollback:** Revoke signed URLs, stop the worker, leave artifacts in review, and preserve provenance records for correction.
+- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md), [Full-stack external setup](full-stack-external-setup.md), and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 17. Test transactional email live — `BLOCKED`
+### Phase 7 — Independent provider canaries (parallel)
+
+Items 17, 19, and 20 are visibly parallel lanes. Each requires its own
+provider approval and owner-controlled canary; none is serialized behind the
+other two. Item 18 is the prospecting lane and follows its separate dependency
+on items 9, 10, and 16.
+
+#### 17. Test transactional email live — `BLOCKED`
 
 - **Owner:** Email/provider owner
-- **Prerequisites:** Items 8–9 passed; restricted Resend credentials, verified sender identity, signed webhook endpoint, and owner-controlled mailbox are ready.
-- **Live procedure:** Send one message only to the owner-controlled mailbox. Verify delivery, webhook signature, duplicate handling, failure, and retry behavior. Do not use customer addresses.
-- **Evidence:** Retain provider message/event IDs, redacted delivery and webhook results, signature/replay tests, retry record, mailbox receipt, and cleanup/retention decision.
+- **Entry condition:** Items 8–9 passed; restricted Resend credentials, a verified sender, signed webhook endpoint, and an owner-controlled mailbox are ready.
+- **Exit proof:** One owner-mailbox message delivers; webhook signature, duplicate, failure, retry, provider event, and cleanup behavior are recorded; no customer address is used.
 - **Approval:** Required — email owner authorizes the sender, content, mailbox, and one-message canary.
 - **Rollback:** Disable or rotate the key, disable the sender route, preserve event/audit history, and leave customer delivery off.
+- **Evidence link:** [Full-stack external setup](full-stack-external-setup.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 18. Test prospecting sender live — `BLOCKED`
+#### 18. Test prospecting sender live — `BLOCKED`
 
 - **Owner:** Prospecting/provider owner
-- **Prerequisites:** Items 9–10 and 16 passed; separate prospecting key/provider mode, suppression rules, signed event endpoint, and owner-controlled mailbox are ready.
-- **Live procedure:** Send one approved message to the owner-controlled mailbox. Verify sender events, bounce/reply handling, suppression, retries, and audit history. Prove the transactional Resend key cannot activate prospecting.
-- **Evidence:** Retain message/event IDs, provider-mode fingerprint, suppression/replay results, mailbox receipt, and audit trail. No customer or prospect address may appear.
+- **Entry condition:** Items 9, 10, and 16 passed; a separate prospecting key/provider mode, suppression rules, signed event endpoint, and owner-controlled mailbox are ready.
+- **Exit proof:** One approved owner-mailbox message proves sender events, bounce/reply handling, suppression, retries, audit history, and isolation from the transactional Resend key; no customer or prospect address appears.
 - **Approval:** Required — prospecting owner approves the separate key, content, mailbox, and canary.
 - **Rollback:** Disable prospecting mode, revoke the separate key, preserve sender events/suppression history, and leave the transactional key isolated.
+- **Evidence link:** [Full-stack external setup](full-stack-external-setup.md), [Agent operations](../AGENT_OPERATIONS.md), and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 19. Test Google OAuth and Calendar live — `BLOCKED`
+#### 19. Test Google OAuth and Calendar live — `BLOCKED`
 
 - **Owner:** Calendar/integration owner
-- **Prerequisites:** Items 6–9 passed; Google credentials, server-only `CALENDAR_TOKEN_ENCRYPTION_KEY`, hosted migration `073`, owner-controlled test calendar, and callback configuration are ready. The missing consultation caller and durable event-idempotency reference must be implemented first.
-- **Live procedure:** Test sign-in and admin Calendar connection. Create, update, cancel, and delete one owner-controlled test event. Repeat the same confirmation/idempotency key and prove no duplicate event. Verify encrypted tokens, cleanup, and disconnect.
-- **Evidence:** Retain OAuth state/callback results, token-encryption proof, calendar event IDs, idempotency/retry result, update/cancel/delete results, and cleanup record.
+- **Entry condition:** Items 6–9 passed; Google credentials, server-only `CALENDAR_TOKEN_ENCRYPTION_KEY`, hosted migration `073`, owner-controlled test calendar, and callback configuration are ready; the consultation caller and durable event-idempotency reference are implemented.
+- **Exit proof:** Owner-controlled OAuth sign-in and Calendar connection create, update, cancel, and delete one test event; repeated confirmation/idempotency keys do not duplicate it; encrypted-token, cleanup, and disconnect proof is retained.
 - **Approval:** Required — Calendar owner approves the Google project, test account/calendar, event content, and cleanup.
 - **Rollback:** Disconnect the test account, delete test events, remove the server secret through the secret manager, and keep the manual-calendar path. Never reverse the encrypted-token migration ad hoc.
+- **Evidence link:** [Google Calendar readiness](google-calendar-readiness.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 20. Test Stripe live — `BLOCKED`
+#### 20. Test Stripe live — `BLOCKED`
 
 - **Owner:** Payments owner
-- **Prerequisites:** Items 6–9 passed; first offer, price, currency, refund rule, minimal payment references, signed idempotent webhook path, owner-controlled Stripe account, and owner-approved nominal amount are ready.
-- **Live procedure:** Use the owner-controlled Stripe account for one controlled canary. Verify success, decline, duplicate webhook, refund/cancellation, signature rejection, and operator visibility. Keep subscriptions, Customer Portal, carts, and legacy orders out of scope.
-- **Evidence:** Retain redacted Stripe object/event IDs, webhook signature/idempotency results, payment-reference rows, refund/void confirmation, and operator view. Never store card data.
+- **Entry condition:** Items 6–9 passed; first offer, price, currency, refund rule, payment references, signed idempotent webhook path, owner-controlled Stripe account, and owner-approved nominal amount are ready.
+- **Exit proof:** One controlled owner-account canary proves success, decline, duplicate webhook, refund/cancellation, signature rejection, and operator visibility; subscriptions, Customer Portal, carts, legacy orders, and card data remain out of scope.
 - **Approval:** Required — payments owner approves the exact offer, nominal amount, test/live mode, refund/void window, and canary.
 - **Rollback:** Immediately refund/void the canary, disable the payment path, preserve webhook/payment references, and leave the public fallback guarded until the path is reviewed again.
+- **Evidence link:** [Hosted payments readiness](hosted-payments-readiness.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-### 21. Run reliability and rollback tests — `BLOCKED`
+### Phase 8 — Reliability and technical go/no-go
+
+#### 21. Run reliability and rollback tests — `BLOCKED`
 
 - **Owner:** Reliability owner
-- **Prerequisites:** Items 7, 7.1, and 8–20 passed or have explicit exceptions; monitoring, emergency-stop operator, and application rollback deployment are available.
-- **Live procedure:** Test Mac restart, bridge restart, Gateway/provider failure, network outage, expired lease, duplicate callback, stale reservation, media overage, offline recovery, and emergency stop. Verify new claims are blocked when stopped. Deploy and verify application rollback to `8b8d429`; preserve hosted migration history.
-- **Evidence:** Retain fault-injection matrix, timestamps, alerts, lease/callback reconciliation, stop-state proof, rollback deployment identity, recovery result, and monitoring links.
+- **Entry condition:** Items 7, 7.1, and 8–20 passed or have explicit exceptions; monitoring, emergency-stop operator, application rollback deployment, and the list of provider/runtime surfaces activated for this launch are available.
+- **Exit proof:** Fault-injection and recovery coverage includes the core planner-to-bridge-to-runtime path plus every provider/runtime surface activated for the current launch, including restart, provider/network failure, lease/callback/idempotency, stale reservation, media overage, offline recovery, and emergency stop. The application rollback to `8b8d429` is verified. Any unactivated provider lane remains blocked and prevents item 22 from passing unless a documented, owner-approved, time-boxed exception is recorded.
 - **Approval:** Required — reliability and release owners approve the failure coverage and rollback result.
 - **Rollback:** Keep the old application commit available, use forward database fixes only, and leave emergency stop active until recovery is understood.
+- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md), [release evidence](../RELEASE_EVIDENCE.md), and [project status](../PROJECT_STATUS.md).
 
-### 22. Technical production go/no-go — `BLOCKED`
+#### 22. Technical production go/no-go — `BLOCKED`
 
 - **Owner:** Release owner
-- **Prerequisites:** Items 1–7, 7.1, and 8–21 are `PASSED` or have owner-approved, time-boxed exceptions; monitoring and rollback owners are named.
-- **Live procedure:** Record the deployed commit, hosted migration state, provider configuration fingerprints, evidence links, monitoring owner, rollback owner, exceptions, and expiry dates. Decide `GO` or `NO GO` in this checklist and update release evidence/status documents.
-- **Evidence:** Final signed checklist, deployment/hosted/provider evidence index, exception register, and post-cutover health snapshot.
+- **Entry condition:** Items 1–7, 7.1, and 8–21 are `PASSED` or have owner-approved, time-boxed exceptions; monitoring and rollback owners are named.
+- **Exit proof:** The final signed checklist records the deployed commit, hosted migration state, provider fingerprints, evidence index, monitoring/rollback owners, exceptions, expiry dates, and a `GO` or `NO GO` decision.
 - **Approval:** Required — release owner, database owner, security owner, and platform/provider owners sign the technical decision.
 - **Rollback:** A `NO GO` keeps production on the old reference or rolls the application back to `8b8d429`; hosted state remains forward-only.
+- **Evidence link:** [Release evidence](../RELEASE_EVIDENCE.md) and [project status](../PROJECT_STATUS.md).
 
-### 23. Paid Website Improvement gate — `NOT_STARTED`
+## Appendix — Business proof (not technical launch)
+
+Items 23 and 24 are separate paid-business gates. They do not count as
+technical launch evidence and do not authorize hosted, provider, or external
+actions.
+
+#### 23. Paid Website Improvement gate — `NOT_STARTED`
 
 - **Owner:** Business owner
-- **Prerequisites:** Technical launch decision is recorded; one customer has agreed to the $500 scope and delivery boundary.
-- **Live procedure:** Complete one paid $500 engagement, issue the $250/$250 invoice sequence, deliver one contained fix, and complete the handoff.
-- **Evidence:** Store the scope, invoice/payment confirmation, before/after evidence, delivery date, handoff, and outcome in the business record. Do not infer completion from code or technical launch.
+- **Entry condition:** The technical launch decision is recorded; one customer has agreed to the $500 scope and delivery boundary.
+- **Exit proof:** One paid $500 engagement is scoped, invoiced through the $250/$250 sequence, delivered as one contained fix, and handed off; the outcome is recorded in the business record.
 - **Approval:** Required — business owner and customer approve scope and handoff.
 - **Rollback:** Preserve the engagement and invoice record; resolve scope/payment issues through the business process rather than deleting launch evidence.
+- **Evidence link:** [Roadmap](../ROADMAP.md) and [project status](../PROJECT_STATUS.md).
 
-### 24. Paid Managed AI Operator gate — `NOT_STARTED`
+#### 24. Paid Managed AI Operator gate — `NOT_STARTED`
 
 - **Owner:** Business owner
-- **Prerequisites:** Technical launch decision is recorded; one customer has accepted the proposal, approval boundary, and 30-day pilot terms.
-- **Live procedure:** Complete one paid 30-day pilot, provide four human-led weekly briefs, and record outcomes and any scope changes.
-- **Evidence:** Store the proposal, payment record, approval boundary, four dated briefs, delivery acknowledgements, and outcome summary in the business record.
+- **Entry condition:** The technical launch decision is recorded; one customer has accepted the proposal, approval boundary, and 30-day pilot terms.
+- **Exit proof:** One paid 30-day pilot completes with four human-led weekly briefs, delivery acknowledgements, outcomes, and any scope changes recorded in the business record.
 - **Approval:** Required — business owner and customer approve the pilot scope and final outcome.
 - **Rollback:** Preserve the pilot and payment record; stop future work through the agreed business process and do not represent an incomplete pilot as launch proof.
+- **Evidence link:** [Roadmap](../ROADMAP.md) and [project status](../PROJECT_STATUS.md).
 
 ## Current evidence index
 
