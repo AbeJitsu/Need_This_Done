@@ -292,23 +292,45 @@ async function fixtureSetup(profile, clients, report) {
 
   const runTag = randomBytes(6).toString('hex');
   const password = randomBytes(24).toString('base64url');
+  const fixture = {
+    users: {},
+    userClients: {},
+    customers: {},
+    employees: {},
+    work: {},
+    profiles: {},
+    ids: {
+      plan: null,
+      run: null,
+      task: null,
+      artifact: null,
+      reservation: null,
+      provenance: null,
+      decision: null,
+    },
+  };
+  try {
   const userSpecs = [
     ['owner-a', 'owner'],
     ['manager-a', 'manager'],
     ['viewer-a', 'viewer'],
     ['owner-b', 'owner'],
   ];
-  const users = {};
+  const users = fixture.users;
   for (const [key, label] of userSpecs) {
-    const email = `ntd-parity-${runTag}-${label}@fixture.invalid`;
+    const email = `ntd-parity-${runTag}-${key}-${label}@fixture.invalid`;
     users[key] = await createUser(clients.service, email, password);
   }
   report.fixtures.created_users = Object.keys(users).length;
 
   const customerA = await insertOne(clients.service, 'customer_accounts', { name: `Parity Customer A ${runTag}` }, 'customer A fixture creation failed');
+  fixture.customers.a = customerA;
   const customerB = await insertOne(clients.service, 'customer_accounts', { name: `Parity Customer B ${runTag}` }, 'customer B fixture creation failed');
+  fixture.customers.b = customerB;
   const employeeA = await insertOne(clients.service, 'ai_employees', { customer_id: customerA.id, name: `Parity Employee A ${runTag}` }, 'employee A fixture creation failed');
+  fixture.employees.a = employeeA;
   const employeeB = await insertOne(clients.service, 'ai_employees', { customer_id: customerB.id, name: `Parity Employee B ${runTag}` }, 'employee B fixture creation failed');
+  fixture.employees.b = employeeB;
   const workA = await insertOne(clients.service, 'ai_employee_work_items', {
     employee_id: employeeA.id,
     queue: 'morning',
@@ -317,6 +339,7 @@ async function fixtureSetup(profile, clients, report) {
     expected_outcome: 'No external action.',
     priority: 1,
   }, 'employee work fixture creation failed');
+  fixture.work.a = workA;
   const workB = await insertOne(clients.service, 'ai_employee_work_items', {
     employee_id: employeeB.id,
     queue: 'morning',
@@ -325,6 +348,7 @@ async function fixtureSetup(profile, clients, report) {
     expected_outcome: 'No external action.',
     priority: 1,
   }, 'cross-customer work fixture creation failed');
+  fixture.work.b = workB;
   await clients.service.from('customer_memberships').insert([
     { customer_id: customerA.id, user_id: users['owner-a'].id, role: 'owner' },
     { customer_id: customerA.id, user_id: users['manager-a'].id, role: 'manager' },
@@ -349,6 +373,7 @@ async function fixtureSetup(profile, clients, report) {
     selected_model_rationale: 'Hosted parity fixture only',
     emergency_stop: false,
   }, 'growth profile A fixture creation failed');
+  fixture.profiles.a = profileA;
   const profileB = await insertOne(clients.service, 'growth_profiles', {
     owner_id: users['owner-b'].id,
     target_market: 'disposable cross-customer fixture',
@@ -361,30 +386,19 @@ async function fixtureSetup(profile, clients, report) {
     selected_model_rationale: 'Hosted parity fixture only',
     emergency_stop: false,
   }, 'growth profile B fixture creation failed');
+  fixture.profiles.b = profileB;
 
-  const userClients = {};
+  const userClients = fixture.userClients;
   for (const [key, label] of userSpecs) {
     const user = users[key];
     userClients[key] = await signIn(profile, user.email, password);
   }
 
-  return {
-    users,
-    userClients,
-    customers: { a: customerA, b: customerB },
-    employees: { a: employeeA, b: employeeB },
-    work: { a: workA, b: workB },
-    profiles: { a: profileA, b: profileB },
-    ids: {
-      plan: null,
-      run: null,
-      task: null,
-      artifact: null,
-      reservation: null,
-      provenance: null,
-      decision: null,
-    },
-  };
+  return fixture;
+  } catch (error) {
+    await cleanupFixtures(clients, fixture, report);
+    throw error;
+  }
 }
 
 async function cleanupFixtures(clients, fixture, report) {
@@ -400,6 +414,7 @@ async function cleanupFixtures(clients, fixture, report) {
   const service = clients.service;
   const userIds = Object.values(fixture.users || {}).map((user) => user.id);
   const ownerIds = userIds;
+  let cleanedUsers = 0;
 
   await attempt(async () => { if (fixture.ids.provenance) await deleteWhere(service, 'prospecting_artifact_provenance', 'id', fixture.ids.provenance); });
   await attempt(async () => { if (fixture.ids.decision) await deleteWhere(service, 'ai_employee_decisions', 'id', fixture.ids.decision); });
@@ -407,14 +422,12 @@ async function cleanupFixtures(clients, fixture, report) {
     ['agent_artifact_versions', 'owner_id'],
     ['agent_artifacts', 'owner_id'],
     ['openclaw_model_usage_reservations', 'owner_id'],
-    ['agent_task_events', 'task_id'],
     ['agent_run_events', 'owner_id'],
     ['agent_plan_events', 'owner_id'],
     ['agent_run_commands', 'owner_id'],
-    ['agent_task_dependencies', 'task_id'],
     ['agent_orchestration_tasks', 'owner_id'],
-    ['agent_runs', 'owner_id'],
     ['agent_plans', 'owner_id'],
+    ['agent_runs', 'owner_id'],
     ['growth_profiles', 'owner_id'],
   ]) {
     for (const ownerId of ownerIds) {
@@ -444,10 +457,12 @@ async function cleanupFixtures(clients, fixture, report) {
     await attempt(async () => {
       const { error } = await service.auth.admin.deleteUser(userId);
       if (error) throw new Error('cleanup auth user');
+      cleanedUsers += 1;
     });
   }
-  report.fixtures.cleaned_users = userIds.length - errors.length;
+  report.fixtures.cleaned_users = cleanedUsers;
   report.fixtures.cleanup_errors = errors.length;
+  report.fixtures.cleanup_failures = errors;
   if (errors.length) fail('fixture cleanup failed');
 }
 
@@ -791,7 +806,7 @@ async function main() {
     schema: {},
     history: {},
     storage: {},
-    fixtures: { created_users: 0, cleaned_users: 0, cleanup_errors: 0, external_recipients: 0 },
+    fixtures: { created_users: 0, cleaned_users: 0, cleanup_errors: 0, cleanup_failures: [], external_recipients: 0 },
   };
   try {
     const identity = await fetch(`${expectedEndpoint}/auth/v1/health`, {
