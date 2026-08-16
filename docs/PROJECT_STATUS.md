@@ -89,7 +89,7 @@ changed.
 ## Current state map
 
 ```text
-production/origin/production `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` -> deployed application; `8b8d429` remains the application rollback reference
+production/origin/production `0aac9c144da4ea9144050003aea37d3c4cdcd3f3` -> deployed application; current `dev` evidence commit is `5d3485e`; `8b8d429` remains the application rollback reference
 local/origin dev              `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` -> reviewed local assembly and hosted-write SHA
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa

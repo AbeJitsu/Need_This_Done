@@ -21,9 +21,12 @@ hosted Supabase.
 
 ## Cutover and deployment
 
-The remote `production` branch was fast-forwarded from `8b8d429` to
-`3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`. Direct remote verification
-confirmed both `dev` and `production` at that SHA.
+The remote `production` branch was fast-forwarded from `8b8d429` through the
+application/evidence commit `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` to
+the branch-alignment commit `0aac9c144da4ea9144050003aea37d3c4cdcd3f3`.
+Direct remote verification confirmed both `dev` and `production` at
+`0aac9c1` before the later evidence-only `dev` commit
+`5d3485e`. The application files are unchanged across those evidence commits.
 
 Vercel project: `vision2virtual/app`
 

@@ -8,7 +8,7 @@ to these item numbers; they do not define a second activation order.
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current reviewed `dev` SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
-**Deployed application SHA:** `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` (evidence-only commit on top of the reviewed application code)
+**Deployed application SHA:** `0aac9c144da4ea9144050003aea37d3c4cdcd3f3` (branch-alignment commit; application code is unchanged from `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`)
 **Last full local assembly proof:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` (2026-08-15; local migrations through `095`)
 **Final pre-apply release-control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
@@ -108,7 +108,7 @@ Status values:
 - **Owner:** Release/deployment owner
 - **Prerequisites:** Items 1–6 passed; `production` is an ancestor of the verified `dev` SHA; deployment target and rollback owner are named.
 - **Live procedure:** Move the `production` branch forward to the verified `dev` SHA using the approved repository flow. Deploy that exact SHA to Vercel production and verify the deployment identity before enabling traffic.
-- **Evidence:** The remote `production` branch moved forward from `8b8d429` to `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`; `origin/production` and `origin/dev` were directly verified at the same SHA at cutover. The final branch-triggered Vercel deployment `dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB` is `READY` at `https://app-bvxn361zh-vision2virtual.vercel.app`, aliased to `https://needthisdone.com`; its build generated 49 pages. `/api/health` returned healthy with Redis and Supabase up, public routes returned `200`, and anonymous planner/worker POSTs returned `401`. Full evidence is in [Step 7 production cutover](step-7-production-cutover-2026-08-15.md).
+- **Evidence:** The remote `production` branch moved forward from `8b8d429` to the branch-alignment commit `0aac9c144da4ea9144050003aea37d3c4cdcd3f3`; `origin/production` and `origin/dev` were directly verified at that SHA before the final evidence-only `dev` commit. The final branch-triggered Vercel deployment `dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB` is `READY` at `https://app-bvxn361zh-vision2virtual.vercel.app`, aliased to `https://needthisdone.com`; its build generated 49 pages. `/api/health` returned healthy with Redis and Supabase up, public routes returned `200`, and anonymous planner/worker POSTs returned `401`. Full evidence is in [Step 7 production cutover](step-7-production-cutover-2026-08-15.md).
 - **Approval:** Recorded — the owner explicitly authorized the fast-forward, exact-commit deployment, and post-deployment checks. This approval does not authorize step 8 secret or provider configuration.
 - **Rollback:** Re-deploy `8b8d429` as the application rollback reference if the application fails. Do not roll hosted migrations backward; preserve the forward-only database plan.
 

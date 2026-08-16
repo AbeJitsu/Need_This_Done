@@ -31,9 +31,9 @@ and the [final parity report](launch/hosted-parity-report-2026-08-15.json).
 
 ## Production cutover — 2026-08-15
 
-Step 7 fast-forwarded remote `production` from `8b8d429` to
-`3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` and deployed that application
-commit to the linked Vercel project. Final branch-triggered deployment
+Step 7 fast-forwarded remote `production` from `8b8d429` to the
+branch-alignment commit `0aac9c144da4ea9144050003aea37d3c4cdcd3f3` and
+deployed that application tree to the linked Vercel project. Final branch-triggered deployment
 `dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB` reached `READY` and was aliased to
 `https://needthisdone.com`. The health endpoint reported the app, Redis, and
 Supabase up; public routes returned `200`; anonymous planner and worker POSTs
