@@ -130,6 +130,9 @@ aliases below are a separate local contract.
 | `NEXT_PUBLIC_E2E_ADMIN_BYPASS` | Test-only bypass name; must never be enabled in a hosted app. |  |  |
 | `NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL` | Forbidden public model configuration name. |  |  |
 | `NEXT_PUBLIC_OPENROUTER_TEST_MODEL` | Forbidden public comparison-model configuration name. |  |  |
+| `NEXT_PUBLIC_APP_URL` | Template-only URL alias retained for local examples; the current release uses `NEXT_PUBLIC_SITE_URL`. |  |  |
+| `NEXT_PUBLIC_BASE_URL` | Template-only URL alias retained for local examples; the current release uses `NEXT_PUBLIC_SITE_URL`. |  |  |
+| `NEXTAUTH_URL` | Template-only/legacy NextAuth URL alias; it is not part of the first hosted baseline. |  |  |
 | `NEXTAUTH_DEBUG` | Non-production authentication debugging. |  |  |
 | `STRIPE_TEST_SECRET_KEY` | Local/test-only Stripe credential name. |  |  |
 | `ASSEMBLY_PRODUCTION_SERVER` | Local assembly mode selector. |  |  |
@@ -183,11 +186,19 @@ legacy provider credentials, and Mac-only worker settings.
 | `NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL` | Provider/model configuration must not be public. |  |  |
 | `NEXT_PUBLIC_OPENROUTER_TEST_MODEL` | Comparison model must not be public. |  |  |
 | `NEXT_PUBLIC_CHATBOT_MODEL` | Legacy public analyzer override; use the retained server/provider boundary. |  |  |
+| `NEXT_PUBLIC_CHATBOT_MAX_TOKENS` | Retired public analyzer tuning setting. |  |  |
+| `NEXT_PUBLIC_CHATBOT_TEMPERATURE` | Retired public analyzer tuning setting. |  |  |
+| `NEXT_PUBLIC_URL` | Retired generic URL alias; use the canonical `NEXT_PUBLIC_SITE_URL`. |  |  |
+| `NEXT_PUBLIC_USE_MOCK_DATA` | Retired mock-data switch; hosted behavior must use the reviewed application path. |  |  |
 | `CONTEXT7_API_KEY` or `CONTEXT7_*` | Context7 is retired and its credential was revoked. |  |  |
 | `MEDUSA_*` | Retired Medusa/Railway commerce runtime. |  |  |
 | `NEXT_PUBLIC_MEDUSA_*` | Retired public commerce configuration. |  |  |
 | `COOKIE_SECRET` | Retired commerce runtime secret. |  |  |
 | `ADMIN_CORS` | Retired commerce runtime setting. |  |  |
+| `SESSION_SECRET` or `SESSION_MAX_AGE` | Retired session-runtime settings; the retained auth boundary uses `NEXTAUTH_SECRET`. |  |  |
+| `TEST_*` or `E2E_*` | Test identities and credentials must never enter hosted application settings. |  |  |
+| `UPSTASH_*` | Retired direct Upstash REST settings; the retained app contract is optional `REDIS_URL`. |  |  |
+| `OPENAI_EMBEDDING_MODEL` or `EMBEDDING_BATCH_SIZE` | Retired embedding-pipeline settings; embeddings are not part of the retained application boundary. |  |  |
 | `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | Retired vector-search setting. |  |  |
 | `VECTOR_SEARCH_MAX_RESULTS` | Retired vector-search setting. |  |  |
 | `STRIPE_TEST_SECRET_KEY` | Test-only secret must not enter hosted application settings. |  |  |
@@ -200,14 +211,99 @@ legacy provider credentials, and Mac-only worker settings.
 | `PROSPECTING_PROFILE_ID` | Private worker approval/profile selector. |  |  |
 | `PROSPECTING_*_APPROVAL` | Human approval markers belong to the private worker command, not Vercel. |  |  |
 
+## Read-only Vercel audit and pending item-8 approval packet
+
+On 2026-08-16, `vercel env ls` was run against the linked Vercel project
+`app`. The command reported names and scope labels only; encrypted values were
+not pulled, printed, copied, fingerprinted, or changed. Every name returned by
+the command was present in Development, Preview, and Production.
+
+The current names-only result is:
+
+- Baseline names present: `NEXT_PUBLIC_SUPABASE_URL`,
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+  `NEXT_PUBLIC_SITE_URL`, and `NEXTAUTH_SECRET`.
+- Baseline name missing: `ENV_TARGET`.
+- Optional/later-gated names currently present: `REDIS_URL`, `OPENAI_API_KEY`,
+  `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`,
+  `RESEND_FROM_EMAIL`, `RESEND_ADMIN_EMAIL`, `RESEND_WEBHOOK_SECRET`,
+  `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, and
+  `STRIPE_WEBHOOK_SECRET`. Presence is not provider activation approval.
+- Current names with no retained hosted contract: `MEDUSA_ADMIN_EMAIL`,
+  `MEDUSA_ADMIN_PASSWORD`, `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`,
+  `TEST_ADMIN_EMAIL`, `TEST_ADMIN_PASSWORD`, `TEST_USER_EMAIL`,
+  `TEST_USER_PASSWORD`, `NEXT_PUBLIC_USE_MOCK_DATA`, `NEXTAUTH_URL`,
+  `SESSION_SECRET`, `SESSION_MAX_AGE`, `MEDUSA_DB_PASSWORD`,
+  `MEDUSA_JWT_SECRET`, `MEDUSA_ADMIN_JWT_SECRET`, `COOKIE_SECRET`,
+  `ADMIN_CORS`, `SUPABASE_ACCESS_TOKEN`, `SKIP_CACHE`, `NEXT_PUBLIC_URL`,
+  `E2E_ADMIN_PASSWORD`, `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`,
+  `UPSTASH_REDIS_API_KEY`, `UPSTASH_EMAIL`, `UPSTASH_REDIS_REST_URL`,
+  `UPSTASH_REDIS_REST_TOKEN`, `MEDUSA_DATABASE_URL`,
+  `NEXT_PUBLIC_MEDUSA_URL`, `NEXT_PUBLIC_CHATBOT_MODEL`,
+  `NEXT_PUBLIC_CHATBOT_MAX_TOKENS`, `NEXT_PUBLIC_CHATBOT_TEMPERATURE`,
+  `OPENAI_EMBEDDING_MODEL`, `EMBEDDING_BATCH_SIZE`,
+  `VECTOR_SEARCH_SIMILARITY_THRESHOLD`, `VECTOR_SEARCH_MAX_RESULTS`,
+  `CONTEXT7_API_KEY`, `E2E_ADMIN_EMAIL`, and the manually configured
+  `NODE_ENV` name. These are covered by the local/process or forbidden rows
+  above; they are not part of the first hosted baseline.
+
+### Exact allowlist requiring platform/security approval
+
+For both Production and Preview, the proposed first-batch allowlist is exactly
+the six hosted baseline names:
+
+`ENV_TARGET`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`, and `NEXTAUTH_SECRET`.
+
+`REDIS_URL` is excluded unless hosted Redis is separately approved. OpenRouter,
+email, Calendar, Stripe, Google OAuth, OpenClaw bridge, Mac-worker, legacy
+commerce, test, and process-control names are excluded from this batch.
+
+The selected Preview policy reuses the approved cloud Supabase target. The
+platform/security approval must explicitly accept that Preview can reach hosted
+production data and must prohibit unapproved mutable/customer workflows from
+Preview: no test bypass, provider activation, external message, publication,
+spend, account change, or customer-data workflow.
+
+Value sources must be approved per name without recording values here:
+
+- `ENV_TARGET` is the fixed `cloud` runtime marker.
+- The Supabase URL and keys come from the approved hosted Supabase project
+  credential source; the service-role key remains server-only.
+- `NEXT_PUBLIC_SITE_URL` comes from the controlled production domain and its
+  reviewed Preview policy.
+- `NEXTAUTH_SECRET` is a newly generated, owner-controlled server secret or a
+  separately approved rotation of the existing value; it is never copied into
+  browser code.
+
+The legacy-removal decision must cover every current Vercel name outside that
+allowlist in both Production and Preview. Provider credentials must be revoked
+or rotated at their provider when their provenance is unknown, then removed
+from Vercel; removal does not activate a provider. Any current `NODE_ENV` entry
+is removed as a manually managed variable and left to the platform runtime.
+
+The browser/server decision is that only the two `NEXT_PUBLIC_SUPABASE_*`
+names and the public site URL may be browser-visible. `ENV_TARGET`,
+`SUPABASE_SERVICE_ROLE_KEY`, `NEXTAUTH_SECRET`, and any future provider,
+bridge, worker, or Redis values remain server-only. The corrected deployment
+bundle scan remains required after any approved write.
+
+Item 8 is still `BLOCKED` until the platform/security owner records approval
+of this exact allowlist, the two-scope Preview risk, value sources, and
+legacy-variable removal/rotation scope. The Production and Preview columns
+above therefore remain intentionally blank and are not configuration proof.
+
 ## Audit record and sources
 
 - **Audit date:** 2026-08-16
 - **Code snapshot audited:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
 - **Method:** names-only scan of `process.env` references, bridge runtime
-  environment keys, private-worker environment contracts, local/migration
-  scripts, and Supabase test/config helpers. Environment values were not
-  read, copied, or recorded.
+  environment keys, private-worker environment contracts, dynamic test
+  allowlists, local/migration scripts, template-only aliases, Supabase
+  test/config helpers, and the read-only `vercel env ls` listing. Environment
+  values were not read, copied, or recorded. Every code-referenced name is
+  classified above; no Mac-only, local/test/process-only, or forbidden name is
+  included in the proposed hosted baseline.
 - **Primary sources:** [`app/lib/env-validation.ts`](../../app/lib/env-validation.ts),
   [`app/lib/supabase.ts`](../../app/lib/supabase.ts),
   [`app/lib/supabase-server.ts`](../../app/lib/supabase-server.ts),
@@ -227,8 +323,12 @@ legacy provider credentials, and Mac-only worker settings.
   [`app/lib/prospecting-sender.ts`](../../app/lib/prospecting-sender.ts),
   [`app/lib/prospecting-worker.ts`](../../app/lib/prospecting-worker.ts),
   [`app/scripts/run-prospecting-worker.ts`](../../app/scripts/run-prospecting-worker.ts),
+  [`app/e2e/authenticated-employee-workspace.spec.ts`](../../app/e2e/authenticated-employee-workspace.spec.ts),
+  [`app/playwright.config.ts`](../../app/playwright.config.ts),
   [`bridge/src/index.ts`](../../bridge/src/index.ts),
   [`bridge/README.md`](../../bridge/README.md),
+  [`.env.example`](../../.env.example),
+  [`app/.env.example`](../../app/.env.example),
   [`scripts/verify-local-assembly.sh`](../../scripts/verify-local-assembly.sh),
   [`scripts/rehearse-local-data-migration.sh`](../../scripts/rehearse-local-data-migration.sh),
   [`scripts/verify-hosted-migration-step4.mjs`](../../scripts/verify-hosted-migration-step4.mjs),
