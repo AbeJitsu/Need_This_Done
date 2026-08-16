@@ -2,9 +2,9 @@
 
 This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service. The canonical numbered control record is the [production launch checklist](launch/LAUNCH_CHECKLIST.md); this file is its evidence ledger.
 
-## Current release-control and hosted-stage ledger — 2026-08-15
+## Current release-control and hosted-stage ledger — 2026-08-16
 
-**Decision:** **Launch checklist items 1–7 passed; remaining production controls remain separately gated.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. The reviewed application is deployed to Vercel production; `8b8d429` remains the application rollback reference.
+**Decision:** **Launch checklist items 1–7 and 7.1 passed for the corrected release candidate; the corrected application is not yet deployed, so remaining production controls remain separately gated.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. The existing deployed application remains the immediate rollback reference; `8b8d429` remains the documented application rollback reference.
 
 The reviewed `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` passed `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, bridge build/tests 6/6, the 23-mapping/9-gate migration-stage verifier, and whitespace validation on 2026-08-15. The fresh assembly reset only disposable local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion. No provider credential or hosted state was used by that local assembly.
 
@@ -42,6 +42,27 @@ returned `401`. The full record is in
 
 No Vercel environment variable or provider setting was changed. Step 8 has not
 started.
+
+## Contact-page repair — 2026-08-16
+
+The corrected release candidate moves both context legends into their fieldset
+panels with clear spacing and no border overlap. The native `legend`/`fieldset`
+relationship remains intact, and the change does not alter form fields, the
+submission API, pricing, wording, or customer-data handling.
+
+The focused ContactIntake accessibility suite passed 2/2. Lint, TypeScript,
+the production build (49 pages), and `git diff --check` passed. The contact
+browser contract passed 6/6 across the configured public desktop and
+iPhone-sized mobile projects, including the geometry assertion and both offer
+selections. The retained contact-intake contract passed 2/2 across desktop and
+mobile, including switching from Website Improvement to Automation System
+Setup. No hosted, Vercel, provider, payment, or customer-data state changed.
+
+The next approved Vercel deployment must contain this corrected release
+candidate. Do not begin environment configuration or claim the deployed
+contact page is repaired until that deployment and its post-deployment checks
+pass; retain the current deployed application as the immediate rollback
+reference in the meantime.
 
 ## Hosted backup gate — 2026-08-12
 

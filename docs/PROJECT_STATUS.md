@@ -8,9 +8,9 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current release-control and hosted-stage ledger — 2026-08-15
+## Current release-control and hosted-stage ledger — 2026-08-16
 
-**Finish-line decision:** **Launch checklist items 1–7 passed.** The reviewed application is deployed at the production Vercel target; remaining secret, provider, hosted authorization, runtime, reliability, and business controls are still separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
+**Finish-line decision:** **Launch checklist items 1–7 passed, and item 7.1 passed for the corrected release candidate.** The existing application remains deployed at the production Vercel target; the corrected contact page is not yet deployed, and secret, provider, hosted authorization, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
 
 The final full assembly command, `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and bridge checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
 
@@ -18,6 +18,15 @@ The final full assembly command, `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run ve
 - Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
 - Authenticated browser workflows: retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2.
 - Mac bridge: build and 6/6 offline tests passed. The assembly used no provider credentials and made no external action.
+
+The contact-page repair passed the focused accessibility suite (2/2), lint,
+TypeScript, the 49-page production build, whitespace validation, the contact
+desktop/mobile browser contract (6/6), and the retained contact adaptation
+contract (2/2). Both offer selections retain their labels and behavior, and
+the geometry assertion confirms both native fieldset legends sit inside their
+panels. The correction is code/test/documentation only; no form fields,
+submission API, pricing, wording, customer-data handling, hosted state, or
+Vercel configuration changed.
 
 The planner/OpenClaw slice is applied only to the disposable local database through migration `095`; the local repair reset applies the full sequence. Its proof is part of the canonical `npm run verify:database` gate: 5/5 planner unit tests, 2/2 planner/OpenClaw RLS tests, 9/9 retained-schema checks, and 6/6 bridge offline tests. The single local database command selects the local profile, lints the schema, and runs every local Supabase security/lifecycle suite.
 
@@ -87,6 +96,14 @@ and worker requests returned `401`. The detailed record is
 Step 8 has not started: no Vercel secret/configuration values were added or
 changed.
 
+## Contact-page launch control — 2026-08-16
+
+Checklist item 7.1 passed for the corrected local release candidate. The
+next approved Vercel deployment must contain the correction before item 8
+environment configuration or hosted verification proceeds. Until that
+deployment passes its checks, the existing deployed application remains the
+immediate rollback reference and hosted database rollback remains forward-only.
+
 ## Current state map
 
 ```text
@@ -96,7 +113,7 @@ local/origin dev              `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` -> revi
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 095; no higher migration
   -> retained schema/lint/RLS/grant/Storage checks passed
-  -> items 1–6 passed; final fixture parity created and removed four disposable users
+  -> items 1–7 passed; item 7.1 is a locally verified release-candidate repair; corrected deployment pending
   -> latest protected recovery point is 90/094 before the 095 repair
 
 local Supabase
@@ -152,6 +169,7 @@ Historical change-log rows below retain the migration filenames used before the 
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-16 | Contact-page launch control repair | This working slice | Moved the Website Improvement and Automation System Setup context legends inside their native fieldset panels, added desktop/mobile offer and geometry coverage, and recorded the focused accessibility, lint, TypeScript, 49-page build, retained browser, and whitespace passes. No form/API/pricing/wording/customer-data, hosted, Vercel, provider, or payment state changed. The next approved deployment must contain the correction before item 8 begins. | Keep the existing deployed application as the immediate rollback reference until the corrected deployment passes; revert this focused code/test/documentation slice if rejected, and use forward-only hosted database repair. |
 | 2026-08-13 | Provider-owned model spend policy | `b6844df`, `74d3257` | Removed application-owned daily/per-request model-dollar enforcement, retained provider-usage records and non-budget safety controls, aligned focused tests, and passed the fresh local assembly through `092`. No hosted or provider state changed. | Revert these two focused commits; preserve migration history and usage/evaluation records, and use a reviewed forward migration for any hosted correction. |
 | 2026-08-13 | Hosted Step 4 deterministic migration gate | This working slice | Added `npm run verify:hosted-migration-step4`; its technical and data-impact passes verified the mapping, six dry runs, 68-row/latest-`072` hosted history, eight-artifact backup checksum, five cumulative legacy-inventory checkpoints, and the exact post-`092` retired/retained boundary. The gate reports `hosted_writes: 0`; checklist item 4 is review confirmation only and item 5 remains pending. | Preserve the protected backup; if any later hosted stage fails, stop and use a separately reviewed forward repair. Never reset hosted Supabase or reverse migration history. |
 | 2026-08-15 | Hosted Step 5 calendar-token-security stage | `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` plus separate evidence commit | Repaired the hosted apply gate to require and recheck an explicit release SHA, pushed and verified `dev`, captured a fresh protected backup, applied only `073`, and recorded `69/073` history, encrypted token columns, service-role-only grants, zero token rows, anonymous denial, and unchanged Storage inventory. `074`–`092` remain neither approved nor applied; no provider, deployment, secret, Calendar API, or external-message action occurred. | Preserve the `073` history/data and backup. Hosted rollback is forward-only; stop before `074` and use a separately reviewed forward repair if needed. |

@@ -39,6 +39,34 @@ test('contact gives the targeted fix context a clear working area', async ({ pag
   await expect(page.getByText(/keep it specific/i)).toBeVisible();
 });
 
+test('contact keeps both context headings inside their fieldset panels', async ({ page }) => {
+  for (const context of [
+    { offer: 'website-improvement', heading: 'Targeted fix context', field: /website url/i },
+    { offer: 'ai-operator', heading: 'Automation setup context', field: /where does work get stuck/i },
+  ]) {
+    await page.goto(`/contact?offer=${context.offer}`);
+
+    const panel = page.locator('fieldset').filter({ has: page.locator('legend', { hasText: context.heading }) });
+    const legend = panel.locator('legend');
+    await expect(legend).toHaveText(context.heading);
+    await expect(panel.getByRole('textbox', { name: context.field })).toBeVisible();
+
+    const panelBox = await panel.boundingBox();
+    const legendBox = await legend.boundingBox();
+    expect(panelBox).not.toBeNull();
+    expect(legendBox).not.toBeNull();
+
+    const panelRight = panelBox!.x + panelBox!.width;
+    const panelBottom = panelBox!.y + panelBox!.height;
+    const legendRight = legendBox!.x + legendBox!.width;
+    const legendBottom = legendBox!.y + legendBox!.height;
+    expect(legendBox!.y - panelBox!.y).toBeGreaterThan(4);
+    expect(panelBottom - legendBottom).toBeGreaterThan(4);
+    expect(legendBox!.x).toBeGreaterThanOrEqual(panelBox!.x);
+    expect(legendRight).toBeLessThanOrEqual(panelRight);
+  }
+});
+
 test('how it works makes the process and review boundary visible', async ({ page }) => {
   await page.goto('/how-it-works');
   await expect(page.getByRole('heading', { name: /work backward from the result/i })).toBeVisible();

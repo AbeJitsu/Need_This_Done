@@ -4,7 +4,7 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-15
+**Last reviewed:** 2026-08-16
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current reviewed `dev` SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
@@ -23,7 +23,7 @@ to these item numbers; they do not define a second activation order.
 
 Every item is an independent release record. Update the status only when the
 evidence, approval, and rollback fields are complete. A technical launch needs
-items 1–22 to be `PASSED`, or an explicit owner-approved exception with an owner,
+items 1–7, 7.1, and 8–22 to be `PASSED`, or an explicit owner-approved exception with an owner,
 scope, reason, expiration/removal date, and monitoring plan. Items 23 and 24 are
 separate paid-business gates and must not be represented as technical launch
 evidence.
@@ -45,6 +45,7 @@ Status values:
 - Send the only live messages to an owner-controlled mailbox.
 - Use only the owner-controlled Calendar and an owner-approved nominal Stripe amount, with immediate refund or void.
 - Keep OpenClaw loopback-only and approval-required. It must not send, publish, spend, change accounts, or deliver arbitrary external content.
+- The next approved Vercel deployment must include the verified contact-page correction in item 7.1. Do not configure or verify item 8 against an application version that still has the contact-page defect.
 - Preserve `8b8d429` as the application rollback reference until cutover and post-cutover checks pass.
 
 ## Launch items
@@ -112,10 +113,20 @@ Status values:
 - **Approval:** Recorded — the owner explicitly authorized the fast-forward, exact-commit deployment, and post-deployment checks. This approval does not authorize step 8 secret or provider configuration.
 - **Rollback:** Re-deploy `8b8d429` as the application rollback reference if the application fails. Do not roll hosted migrations backward; preserve the forward-only database plan.
 
+### 7.1. Repair and verify the contact page — `PASSED`
+
+- **Owner:** Frontend and release owners
+- **Prerequisites:** Items 1–7 passed; the contact page is treated as a public conversion path; the exact release candidate and its prior deployed rollback reference are recorded.
+- **Live procedure:** Repair the context-heading layout on the release candidate so `Targeted fix context` and `Automation setup context` sit inside their fieldset panels with clear spacing and no border overlap. Keep each native `legend`/`fieldset` relationship intact. Do not change the form fields, submission API, pricing, wording, or customer-data handling.
+- **Verification:** Exercise both offer selections. Confirm the Website URL, problem, and goal fields remain correctly labeled. Run the focused ContactIntake accessibility test, the contact browser contract at desktop and mobile sizes, the heading geometry assertion, TypeScript, and `git diff --check`.
+- **Evidence:** On 2026-08-16, the focused ContactIntake accessibility suite passed 2/2; lint, TypeScript, the 49-page production build, and `git diff --check` passed. The contact browser contract passed 6/6 across the public desktop and iPhone-sized mobile projects, including both offer selections and the fieldset-heading geometry assertion. The retained contact-intake contract passed 2/2 across desktop and mobile, including switching offers. The code-only candidate has not been deployed or assigned a new reviewed SHA; no hosted, Vercel, provider, payment, or customer-data state changed.
+- **Approval:** Recorded — the requested code/test/documentation repair is complete within this release scope. This does not authorize a Vercel deployment, environment configuration, hosted migration, or provider action.
+- **Rollback:** Until the corrected deployment passes its checks, keep the prior deployed application as the immediate rollback reference. If the candidate is rejected, revert the focused code/test/documentation change; hosted database rollback remains forward-only.
+
 ### 8. Configure and verify Vercel — `BLOCKED`
 
 - **Owner:** Platform owner
-- **Prerequisites:** Items 5–7 approved; server-only secret store access; exact environment scope (production/preview) is documented.
+- **Prerequisites:** Items 5–7 and 7.1 approved; the next deployment contains the corrected contact page; server-only secret store access; exact environment scope (production/preview) is documented.
 - **Live procedure:** Configure server-only Supabase, Auth, OpenRouter, bridge, provider, webhook, and encryption variables. Verify HTTPS health, protected routes, logs, error reporting, deployment identity, and that no provider key or model ID appears in browser code or source maps.
 - **Evidence:** Retain a redacted configuration manifest, deployment URL/SHA, route checks, bundle inspection, log/error-monitoring links, and secret rotation owner. Never place values in Git or this checklist.
 - **Approval:** Required — platform owner and security owner approve secret scope and browser/server boundary.
@@ -232,7 +243,7 @@ Status values:
 ### 21. Run reliability and rollback tests — `BLOCKED`
 
 - **Owner:** Reliability owner
-- **Prerequisites:** Items 7–20 passed or have explicit exceptions; monitoring, emergency-stop operator, and application rollback deployment are available.
+- **Prerequisites:** Items 7, 7.1, and 8–20 passed or have explicit exceptions; monitoring, emergency-stop operator, and application rollback deployment are available.
 - **Live procedure:** Test Mac restart, bridge restart, Gateway/provider failure, network outage, expired lease, duplicate callback, stale reservation, media overage, offline recovery, and emergency stop. Verify new claims are blocked when stopped. Deploy and verify application rollback to `8b8d429`; preserve hosted migration history.
 - **Evidence:** Retain fault-injection matrix, timestamps, alerts, lease/callback reconciliation, stop-state proof, rollback deployment identity, recovery result, and monitoring links.
 - **Approval:** Required — reliability and release owners approve the failure coverage and rollback result.
@@ -241,7 +252,7 @@ Status values:
 ### 22. Technical production go/no-go — `BLOCKED`
 
 - **Owner:** Release owner
-- **Prerequisites:** Items 1–21 are `PASSED` or have owner-approved, time-boxed exceptions; monitoring and rollback owners are named.
+- **Prerequisites:** Items 1–7, 7.1, and 8–21 are `PASSED` or have owner-approved, time-boxed exceptions; monitoring and rollback owners are named.
 - **Live procedure:** Record the deployed commit, hosted migration state, provider configuration fingerprints, evidence links, monitoring owner, rollback owner, exceptions, and expiry dates. Decide `GO` or `NO GO` in this checklist and update release evidence/status documents.
 - **Evidence:** Final signed checklist, deployment/hosted/provider evidence index, exception register, and post-cutover health snapshot.
 - **Approval:** Required — release owner, database owner, security owner, and platform/provider owners sign the technical decision.

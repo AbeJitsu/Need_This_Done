@@ -102,6 +102,7 @@ function ContactIntake() {
   const website = offer === 'website-improvement';
   const textAreaClass = 'mt-2 min-h-32 w-full rounded-2xl border border-[#183229]/15 bg-white px-4 py-3 leading-6 text-[#183229] outline-none transition focus:border-[#126b4e] focus:ring-2 focus:ring-[#126b4e]/20';
   const inputClass = 'mt-2 min-h-12 w-full rounded-xl border border-[#183229]/15 bg-white px-4 text-[#183229] outline-none transition focus:border-[#126b4e] focus:ring-2 focus:ring-[#126b4e]/20';
+  const contextLegendClass = 'relative top-4 mb-5 block w-fit text-2xl font-black leading-tight';
 
   if (status === 'success') {
     return (
@@ -194,7 +195,7 @@ function ContactIntake() {
 
             {website ? (
               <fieldset className="mt-12 rounded-[1.5rem] border border-[#183229]/10 bg-[#f7f4ed] p-5 sm:p-7">
-                <legend className="-ml-2 w-fit bg-[#f7f4ed] px-2 text-2xl font-black leading-tight">Targeted fix context</legend>
+                <legend className={contextLegendClass}>Targeted fix context</legend>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-[#50675e]">Point to the page, describe the friction, and name the improvement you would recognize when it is done.</p>
                 <label className="mt-7 block font-semibold">Website URL<input className={inputClass} required type="url" name="websiteUrl" value={form.websiteUrl} onChange={update} placeholder="https://example.com/page" /></label>
                 <div className="mt-5 grid gap-5 md:grid-cols-2">
@@ -205,7 +206,7 @@ function ContactIntake() {
               </fieldset>
             ) : (
               <fieldset className="mt-12 space-y-6 border-t border-[#183229]/10 pt-9">
-                <legend className="-ml-2 w-fit bg-white px-2 text-2xl font-black leading-tight">Automation setup context</legend>
+                <legend className={contextLegendClass}>Automation setup context</legend>
                 <label className="block font-semibold">Where does work get stuck or repeat?<textarea className={textAreaClass} required name="bottlenecks" value={form.bottlenecks} onChange={update} placeholder="Describe the recurring workflow or bottleneck." /></label>
                 <label className="block font-semibold">Which tools are involved?<textarea className={textAreaClass} required name="tools" value={form.tools} onChange={update} placeholder="CRM, email, website, calendar, or other tools." /></label>
                 <div className="grid gap-6 md:grid-cols-2">
