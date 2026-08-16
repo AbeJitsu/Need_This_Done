@@ -4,7 +4,7 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Decision:** **Launch checklist items 1–6 passed; cloud promotion remains separately gated.** This evidence does not authorize deployment, provider activation, secret provisioning, payment, Calendar, publication, or live external action. The reviewed `dev` branch replaces the old production application only after the remaining launch checklist passes; `8b8d429` remains the application rollback reference.
+**Decision:** **Launch checklist items 1–7 passed; remaining production controls remain separately gated.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. The reviewed application is deployed to Vercel production; `8b8d429` remains the application rollback reference.
 
 The reviewed `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` passed `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, bridge build/tests 6/6, the 23-mapping/9-gate migration-stage verifier, and whitespace validation on 2026-08-15. The fresh assembly reset only disposable local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion. No provider credential or hosted state was used by that local assembly.
 
@@ -14,7 +14,7 @@ The planner/OpenClaw proof is included in the canonical `npm run verify:database
 
 **Release blockers and exceptions:** Hosted history is `91/095`, and the final parity report passes with four temporary users cleaned and zero errors. The historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the final result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair records are [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md) and [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md). `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
-**Rollback:** Hosted `090`–`095` completed successfully; no rollback was needed. Preserve the history, backups, and evidence and use only reviewed forward migrations for any future correction. Use `8b8d429` only as the application rollback reference.
+**Rollback:** Hosted `090`–`095` completed successfully; no rollback was needed. Preserve the history, backups, and evidence and use only reviewed forward migrations for any database correction. Redeploy `8b8d429` for an application rollback if needed.
 
 ## Hosted parity endgame — 2026-08-15
 
@@ -28,6 +28,20 @@ lease/idempotency, Storage privacy, and cleanup evidence all pass. See
 the [Storage-policy repair evidence](launch/step-5-storage-policy-repair-2026-08-15.md),
 the [hosted security repair evidence](launch/step-5-hosted-security-repairs-2026-08-15.md),
 and the [final parity report](launch/hosted-parity-report-2026-08-15.json).
+
+## Production cutover — 2026-08-15
+
+Step 7 fast-forwarded remote `production` from `8b8d429` to
+`3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` and deployed that application
+commit to the linked Vercel project. Deployment
+`dpl_6vVRn4Jbnsx7hHneBPgqudLVQNcd` reached `READY` and was aliased to
+`https://needthisdone.com`. The health endpoint reported the app, Redis, and
+Supabase up; public routes returned `200`; anonymous planner and worker POSTs
+returned `401`. The full record is in
+[step-7-production-cutover-2026-08-15.md](launch/step-7-production-cutover-2026-08-15.md).
+
+No Vercel environment variable or provider setting was changed. Step 8 has not
+started.
 
 ## Hosted backup gate — 2026-08-12
 

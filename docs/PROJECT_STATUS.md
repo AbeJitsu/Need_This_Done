@@ -10,7 +10,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Finish-line decision:** **Launch checklist items 1–6 passed.** The reviewed `dev` branch replaces the old production application only after the remaining launch controls pass. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
+**Finish-line decision:** **Launch checklist items 1–7 passed.** The reviewed application is deployed at the production Vercel target; remaining secret, provider, hosted authorization, runtime, reliability, and business controls are still separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
 
 The final full assembly command, `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and bridge checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
 
@@ -31,9 +31,9 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
 - Current legal copy requires human/legal review before publication. Owner: human/legal reviewer. Review date: 2026-08-16 or before publication, whichever comes first.
 
-**Operational boundaries:** Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally; no model, payment, sender, calendar, deployment, publish, spend, account, or external-message action was enabled.
+**Operational boundaries:** The reviewed application is deployed to Vercel production, but no new secret or provider configuration was performed. Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally and the deployed anonymous boundaries returned `401`; no model, payment, sender, calendar, publish, spend, account, or external-message action was enabled.
 
-**Rollback:** Hosted `090`–`095` completed successfully; all security repairs are forward-only. Preserve hosted migration history, evidence, backups, and media records rather than deleting them. Never recreate anonymous Storage policies, reset hosted Supabase, or reverse migrations ad hoc.
+**Rollback:** Hosted `090`–`095` completed successfully; all database security repairs are forward-only. The deployed application can be rolled back by redeploying `8b8d429`; preserve hosted migration history, evidence, backups, and media records rather than deleting them. Never recreate anonymous Storage policies, reset hosted Supabase, or reverse migrations ad hoc.
 
 ## Hosted backup gate — 2026-08-12
 
@@ -73,10 +73,23 @@ call, deployment, payment, Calendar, publication, or OpenClaw live action was
 used. Abe Reyes accepted the database/security evidence as owner; no
 independent security review is claimed.
 
+## Production cutover closeout — 2026-08-15
+
+Step 7 fast-forwarded remote `production` from `8b8d429` to
+`3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`, matching `dev` at the time of
+deployment. The linked Vercel project created deployment
+`dpl_6vVRn4Jbnsx7hHneBPgqudLVQNcd`, marked it `READY`, and aliased it to
+`https://needthisdone.com`. The production health endpoint returned healthy
+with Redis and Supabase up; public routes returned `200`; anonymous planner
+and worker requests returned `401`. The detailed record is
+[step-7-production-cutover-2026-08-15.md](launch/step-7-production-cutover-2026-08-15.md).
+Step 8 has not started: no Vercel secret/configuration values were added or
+changed.
+
 ## Current state map
 
 ```text
-production/origin/production 8b8d429          -> old hosted production product and application rollback reference
+production/origin/production `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` -> deployed application; `8b8d429` remains the application rollback reference
 local/origin dev              `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` -> reviewed local assembly and hosted-write SHA
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
@@ -98,7 +111,7 @@ The local proof uses a fake completion client, a fake Gateway, real local Supaba
 
 Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
-Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–6 are now passed; until the remaining sequence is approved and completed, `production` remains the old application rollback reference at `8b8d429`.
+Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–7 are now passed; until the remaining sequence is approved and completed, `8b8d429` remains the application rollback reference.
 
 Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
 

@@ -12,7 +12,7 @@ technical launch gate.
 | Local Supabase | Proven through migration `095` by the fresh assembly on `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` |
 | Hosted Supabase `oxhjtmozsdstbokwtnwa` | `91` rows, latest `095`, no higher migration |
 | Hosted schema gap | No item-5/6 schema or security gap remains; the anonymous Storage defect, worker claim-context defect, and fixture-cleanup boundary are repaired and parity is passed |
-| Application state | `dev` is the only active release branch; `production` remains the old rollback reference |
+| Application state | `dev` and remote `production` point to the deployed application; `8b8d429` remains the application rollback reference |
 | External activity | No deployment, provider activation, secret provisioning, Calendar API call, publication, spend, or external message is part of parity work |
 
 Local proof was valuable because it tested the SQL, RLS, function boundaries,
@@ -113,10 +113,12 @@ The historical blocked result is preserved as
 The repair records are [step-5-storage-policy-repair-2026-08-15.md](step-5-storage-policy-repair-2026-08-15.md)
 and [step-5-hosted-security-repairs-2026-08-15.md](step-5-hosted-security-repairs-2026-08-15.md).
 
-Only after those criteria are met may the release owner separately approve the
-production fast-forward and deploy that exact `dev` SHA. Production promotion
-does not authorize hosted migrations, and hosted migrations do not authorize
-provider or live-action work.
+Those parity criteria were met. Step 7 separately fast-forwarded remote
+`production` to the verified application commit and deployed it to Vercel;
+the complete evidence is in
+[step-7-production-cutover-2026-08-15.md](step-7-production-cutover-2026-08-15.md).
+Production promotion did not authorize hosted migrations, and it does not
+authorize provider or live-action work. Step 8 remains separate.
 
 ## Failure boundary
 
