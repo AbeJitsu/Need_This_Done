@@ -60,10 +60,10 @@ const previewDashboardData: DashboardData = {
     title: 'Find local operators who need a simpler growth system',
     created_at: '2026-08-09T12:05:00.000Z',
     tasks: [
-      { id: '00000000-0000-4000-8000-000000000011', task_key: 'coordinator', agent_role: 'coordinator', agent_provider: 'openclaw', model_id: 'openclaw/coordinator', status: 'succeeded', progress: 100 },
-      { id: '00000000-0000-4000-8000-000000000012', task_key: 'public-web-researcher', agent_role: 'public_web_researcher', agent_provider: 'openrouter', model_id: 'openrouter/auto', status: 'running', progress: 68 },
-      { id: '00000000-0000-4000-8000-000000000013', task_key: 'outreach-writer', agent_role: 'outreach_writer', agent_provider: 'anthropic', model_id: 'anthropic/claude-sonnet', status: 'queued', progress: 0 },
-      { id: '00000000-0000-4000-8000-000000000014', task_key: 'reviewer', agent_role: 'reviewer', agent_provider: 'openclaw', model_id: 'openclaw/reviewer', status: 'blocked', progress: 0 },
+      { id: '00000000-0000-4000-8000-000000000011', task_key: 'coordinator', agent_role: 'coordinator', agent_provider: 'openclaw', model_id: null, status: 'succeeded', progress: 100 },
+      { id: '00000000-0000-4000-8000-000000000012', task_key: 'public-web-researcher', agent_role: 'public_web_researcher', agent_provider: 'openrouter', model_id: null, status: 'running', progress: 68 },
+      { id: '00000000-0000-4000-8000-000000000013', task_key: 'outreach-writer', agent_role: 'outreach_writer', agent_provider: 'anthropic', model_id: null, status: 'queued', progress: 0 },
+      { id: '00000000-0000-4000-8000-000000000014', task_key: 'reviewer', agent_role: 'reviewer', agent_provider: 'openclaw', model_id: null, status: 'blocked', progress: 0 },
     ],
     artifacts: [],
   }, {
@@ -73,9 +73,9 @@ const previewDashboardData: DashboardData = {
     title: 'Minimum effective dose content package · Aug 9',
     created_at: '2026-08-09T09:00:00.000Z',
     tasks: [
-      { id: '00000000-0000-4000-8000-000000000021', task_key: 'coordinator', agent_role: 'coordinator', agent_provider: 'openclaw', model_id: 'openclaw/coordinator', status: 'succeeded', progress: 100 },
-      { id: '00000000-0000-4000-8000-000000000022', task_key: 'daily-content-producer', agent_role: 'daily_content_producer', agent_provider: 'openrouter', model_id: 'openrouter/auto', status: 'succeeded', progress: 100 },
-      { id: '00000000-0000-4000-8000-000000000023', task_key: 'reviewer', agent_role: 'reviewer', agent_provider: 'local', model_id: 'local/reviewer', status: 'succeeded', progress: 100 },
+      { id: '00000000-0000-4000-8000-000000000021', task_key: 'coordinator', agent_role: 'coordinator', agent_provider: 'openclaw', model_id: null, status: 'succeeded', progress: 100 },
+      { id: '00000000-0000-4000-8000-000000000022', task_key: 'daily-content-producer', agent_role: 'daily_content_producer', agent_provider: 'openrouter', model_id: null, status: 'succeeded', progress: 100 },
+      { id: '00000000-0000-4000-8000-000000000023', task_key: 'reviewer', agent_role: 'reviewer', agent_provider: 'local', model_id: null, status: 'succeeded', progress: 100 },
     ],
     artifacts: [],
   }],

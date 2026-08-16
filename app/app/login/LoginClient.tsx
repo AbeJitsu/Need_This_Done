@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, Lock, Mail, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { signIn as signInWithNextAuth } from 'next-auth/react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-browser';
 import { getAuthTitle, getAuthDescription } from '@/lib/auth-utils';
 import { FadeIn } from '@/components/motion/FadeIn';
 

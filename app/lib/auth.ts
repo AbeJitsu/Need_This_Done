@@ -5,7 +5,7 @@
 // They handle getting the current user, checking if someone is logged in,
 // and managing session state.
 
-import { supabase } from './supabase';
+import { supabase } from './supabase-browser';
 import { signOut as signOutFromNextAuth } from 'next-auth/react';
 
 // ============================================================================

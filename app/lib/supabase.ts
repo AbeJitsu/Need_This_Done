@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { createBrowserClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 
