@@ -4,9 +4,11 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-16
 
-**Decision:** **Launch checklist items 1–7 and 7.1 passed for the corrected release candidate; the corrected application is not yet deployed, so remaining production controls remain separately gated.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. The existing deployed application remains the immediate rollback reference; `8b8d429` remains the documented application rollback reference.
+**Decision:** **The prior hosted release controls 1–7 passed; local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` passed item 1 and 7.1, while item 2 publication and the corrected deployment remain pending.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. The existing deployed application remains the immediate rollback reference; `8b8d429` remains the documented application rollback reference.
 
 The reviewed `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` passed `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, bridge build/tests 6/6, the 23-mapping/9-gate migration-stage verifier, and whitespace validation on 2026-08-15. The fresh assembly reset only disposable local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion. No provider credential or hosted state was used by that local assembly.
+
+The new local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` then passed `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh` on 2026-08-16: local migrations `001`–`095`, schema lint, 213 required unit tests, 50 accessibility checks, the 49-page production build, retained public browser checks (47 passed and one intentional mobile navigation skip), authenticated auth 4/4, prospecting 1/1, cockpit 1/1, workspace 2/2, and bridge tests 6/6. `origin/dev` remains on the prior candidate until item 2 is completed.
 
 The planner/OpenClaw proof is included in the canonical `npm run verify:database` gate. It proves draft-only planning, approval-before-dispatch, frozen snapshots, OpenClaw-only claiming, model reservations, strict HTTPS citation validation, provenance linkage, private artifact boundaries, and authenticated direct-write denial.
 
@@ -45,7 +47,7 @@ started.
 
 ## Contact-page repair — 2026-08-16
 
-The corrected release candidate moves both context legends into their fieldset
+Local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` moves both context legends into their fieldset
 panels with clear spacing and no border overlap. The native `legend`/`fieldset`
 relationship remains intact, and the change does not alter form fields, the
 submission API, pricing, wording, or customer-data handling.
@@ -59,9 +61,9 @@ mobile, including switching from Website Improvement to Automation System
 Setup. No hosted, Vercel, provider, payment, or customer-data state changed.
 
 The next approved Vercel deployment must contain this corrected release
-candidate. Do not begin environment configuration or claim the deployed
-contact page is repaired until that deployment and its post-deployment checks
-pass; retain the current deployed application as the immediate rollback
+candidate. Item 2 publication and the corrected deployment must occur before
+environment configuration or a claim that the deployed contact page is
+repaired; retain the current deployed application as the immediate rollback
 reference in the meantime.
 
 ## Hosted backup gate — 2026-08-12
