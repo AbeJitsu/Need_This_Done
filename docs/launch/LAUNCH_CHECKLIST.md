@@ -128,6 +128,7 @@ Status values:
 - **Owner:** Platform owner
 - **Prerequisites:** Items 5–7 and 7.1 approved; the next deployment contains the corrected contact page; server-only secret store access; exact environment scope (production/preview) is documented.
 - **Live procedure:** Configure server-only Supabase, Auth, OpenRouter, bridge, provider, webhook, and encryption variables. Verify HTTPS health, protected routes, logs, error reporting, deployment identity, and that no provider key or model ID appears in browser code or source maps.
+- **Names-only inventory:** Use the [environment variable inventory](ENVIRONMENT_VARIABLE_INVENTORY.md) to compare names only. Never record values or copied `.env` contents; item 8 remains blocked pending platform/security approval.
 - **Evidence:** Retain a redacted configuration manifest, deployment URL/SHA, route checks, bundle inspection, log/error-monitoring links, and secret rotation owner. Never place values in Git or this checklist.
 - **Approval:** Required — platform owner and security owner approve secret scope and browser/server boundary.
 - **Rollback:** Remove or rotate only the affected deployment secrets through the secret manager and redeploy the last known-good application commit. Preserve logs and audit history.
