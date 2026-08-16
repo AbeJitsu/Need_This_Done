@@ -60,10 +60,14 @@ test('contact keeps both context headings inside their fieldset panels', async (
     const panelBottom = panelBox!.y + panelBox!.height;
     const legendRight = legendBox!.x + legendBox!.width;
     const legendBottom = legendBox!.y + legendBox!.height;
-    expect(legendBox!.y - panelBox!.y).toBeGreaterThan(4);
+    const firstContent = panel.locator(':scope > p, :scope > label').first();
+    const firstContentBox = await firstContent.boundingBox();
+    expect(firstContentBox).not.toBeNull();
+    expect(legendBox!.y - panelBox!.y).toBeGreaterThan(8);
+    expect(firstContentBox!.y - legendBottom).toBeGreaterThan(12);
     expect(panelBottom - legendBottom).toBeGreaterThan(4);
-    expect(legendBox!.x).toBeGreaterThanOrEqual(panelBox!.x);
-    expect(legendRight).toBeLessThanOrEqual(panelRight);
+    expect(legendBox!.x).toBeGreaterThanOrEqual(panelBox!.x + 4);
+    expect(legendRight).toBeLessThanOrEqual(panelRight - 4);
   }
 });
 
