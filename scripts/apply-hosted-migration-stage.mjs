@@ -39,6 +39,7 @@ const writeAcknowledgements = {
   'destructive-retirement': 'I_UNDERSTAND_THIS_APPLIES_ONLY_090_092',
   'storage-policy-repair': 'I_UNDERSTAND_THIS_APPLIES_ONLY_093_STORAGE_POLICY_REPAIR',
   'worker-claim-context-repair': 'I_UNDERSTAND_THIS_APPLIES_ONLY_094_WORKER_CLAIM_CONTEXT_REPAIR',
+  'hosted-parity-fixture-cleanup': 'I_UNDERSTAND_THIS_APPLIES_ONLY_095_FIXTURE_CLEANUP_BOUNDARY',
 };
 const destructiveApproval = 'I_UNDERSTAND_THIS_DELETES_RETIRED_HOSTED_DATA_090_092';
 const expectedBackupArtifacts = [
