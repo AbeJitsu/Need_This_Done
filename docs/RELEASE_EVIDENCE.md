@@ -4,12 +4,12 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-16
 
-**Decision:** **The prior hosted release controls 1–7 passed; candidate `80d1e74a853fcfc432c72979bb6485a8fd6f6abf` passed items 1, 2, and 7.1, while corrected deployment and item 8 remain pending.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. The existing deployed application remains the immediate rollback reference; `8b8d429` remains the documented application rollback reference.
+**Decision:** **Corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` passed items 1–7 and 7.1, and its Vercel deployment passed the live checks; item 8 remains blocked on the exact secret allowlist and platform/security approval.** This evidence does not authorize provider activation, secret provisioning, payment, Calendar, publication, or live external action. `8b8d429` remains the documented application rollback reference.
 
 The reviewed `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` passed `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, bridge build/tests 6/6, the 23-mapping/9-gate migration-stage verifier, and whitespace validation on 2026-08-15. The fresh assembly reset only disposable local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion. No provider credential or hosted state was used by that local assembly.
 
-The local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61`, published in
-candidate tip `80d1e74a853fcfc432c72979bb6485a8fd6f6abf`, passed
+The corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`, including
+the boundary commit `f567844` and contact refinement `e363a5f`, passed
 `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run
 verify:assembly:fresh` on 2026-08-16: local migrations `001`–`095`, schema lint,
 213 required unit tests, 50 accessibility checks, the 49-page production
@@ -22,7 +22,7 @@ The planner/OpenClaw proof is included in the canonical `npm run verify:database
 
 **Provider and secret boundary:** An OpenRouter API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly clears provider credentials and model configuration and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action.
 
-**Release blockers and exceptions:** Hosted history is `91/095`, and the final parity report passes with four temporary users cleaned and zero errors. The historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the final result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair records are [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md) and [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md). `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
+**Release blockers and exceptions:** Hosted history is `91/095`, and the final parity report passes with four temporary users cleaned and zero errors. The historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the final result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair records are [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md) and [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md). Item 8 is blocked: the corrected deployment and public bundle scan passed, but the read-only Vercel environment inventory lacks the current `ENV_TARGET`, OpenRouter, OpenClaw bridge, Google OAuth state, and Calendar encryption names and retains legacy Medusa/Context7/vector/chatbot/test names. No environment values were read or changed; platform/security approval of the exact allowlist and rotation/removal scope is required. `npm audit` reports 16 findings overall and 11 production-tree findings, so later technical promotion remains blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
 **Rollback:** Hosted `090`–`095` completed successfully; no rollback was needed. Preserve the history, backups, and evidence and use only reviewed forward migrations for any database correction. Redeploy `8b8d429` for an application rollback if needed.
 
@@ -53,12 +53,31 @@ returned `401`. The full record is in
 No Vercel environment variable or provider setting was changed. Step 8 has not
 started.
 
+## Corrected production cutover — 2026-08-16
+
+The corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` was
+fast-forwarded to `origin/production` and deployed as
+`dpl_GVMHoCVSKiMgy2nse84zKs1cXafc`. The deployment reached `READY` at
+`https://app-m3bsrt3t0-vision2virtual.vercel.app` and was aliased to
+`https://needthisdone.com`.
+
+The health endpoint reported Redis, Supabase, and app `up`; `/`, `/contact`,
+and `/services` returned `200`; anonymous planner and bridge requests returned
+`401`; the contact desktop/mobile contract passed 6/6; and retained offer
+switching passed 2/2. A read-only production bundle scan fetched 15 contact
+scripts and found no server-only environment identifiers, provider-key shapes,
+model-ID patterns, or source-map URLs. No Vercel environment value, provider
+setting, hosted database state, payment state, or customer data changed.
+
+The detailed record is [corrected Step 7 deployment](launch/step-7-corrected-contact-deployment-2026-08-16.md).
+
 ## Contact-page repair — 2026-08-16
 
-Local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` moves both context legends into their fieldset
-panels with clear spacing and no border overlap. The native `legend`/`fieldset`
-relationship remains intact, and the change does not alter form fields, the
-submission API, pricing, wording, or customer-data handling.
+Corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` moves both
+context legends into consistent responsive fieldset panels with clear spacing
+and no border overlap. The native `legend`/`fieldset` relationship remains
+intact, and the change does not alter form fields, the submission API, pricing,
+wording, or customer-data handling.
 
 The focused ContactIntake accessibility suite passed 2/2. Lint, TypeScript,
 the production build (49 pages), and `git diff --check` passed. The contact
@@ -68,11 +87,18 @@ selections. The retained contact-intake contract passed 2/2 across desktop and
 mobile, including switching from Website Improvement to Automation System
 Setup. No hosted, Vercel, provider, payment, or customer-data state changed.
 
-The next approved Vercel deployment must contain this corrected release
-candidate. The corrected deployment must occur before environment
-configuration or a claim that the deployed contact page is repaired; retain
-the current deployed application as the immediate rollback reference in the
-meantime.
+The corrected deployment passed its live checks. Item 8 environment
+configuration remains blocked until platform/security approves the exact
+production/preview secret allowlist, source, and legacy-variable
+rotation/removal scope.
+
+## Browser/server release boundary — 2026-08-16
+
+The browser Supabase client is now isolated from the server-admin client, and
+display-only preview data no longer embeds provider/model IDs. The local
+production bundle and corrected deployed bundle contain no server-only
+environment identifiers, provider-key shapes, model-ID patterns, or source
+maps. Auth behavior and server APIs remain unchanged.
 
 ## Hosted backup gate — 2026-08-12
 

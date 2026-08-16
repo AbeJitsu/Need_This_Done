@@ -10,12 +10,12 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-16
 
-**Finish-line decision:** **The prior hosted release controls 1–7 passed; the corrected candidate `80d1e74a853fcfc432c72979bb6485a8fd6f6abf` passed items 1, 2, and 7.1, while corrected deployment and item 8 remain pending.** The candidate is now on `origin/dev` but not deployed to Vercel, so the corrected contact page is not live and secret, provider, hosted authorization, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
+**Finish-line decision:** **Items 1–7 and 7.1 passed for corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`; the corrected deployment is live and item 8 remains blocked on its exact secret allowlist and platform/security approval.** The contact page and browser/server boundary fixes are live at Vercel production. Secret, provider, hosted authorization, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
 
-The latest full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The bridge build and 6/6 offline tests passed separately. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
+The latest full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The bridge build and 6/6 offline tests passed separately. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
 
 - Code: lint with zero warnings, TypeScript, 213/213 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
-- Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
+- Database: no schema errors from local lint; schema manifest 9/9, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
 - Authenticated browser workflows: retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2.
 - Mac bridge: build and 6/6 offline tests passed. The assembly used no provider credentials and made no external action.
 
@@ -24,9 +24,9 @@ TypeScript, the 49-page production build, whitespace validation, the contact
 desktop/mobile browser contract (6/6), and the retained contact adaptation
 contract (2/2). Both offer selections retain their labels and behavior, and
 the geometry assertion confirms both native fieldset legends sit inside their
-panels. The correction is code/test/documentation only; no form fields,
-submission API, pricing, wording, customer-data handling, hosted state, or
-Vercel configuration changed.
+panels with clear spacing. The corrected production deployment passed the same
+contact checks live. No form fields, submission API, pricing, wording,
+customer-data handling, hosted state, or Vercel environment values changed.
 
 The planner/OpenClaw slice is applied only to the disposable local database through migration `095`; the local repair reset applies the full sequence. Its proof is part of the canonical `npm run verify:database` gate: 5/5 planner unit tests, 2/2 planner/OpenClaw RLS tests, 9/9 retained-schema checks, and 6/6 bridge offline tests. The single local database command selects the local profile, lints the schema, and runs every local Supabase security/lifecycle suite.
 
@@ -39,9 +39,10 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
 - The Vercel CLI background update worker cannot write its local cache in this sandbox and emits an `EPERM` warning; deployment, inspection, build, and live checks still complete successfully. Owner: engineering. Review/removal date: 2026-08-16.
+- Item 8 remains blocked after a read-only Vercel production environment inventory. The corrected deployment and bundle scan passed, but the project does not list the current `ENV_TARGET`, OpenRouter, OpenClaw bridge, Google OAuth state, or Calendar encryption variable names; it retains legacy Medusa/Context7/vector/chatbot/test names. No environment values were read or changed. Owner: platform/security. Required removal date: before any further hosted authorization or provider activation.
 - Current legal copy requires human/legal review before publication. Owner: human/legal reviewer. Review date: 2026-08-16 or before publication, whichever comes first.
 
-**Operational boundaries:** The reviewed application is deployed to Vercel production, but no new secret or provider configuration was performed. Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally and the deployed anonymous boundaries returned `401`; no model, payment, sender, calendar, publish, spend, account, or external-message action was enabled.
+**Operational boundaries:** The corrected application candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` is deployed to Vercel production, and its public bundle contains no server-only environment identifiers, provider-key shapes, model IDs, or source maps. No new secret or provider configuration was performed. Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally and the deployed anonymous boundaries returned `401`; no model, payment, sender, calendar, publish, spend, account, or external-message action was enabled.
 
 **Rollback:** Hosted `090`–`095` completed successfully; all database security repairs are forward-only. The deployed application can be rolled back by redeploying `8b8d429`; preserve hosted migration history, evidence, backups, and media records rather than deleting them. Never recreate anonymous Storage policies, reset hosted Supabase, or reverse migrations ad hoc.
 
@@ -96,26 +97,44 @@ and worker requests returned `401`. The detailed record is
 Step 8 has not started: no Vercel secret/configuration values were added or
 changed.
 
+## Corrected production cutover closeout — 2026-08-16
+
+The corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` passed the
+fresh local assembly and bridge 6/6, was published to `origin/dev`, and was
+fast-forwarded to `origin/production`. Vercel deployment
+`dpl_GVMHoCVSKiMgy2nse84zKs1cXafc` reached `READY` at
+`https://app-m3bsrt3t0-vision2virtual.vercel.app` and was aliased to
+`https://needthisdone.com`.
+
+The live health endpoint returned Redis, Supabase, and app `up`; public routes
+returned `200`; anonymous planner and bridge requests returned `401`; the
+contact desktop/mobile contract passed 6/6; and retained offer switching
+passed 2/2. The bundle scan found no server-only environment identifiers,
+provider-key shapes, model IDs, or source maps. No Vercel environment value,
+provider setting, payment state, hosted database state, or customer data was
+changed.
+
 ## Contact-page launch control — 2026-08-16
 
-Checklist item 7.1 passed for published candidate
-`80d1e74a853fcfc432c72979bb6485a8fd6f6abf`. The candidate still needs the
-separately approved corrected Vercel deployment before
-item 8 environment configuration or hosted verification proceeds. Until that
-deployment passes its checks, the existing deployed application remains the
-immediate rollback reference and hosted database rollback remains forward-only.
+Checklist item 7.1 passed for corrected candidate
+`e363a5f74ff8ad731272089f8714bd81edb97d3d`, and the corrected deployment
+passed its live checks. Item 8 environment configuration remains blocked until
+the platform/security owner approves the exact production/preview allowlist,
+secret source, and legacy-variable rotation/removal scope. The documented
+application rollback reference remains `8b8d429`; hosted database rollback is
+forward-only.
 
 ## Current state map
 
 ```text
-production/origin/production `0aac9c144da4ea9144050003aea37d3c4cdcd3f3` -> deployed application; `8b8d429` remains the application rollback reference
-local dev                     `80d1e74a853fcfc432c72979bb6485a8fd6f6abf` -> fresh local assembly and published contact repair candidate
-origin/dev                    `80d1e74a853fcfc432c72979bb6485a8fd6f6abf` -> published candidate; corrected deployment pending
+production/origin/production `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> corrected deployed application; `8b8d429` remains the application rollback reference
+local dev                     `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> fresh local assembly, contact repair, and browser-boundary candidate
+origin/dev                    `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> published and deployed candidate
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 095; no higher migration
   -> retained schema/lint/RLS/grant/Storage checks passed
-  -> items 1–7 passed; item 7.1 is a locally verified release-candidate repair; corrected deployment pending
+  -> items 1–7 and 7.1 passed; corrected deployment live; item 8 secret scope remains blocked
   -> latest protected recovery point is 90/094 before the 095 repair
 
 local Supabase
@@ -131,7 +150,7 @@ The local proof uses a fake completion client, a fake Gateway, real local Supaba
 
 Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
-Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–7 are now passed; until the remaining sequence is approved and completed, `8b8d429` remains the application rollback reference.
+Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–7 and 7.1 are now passed; item 8 is blocked pending the exact secret boundary approval, and `8b8d429` remains the application rollback reference.
 
 Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
 
@@ -171,6 +190,8 @@ Historical change-log rows below retain the migration filenames used before the 
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-16 | Browser/server release boundary | `f567844` | Isolated the browser Supabase client from the server-admin module and removed display-only provider/model IDs from preview data. Focused code checks and the subsequent fresh assembly passed; browser chunks contain no server-only environment identifiers or model IDs. | Revert this focused boundary slice only with a reviewed replacement that preserves the server-only admin boundary. |
+| 2026-08-16 | Corrected contact panel spacing and cutover | `e363a5f` | Added responsive panel padding, clear legend spacing, consistent Website Improvement/Automation context panels, and stronger desktop/mobile geometry assertions. Focused a11y passed 2/2, live contact checks passed 6/6, retained offer switching passed 2/2, and the candidate was deployed as `dpl_GVMHoCVSKiMgy2nse84zKs1cXafc`. | Redeploy `8b8d429` or another reviewed replacement; preserve hosted history and use forward-only database repair. |
 | 2026-08-16 | Contact-page launch control repair | `48ca2d5`, `80d1e74` | Moved the Website Improvement and Automation System Setup context legends inside their native fieldset panels, added desktop/mobile offer and geometry coverage, passed the fresh local assembly (including 213 unit tests, 50 accessibility checks, 49-page build, database/RLS, browser/workspace checks), passed bridge tests 6/6, and published the candidate to `origin/dev` with exact SHA verification. No form/API/pricing/wording/customer-data, hosted, Vercel, provider, or payment state changed. Corrected deployment and item 8 remain pending. | Keep the existing deployed application as the immediate rollback reference until the corrected deployment passes; revert this focused slice if rejected, and use forward-only hosted database repair. |
 | 2026-08-13 | Provider-owned model spend policy | `b6844df`, `74d3257` | Removed application-owned daily/per-request model-dollar enforcement, retained provider-usage records and non-budget safety controls, aligned focused tests, and passed the fresh local assembly through `092`. No hosted or provider state changed. | Revert these two focused commits; preserve migration history and usage/evaluation records, and use a reviewed forward migration for any hosted correction. |
 | 2026-08-13 | Hosted Step 4 deterministic migration gate | This working slice | Added `npm run verify:hosted-migration-step4`; its technical and data-impact passes verified the mapping, six dry runs, 68-row/latest-`072` hosted history, eight-artifact backup checksum, five cumulative legacy-inventory checkpoints, and the exact post-`092` retired/retained boundary. The gate reports `hosted_writes: 0`; checklist item 4 is review confirmation only and item 5 remains pending. | Preserve the protected backup; if any later hosted stage fails, stop and use a separately reviewed forward repair. Never reset hosted Supabase or reverse migration history. |
