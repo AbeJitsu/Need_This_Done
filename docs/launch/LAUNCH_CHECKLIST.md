@@ -7,7 +7,7 @@ to these item numbers; they do not define a second activation order.
 **Last reviewed:** 2026-08-16
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed local `dev` candidate SHA:** `48ca2d52b242ca38cb4d5e75f984d213ccb89e61`
+**Current reviewed `dev` candidate SHA:** `80d1e74a853fcfc432c72979bb6485a8fd6f6abf`
 **Deployed application SHA:** `0aac9c144da4ea9144050003aea37d3c4cdcd3f3` (branch-alignment commit; application code is unchanged from `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`)
 **Last full local assembly proof:** `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` (2026-08-16; local migrations through `095`)
 **Final pre-apply release-control SHA:** `48ca2d52b242ca38cb4d5e75f984d213ccb89e61`
@@ -59,12 +59,12 @@ Status values:
 - **Approval:** Recorded — the owner-authorized local model-spend change and the focused hosted-write gate repair were committed and validated. Hosted database, deployment, secret, provider, and live-canary approvals remain separate.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
-### 2. Push the reviewed `dev` branch — `IN_PROGRESS`
+### 2. Push the reviewed `dev` branch — `PASSED`
 
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** The reviewed local candidate is `48ca2d52b242ca38cb4d5e75f984d213ccb89e61`; `origin/dev` remains at `efdb7f92df4439a59194ea572921dc1e315fdae3` until the candidate is published and remotely verified. Production and hosted services remain untouched by this pending push.
+- **Evidence:** On 2026-08-16, the verified candidate was published without force-push and `git ls-remote origin refs/heads/dev` resolved to `80d1e74a853fcfc432c72979bb6485a8fd6f6abf`. Production, Vercel, hosted Supabase, providers, and secrets remain untouched.
 - **Approval:** Recorded — release-owner approval covered publishing the reviewed gate-repair commit only. It did not authorize hosted migration, deployment, provider, secret, or live-action work.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
@@ -119,7 +119,7 @@ Status values:
 - **Prerequisites:** Items 1–7 passed; the contact page is treated as a public conversion path; the exact release candidate and its prior deployed rollback reference are recorded.
 - **Live procedure:** Repair the context-heading layout on the release candidate so `Targeted fix context` and `Automation setup context` sit inside their fieldset panels with clear spacing and no border overlap. Keep each native `legend`/`fieldset` relationship intact. Do not change the form fields, submission API, pricing, wording, or customer-data handling.
 - **Verification:** Exercise both offer selections. Confirm the Website URL, problem, and goal fields remain correctly labeled. Run the focused ContactIntake accessibility test, the contact browser contract at desktop and mobile sizes, the heading geometry assertion, TypeScript, and `git diff --check`.
-- **Evidence:** On 2026-08-16, local candidate `48ca2d52b242ca38cb4d5e75f984d213ccb89e61` passed the focused ContactIntake accessibility suite 2/2; lint, TypeScript, the 49-page production build, and `git diff --check` passed. The contact browser contract passed 6/6 across the public desktop and iPhone-sized mobile projects, including both offer selections and the fieldset-heading geometry assertion. The retained contact-intake contract passed 2/2 across desktop and mobile, including switching offers. The candidate has not been pushed or deployed; no hosted, Vercel, provider, payment, or customer-data state changed.
+- **Evidence:** On 2026-08-16, candidate `80d1e74a853fcfc432c72979bb6485a8fd6f6abf` (including the verified repair commit `48ca2d5`) passed the focused ContactIntake accessibility suite 2/2; lint, TypeScript, the 49-page production build, and `git diff --check` passed. The contact browser contract passed 6/6 across the public desktop and iPhone-sized mobile projects, including both offer selections and the fieldset-heading geometry assertion. The retained contact-intake contract passed 2/2 across desktop and mobile, including switching offers. The candidate is published but not deployed; no hosted, Vercel, provider, payment, or customer-data state changed.
 - **Approval:** Recorded — the requested code/test/documentation repair is complete within this release scope. This does not authorize a Vercel deployment, environment configuration, hosted migration, or provider action.
 - **Rollback:** Until the corrected deployment passes its checks, keep the prior deployed application as the immediate rollback reference. If the candidate is rejected, revert the focused code/test/documentation change; hosted database rollback remains forward-only.
 
