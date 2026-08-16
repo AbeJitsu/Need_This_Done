@@ -10,22 +10,22 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Finish-line decision:** **Security repair in progress; hosted parity remains blocked until migration `093` is applied.** The reviewed `dev` branch replaces the old production application only after the hosted project matches the locally proven retained schema and the launch checklist passes. Hosted history is `88/092`; the tracked `093` repair removes the two anonymous `project-attachments` policies, after which item 6 will rerun the full hosted proof. Production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
+**Finish-line decision:** **Launch checklist items 1–6 passed.** The reviewed `dev` branch replaces the old production application only after the remaining launch controls pass. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
-The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on reviewed `dev` SHA `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed`. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed the documented code, database, browser, and bridge checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
+The final full assembly command, `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and bridge checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
 
 - Code: lint with zero warnings, TypeScript, 213/213 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
 - Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
 - Authenticated browser workflows: retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2.
 - Mac bridge: build and 6/6 offline tests passed. The assembly used no provider credentials and made no external action.
 
-The planner/OpenClaw slice is applied only to the disposable local database through migration `092`; the local repair reset now also applies `093`. Its proof is part of the canonical `npm run verify:database` gate: 5/5 planner unit tests, 2/2 planner/OpenClaw RLS tests, 9/9 retained-schema checks, and 6/6 bridge offline tests. The single local database command selects the local profile, lints the schema, and runs every local Supabase security/lifecycle suite.
+The planner/OpenClaw slice is applied only to the disposable local database through migration `095`; the local repair reset applies the full sequence. Its proof is part of the canonical `npm run verify:database` gate: 5/5 planner unit tests, 2/2 planner/OpenClaw RLS tests, 9/9 retained-schema checks, and 6/6 bridge offline tests. The single local database command selects the local profile, lints the schema, and runs every local Supabase security/lifecycle suite.
 
 **OpenRouter boundary:** The API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The root `.env.local` points to `.env.local.profile`; `app/.env.local` points to the root active profile. The server rejects missing or moving model IDs, the worker requires the same values in a separate chmod-600 `--env-file`, and the primary remains unpinned until the explicit approval-gated command is used.
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted history is `88/092`; the exact `093` Storage-policy repair dry run passes against a fresh protected backup and selects only `093_revoke_anonymous_project_attachments_policies.sql`. Item 5 remains `IN_PROGRESS` until that separate hosted write is applied. Item 6 remains blocked until anonymous Storage denial and the full disposable fixture suite pass. The pre-repair result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair evidence is [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md).
+- Hosted history is `91/095`; the exact `093`, `094`, and `095` stage dry runs selected only their respective migrations, and the final hosted parity verifier passed. The passing result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the repair evidence is [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md).
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -33,7 +33,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 
 **Operational boundaries:** Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally; no model, payment, sender, calendar, deployment, publish, spend, account, or external-message action was enabled.
 
-**Rollback:** Hosted `090`–`092` completed successfully; `093` is a forward-only security repair. Preserve hosted migration history, evidence, backup, and media records rather than deleting them. Never recreate anonymous Storage policies, reset hosted Supabase, or reverse migrations ad hoc.
+**Rollback:** Hosted `090`–`095` completed successfully; all security repairs are forward-only. Preserve hosted migration history, evidence, backups, and media records rather than deleting them. Never recreate anonymous Storage policies, reset hosted Supabase, or reverse migrations ad hoc.
 
 ## Hosted backup gate — 2026-08-12
 
@@ -45,11 +45,11 @@ The read-only item-4 hosted migration review is staged and recorded in the [Step
 
 ## Hosted staged migration review — 2026-08-13
 
-The blanket migration review was replaced with seven allowlisted stages: `073`, `074`, `075`–`080`, `081`, `082`–`089`, the isolated final cleanup `090`–`092`, and the separate `093` Storage-policy repair. The original Step 4 review remains historical; the new map verifier passes `21` mappings and `7` gates. Checklist item 5 remains active until `093` is applied and recorded.
+The blanket migration review was replaced with nine allowlisted stages: `073`, `074`, `075`–`080`, `081`, `082`–`089`, the isolated final cleanup `090`–`092`, the separate `093` Storage-policy repair, `094` worker-claim repair, and `095` hosted-parity fixture cleanup. The original Step 4 review remains historical; the current map verifier passes `23` mappings and `9` gates. Checklist item 5 is passed.
 
 ## Hosted Step 5 — calendar-token-security (`073`) — 2026-08-15
 
-The dedicated [Step 5 evidence record](launch/step-5-calendar-token-apply-2026-08-15.md) records the only hosted write in this execution window. The fresh protected backup at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202` passed mode `700`/`600`, eight-artifact checksum, target, history, and Storage preflight: project `oxhjtmozsdstbokwtnwa`, one private `project-attachments` bucket, 217 metadata-only objects, and `68/072` history.
+The dedicated [Step 5 evidence record](launch/step-5-calendar-token-apply-2026-08-15.md) records the first hosted write in this execution window. The fresh protected backup at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202` passed mode `700`/`600`, eight-artifact checksum, target, history, and Storage preflight: project `oxhjtmozsdstbokwtnwa`, one private `project-attachments` bucket, 217 metadata-only objects, and `68/072` history.
 
 The stage-only dry run selected exactly `073_secure_google_calendar_tokens.sql`. The approved operator/monitor was Abe Reyes, the maintenance window was 15 minutes in America/New_York, the forward-repair owner was the NeedThisDone database owner, and the release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`. The helper applied exactly one migration and reported `hosted_writes: 1`, `69/073` history, and temporary-workdir cleanup. Read-only verification confirmed encrypted `bytea` columns, nullable legacy token columns, service-role-only execution for all three token functions, anonymous RPC denial (`401` for both read functions), zero Calendar-token rows, no `074+`, and unchanged Storage inventory. `074`–`092` remain neither approved nor applied. No provider, deployment, secret, Calendar API, publication, spend, or external-message action occurred.
 
@@ -57,22 +57,36 @@ The stage-only dry run selected exactly `073_secure_google_calendar_tokens.sql`.
 
 After `073`, a read-only hosted schema dump and service-role PostgREST interface audit confirmed the actual blocker: hosted contained the retained pre-`079` tables but returned `404` for the additive prospecting, cockpit, evaluation, research, agent-operations, planner, and OpenClaw tables required by current `dev`. The staged writes then applied `074`, `075`–`080`, `081`, and `082`–`089`; hosted is now `85/089`, and those interfaces return `200`. The remaining `090`–`092` deletion inventory and backup are recorded in [Step 5 hosted parity evidence](launch/step-5-hosted-parity-2026-08-15.md). The active target and handoff to checklist item 6 are maintained in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md).
 
-The [destructive-retirement record](launch/step-5-destructive-retirement-2026-08-15.md) is the source for the exact `090`–`092` write. The [Storage-policy repair record](launch/step-5-storage-policy-repair-2026-08-15.md) records migration `093`, its local proof, fresh `88/092` backup, and exact dry run. Checklist item 6 remains blocked until the hosted repair and disposable fixture suite complete with cleanup.
+The [destructive-retirement record](launch/step-5-destructive-retirement-2026-08-15.md) is the source for the exact `090`–`092` write. The [Storage-policy repair record](launch/step-5-storage-policy-repair-2026-08-15.md) records migration `093`; the [hosted security repair record](launch/step-5-hosted-security-repairs-2026-08-15.md) records `094` and `095`, their protected backups, exact dry runs, hosted history `91/095`, and the final parity pass. Checklist item 6 is passed.
+
+## Hosted parity closeout — 2026-08-15
+
+The final hosted verifier ran against release SHA
+`9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` and passed endpoint identity,
+history `91/095`, hosted lint, the retained/retired object inventory, RLS and
+grant checks, private Storage limits/MIME rules, anonymous denial, tenant
+isolation, viewer read-only behavior, planner approval-before-dispatch,
+service-role-only worker access, emergency stop, lease/idempotency, and
+provenance isolation. It created four disposable `.invalid` users and removed
+all four with zero cleanup errors. No customer/prospect recipient, provider
+call, deployment, payment, Calendar, publication, or OpenClaw live action was
+used. Abe Reyes accepted the database/security evidence as owner; no
+independent security review is claimed.
 
 ## Current state map
 
 ```text
 production/origin/production 8b8d429          -> old hosted production product and application rollback reference
-local/origin dev              `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed` -> reviewed local assembly and hosted-write SHA
+local/origin dev              `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` -> reviewed local assembly and hosted-write SHA
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
-  -> hosted history through 092; tracked 093 security repair is pending
-  -> retained schema/lint/RLS/grant checks passed
-  -> item 6 is blocked until anonymous Storage denial and fixture parity pass
-  -> latest protected recovery point is 88/092 before the 093 repair
+  -> hosted history through 095; no higher migration
+  -> retained schema/lint/RLS/grant/Storage checks passed
+  -> items 1–6 passed; final fixture parity created and removed four disposable users
+  -> latest protected recovery point is 90/094 before the 095 repair
 
 local Supabase
-  -> migrations applied through 093; focused Storage/schema/security proof passed
+  -> migrations applied through 095; focused Storage/schema/security proof passed
   -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, auth, plan approval, and provenance proof passed
 ```
 
@@ -84,7 +98,7 @@ The local proof uses a fake completion client, a fake Gateway, real local Supaba
 
 Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
-Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`092`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Until that sequence is approved and completed, `production` remains the old application rollback reference at `8b8d429`.
+Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–6 are now passed; until the remaining sequence is approved and completed, `production` remains the old application rollback reference at `8b8d429`.
 
 Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
 

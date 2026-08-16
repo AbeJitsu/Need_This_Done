@@ -35,10 +35,23 @@ temporary worktree.
 
 ## Apply and verification
 
-The hosted write is intentionally a separate stage. The final apply SHA,
-post-write `89/093` history, anonymous denial result, and full hosted parity
-fixture cleanup are recorded here after the write. Until then, hosted parity
-item 6 remains blocked.
+The hosted write was applied as its own stage from release SHA
+`87a218e308064ad99d9ecb0bdf97520a9392cd3b` using the protected backup above.
+The helper selected only
+`093_revoke_anonymous_project_attachments_policies.sql`, reported
+`hosted_writes: 1`, moved hosted history from `88/092` to `89/093`, and cleaned
+its temporary worktree. The post-write check confirmed the two anonymous
+policies were absent without changing the bucket, object metadata, limits, or
+MIME rules.
+
+Two additional forward-only security repairs were then required by the hosted
+parity proof: migration `094` restored the service-role claim context inside
+protected worker functions, and migration `095` allowed cleanup only for the
+verifier's reserved `.invalid` fixture identities. Their backups, dry runs,
+and apply results are recorded in
+[the hosted security repair evidence](step-5-hosted-security-repairs-2026-08-15.md).
+The final hosted parity report is
+[hosted-parity-report-2026-08-15.json](hosted-parity-report-2026-08-15.json).
 
 ## Rollback
 

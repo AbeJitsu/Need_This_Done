@@ -9,9 +9,9 @@ technical launch gate.
 
 | Boundary | State |
 | --- | --- |
-| Local Supabase | Proven through migration `092` by the fresh assembly on reviewed `dev` SHA `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed` |
-| Hosted Supabase `oxhjtmozsdstbokwtnwa` | `88` rows, latest `092`, no higher migration |
-| Hosted schema gap | Retained schema, lint, RLS markers, and Storage metadata pass; tracked `093` repair is dry-run proven and awaiting hosted apply |
+| Local Supabase | Proven through migration `095` by the fresh assembly on `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` |
+| Hosted Supabase `oxhjtmozsdstbokwtnwa` | `91` rows, latest `095`, no higher migration |
+| Hosted schema gap | No item-5/6 schema or security gap remains; the anonymous Storage defect, worker claim-context defect, and fixture-cleanup boundary are repaired and parity is passed |
 | Application state | `dev` is the only active release branch; `production` remains the old rollback reference |
 | External activity | No deployment, provider activation, secret provisioning, Calendar API call, publication, spend, or external message is part of parity work |
 
@@ -40,15 +40,22 @@ hosted rollback is forward-only.
    and forward-only rollback are recorded in
    [step-5-destructive-retirement-2026-08-15.md](step-5-destructive-retirement-2026-08-15.md).
 6. `093` — apply the separate forward-only Storage policy repair that removes
-   only the two anonymous `project-attachments` policies. Its pre-apply proof
-   is recorded in [step-5-storage-policy-repair-2026-08-15.md](step-5-storage-policy-repair-2026-08-15.md).
+   only the two anonymous `project-attachments` policies. **Passed.** Its
+   evidence is recorded in [step-5-storage-policy-repair-2026-08-15.md](step-5-storage-policy-repair-2026-08-15.md).
+7. `094` — restore the service-role claim context inside protected worker
+   functions. **Passed.**
+8. `095` — allow only the hosted verifier's reserved `.invalid` service-role
+   fixtures to be cleaned up while keeping normal history immutable. **Passed.**
+   The repair records, protected backups, and exact stage results are in
+   [step-5-hosted-security-repairs-2026-08-15.md](step-5-hosted-security-repairs-2026-08-15.md).
 
 The destructive stage reached hosted history `092`. The focused parity verifier
-passed endpoint identity, exact history, hosted lint, retained objects, RLS
-markers, function grants, and Storage metadata, then found anonymous listing
-exposing metadata from the private `project-attachments` bucket. The tracked
-`093` repair removes exactly those policies; item 6 remains blocked until the
-repair is applied and the disposable fixture suite passes with cleanup.
+then found anonymous listing exposing metadata from the private
+`project-attachments` bucket. The tracked `093` repair removed exactly those
+policies. The follow-on `094` and `095` repairs closed the worker claim-context
+and disposable-fixture cleanup boundaries without weakening ordinary customer
+history protections. The final hosted parity verifier passed all required
+checks and cleaned all four temporary fixtures.
 
 Migration completion is not production readiness. Do not weaken the hosted
 security, tenant-isolation, grant, Storage, planner, or worker-boundary checks
@@ -80,14 +87,16 @@ resets the hosted project.
 | `research-agent-planner` | `082`–`089` | `I_UNDERSTAND_THIS_APPLIES_ONLY_082_089` |
 | `destructive-retirement` | `090`–`092` | `I_UNDERSTAND_THIS_APPLIES_ONLY_090_092` |
 | `storage-policy-repair` | `093` | `I_UNDERSTAND_THIS_APPLIES_ONLY_093_STORAGE_POLICY_REPAIR` |
+| `worker-claim-context-repair` | `094` | `I_UNDERSTAND_THIS_APPLIES_ONLY_094_WORKER_CLAIM_CONTEXT_REPAIR` |
+| `hosted-parity-fixture-cleanup` | `095` | `I_UNDERSTAND_THIS_APPLIES_ONLY_095_FIXTURE_CLEANUP_BOUNDARY` |
 
 ## Exit criteria before production
 
 Hosted parity is complete only when all of the following are recorded:
 
 - hosted history exactly matches the repository migration sequence from `001`
-  through `093` (including its preserved numbering gaps), with no migration
-  above `093`;
+  through `095` (including its preserved numbering gaps), with no migration
+  above `095`;
 - the retained schema manifest, RLS/tenant-isolation checks, function grants,
   and Storage privacy/size/MIME checks pass against the hosted project;
 - hosted row counts and retained object inventory match the reviewed baseline,
@@ -95,14 +104,14 @@ Hosted parity is complete only when all of the following are recorded:
 - the exact reviewed `dev` SHA is pushed and verified on `origin/dev`;
 - no provider, deployment, secret, Calendar, publication, spend, or external
   message activity is represented as parity evidence;
-- the security owner accepts the hosted parity evidence.
+- the database/security owner accepts the hosted parity evidence.
 
-The pre-repair sanitized verifier result is
+The final sanitized verifier result is
 [hosted-parity-report-2026-08-15.json](hosted-parity-report-2026-08-15.json).
-The repair-stage record is
-[step-5-storage-policy-repair-2026-08-15.md](step-5-storage-policy-repair-2026-08-15.md).
-The final parity report replaces the pre-repair result only after `093` and
-fixture cleanup pass.
+The historical blocked result is preserved as
+[hosted-parity-pre-repair-report-2026-08-15.json](hosted-parity-pre-repair-report-2026-08-15.json).
+The repair records are [step-5-storage-policy-repair-2026-08-15.md](step-5-storage-policy-repair-2026-08-15.md)
+and [step-5-hosted-security-repairs-2026-08-15.md](step-5-hosted-security-repairs-2026-08-15.md).
 
 Only after those criteria are met may the release owner separately approve the
 production fast-forward and deploy that exact `dev` SHA. Production promotion
@@ -115,6 +124,6 @@ If a hosted stage or parity check fails, retain the transcript and run only
 read-only diagnosis. Do not reset hosted Supabase, delete migration history,
 reverse SQL ad hoc, weaken the check, continue to production, or fast-forward
 the application. Preserve the backup and use a reviewed forward repair if one
-is required. The Storage policy issue is authorized only through the tracked
-`093` repair stage; do not recreate anonymous policies or reverse migration
-history ad hoc.
+is required. The Storage, worker-claim, and fixture-cleanup repairs are
+authorized only through the tracked `093`–`095` stages; do not recreate
+anonymous policies or reverse migration history ad hoc.

@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
-  "status": "blocked",
+  "status": "passed",
   "target": {
     "project_ref": "oxhjtmozsdstbokwtnwa",
     "endpoint": "https://oxhjtmozsdstbokwtnwa.supabase.co",
     "branch": "dev"
   },
-  "release_sha": "3b23b129e791e2678afbcfa82f0a5c0e428ed8ed",
+  "release_sha": "9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce",
+  "timestamp_utc": "2026-08-16T00:42:41.805Z",
   "hosted_writes": 0,
   "external_provider_calls": 0,
   "endpoint_identity": {
@@ -14,8 +15,8 @@
     "expected_project": true
   },
   "history": {
-    "rows": 88,
-    "latest": "092",
+    "rows": 91,
+    "latest": "095",
     "no_higher_migration": true
   },
   "schema": {
@@ -23,25 +24,42 @@
     "retained_tables": 49,
     "retired_tables_absent": 186,
     "retired_views_absent": 8,
+    "rls_tables": 49,
     "required_policy_markers": 17,
-    "service_only_functions": 11,
+    "service_only_functions": 13,
     "authenticated_functions": 4
   },
   "storage": {
-    "bucket_metadata": "passed",
-    "project_attachment_object_inventory": 217,
+    "buckets": [
+      "agent-media-private",
+      "project-attachments"
+    ],
+    "private_buckets": 2,
+    "project_attachment_objects": 217,
     "agent_media_objects": 0,
-    "anonymous_read_denied": false,
-    "violating_policies": [
-      "Allow anonymous read",
-      "Allow anonymous uploads"
-    ]
+    "object_bytes_downloaded": false,
+    "anonymous_read_denied": true
   },
   "fixtures": {
-    "created_users": 0,
-    "cleaned_users": 0,
+    "created_users": 4,
+    "cleaned_users": 4,
     "cleanup_errors": 0,
-    "external_recipients": 0
+    "cleanup_failures": [],
+    "external_recipients": 0,
+    "tenant_isolation": "passed",
+    "viewer_read_only": "passed",
+    "planner_approval_before_dispatch": "passed",
+    "service_role_worker_boundary": "passed",
+    "lease_and_idempotency": "passed",
+    "emergency_stop": "passed",
+    "provenance_isolation": "passed"
   },
-  "blocker": "Private project-attachments Storage has out-of-band anonymous read and upload policies; item 6 requires a reviewed forward repair before fixture parity testing can proceed."
+  "post_cleanup_check": {
+    "fixture_users_remaining": 0,
+    "agent_runs": 0,
+    "agent_orchestration_tasks": 0,
+    "agent_artifacts": 0,
+    "agent_artifact_versions": 0,
+    "agent_run_events": 0
+  }
 }
