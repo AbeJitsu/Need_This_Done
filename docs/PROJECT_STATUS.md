@@ -8,9 +8,9 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current release-control and hosted-stage ledger — 2026-08-16
+## Current release-control and hosted-stage ledger — 2026-08-17
 
-**Finish-line decision:** **Items 1–7 and 7.1 passed for corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`; the corrected deployment is live and item 8 remains blocked on its exact secret allowlist and platform/security approval.** The contact page and browser/server boundary fixes are live at Vercel production. Secret, provider, hosted authorization, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
+**Finish-line decision:** **Items 1–7, 7.1, and 9 passed for corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`; item 8 remains an owner-approved, time-boxed retention `EXCEPTION`, not a clean six-variable pass.** The corrected application is live at Vercel Production and Preview. Item 9 passed only after Abe Reyes / `abejitsu` expressly renewed the item-8 retention scope for this check on 2026-08-17; the exception remains due for review/removal on 2026-09-15. Provider, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
 
 The latest full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The bridge build and 6/6 offline tests passed separately. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
 
@@ -26,7 +26,9 @@ contract (2/2). Both offer selections retain their labels and behavior, and
 the geometry assertion confirms both native fieldset legends sit inside their
 panels with clear spacing. The corrected production deployment passed the same
 contact checks live. No form fields, submission API, pricing, wording,
-customer-data handling, hosted state, or Vercel environment values changed.
+customer-data handling, or hosted database state changed. The later item-8
+change added only `ENV_TARGET` to Production and Preview; existing Vercel
+variables were retained.
 
 The planner/OpenClaw slice is applied only to the disposable local database through migration `095`; the local repair reset applies the full sequence. Its proof is part of the canonical `npm run verify:database` gate: 5/5 planner unit tests, 2/2 planner/OpenClaw RLS tests, 9/9 retained-schema checks, and 6/6 bridge offline tests. The single local database command selects the local profile, lints the schema, and runs every local Supabase security/lifecycle suite.
 
@@ -39,10 +41,11 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
 - The Vercel CLI background update worker cannot write its local cache in this sandbox and emits an `EPERM` warning; deployment, inspection, build, and live checks still complete successfully. Owner: engineering. Review/removal date: 2026-08-16.
-- Item 8 remains blocked after the names-only Vercel audit recorded in [the environment inventory](launch/ENVIRONMENT_VARIABLE_INVENTORY.md). `vercel env ls` found five of the six proposed baseline names in all three scopes, with `ENV_TARGET` absent; it also found optional/later-gated provider names and legacy commerce, test, mock, embedding, session, and process names. No environment values were read or changed. The exact Production/Preview allowlist, shared-cloud Preview risk, value sources, legacy removal/rotation scope, and browser/server boundary still require platform/security approval. Owner: platform/security. Required removal date: before any further hosted authorization or provider activation.
+- Item 8 is an approved retention exception recorded in [the environment inventory](launch/ENVIRONMENT_VARIABLE_INVENTORY.md). The names-only preflight found 55 names in each scope; only `ENV_TARGET=cloud` was added to Production and Preview, bringing those scopes to 56 names, while Development remains unchanged at 55 names. The six baseline names are present in both target scopes. Existing Supabase, Google, `NEXTAUTH_SECRET`, cookie/session, Redis, provider/email/payment, legacy, and test names were not revoked or rotated. Owner: Abe Reyes / `abejitsu`; approved 2026-08-16 and expressly renewed for Step 9 on 2026-08-17; review/removal date: 2026-09-15. This is not a clean six-variable pass or provider activation approval. Item 9 passed under the one-check renewal; items 10–22 remain blocked.
+- Step 9 hosted authorization passed on 2026-08-17 using the existing verifier and disposable `.invalid` identities. The approved cloud target matched, history remained at `91/095`, anonymous/private Storage denial, role and tenant boundaries, planner approval-before-dispatch, service-role worker access, emergency stop, idempotency, provenance isolation, and cleanup all passed. Four fixture users were cleaned with zero errors; no provider call or real recipient occurred, and no customer or prospect records were created or used for the fixture checks. Existing Storage metadata was compared without downloading object bytes. The sanitized evidence is [step-9-hosted-authorization-2026-08-17.md](launch/step-9-hosted-authorization-2026-08-17.md). Items 10–22 remain independently blocked.
 - Current legal copy requires human/legal review before publication. Owner: human/legal reviewer. Review date: 2026-08-16 or before publication, whichever comes first.
 
-**Operational boundaries:** The corrected application candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` is deployed to Vercel production, and its public bundle contains no server-only environment identifiers, provider-key shapes, model IDs, or source maps. No new secret or provider configuration was performed. Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally and the deployed anonymous boundaries returned `401`; no model, payment, sender, calendar, publish, spend, account, or external-message action was enabled.
+**Operational boundaries:** The corrected application candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` is deployed to Vercel production and the reviewed Preview deployment, and both public bundle scans contain no server-only environment identifiers, provider-key shapes, model IDs, or source maps. Only the non-secret `ENV_TARGET` marker was added to the two target scopes; no existing credential was revoked or rotated and no provider was configured or activated. Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally and the deployed anonymous boundaries returned `401`; no model, payment, sender, calendar, publish, spend, account, or external-message action was enabled.
 
 **Rollback:** Hosted `090`–`095` completed successfully; all database security repairs are forward-only. The deployed application can be rolled back by redeploying `8b8d429`; preserve hosted migration history, evidence, backups, and media records rather than deleting them. Never recreate anonymous Storage policies, reset hosted Supabase, or reverse migrations ad hoc.
 
@@ -94,8 +97,8 @@ deployment. The linked Vercel project created final deployment
 with Redis and Supabase up; public routes returned `200`; anonymous planner
 and worker requests returned `401`. The detailed record is
 [step-7-production-cutover-2026-08-15.md](launch/step-7-production-cutover-2026-08-15.md).
-Step 8 has not started: no Vercel secret/configuration values were added or
-changed.
+At the time of this 2026-08-15 cutover, Step 8 had not started: no Vercel
+secret/configuration values were added or changed.
 
 ## Corrected production cutover closeout — 2026-08-16
 
@@ -110,19 +113,57 @@ The live health endpoint returned Redis, Supabase, and app `up`; public routes
 returned `200`; anonymous planner and bridge requests returned `401`; the
 contact desktop/mobile contract passed 6/6; and retained offer switching
 passed 2/2. The bundle scan found no server-only environment identifiers,
-provider-key shapes, model IDs, or source maps. No Vercel environment value,
-provider setting, payment state, hosted database state, or customer data was
-changed.
+provider-key shapes, model IDs, or source maps. During this pre-item-8
+cutover, no Vercel environment value, provider setting, payment state, hosted
+database state, or customer data was changed.
 
 ## Contact-page launch control — 2026-08-16
 
 Checklist item 7.1 passed for corrected candidate
 `e363a5f74ff8ad731272089f8714bd81edb97d3d`, and the corrected deployment
-passed its live checks. Item 8 environment configuration remains blocked until
-the platform/security owner approves the exact production/preview allowlist,
-secret source, and legacy-variable rotation/removal scope. The documented
-application rollback reference remains `8b8d429`; hosted database rollback is
-forward-only.
+passed its live checks. Item 8 is now recorded as the owner-approved retained-
+variable exception described below; it is not a clean six-variable allowlist
+pass. The documented application rollback reference remains `8b8d429`; hosted
+database rollback is forward-only.
+
+## Vercel retained-variable exception — 2026-08-16
+
+The names-only preflight found 55 names in each Vercel scope. Only
+`ENV_TARGET=cloud` was added, and only to Production and Preview. Those scopes
+now contain 56 names and all six baseline names; Development remains unchanged
+at 55 names. Existing Supabase, Google, `NEXTAUTH_SECRET`, cookie/session,
+Redis, provider/email/payment, legacy, and test variables remain in place.
+
+Abe Reyes / `abejitsu` owns the exception, approved 2026-08-16, with review or
+removal due 2026-09-15. No provider was activated and no customer workflow was
+authorized. Production `dpl_4XP38V8P6G8NGBb517aMa658m5Qm` and Preview
+`dpl_6NMvvVgVv2aqGtgxFFvqtwWr7Exh` reached `READY`; live route, protected-POST,
+health, and bundle checks are recorded in [release evidence](RELEASE_EVIDENCE.md).
+The exception was expressly renewed for item 9 on 2026-08-17; items 10–22
+remain blocked until their separate approvals are complete.
+
+## Hosted authorization verification — 2026-08-17
+
+The existing hosted parity verifier passed against the approved cloud target
+after the item-8 retention exception was renewed for this check by Abe Reyes /
+`abejitsu`. The reviewed Production and Preview deployment identities were
+reconfirmed as `READY` before execution, and no Vercel environment value or
+deployment changed.
+
+The verifier confirmed Auth endpoint identity, hosted history through `095`,
+schema lint, retained RLS/grant boundaries, anonymous/private Storage denial,
+owner/manager access, viewer read-only behavior, tenant isolation, planner
+approval-before-dispatch, the service-role worker boundary, Storage privacy and
+limits, emergency stop, lease/idempotency, provenance isolation, and fixture
+cleanup. Four disposable `.invalid` users were created and four were cleaned
+with zero cleanup errors. No provider call, real recipient, publication,
+payment, or model activation occurred; no customer or prospect records were
+created or used for the fixture checks. Existing Storage metadata was compared
+without downloading object bytes. The sanitized record
+is [step-9-hosted-authorization-2026-08-17.md](launch/step-9-hosted-authorization-2026-08-17.md).
+
+Item 9 is `PASSED`; item 8 remains an `EXCEPTION` due for review/removal on
+2026-09-15, and items 10–22 remain independently blocked.
 
 ## Current state map
 
@@ -134,7 +175,7 @@ origin/dev                    `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> publ
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 095; no higher migration
   -> retained schema/lint/RLS/grant/Storage checks passed
-  -> items 1–7 and 7.1 passed; corrected deployment live; item 8 secret scope remains blocked
+  -> items 1–7, 7.1, and 9 passed; corrected deployments live; item 8 is a time-boxed retention exception renewed for item 9
   -> latest protected recovery point is 90/094 before the 095 repair
 
 local Supabase
@@ -150,7 +191,7 @@ The local proof uses a fake completion client, a fake Gateway, real local Supaba
 
 Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
-Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–7 and 7.1 are now passed; item 8 is blocked pending the exact secret boundary approval, and `8b8d429` remains the application rollback reference.
+Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–7, 7.1, and 9 are now passed; item 8 is an owner-approved time-boxed retention exception renewed for item 9 and due for review 2026-09-15; items 10–22 remain blocked. `8b8d429` remains the application rollback reference.
 
 Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
 
@@ -190,6 +231,7 @@ Historical change-log rows below retain the migration filenames used before the 
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-17 | Hosted Step 9 authorization verification | This working slice | Under the explicitly renewed item-8 retention exception, the existing hosted parity verifier passed the approved cloud endpoint, hosted history through `095`, anonymous/private Storage denial, role and tenant isolation, planner approval-before-dispatch, service-role worker boundary, emergency stop, idempotency, provenance isolation, and disposable fixture cleanup. Four `.invalid` users were cleaned with zero errors; no provider or real-recipient action occurred. Added the sanitized Step 9 evidence record and updated the launch/release ledgers. | Preserve hosted history and audit records; if a later issue appears, disable the affected route or redeploy `8b8d429`, and use a separately reviewed forward migration for any database correction. |
 | 2026-08-16 | Browser/server release boundary | `f567844` | Isolated the browser Supabase client from the server-admin module and removed display-only provider/model IDs from preview data. Focused code checks and the subsequent fresh assembly passed; browser chunks contain no server-only environment identifiers or model IDs. | Revert this focused boundary slice only with a reviewed replacement that preserves the server-only admin boundary. |
 | 2026-08-16 | Corrected contact panel spacing and cutover | `e363a5f` | Added responsive panel padding, clear legend spacing, consistent Website Improvement/Automation context panels, and stronger desktop/mobile geometry assertions. Focused a11y passed 2/2, live contact checks passed 6/6, retained offer switching passed 2/2, and the candidate was deployed as `dpl_GVMHoCVSKiMgy2nse84zKs1cXafc`. | Redeploy `8b8d429` or another reviewed replacement; preserve hosted history and use forward-only database repair. |
 | 2026-08-16 | Contact-page launch control repair | `48ca2d5`, `80d1e74` | Moved the Website Improvement and Automation System Setup context legends inside their native fieldset panels, added desktop/mobile offer and geometry coverage, passed the fresh local assembly (including 213 unit tests, 50 accessibility checks, 49-page build, database/RLS, browser/workspace checks), passed bridge tests 6/6, and published the candidate to `origin/dev` with exact SHA verification. No form/API/pricing/wording/customer-data, hosted, Vercel, provider, or payment state changed. Corrected deployment and item 8 remain pending. | Keep the existing deployed application as the immediate rollback reference until the corrected deployment passes; revert this focused slice if rejected, and use forward-only hosted database repair. |

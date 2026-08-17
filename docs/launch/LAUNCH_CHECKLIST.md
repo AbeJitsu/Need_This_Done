@@ -4,7 +4,7 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-16
+**Last reviewed:** 2026-08-17
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current reviewed `dev` candidate SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
@@ -51,8 +51,8 @@ Items 17, 19, and 20 are independent provider-canary lanes and may run in
 parallel once their own entry conditions are met. Item 18 remains separately
 dependent on items 9, 10, and 16.
 
-**Current gate state:** Items 1–7 and 7.1 are `PASSED`; item 8 is the active
-`BLOCKED` gate; items 9–22 are `BLOCKED`; items 23–24 are `NOT_STARTED` and
+**Current gate state:** Items 1–7, 7.1, and 9 are `PASSED`; item 8 is the active
+`EXCEPTION` gate; items 10–22 are `BLOCKED`; items 23–24 are `NOT_STARTED` and
 remain separate from technical launch.
 
 ## Cutover safeguards
@@ -146,23 +146,26 @@ remain separate from technical launch.
 
 ### Phase 3 — Hosted secrets, browser boundary, and authorization
 
-#### 8. Configure and verify Vercel — `BLOCKED`
+#### 8. Configure and verify Vercel — `EXCEPTION`
 
-- **Owner:** Platform owner
-- **Entry condition:** Items 5–7 and 7.1 approved; the corrected deployment is the target; server-only secret-store access and the exact production/preview environment scope are documented.
-- **Exit proof:** **BLOCKED** — the corrected deployment’s health, protected-route, contact, identity, and public-bundle checks pass, but the names-only inventory lacks the current secret names and retains legacy settings; no secret write has occurred.
-- **Approval:** **BLOCKED** — platform/security owner must approve the exact production/preview allowlist, source for each value, legacy-variable rotation/removal scope, and browser/server boundary before any secret write.
-- **Rollback:** Remove or rotate only the affected deployment secrets through the secret manager and redeploy the last known-good application commit. Preserve logs and audit history.
-- **Evidence link:** [Environment variable inventory](ENVIRONMENT_VARIABLE_INVENTORY.md), [corrected Step 7 deployment](step-7-corrected-contact-deployment-2026-08-16.md), and [release evidence](../RELEASE_EVIDENCE.md).
+- **Owner:** Abe Reyes / `abejitsu` (platform owner)
+- **Entry condition:** Items 5–7 and 7.1 approved; the corrected application candidate is the target; the Production and Preview scopes are documented.
+- **Exit proof:** **EXCEPTION** — the names-only preflight found 55 existing names in each scope. Only `ENV_TARGET` was added, with the non-secret value `cloud`, to Production and Preview. Production and Preview now contain all six baseline names and 56 names total; Development remains unchanged at 55 names and still has no `ENV_TARGET`. No existing variable was overwritten, revoked, rotated, or read.
+- **Retention exception:** Keep every existing Vercel variable, including Supabase URL/anon/service-role credentials, Google client ID/secret, `NEXTAUTH_SECRET`, `COOKIE_SECRET`, `SESSION_SECRET`, `SESSION_MAX_AGE`, `REDIS_URL`, email/payment/provider entries, and legacy/test entries. This is not a clean six-variable allowlist pass and does not activate any provider or authorize a customer workflow.
+- **Approval:** Recorded — Abe Reyes / `abejitsu` approved this time-boxed retention exception on 2026-08-16 and expressly renewed its scope for item 9 on 2026-08-17. Review or remove the exception by **2026-09-15** before item 10 or any later hosted authorization/provider gate proceeds. The names-only inventory, browser/server boundary, and item-9 evidence remain the review record.
+- **Monitoring:** Re-audit Vercel names in all three scopes at review; preserve the Production/Preview deployment identities; rerun health, public-route, protected-POST, and bundle scans after any environment change. Item 9 reconfirmed both reviewed deployment identities as `Ready`; Preview health was verified through Vercel’s automatic protection bypass; direct unauthenticated Preview requests may return the platform’s SSO redirect.
+- **Deployment proof:** Production `dpl_4XP38V8P6G8NGBb517aMa658m5Qm` and Preview `dpl_6NMvvVgVv2aqGtgxFFvqtwWr7Exh` reached `READY`. Production health and public routes returned `200`; both anonymous protected POST routes returned `401`; Preview returned health `200` with healthy JSON and the same public-route/authorization results through Vercel's protection-bypass curl.
+- **Rollback:** Preserve all existing variables. If this deployment fails, redeploy the prior reviewed application; remove only the newly added `ENV_TARGET` from Production and Preview if necessary. Do not revoke Supabase, Google, cookie/session, Redis, provider, payment, email, or legacy values as part of this rollback.
+- **Evidence link:** [Environment variable inventory](ENVIRONMENT_VARIABLE_INVENTORY.md), [release evidence](../RELEASE_EVIDENCE.md), and the corrected Step 7 deployment record [step-7-corrected-contact-deployment-2026-08-16.md](step-7-corrected-contact-deployment-2026-08-16.md).
 
-#### 9. Run hosted authentication and authorization checks — `BLOCKED`
+#### 9. Run hosted authentication and authorization checks — `PASSED`
 
 - **Owner:** Security owner
-- **Entry condition:** Items 6–8 passed; owner, manager, viewer, anonymous, and cross-customer test identities are controlled and disposable.
-- **Exit proof:** Hosted anonymous denial, role access, viewer read-only behavior, cross-customer denial, planner approval boundary, dispatch boundary, prospect review, private Storage access, and emergency controls pass with no development bypass.
-- **Approval:** Required — security owner signs the authorization matrix.
-- **Rollback:** Disable the affected route/feature or redeploy the prior application commit; keep hosted data and audit records for investigation.
-- **Evidence link:** [Agent operations](../AGENT_OPERATIONS.md) and [release evidence](../RELEASE_EVIDENCE.md).
+- **Entry condition:** Items 6–7 passed and item 8's exception was recorded and expressly renewed for this check on 2026-08-17; owner, manager, viewer, anonymous, and cross-customer identities were controlled and disposable.
+- **Exit proof:** The approved hosted verifier passed endpoint identity, anonymous/private Storage denial, owner/manager access, viewer read-only behavior, tenant isolation, planner approval-before-dispatch, service-role worker boundary, Storage privacy/limits, emergency stop, lease/idempotency, provenance isolation, and fixture cleanup with zero cleanup errors. No provider call or real recipient was used.
+- **Approval:** Recorded — Abe Reyes / `abejitsu`, the approving security owner, accepted the sanitized authorization matrix and renewed the item-8 retention exception for this check. This is owner acceptance, not an independent security review or provider approval.
+- **Rollback:** Disable the affected route/feature or redeploy the prior application commit; keep hosted data and audit records for investigation. Hosted database rollback remains forward-only.
+- **Evidence link:** [Step 9 hosted authorization evidence](step-9-hosted-authorization-2026-08-17.md), [Agent operations](../AGENT_OPERATIONS.md), and [release evidence](../RELEASE_EVIDENCE.md).
 
 ### Phase 4 — Core AI operator path
 

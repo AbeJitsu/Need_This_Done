@@ -9,10 +9,11 @@ checklist item 8.
 > `.env` contents, or screenshots containing them here. Compare variable names
 > only. Keep all values in the approved secret manager or private host files.
 
-The `Production` and `Preview` columns are intentionally empty. Complete them
-only during an approved, names-only Vercel review. Do not mark item 8 complete
-from this document; platform/security approval of the exact allowlist, value
-source, and legacy-variable rotation/removal scope is still required.
+The baseline and observed optional rows below were completed during the
+approved names-only Vercel review on 2026-08-16. The full scope comparison and
+the retained-variable exception are recorded at the end of this document. Do
+not treat the presence of a name as provider activation or customer-workflow
+approval.
 
 ## Vercel application variables — required baseline
 
@@ -21,12 +22,12 @@ NextAuth secret, and any other non-`NEXT_PUBLIC_` value are server-only.
 
 | Variable name | Boundary / purpose | Production | Preview |
 | --- | --- | --- | --- |
-| `ENV_TARGET` | Runtime target guard for the approved hosted Supabase target. |  |  |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase URL used by browser and server clients. |  |  |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase browser-safe key. |  |  |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase admin client and private routes. |  |  |
-| `NEXT_PUBLIC_SITE_URL` | Canonical site URL for links, redirects, and email URLs. |  |  |
-| `NEXTAUTH_SECRET` | Server-only NextAuth JWT secret and fallback OAuth-state signing secret. |  |  |
+| `ENV_TARGET` | Runtime target guard for the approved hosted Supabase target. | present | present |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase URL used by browser and server clients. | present | present |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase browser-safe key. | present | present |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase admin client and private routes. | present | present |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL for links, redirects, and email URLs. | present | present |
+| `NEXTAUTH_SECRET` | Server-only NextAuth JWT secret and fallback OAuth-state signing secret. | present | present |
 
 ### Vercel application variables — optional runtime acceleration
 
@@ -37,7 +38,7 @@ hosted deployment.
 
 | Variable name | Boundary / purpose | Production | Preview |
 | --- | --- | --- | --- |
-| `REDIS_URL` | Transient cache, rate-limit, and deduplication service. |  |  |
+| `REDIS_URL` | Transient cache, rate-limit, and deduplication service. | present | present |
 
 ## Vercel application variables — later-gated providers
 
@@ -47,25 +48,25 @@ or external action.
 
 | Variable name | Boundary / later gate | Production | Preview |
 | --- | --- | --- | --- |
-| `OPENAI_API_KEY` | Optional retained analyzer provider; separately approved provider use. |  |  |
-| `OPENROUTER_API_KEY` | Server-only model provider; item 10. |  |  |
-| `OPENROUTER_PRIMARY_MODEL` | Server-only pinned primary model ID; item 10. |  |  |
-| `OPENROUTER_TEST_MODEL` | Server-only comparison model ID; item 10. |  |  |
-| `OPENCLAW_BRIDGE_SECRET` | Server side of the signed Mac bridge; items 12–15. |  |  |
-| `GOOGLE_CLIENT_ID` | Google sign-in and Calendar OAuth client; items 9 and 19. |  |  |
-| `GOOGLE_CLIENT_SECRET` | Server-only Google OAuth client secret; items 9 and 19. |  |  |
+| `OPENAI_API_KEY` | Optional retained analyzer provider; separately approved provider use. | present | present |
+| `OPENROUTER_API_KEY` | Server-only model provider; item 10. | absent | absent |
+| `OPENROUTER_PRIMARY_MODEL` | Server-only pinned primary model ID; item 10. | absent | absent |
+| `OPENROUTER_TEST_MODEL` | Server-only comparison model ID; item 10. | absent | absent |
+| `OPENCLAW_BRIDGE_SECRET` | Server side of the signed Mac bridge; items 12–15. | absent | absent |
+| `GOOGLE_CLIENT_ID` | Google sign-in and Calendar OAuth client; items 9 and 19. | present | present |
+| `GOOGLE_CLIENT_SECRET` | Server-only Google OAuth client secret; items 9 and 19. | present | present |
 | `GOOGLE_REDIRECT_URI` | Explicit hosted Calendar callback URI; item 19. |  |  |
 | `GOOGLE_OAUTH_STATE_SECRET` | Dedicated server-only OAuth-state signer; item 19. |  |  |
 | `CALENDAR_TOKEN_ENCRYPTION_KEY` | Server-only Calendar token encryption key; item 19. |  |  |
-| `RESEND_API_KEY` | Transactional email provider key; item 17. |  |  |
-| `RESEND_FROM_EMAIL` | Approved transactional sender identity; item 17. |  |  |
-| `RESEND_ADMIN_EMAIL` | Owner-controlled transactional notification destination; item 17. |  |  |
-| `RESEND_WEBHOOK_SECRET` | Server-only transactional webhook verifier; item 17. |  |  |
+| `RESEND_API_KEY` | Transactional email provider key; item 17. | present | present |
+| `RESEND_FROM_EMAIL` | Approved transactional sender identity; item 17. | present | present |
+| `RESEND_ADMIN_EMAIL` | Owner-controlled transactional notification destination; item 17. | present | present |
+| `RESEND_WEBHOOK_SECRET` | Server-only transactional webhook verifier; item 17. | present | present |
 | `PROSPECTING_SENDER_PROVIDER` | Explicit prospecting sender mode; item 18. |  |  |
 | `PROSPECTING_RESEND_API_KEY` | Separate prospecting sender key; item 18. |  |  |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Browser-side Stripe publishable key, only after payment scope approval; item 20. |  |  |
-| `STRIPE_SECRET_KEY` | Server-only Stripe key; item 20. |  |  |
-| `STRIPE_WEBHOOK_SECRET` | Server-only Stripe webhook verifier; item 20. |  |  |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Browser-side Stripe publishable key, only after payment scope approval; item 20. | present | present |
+| `STRIPE_SECRET_KEY` | Server-only Stripe key; item 20. | present | present |
+| `STRIPE_WEBHOOK_SECRET` | Server-only Stripe webhook verifier; item 20. | present | present |
 
 ## Mac bridge variables
 
@@ -173,125 +174,121 @@ migration commands. They are not Vercel application settings.
 | `SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN` | Supabase local Auth/Twilio configuration secret. |  |  |
 | `SUPABASE_AUTH_EXTERNAL_APPLE_SECRET` | Supabase local Auth/Apple configuration secret. |  |  |
 
-## Names that must remain absent from Vercel
+## Names outside the current hosted contract — retained by exception
 
-Remove or reject these names from the Vercel application inventory unless a
-new, separately reviewed product boundary explicitly replaces this document.
-This includes public secret/model aliases, retired commerce/search settings,
-legacy provider credentials, and Mac-only worker settings.
+These names are outside the six-name hosted baseline or belong to a retired,
+local, test, Mac-only, or later-gated boundary. Existing names remain in place
+under the approved item-8 retention exception; they are not activated by their
+presence. Review or removal is due 2026-09-15. Do not remove or rotate them as
+part of this change.
 
-| Name or family | Why it must remain absent | Production | Preview |
+| Name or family | Boundary reason | Production | Preview |
 | --- | --- | --- | --- |
-| `NEXT_PUBLIC_E2E_ADMIN_BYPASS` | No hosted authorization bypass. |  |  |
-| `NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL` | Provider/model configuration must not be public. |  |  |
-| `NEXT_PUBLIC_OPENROUTER_TEST_MODEL` | Comparison model must not be public. |  |  |
-| `NEXT_PUBLIC_CHATBOT_MODEL` | Legacy public analyzer override; use the retained server/provider boundary. |  |  |
-| `NEXT_PUBLIC_CHATBOT_MAX_TOKENS` | Retired public analyzer tuning setting. |  |  |
-| `NEXT_PUBLIC_CHATBOT_TEMPERATURE` | Retired public analyzer tuning setting. |  |  |
-| `NEXT_PUBLIC_URL` | Retired generic URL alias; use the canonical `NEXT_PUBLIC_SITE_URL`. |  |  |
-| `NEXT_PUBLIC_USE_MOCK_DATA` | Retired mock-data switch; hosted behavior must use the reviewed application path. |  |  |
-| `CONTEXT7_API_KEY` or `CONTEXT7_*` | Context7 is retired and its credential was revoked. |  |  |
-| `MEDUSA_*` | Retired Medusa/Railway commerce runtime. |  |  |
-| `NEXT_PUBLIC_MEDUSA_*` | Retired public commerce configuration. |  |  |
-| `COOKIE_SECRET` | Retired commerce runtime secret. |  |  |
-| `ADMIN_CORS` | Retired commerce runtime setting. |  |  |
-| `SESSION_SECRET` or `SESSION_MAX_AGE` | Retired session-runtime settings; the retained auth boundary uses `NEXTAUTH_SECRET`. |  |  |
-| `TEST_*` or `E2E_*` | Test identities and credentials must never enter hosted application settings. |  |  |
-| `UPSTASH_*` | Retired direct Upstash REST settings; the retained app contract is optional `REDIS_URL`. |  |  |
-| `OPENAI_EMBEDDING_MODEL` or `EMBEDDING_BATCH_SIZE` | Retired embedding-pipeline settings; embeddings are not part of the retained application boundary. |  |  |
-| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | Retired vector-search setting. |  |  |
-| `VECTOR_SEARCH_MAX_RESULTS` | Retired vector-search setting. |  |  |
-| `STRIPE_TEST_SECRET_KEY` | Test-only secret must not enter hosted application settings. |  |  |
-| `STRIPE_PAYMENT_LINK_*` | Retired catalog/payment-link variables are outside the current manual fallback. |  |  |
-| `BRIDGE_*` except `OPENCLAW_BRIDGE_SECRET` | Mac bridge runtime settings do not belong in Vercel. |  |  |
-| `OPENCLAW_GATEWAY_TOKEN` | Loopback Gateway credential is Mac-only. |  |  |
-| `OPENCLAW_GATEWAY_URL` | Loopback Gateway endpoint is Mac-only. |  |  |
-| `OPENCLAW_REQUEST_TIMEOUT_MS` | Mac bridge runtime setting. |  |  |
-| `PROSPECTING_WORKER_*` | Legacy direct-worker settings are not the active Vercel bridge contract. |  |  |
-| `PROSPECTING_PROFILE_ID` | Private worker approval/profile selector. |  |  |
-| `PROSPECTING_*_APPROVAL` | Human approval markers belong to the private worker command, not Vercel. |  |  |
+| `NEXT_PUBLIC_E2E_ADMIN_BYPASS` | No hosted authorization bypass. | absent | absent |
+| `NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL` | Provider/model configuration must not be public. | absent | absent |
+| `NEXT_PUBLIC_OPENROUTER_TEST_MODEL` | Comparison model must not be public. | absent | absent |
+| `NEXT_PUBLIC_CHATBOT_MODEL` | Legacy public analyzer override; use the retained server/provider boundary. | present | present |
+| `NEXT_PUBLIC_CHATBOT_MAX_TOKENS` | Retired public analyzer tuning setting. | present | present |
+| `NEXT_PUBLIC_CHATBOT_TEMPERATURE` | Retired public analyzer tuning setting. | present | present |
+| `NEXT_PUBLIC_URL` | Retired generic URL alias; use the canonical `NEXT_PUBLIC_SITE_URL`. | present | present |
+| `NEXT_PUBLIC_USE_MOCK_DATA` | Retired mock-data switch; hosted behavior must use the reviewed application path. | present | present |
+| `CONTEXT7_API_KEY` or `CONTEXT7_*` | Context7 is retired and its credential was revoked. | present | present |
+| `MEDUSA_*` | Retired Medusa/Railway commerce runtime. | present | present |
+| `NEXT_PUBLIC_MEDUSA_*` | Retired public commerce configuration. | present | present |
+| `COOKIE_SECRET` | Retired commerce runtime secret. | present | present |
+| `ADMIN_CORS` | Retired commerce runtime setting. | present | present |
+| `SESSION_SECRET` or `SESSION_MAX_AGE` | Retired session-runtime settings; the retained auth boundary uses `NEXTAUTH_SECRET`. | present | present |
+| `TEST_*` or `E2E_*` | Test identities and credentials must never enter hosted application settings. | present | present |
+| `UPSTASH_*` | Retired direct Upstash REST settings; the retained app contract is optional `REDIS_URL`. | present | present |
+| `OPENAI_EMBEDDING_MODEL` or `EMBEDDING_BATCH_SIZE` | Retired embedding-pipeline settings; embeddings are not part of the retained application boundary. | present | present |
+| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | Retired vector-search setting. | present | present |
+| `VECTOR_SEARCH_MAX_RESULTS` | Retired vector-search setting. | present | present |
+| `STRIPE_TEST_SECRET_KEY` | Test-only secret must not enter hosted application settings. | absent | absent |
+| `STRIPE_PAYMENT_LINK_*` | Retired catalog/payment-link variables are outside the current manual fallback. | absent | absent |
+| `BRIDGE_*` except `OPENCLAW_BRIDGE_SECRET` | Mac bridge runtime settings do not belong in Vercel. | absent | absent |
+| `OPENCLAW_GATEWAY_TOKEN` | Loopback Gateway credential is Mac-only. | absent | absent |
+| `OPENCLAW_GATEWAY_URL` | Loopback Gateway endpoint is Mac-only. | absent | absent |
+| `OPENCLAW_REQUEST_TIMEOUT_MS` | Mac bridge runtime setting. | absent | absent |
+| `PROSPECTING_WORKER_*` | Legacy direct-worker settings are not the active Vercel bridge contract. | absent | absent |
+| `PROSPECTING_PROFILE_ID` | Private worker approval/profile selector. | absent | absent |
+| `PROSPECTING_*_APPROVAL` | Human approval markers belong to the private worker command, not Vercel. | absent | absent |
 
-## Read-only Vercel audit and pending item-8 approval packet
+## Names-only Vercel audit and approved item-8 retention exception
 
-On 2026-08-16, `vercel env ls` was run against the linked Vercel project
-`app`. The command reported names and scope labels only; encrypted values were
-not pulled, printed, copied, fingerprinted, or changed. Every name returned by
-the command was present in Development, Preview, and Production.
+On 2026-08-16, a names-only preflight of `vercel env ls` was run against the
+linked Vercel project `app` for all three scopes. Environment values were not
+pulled, copied, fingerprinted, or used. Before the change, every scope had the
+same 55 names. Only `ENV_TARGET` was added, with the non-secret value `cloud`,
+to Production and Preview.
 
-The current names-only result is:
+| Scope | Names before | Names after | Names-only result |
+| --- | ---: | ---: | --- |
+| Development | 55 | 55 | unchanged; `ENV_TARGET` absent |
+| Preview | 55 | 56 | only `ENV_TARGET` added |
+| Production | 55 | 56 | only `ENV_TARGET` added |
 
-- Baseline names present: `NEXT_PUBLIC_SUPABASE_URL`,
-  `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
-  `NEXT_PUBLIC_SITE_URL`, and `NEXTAUTH_SECRET`.
-- Baseline name missing: `ENV_TARGET`.
-- Optional/later-gated names currently present: `REDIS_URL`, `OPENAI_API_KEY`,
-  `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`,
-  `RESEND_FROM_EMAIL`, `RESEND_ADMIN_EMAIL`, `RESEND_WEBHOOK_SECRET`,
-  `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, and
-  `STRIPE_WEBHOOK_SECRET`. Presence is not provider activation approval.
-- Current names with no retained hosted contract: `MEDUSA_ADMIN_EMAIL`,
-  `MEDUSA_ADMIN_PASSWORD`, `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`,
-  `TEST_ADMIN_EMAIL`, `TEST_ADMIN_PASSWORD`, `TEST_USER_EMAIL`,
-  `TEST_USER_PASSWORD`, `NEXT_PUBLIC_USE_MOCK_DATA`, `NEXTAUTH_URL`,
-  `SESSION_SECRET`, `SESSION_MAX_AGE`, `MEDUSA_DB_PASSWORD`,
-  `MEDUSA_JWT_SECRET`, `MEDUSA_ADMIN_JWT_SECRET`, `COOKIE_SECRET`,
-  `ADMIN_CORS`, `SUPABASE_ACCESS_TOKEN`, `SKIP_CACHE`, `NEXT_PUBLIC_URL`,
-  `E2E_ADMIN_PASSWORD`, `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`,
-  `UPSTASH_REDIS_API_KEY`, `UPSTASH_EMAIL`, `UPSTASH_REDIS_REST_URL`,
-  `UPSTASH_REDIS_REST_TOKEN`, `MEDUSA_DATABASE_URL`,
-  `NEXT_PUBLIC_MEDUSA_URL`, `NEXT_PUBLIC_CHATBOT_MODEL`,
-  `NEXT_PUBLIC_CHATBOT_MAX_TOKENS`, `NEXT_PUBLIC_CHATBOT_TEMPERATURE`,
-  `OPENAI_EMBEDDING_MODEL`, `EMBEDDING_BATCH_SIZE`,
-  `VECTOR_SEARCH_SIMILARITY_THRESHOLD`, `VECTOR_SEARCH_MAX_RESULTS`,
-  `CONTEXT7_API_KEY`, `E2E_ADMIN_EMAIL`, and the manually configured
-  `NODE_ENV` name. These are covered by the local/process or forbidden rows
-  above; they are not part of the first hosted baseline.
-
-### Exact allowlist requiring platform/security approval
-
-For both Production and Preview, the proposed first-batch allowlist is exactly
-the six hosted baseline names:
-
+The six hosted baseline names are now present in both Production and Preview:
 `ENV_TARGET`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
 `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`, and `NEXTAUTH_SECRET`.
+Presence is not provider activation or approval for a customer workflow.
 
-`REDIS_URL` is excluded unless hosted Redis is separately approved. OpenRouter,
-email, Calendar, Stripe, Google OAuth, OpenClaw bridge, Mac-worker, legacy
-commerce, test, and process-control names are excluded from this batch.
+Optional/later-gated names currently present in all three scopes are
+`REDIS_URL`, `OPENAI_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`,
+`RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `RESEND_ADMIN_EMAIL`,
+`RESEND_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
+`STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET`. OpenRouter, Calendar,
+OpenClaw bridge, and private-worker names were not added by this change.
 
-The selected Preview policy reuses the approved cloud Supabase target. The
-platform/security approval must explicitly accept that Preview can reach hosted
-production data and must prohibit unapproved mutable/customer workflows from
-Preview: no test bypass, provider activation, external message, publication,
-spend, account change, or customer-data workflow.
+Current names outside the retained application contract remain present by
+exception: `MEDUSA_ADMIN_EMAIL`, `MEDUSA_ADMIN_PASSWORD`,
+`NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`, `TEST_ADMIN_EMAIL`,
+`TEST_ADMIN_PASSWORD`, `TEST_USER_EMAIL`, `TEST_USER_PASSWORD`,
+`NEXT_PUBLIC_USE_MOCK_DATA`, `NEXTAUTH_URL`, `SESSION_SECRET`,
+`SESSION_MAX_AGE`, `MEDUSA_DB_PASSWORD`, `MEDUSA_JWT_SECRET`,
+`MEDUSA_ADMIN_JWT_SECRET`, `COOKIE_SECRET`, `ADMIN_CORS`,
+`SUPABASE_ACCESS_TOKEN`, `SKIP_CACHE`, `NEXT_PUBLIC_URL`,
+`E2E_ADMIN_PASSWORD`, `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`,
+`UPSTASH_REDIS_API_KEY`, `UPSTASH_EMAIL`, `UPSTASH_REDIS_REST_URL`,
+`UPSTASH_REDIS_REST_TOKEN`, `MEDUSA_DATABASE_URL`, `MEDUSA_BACKEND_URL`,
+`NEXT_PUBLIC_MEDUSA_URL`, `NEXT_PUBLIC_CHATBOT_MODEL`,
+`NEXT_PUBLIC_CHATBOT_MAX_TOKENS`, `NEXT_PUBLIC_CHATBOT_TEMPERATURE`,
+`OPENAI_EMBEDDING_MODEL`, `EMBEDDING_BATCH_SIZE`,
+`VECTOR_SEARCH_SIMILARITY_THRESHOLD`, `VECTOR_SEARCH_MAX_RESULTS`,
+`CONTEXT7_API_KEY`, `E2E_ADMIN_EMAIL`, and the manually configured `NODE_ENV`.
+They are not part of the six-name baseline, but they were not revoked or
+rotated.
 
-Value sources must be approved per name without recording values here:
+### Approved retention exception
 
-- `ENV_TARGET` is the fixed `cloud` runtime marker.
-- The Supabase URL and keys come from the approved hosted Supabase project
-  credential source; the service-role key remains server-only.
-- `NEXT_PUBLIC_SITE_URL` comes from the controlled production domain and its
-  reviewed Preview policy.
-- `NEXTAUTH_SECRET` is a newly generated, owner-controlled server secret or a
-  separately approved rotation of the existing value; it is never copied into
-  browser code.
+- **Owner:** Abe Reyes / `abejitsu`
+- **Approved:** 2026-08-16
+- **Review/removal date:** 2026-09-15
+- **Scope:** Preserve all existing Vercel variables in Production, Preview, and
+  Development. Add only `ENV_TARGET` to Production and Preview; leave
+  Development unchanged.
+- **Protected values:** Supabase URL, anon key, and service-role key; Google
+  client ID and secret; existing `NEXTAUTH_SECRET`; `COOKIE_SECRET`,
+  `SESSION_SECRET`, and `SESSION_MAX_AGE`; `REDIS_URL`; email/payment/provider
+  names; and legacy/test names remain in place.
+- **Boundary:** The exception is a retention decision, not a clean six-variable
+  allowlist pass. It does not activate Google, email, payment, Redis,
+  OpenRouter, Calendar, OpenClaw, sending, publication, spend, or customer
+  workflows.
+- **Renewal for item 9:** Abe Reyes / `abejitsu` expressly renewed the same
+  retention scope on 2026-08-17 for the hosted authorization check only. Item 9
+  passed under that one-check renewal; no provider or customer workflow was
+  authorized.
+- **Next decision:** By the review date, platform/security must either resolve
+  the retained names through a documented removal/rotation decision or renew
+  this exception before item 10 or any later hosted authorization/provider
+  gate. The exception remains due for review/removal on 2026-09-15.
 
-The legacy-removal decision must cover every current Vercel name outside that
-allowlist in both Production and Preview. Provider credentials must be revoked
-or rotated at their provider when their provenance is unknown, then removed
-from Vercel; removal does not activate a provider. Any current `NODE_ENV` entry
-is removed as a manually managed variable and left to the platform runtime.
-
-The browser/server decision is that only the two `NEXT_PUBLIC_SUPABASE_*`
-names and the public site URL may be browser-visible. `ENV_TARGET`,
-`SUPABASE_SERVICE_ROLE_KEY`, `NEXTAUTH_SECRET`, and any future provider,
-bridge, worker, or Redis values remain server-only. The corrected deployment
-bundle scan remains required after any approved write.
-
-Item 8 is still `BLOCKED` until the platform/security owner records approval
-of this exact allowlist, the two-scope Preview risk, value sources, and
-legacy-variable removal/rotation scope. The Production and Preview columns
-above therefore remain intentionally blank and are not configuration proof.
+The browser/server decision remains that only intended `NEXT_PUBLIC_*` values
+may be browser-visible. `ENV_TARGET`, `SUPABASE_SERVICE_ROLE_KEY`,
+`NEXTAUTH_SECRET`, and all provider, bridge, worker, Redis, cookie, and session
+values remain server-only. Production and Preview scans after the write found
+zero server-only environment names, key patterns, model/provider patterns, or
+source-map references.
 
 ## Audit record and sources
 
@@ -303,7 +300,13 @@ above therefore remain intentionally blank and are not configuration proof.
   test/config helpers, and the read-only `vercel env ls` listing. Environment
   values were not read, copied, or recorded. Every code-referenced name is
   classified above; no Mac-only, local/test/process-only, or forbidden name is
-  included in the proposed hosted baseline.
+  included in the six-name hosted baseline, while existing out-of-contract
+  names remain covered by the approved retention exception.
+- **Hosted verification:** Production deployment `dpl_4XP38V8P6G8NGBb517aMa658m5Qm`
+  and Preview deployment `dpl_6NMvvVgVv2aqGtgxFFvqtwWr7Exh` reached `READY`.
+  Production and Preview public routes returned `200`, anonymous planner and
+  bridge POSTs returned `401`, and Preview health returned `200` with healthy
+  JSON through Vercel's automatic protection bypass.
 - **Primary sources:** [`app/lib/env-validation.ts`](../../app/lib/env-validation.ts),
   [`app/lib/supabase.ts`](../../app/lib/supabase.ts),
   [`app/lib/supabase-server.ts`](../../app/lib/supabase-server.ts),
