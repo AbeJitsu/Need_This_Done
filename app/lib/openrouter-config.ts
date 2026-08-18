@@ -7,6 +7,7 @@ export function getOpenRouterModelConfig(): OpenRouterModelConfig {
   return parseOpenRouterModelConfig({
     OPENROUTER_PRIMARY_MODEL: process.env.OPENROUTER_PRIMARY_MODEL,
     OPENROUTER_TEST_MODEL: process.env.OPENROUTER_TEST_MODEL,
+    OPENROUTER_BACKUP_MODEL: process.env.OPENROUTER_BACKUP_MODEL,
   });
 }
 

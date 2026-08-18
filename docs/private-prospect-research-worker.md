@@ -30,15 +30,21 @@ Its only required values are:
 OPENROUTER_API_KEY=...
 OPENROUTER_PRIMARY_MODEL=...
 OPENROUTER_TEST_MODEL=...
+# Only for the separately approved two-request backup probe:
+OPENROUTER_BACKUP_MODEL=openrouter/free
 PROSPECTING_WORKER_SECRET=...
 PROSPECTING_WORKER_BASE_URL=https://private-operator-host.example
 PROSPECTING_WORKER_ID=mac-mini-private-research-1
 ```
 
-The two model variables must be exact provider/model IDs. The runner rejects
-missing values, malformed IDs, and moving aliases such as `latest`. Keep the
-same two values in the app's root private profile and this separate worker
-file; the worker file is not populated automatically from the app profile.
+The primary and comparison model variables must be exact provider/model IDs.
+The optional backup variable may be `openrouter/free` for the controlled probe
+or an exact pinned free model such as
+`google/gemma-4-26b-a4b-it:free`. The runner rejects malformed IDs and moving
+aliases such as `latest`, and it never permits `openrouter/free` to be pinned
+as a live worker model. Keep the same private values in the app's root
+profile and this separate worker file; the worker file is not populated
+automatically from the app profile.
 
 For a measured benchmark, add a specific profile ID and the runtime approval gate only after a human has approved that measurement:
 
@@ -90,6 +96,24 @@ and runs the same sanitized fixed tasks against both models. The shared ledger
 reserves each call before it happens and reconciles provider usage afterward.
 Comparison results are recorded as evidence only; they never change the
 database-pinned primary route.
+
+The backup probe is also deliberately locked and makes exactly two provider
+requests: one basic non-streaming text request and one structured JSON request
+with a no-op tool declaration and `require_parameters=true`. It does not use
+web search, retry a failed request, schedule or claim a worker task, send
+email, publish, spend, or address an external recipient:
+
+```bash
+npx tsx scripts/run-prospecting-worker.ts \
+  --env-file /Users/your-operator/.config/needthisdone/prospecting-worker.env \
+  --probe-free-router
+```
+
+Use `--probe-backup` with the same approval gate after changing
+`OPENROUTER_BACKUP_MODEL` to the pinned Gemma free variant if the dynamic
+router fails or selects an unsuitable endpoint. Both probe forms keep the
+profile at `evaluation-required` and persist the returned endpoint model ID
+alongside the requested route and provider usage.
 
 ## Before operational rollout
 

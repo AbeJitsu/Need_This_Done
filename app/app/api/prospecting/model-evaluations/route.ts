@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { DEEPSEEK_V4_FLASH_FALLBACK, selectModelRoutingPolicy, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
+import { selectModelRoutingPolicy, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 
 function recordFromRow(row: Record<string, unknown>): ModelEvaluationRecord {
   return {
     candidateId: String(row.candidate_id),
     providerModelId: String(row.provider_model_id),
+    actualModelId: row.actual_model_id ? String(row.actual_model_id) : null,
     taskId: row.task_id as ModelEvaluationTaskId,
     qualityScore: Number(row.quality_score),
     toolUseScore: Number(row.tool_use_score),
@@ -42,9 +43,8 @@ export async function GET() {
     catalogMetadata: row.catalog_metadata || {},
   })) as ModelCandidate[];
   const freeCandidates = candidates.filter((candidate) => candidate.kind === 'free');
-  const fallback = candidates.find((candidate) => candidate.kind === 'deepseek-fallback') || DEEPSEEK_V4_FLASH_FALLBACK;
   const records = (recordsResult.data || []).map((row) => recordFromRow(row as Record<string, unknown>));
-  return NextResponse.json({ records: recordsResult.data || [], candidates: candidatesResult.data || [], policy: selectModelRoutingPolicy(records, freeCandidates, fallback) });
+  return NextResponse.json({ records: recordsResult.data || [], candidates: candidatesResult.data || [], policy: selectModelRoutingPolicy(records, freeCandidates) });
 }
 
 export async function POST() {

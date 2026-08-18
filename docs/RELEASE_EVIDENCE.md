@@ -2,7 +2,7 @@
 
 This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service. The canonical numbered control record is the [production launch checklist](launch/LAUNCH_CHECKLIST.md); this file is its evidence ledger.
 
-## Current release-control and hosted-stage ledger — 2026-08-17
+## Current release-control and hosted-stage ledger — 2026-08-18
 
 **Decision:** **Corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` passed items 1–7, 7.1, and 9; item 8 remains an owner-approved, time-boxed retention `EXCEPTION`, not a clean six-variable allowlist pass.** Item 9 passed only after the item-8 retention scope was expressly renewed for this check on 2026-08-17. This evidence does not authorize provider activation, payment, Calendar, publication, or live external action. `8b8d429` remains the documented application rollback reference.
 
@@ -20,7 +20,7 @@ verified the published tip exactly.
 
 The planner/OpenClaw proof is included in the canonical `npm run verify:database` gate. It proves draft-only planning, approval-before-dispatch, frozen snapshots, OpenClaw-only claiming, model reservations, strict HTTPS citation validation, provenance linkage, private artifact boundaries, and authenticated direct-write denial.
 
-**Provider and secret boundary:** An OpenRouter API key and two exact model IDs remain private environment variables. Step 10A used the existing provider key for exactly six sanitized comparison requests and retained provider-reported usage/cost in hosted Supabase; it did not activate a worker, pin a model, change Vercel variables, or run an external action. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly remains provider-free and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action. See [Step 10A evidence](launch/step-10a-model-comparison-2026-08-17.md).
+**Provider and secret boundary:** An OpenRouter API key and exact model IDs remain private environment variables. Step 10A used the existing provider key for exactly six sanitized comparison requests and retained provider-reported usage/cost in hosted Supabase; it did not activate a worker, pin a model, change Vercel variables, or run an external action. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates pinned primary/comparison IDs, permits `OPENROUTER_BACKUP_MODEL` only in the private probe boundary, and persists the actual endpoint model returned for a probe request. A future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly remains provider-free and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action. The backup probe is implementation-only until its separately approved two-request provider check is recorded. See [Step 10A evidence](launch/step-10a-model-comparison-2026-08-17.md).
 
 **Release blockers and exceptions:** Hosted history is `91/095`, and the final parity report plus the Step 9 authorization verifier pass with four temporary users cleaned and zero cleanup errors. The historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the final result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair records are [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md) and [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md); the Step 9 record is [step-9-hosted-authorization-2026-08-17.md](launch/step-9-hosted-authorization-2026-08-17.md). Item 8 is an approved retention exception: the names-only Vercel audit found 55 names in each scope before the change, `ENV_TARGET` was added only to Production and Preview, those scopes now have all six baseline names plus the retained existing names, and Development is unchanged. Supabase, Google, `NEXTAUTH_SECRET`, cookie/session, Redis, provider/email/payment, and legacy/test entries were not revoked or rotated. Abe Reyes / `abejitsu` owns the exception; it was renewed for Step 9 on 2026-08-17 and review/removal is due 2026-09-15. The exception is not provider activation approval; item 9 passed under this one-check renewal, and items 10–22 remain blocked until later approvals are complete. `npm audit` reports 16 findings overall and 11 production-tree findings, so later technical promotion remains blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
@@ -61,6 +61,56 @@ router was not recommended because the worker requires an exact pinned model
 ID. This discovery made no completion request, hosted write, Vercel variable
 change, or model-selection decision; a repeat comparison remains separately
 approval-gated.
+
+### Free backup route implementation — 2026-08-18
+
+Migration `096_openrouter_dynamic_route_evidence.sql` adds the private
+`OPENROUTER_BACKUP_MODEL` boundary, actual endpoint IDs on evaluation and usage
+records, and a service-role-only recording function. The signed probe accepts
+`openrouter/free` only as a dynamic evidence route (or an exact `:free` model
+as the manual replacement), makes exactly two sanitized non-streaming
+requests, requires provider parameters for structured/tool requests, stores
+the returned endpoint model, and leaves the profile `evaluation-required`.
+It has no web-search, sender, publication, spend, or external-recipient path.
+
+The migration was applied only to disposable local Supabase. TypeScript,
+21 targeted tests, `git diff --check`, schema manifest 9/9, prospecting RLS
+2/2, and local schema lint passed. Hosted history remains `91/095`; no hosted
+migration or live provider request occurred. The separate provider check is
+pending because this workspace had no signed private-worker environment or
+explicit benchmark approval marker. Owner: Abe Reyes / private-operator
+owner. Review/removal date: 2026-09-15 or before any backup activation.
+
+### Hardcoded fallback retirement and environment provisioning — 2026-08-18
+
+The current public OpenRouter catalog contains paid DeepSeek IDs but no
+`deepseek/deepseek-v4-flash:free`; it lists
+`google/gemma-4-26b-a4b-it:free` with zero prompt and completion prices. The
+nonexistent hardcoded fallback was removed from active selection, worker, and
+planner paths. Migration `097_retire_hardcoded_deepseek_fallback.sql`
+deactivates historical fallback candidates and returns a retained historical
+route to `evaluation-required` while preserving evidence.
+
+The exact Gemma ID is now stored as private `OPENROUTER_BACKUP_MODEL` in the
+chmod-600 local profile and as an encrypted server-only variable in Vercel
+Production and Preview. A names-only check confirmed the variable in both
+scopes; Development remains unchanged. The configuration action itself made
+no deployment or provider request. A later explicit owner directive separately
+deployed the reviewed working slice to Vercel Production as
+`dpl_7kr6p3LBfph9VjLMBnYgV627BE2M`, which reached `READY` and was aliased to
+`https://needthisdone.com`. Production health reported Redis, Supabase, and the
+app up; `/` and `/services` returned `200`; the unsigned protected benchmark
+POST returned `401`; and 15 public scripts contained neither the private
+variable name nor configured model ID. The hosted queue read was kept
+compatible with hosted schema `095`; migrations `096`–`097` remain local-only.
+No provider request, model pin, hosted database write, publication, spend, or
+external-recipient action occurred. The immediate application rollback is
+prior Production deployment `dpl_4XP38V8P6G8NGBb517aMa658m5Qm`.
+
+Lint passed with zero warnings, TypeScript passed, 219/219 required unit tests
+passed, the 49-page production build passed, `git diff --check` passed, and the
+complete local database gate passed all 41 schema, security, RLS, and
+integration checks through migration `097`.
 
 ## Hosted parity endgame — 2026-08-15
 

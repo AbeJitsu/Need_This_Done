@@ -85,7 +85,7 @@ function acceptedTarget(task: AgentTask) {
   return Number.isInteger(configured) && configured >= 1 && configured <= 2 ? configured : 2;
 }
 
-export const PRIVATE_RESEARCH_MODEL_ROUTES = ['selected-primary', 'selected-free', 'selected-deepseek-fallback'] as const;
+export const PRIVATE_RESEARCH_MODEL_ROUTES = ['selected-primary', 'selected-free'] as const;
 
 export function privateResearchModelAllowed(profile: Pick<PrivateResearchProfile, 'emergencyStop' | 'modelRoute' | 'selectedModelId'>) {
   return !profile.emergencyStop

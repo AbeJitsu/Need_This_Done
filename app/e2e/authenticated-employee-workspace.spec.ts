@@ -59,7 +59,7 @@ async function createFixture(): Promise<Fixture> {
       'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI', 'GOOGLE_OAUTH_STATE_SECRET',
       'CALENDAR_TOKEN_ENCRYPTION_KEY', 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
       'STRIPE_SECRET_KEY', 'STRIPE_TEST_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET',
-      'OPENROUTER_API_KEY', 'OPENROUTER_PRIMARY_MODEL', 'OPENROUTER_TEST_MODEL',
+      'OPENROUTER_API_KEY', 'OPENROUTER_PRIMARY_MODEL', 'OPENROUTER_TEST_MODEL', 'OPENROUTER_BACKUP_MODEL',
     ];
     const configured = externalProviderVariables.filter((name) => Boolean(process.env[name]));
     if (configured.length) throw new Error(`Offline assembly received provider credentials: ${configured.join(', ')}`);

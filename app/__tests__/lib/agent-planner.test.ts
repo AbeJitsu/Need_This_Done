@@ -73,6 +73,7 @@ describe('app-side agent planner', () => {
           expect(request.maxTokens).toBe(4_000);
           expect(request.responseSchema).toBeDefined();
           return {
+            model: 'provider/pinned-model',
             content: raw,
             citations: [],
             usage: { promptTokens: 12, completionTokens: 34, costUsd: 0.001, raw: {} },

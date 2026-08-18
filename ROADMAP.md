@@ -35,13 +35,20 @@ The live worker defaults to `evaluation-required`. The test set is deliberately 
 2. Draft an approved-boundary outreach message.
 3. Summarize sanitized activity notes into a client-ready weekly brief without inventing outcomes.
 
-The record for every task includes quality score, tool-use score, latency, provider-reported cost, failure, and repair-needed flag. The shared threshold is quality ≥ 0.80, tool use ≥ 0.90, failure rate ≤ 0.10, and repair rate ≤ 0.20. OpenRouter account and key limits govern model spend. All three free candidates must complete the set before selection; DeepSeek is eligible only after none of the free candidates clears the threshold.
+The record for every task includes quality score, tool-use score, latency, provider-reported cost, failure, and repair-needed flag. The shared threshold is quality ≥ 0.80, tool use ≥ 0.90, failure rate ≤ 0.10, and repair rate ≤ 0.20. OpenRouter account and key limits govern model spend. All three catalog-resolved free candidates must complete the set before selection; if none clears the threshold, the route stays `evaluation-required`. There is no hardcoded model fallback.
 
 Catalog availability changes, so the two non-Poolside free candidates must be resolved and pinned from the then-current catalog before results are recorded. The evaluation-record API and applied migrations store observations in Supabase; the API records evidence but does not itself make provider calls.
 
 Step 10A evidence is partial rather than a model-selection result: the hosted
 profile remains `evaluation-required`, and provider-policy changes or repeat
 requests require separate approval.
+
+The new `OPENROUTER_BACKUP_MODEL` remains private and probe-only. The moving
+`openrouter/free` route is allowed only for exactly two sanitized requests;
+the response's actual endpoint model is persisted, and the profile remains
+`evaluation-required`. A pinned `google/gemma-4-26b-a4b-it:free` value is the
+manual backup if the dynamic route is unsuitable. Neither path authorizes a
+worker, sender, publication, spend, or external-recipient action.
 
 On 2026-08-18, the account-filtered OpenRouter catalog exposed
 `google/gemma-4-31b-it:free` as a current free text candidate with

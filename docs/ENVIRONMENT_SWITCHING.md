@@ -31,9 +31,11 @@ supabase status
 Put those values in `.env.local.profile` with `ENV_TARGET=local` and `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321`. Obtain hosted development values from the approved Supabase project's API settings and put them in `.env.cloud.profile` with `ENV_TARGET=cloud`. Keep both files mode `600` when they contain credentials.
 
 If the private OpenRouter worker is configured, keep
-`OPENROUTER_PRIMARY_MODEL` and `OPENROUTER_TEST_MODEL` in the active root
-profile as private variables. The isolated Mac worker still needs the same
-two model variables in its own chmod-600 `--env-file`.
+`OPENROUTER_PRIMARY_MODEL`, `OPENROUTER_TEST_MODEL`, and the optional
+`OPENROUTER_BACKUP_MODEL` in the active root profile as private variables.
+The isolated Mac worker still needs the same values in its own chmod-600
+`--env-file`. `openrouter/free` is allowed only in the backup variable for the
+approval-gated two-request probe; it is never a pinned worker model.
 
 Do not edit `app/.env.local`; it must stay linked to the root active environment. Do not commit either profile. The repository ignores `.env.*.profile`.
 

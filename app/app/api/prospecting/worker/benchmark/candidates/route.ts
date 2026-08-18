@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getOpenRouterModelConfig } from '@/lib/openrouter-config';
-import { DEEPSEEK_V4_FLASH_FALLBACK, freeCandidatesCompleted, summarizeModelEvaluation, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
+import { isDynamicOpenRouterModel, isMovingOpenRouterModelAlias, OPENROUTER_FREE_ROUTER_MODEL, validateOpenRouterBackupModelId } from '@/lib/openrouter-model-config';
 import { consumeWorkerNonce, isSignedWorkerFailure, verifySignedWorkerRequest } from '@/lib/private-worker-auth';
 
 export const dynamic = 'force-dynamic';
@@ -11,18 +11,10 @@ const candidateSchema = z.object({
   candidateId: z.string().trim().min(1).max(240),
   providerModelId: z.string().trim().min(1).max(240),
   label: z.string().trim().min(1).max(300),
-  candidateKind: z.enum(['free', 'deepseek-fallback', 'configured-primary', 'configured-test']),
+  candidateKind: z.enum(['free', 'configured-primary', 'configured-test', 'router-free']),
   catalogMetadata: z.record(z.string(), z.unknown()),
 }).strict();
 const schema = z.object({ workerId: z.string().trim().min(1).max(160), profileId: z.string().uuid(), candidates: z.array(candidateSchema).min(1).max(3) }).strict();
-
-function recordFromRow(row: Record<string, unknown>): ModelEvaluationRecord {
-  return { candidateId: String(row.candidate_id), providerModelId: String(row.provider_model_id), taskId: row.task_id as ModelEvaluationTaskId, qualityScore: Number(row.quality_score), toolUseScore: Number(row.tool_use_score), latencyMs: Number(row.latency_ms), costUsd: Number(row.cost_usd), failed: Boolean(row.failed), repairRequired: Boolean(row.repair_required), evaluatedOn: String(row.evaluated_on) };
-}
-
-function movingAlias(value: string) {
-  return /(^|[/:_-])latest($|[/:_-])/i.test(value);
-}
 
 export async function POST(request: Request) {
   const signed = await verifySignedWorkerRequest(request, '/api/prospecting/worker/benchmark/candidates');
@@ -31,7 +23,7 @@ export async function POST(request: Request) {
   try { json = JSON.parse(signed.body); } catch { return NextResponse.json({ error: 'Invalid benchmark candidate JSON.' }, { status: 400 }); }
   const parsed = schema.safeParse(json);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid benchmark candidates.' }, { status: 400 });
-  if (parsed.data.candidates.some((candidate) => movingAlias(candidate.providerModelId))) return NextResponse.json({ error: 'Moving latest aliases cannot be benchmark candidates.' }, { status: 400 });
+  if (parsed.data.candidates.some((candidate) => isMovingOpenRouterModelAlias(candidate.providerModelId))) return NextResponse.json({ error: 'Moving aliases cannot be benchmark candidates.' }, { status: 400 });
   const replay = await consumeWorkerNonce(signed.nonce);
   if (replay) return replay;
 
@@ -39,10 +31,27 @@ export async function POST(request: Request) {
   const isConfiguredComparison = parsed.data.candidates.length === 2
     && kinds.size === 2
     && parsed.data.candidates.every((candidate) => candidate.candidateKind === 'configured-primary' || candidate.candidateKind === 'configured-test');
-  if (!isConfiguredComparison && kinds.size !== 1) return NextResponse.json({ error: 'Register free candidates and the fallback in separate requests.' }, { status: 400 });
+  if (!isConfiguredComparison && kinds.size !== 1) return NextResponse.json({ error: 'Register one benchmark candidate kind per request.' }, { status: 400 });
   const kind = parsed.data.candidates[0].candidateKind;
   const uniqueModels = new Set(parsed.data.candidates.map((candidate) => candidate.providerModelId));
   if (uniqueModels.size !== parsed.data.candidates.length) return NextResponse.json({ error: 'Benchmark candidates must have unique model IDs.' }, { status: 400 });
+  if (parsed.data.candidates.some((candidate) => isDynamicOpenRouterModel(candidate.providerModelId) && candidate.candidateKind !== 'router-free')) {
+    return NextResponse.json({ error: 'openrouter/free is allowed only as a router-free probe candidate.' }, { status: 400 });
+  }
+  if (kind === 'router-free' && parsed.data.candidates.length !== 1) {
+    return NextResponse.json({ error: 'A backup probe must register exactly one probe candidate.' }, { status: 400 });
+  }
+  if (kind === 'router-free') {
+    const candidate = parsed.data.candidates[0];
+    const isDynamic = candidate.providerModelId === OPENROUTER_FREE_ROUTER_MODEL;
+    const expectedCandidateId = isDynamic ? 'openrouter-free-router' : 'openrouter-backup-probe';
+    if (candidate.candidateId !== expectedCandidateId) {
+      return NextResponse.json({ error: 'Backup probe candidates must use their fixed probe ID.' }, { status: 400 });
+    }
+    if (!isDynamic) {
+      try { validateOpenRouterBackupModelId(candidate.providerModelId, 'providerModelId'); } catch { return NextResponse.json({ error: 'The pinned backup probe model ID is invalid.' }, { status: 400 }); }
+    }
+  }
 
   const admin = getSupabaseAdmin();
   const { data: profile } = await admin.from('growth_profiles').select('id, owner_id, emergency_stop, model_route').eq('id', parsed.data.profileId).maybeSingle();
@@ -54,6 +63,7 @@ export async function POST(request: Request) {
     }
     let configured: ReturnType<typeof getOpenRouterModelConfig>;
     try { configured = getOpenRouterModelConfig(); } catch { return NextResponse.json({ error: 'Configured model comparison is unavailable.' }, { status: 503 }); }
+    if (!configured.testModel) return NextResponse.json({ error: 'Configured model comparison is unavailable.' }, { status: 503 });
     const expected = new Map([
       ['configured-primary', configured.primaryModel],
       ['configured-test', configured.testModel],
@@ -65,21 +75,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Candidate selection is unavailable after model selection or an emergency stop.' }, { status: 409 });
   }
 
-  if (kind === 'deepseek-fallback') {
-    const candidate = parsed.data.candidates[0];
-    if (parsed.data.candidates.length !== 1 || candidate.providerModelId !== DEEPSEEK_V4_FLASH_FALLBACK.providerModelId) {
-      return NextResponse.json({ error: 'Only the pinned DeepSeek fallback may be registered as a fallback candidate.' }, { status: 400 });
-    }
-    const [freeResult, recordsResult] = await Promise.all([
-      admin.from('model_benchmark_candidates').select('*').eq('profile_id', profile.id).eq('candidate_kind', 'free').eq('is_active', true),
-      admin.from('model_evaluation_records').select('*').eq('owner_id', profile.owner_id),
-    ]);
-    const freeCandidates = (freeResult.data || []).map((row) => ({ id: row.candidate_id, label: row.provider_model_id, kind: 'free', providerModelId: row.provider_model_id })) as ModelCandidate[];
-    const records = (recordsResult.data || []).map((row) => recordFromRow(row as Record<string, unknown>));
-    const eligible = freeCandidatesCompleted(records, freeCandidates)
-      && freeCandidates.every((free) => !summarizeModelEvaluation(records, free.id).clearsThreshold);
-    if (!eligible) return NextResponse.json({ error: 'The pinned fallback is unavailable until every free candidate finishes and misses the threshold.' }, { status: 409 });
-  } else if (kind === 'free') {
+  if (kind === 'free') {
     await admin.from('model_benchmark_candidates').update({ is_active: false }).eq('profile_id', profile.id).eq('candidate_kind', 'free');
   }
 

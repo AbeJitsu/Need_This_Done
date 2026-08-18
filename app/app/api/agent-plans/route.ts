@@ -85,7 +85,7 @@ export async function POST(request: Request) {
   if (profileError) return NextResponse.json({ error: 'The target growth profile could not be loaded.' }, { status: 500 });
   if (!profile) return NextResponse.json({ error: 'The target growth profile was not found.' }, { status: 404 });
   if (profile.emergency_stop) return NextResponse.json({ error: 'The target growth profile has its emergency stop active.' }, { status: 409 });
-  if (!profile.selected_model_id || !['selected-primary', 'selected-free', 'selected-deepseek-fallback'].includes(profile.model_route)) {
+  if (!profile.selected_model_id || !['selected-primary', 'selected-free'].includes(profile.model_route)) {
     return NextResponse.json({ error: 'Pin a primary model for this growth profile before planning.' }, { status: 409 });
   }
 

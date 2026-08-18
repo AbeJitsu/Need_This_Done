@@ -5,12 +5,13 @@ import { parse } from 'dotenv';
 import { parseOpenRouterModelConfig } from '@/lib/openrouter-model-config';
 import { OpenRouterClient } from '@/lib/openrouter-core';
 import { SignedPrivateResearchWorkerTransport, MacMiniProspectingWorker } from '@/lib/prospecting-worker';
-import { SignedBenchmarkTransport, runConfiguredModelComparison } from '@/lib/prospecting-benchmark';
+import { SignedBenchmarkTransport, runConfiguredModelComparison, runOpenRouterBackupProbe } from '@/lib/prospecting-benchmark';
 
 type WorkerEnvironment = {
   OPENROUTER_API_KEY: string;
   OPENROUTER_PRIMARY_MODEL: string;
-  OPENROUTER_TEST_MODEL: string;
+  OPENROUTER_TEST_MODEL?: string;
+  OPENROUTER_BACKUP_MODEL?: string;
   PROSPECTING_WORKER_SECRET: string;
   PROSPECTING_WORKER_BASE_URL: string;
   PROSPECTING_WORKER_ID: string;
@@ -20,7 +21,7 @@ type WorkerEnvironment = {
 };
 
 function usage(): never {
-  throw new Error('Usage: npx tsx scripts/run-prospecting-worker.ts --env-file /absolute/private.env [--schedule] [--once] [--pin-primary] [--benchmark|--compare-models]');
+  throw new Error('Usage: npx tsx scripts/run-prospecting-worker.ts --env-file /absolute/private.env [--schedule] [--once] [--pin-primary] [--benchmark|--compare-models|--probe-free-router|--probe-backup]');
 }
 
 function readEnvironment(path: string): WorkerEnvironment {
@@ -30,7 +31,7 @@ function readEnvironment(path: string): WorkerEnvironment {
     throw new Error('The Mac-mini worker environment file must be a regular chmod-600 file.');
   }
   const values = parse(readFileSync(absolute));
-  if (values.NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL || values.NEXT_PUBLIC_OPENROUTER_TEST_MODEL) {
+  if (values.NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL || values.NEXT_PUBLIC_OPENROUTER_TEST_MODEL || values.NEXT_PUBLIC_OPENROUTER_BACKUP_MODEL) {
     throw new Error('The private worker environment must not define NEXT_PUBLIC OpenRouter model variables.');
   }
   const required = ['OPENROUTER_API_KEY', 'PROSPECTING_WORKER_SECRET', 'PROSPECTING_WORKER_BASE_URL', 'PROSPECTING_WORKER_ID'] as const;
@@ -39,7 +40,8 @@ function readEnvironment(path: string): WorkerEnvironment {
   return {
     ...values,
     OPENROUTER_PRIMARY_MODEL: modelConfig.primaryModel,
-    OPENROUTER_TEST_MODEL: modelConfig.testModel,
+    ...(modelConfig.testModel ? { OPENROUTER_TEST_MODEL: modelConfig.testModel } : {}),
+    ...(modelConfig.backupModel ? { OPENROUTER_BACKUP_MODEL: modelConfig.backupModel } : {}),
   } as WorkerEnvironment;
 }
 
@@ -53,7 +55,9 @@ const privateTransport = new SignedPrivateResearchWorkerTransport(environment.PR
 async function main() {
   const pinPrimary = args.includes('--pin-primary');
   const compareModels = args.includes('--benchmark') || args.includes('--compare-models');
-  if ((pinPrimary && compareModels) || (pinPrimary && (args.includes('--schedule') || args.includes('--once'))) || (compareModels && (args.includes('--schedule') || args.includes('--once')))) usage();
+  const probeBackup = args.includes('--probe-free-router') || args.includes('--probe-backup');
+  if (([pinPrimary, compareModels, probeBackup].filter(Boolean).length > 1)
+    || ((pinPrimary || compareModels || probeBackup) && (args.includes('--schedule') || args.includes('--once')))) usage();
 
   if (pinPrimary) {
     if (environment.PROSPECTING_PRIMARY_MODEL_APPROVAL !== 'I_HAVE_EXPLICIT_APPROVAL') {
@@ -70,6 +74,7 @@ async function main() {
       throw new Error('Model comparison is locked. Add PROSPECTING_BENCHMARK_APPROVAL=I_HAVE_EXPLICIT_APPROVAL only after explicit human approval.');
     }
     if (!environment.PROSPECTING_PROFILE_ID) throw new Error('PROSPECTING_PROFILE_ID is required for model comparison.');
+    if (!environment.OPENROUTER_TEST_MODEL) throw new Error('OPENROUTER_TEST_MODEL is required for model comparison.');
     await runConfiguredModelComparison({
       workerId: environment.PROSPECTING_WORKER_ID,
       profileId: environment.PROSPECTING_PROFILE_ID,
@@ -78,6 +83,23 @@ async function main() {
       modelConfig: { primaryModel: environment.OPENROUTER_PRIMARY_MODEL, testModel: environment.OPENROUTER_TEST_MODEL },
     });
     process.stdout.write(`${JSON.stringify({ benchmark: 'completed', comparisonOnly: true })}\n`);
+    return;
+  }
+
+  if (probeBackup) {
+    if (environment.PROSPECTING_BENCHMARK_APPROVAL !== 'I_HAVE_EXPLICIT_APPROVAL') {
+      throw new Error('The free-router probe is locked. Add PROSPECTING_BENCHMARK_APPROVAL=I_HAVE_EXPLICIT_APPROVAL only after explicit human approval.');
+    }
+    if (!environment.PROSPECTING_PROFILE_ID) throw new Error('PROSPECTING_PROFILE_ID is required for the free-router probe.');
+    if (!environment.OPENROUTER_BACKUP_MODEL) throw new Error('OPENROUTER_BACKUP_MODEL is required for the free-router probe.');
+    const result = await runOpenRouterBackupProbe({
+      workerId: environment.PROSPECTING_WORKER_ID,
+      profileId: environment.PROSPECTING_PROFILE_ID,
+      transport: new SignedBenchmarkTransport(environment.PROSPECTING_WORKER_BASE_URL, environment.PROSPECTING_WORKER_SECRET),
+      openRouter,
+      backupModel: environment.OPENROUTER_BACKUP_MODEL,
+    });
+    process.stdout.write(`${JSON.stringify({ fallbackProbe: 'completed', requests: result.requests, results: result.results.map(({ taskId, actualModelId, costUsd, ok }) => ({ taskId, actualModelId, costUsd, ok })), modelRoute: result.modelRoute })}\n`);
     return;
   }
 

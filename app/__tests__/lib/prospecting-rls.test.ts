@@ -82,6 +82,8 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
   it('keeps dossier storage, provider usage records, replay nonces, and sender promotion on separate boundaries', async () => {
     await asOperator(`insert into public.growth_profiles (id, owner_id, target_market, geography, offer, sender_name, sender_email) values ($1, $2, 'service businesses', 'New York', 'a focused audit', null, null)`, [researchProfileId, researchOwnerId]);
     await expect(asOperator(`select public.pin_private_primary_model($1, 'browser-worker', 'provider/primary-2026', 'browser must not pin')`, [researchProfileId])).rejects.toThrow();
+    await expect(asPrivateWorker(`select public.pin_private_primary_model($1, 'mac-mini-test', 'openrouter/free', 'dynamic router must not pin')`, [researchProfileId])).rejects.toThrow('invalid_primary_model_pin');
+    await expect(asPrivateWorker(`update public.growth_profiles set model_route = 'selected-deepseek-fallback', selected_model_id = 'provider/retired', selected_model_rationale = 'retired route' where id = $1`, [researchProfileId])).rejects.toThrow();
     const pinned = await asPrivateWorker<{ result: { model_route: string; selected_model_id: string } }>(`select public.pin_private_primary_model($1, 'mac-mini-test', 'provider/primary-2026', 'Explicitly approved test primary.') as result`, [researchProfileId]);
     expect(pinned[0].result).toMatchObject({ model_route: 'selected-primary', selected_model_id: 'provider/primary-2026' });
     await asOperator(`insert into public.agent_tasks (id, profile_id, task_type, input, idempotency_key) values ($1, $2, 'discover_prospects', '{"targetAcceptedDossiers":2}'::jsonb, $3)`, [researchTaskId, researchProfileId, '60000000-0000-4000-0000-000000000085']);
@@ -92,6 +94,9 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
 
     const firstReservation = await asPrivateWorker<{ reservation: { status: string } }>(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.10) as reservation`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000085']);
     expect(firstReservation[0].reservation.status).toBe('reserved');
+    const actualModel = await asPrivateWorker<{ result: { actual_model_id: string } }>(`select public.record_private_model_actual($1, 'provider/actual-free-endpoint') as result`, ['70000000-0000-4000-0000-000000000085']);
+    expect(actualModel[0].result.actual_model_id).toBe('provider/actual-free-endpoint');
+    await expect(asPrivateWorker(`select public.record_private_model_actual($1, 'openrouter/free')`, ['70000000-0000-4000-0000-000000000085'])).rejects.toThrow('invalid_actual_model_id');
     await asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.10)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000086']);
     const thirdReservation = await asPrivateWorker<{ reservation: { status: string; reserved_cost: number } }>(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.60) as reservation`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000087']);
     expect(thirdReservation[0].reservation.status).toBe('reserved');

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  DEEPSEEK_V4_FLASH_FALLBACK,
   isModelEvaluationRecord,
   MODEL_EVALUATION_TASK_IDS,
   MODEL_ROUTING_POLICY,
@@ -17,12 +16,9 @@ const freeCandidates: ModelCandidate[] = [
 ];
 
 function recordsFor(candidateId: string, values: Partial<ModelEvaluationRecord> = {}): ModelEvaluationRecord[] {
-  const providerModelId = candidateId === DEEPSEEK_V4_FLASH_FALLBACK.id
-    ? DEEPSEEK_V4_FLASH_FALLBACK.providerModelId
-    : candidateId;
   return MODEL_EVALUATION_TASK_IDS.map((taskId) => ({
     candidateId,
-    providerModelId,
+    providerModelId: candidateId,
     taskId,
     qualityScore: 0.95,
     toolUseScore: 0.95,
@@ -51,9 +47,14 @@ describe('model evaluation policy', () => {
     expect(selectModelRoutingPolicy(records, freeCandidates)).toMatchObject({ status: 'selected-free', defaultModel: freeCandidates[0].providerModelId });
   });
 
-  it('permits the pinned DeepSeek fallback only after all free candidates miss', () => {
-    const failedFree = freeCandidates.flatMap((candidate) => recordsFor(candidate.id, { qualityScore: 0.4, toolUseScore: 0.4, failed: true, repairRequired: true }));
-    expect(selectModelRoutingPolicy([...failedFree, ...recordsFor(DEEPSEEK_V4_FLASH_FALLBACK.id)], freeCandidates)).toMatchObject({ status: 'selected-deepseek-fallback', defaultModel: DEEPSEEK_V4_FLASH_FALLBACK.providerModelId });
+  it('stays evaluation-required when every catalog candidate misses', () => {
+    const failed = freeCandidates.flatMap((candidate) => recordsFor(candidate.id, { qualityScore: 0.4, toolUseScore: 0.4, failed: true, repairRequired: true }));
+    expect(selectModelRoutingPolicy(failed, freeCandidates)).toEqual(MODEL_ROUTING_POLICY);
+  });
+
+  it('keeps router probe candidates out of model selection', () => {
+    const probe: ModelCandidate = { id: 'openrouter-free-router', label: 'Probe', kind: 'router-free', providerModelId: 'openrouter/free' };
+    expect(selectModelRoutingPolicy(recordsFor(probe.id, { providerModelId: 'openrouter/free' }), [probe])).toEqual(MODEL_ROUTING_POLICY);
   });
 
   it('accepts finite provider-reported costs without a local dollar ceiling', () => {

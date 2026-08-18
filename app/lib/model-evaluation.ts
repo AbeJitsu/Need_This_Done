@@ -1,3 +1,5 @@
+import { isDynamicOpenRouterModel } from '@/lib/openrouter-model-config';
+
 /**
  * Model selection stays fail-closed. The Mac-mini resolves free candidates
  * from the live OpenRouter catalog and persists those exact IDs before any
@@ -30,17 +32,10 @@ export type ModelEvaluationTaskId = (typeof MODEL_EVALUATION_TASK_IDS)[number];
 export type ModelCandidate = {
   id: string;
   label: string;
-  kind: 'free' | 'deepseek-fallback' | 'configured-primary' | 'configured-test';
+  /** `deepseek-fallback` is retained only to read historical database rows. */
+  kind: 'free' | 'deepseek-fallback' | 'configured-primary' | 'configured-test' | 'router-free';
   providerModelId: string;
   catalogMetadata?: Record<string, unknown>;
-};
-
-/** This is intentionally a pinned free fallback, not a moving "latest" alias. */
-export const DEEPSEEK_V4_FLASH_FALLBACK: ModelCandidate = {
-  id: 'deepseek-v4-flash-free',
-  label: 'DeepSeek V4 Flash (free fallback)',
-  kind: 'deepseek-fallback',
-  providerModelId: 'deepseek/deepseek-v4-flash:free',
 };
 
 export const MODEL_QUALITY_THRESHOLD = 0.8;
@@ -51,6 +46,8 @@ export const MODEL_REPAIR_RATE_MAX = 0.2;
 export type ModelEvaluationRecord = {
   candidateId: string;
   providerModelId: string;
+  /** The endpoint model returned by OpenRouter; differs from providerModelId for a router candidate. */
+  actualModelId?: string | null;
   taskId: ModelEvaluationTaskId;
   qualityScore: number;
   toolUseScore: number;
@@ -74,7 +71,7 @@ export type ModelEvaluationSummary = {
 };
 
 export type ModelRoutingPolicy = {
-  status: 'evaluation-required' | 'selected-free' | 'selected-deepseek-fallback';
+  status: 'evaluation-required' | 'selected-free';
   defaultModel: string | null;
   rationale: string;
 };
@@ -90,6 +87,12 @@ const taskIds = new Set<string>(MODEL_EVALUATION_TASKS.map((task) => task.id));
 export function isModelEvaluationRecord(value: ModelEvaluationRecord) {
   return taskIds.has(value.taskId)
     && typeof value.providerModelId === 'string' && value.providerModelId.trim().length > 0
+    && (value.actualModelId === undefined || value.actualModelId === null || (
+      typeof value.actualModelId === 'string'
+      && /^[A-Za-z0-9][A-Za-z0-9._-]*\/[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value.actualModelId.trim())
+      && !/(^|[/:_-])(latest|current|stable|default)($|[/:_-])/i.test(value.actualModelId.trim())
+      && value.actualModelId.trim() !== 'openrouter/free'
+    ))
     && Number.isFinite(value.qualityScore) && value.qualityScore >= 0 && value.qualityScore <= 1
     && Number.isFinite(value.toolUseScore) && value.toolUseScore >= 0 && value.toolUseScore <= 1
     && Number.isFinite(value.latencyMs) && value.latencyMs >= 0
@@ -153,18 +156,21 @@ export function freeCandidatesCompleted(records: ModelEvaluationRecord[], freeCa
 }
 
 /**
- * Select only from catalog-persisted free candidates. DeepSeek becomes eligible
- * only after every selected free candidate has completed and missed the shared
- * threshold.
+ * Select only from catalog-persisted free candidates. The separately configured
+ * backup probe is evidence-only and cannot become a selected model here.
  */
 export function selectModelRoutingPolicy(
   records: ModelEvaluationRecord[],
   freeCandidates: readonly ModelCandidate[],
-  fallback: ModelCandidate = DEEPSEEK_V4_FLASH_FALLBACK,
 ): ModelRoutingPolicy {
-  const allFreeCandidatesCompleted = freeCandidatesCompleted(records, freeCandidates);
+  // Probe candidates are evidence-only. Keep this invariant here as well as
+  // in the signed API routes so a future caller cannot pin a moving router.
+  const selectableFreeCandidates = freeCandidates.filter(
+    (candidate) => candidate.kind === 'free' && !isDynamicOpenRouterModel(candidate.providerModelId),
+  );
+  const allFreeCandidatesCompleted = freeCandidatesCompleted(records, selectableFreeCandidates);
   const selectedFree = allFreeCandidatesCompleted
-    ? freeCandidates
+    ? selectableFreeCandidates
       .map((candidate) => ({ candidate, summary: summarizeModelEvaluation(records, candidate.id) }))
       .find(({ summary }) => summary.clearsThreshold)
     : undefined;
@@ -177,18 +183,6 @@ export function selectModelRoutingPolicy(
         rationale: `${selectedFree.candidate.label} cleared the fixed threshold with its catalog-persisted model ID.`,
       };
     }
-  }
-
-  const everyFreeCandidateMissed = allFreeCandidatesCompleted
-    && freeCandidates.every((candidate) => !summarizeModelEvaluation(records, candidate.id).clearsThreshold);
-  const fallbackSummary = summarizeModelEvaluation(records, fallback.id);
-  const fallbackModelId = pinnedProviderModelId(records, fallback.id);
-  if (everyFreeCandidateMissed && fallbackSummary.clearsThreshold && fallbackModelId === fallback.providerModelId) {
-    return {
-      status: 'selected-deepseek-fallback',
-      defaultModel: fallback.providerModelId,
-      rationale: 'Every catalog-resolved free candidate missed the threshold; the pinned DeepSeek fallback cleared it.',
-    };
   }
 
   return MODEL_ROUTING_POLICY;

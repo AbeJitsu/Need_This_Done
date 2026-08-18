@@ -16,6 +16,8 @@ export async function GET() {
     supabase.from('prospect_dossiers').select('*').eq('profile_id', profile.id).order('created_at', { ascending: false }).limit(200),
     supabase.from('outreach_messages').select('*').eq('profile_id', profile.id).order('created_at', { ascending: false }).limit(200),
     supabase.from('agent_tasks').select('id, profile_id, task_type, status, input, output, attempt_count, max_attempts, idempotency_key, last_error, model_name, cost, created_at, completed_at').eq('profile_id', profile.id).order('created_at', { ascending: false }).limit(50),
+    // Keep this read compatible with hosted schema 095 until the separately
+    // approved 096 migration adds actual_model_id to the usage ledger.
     supabase.from('model_usage_ledger').select('id, task_id, usage_kind, model_id, reserved_cost, actual_cost, status, local_usage_date, created_at').eq('profile_id', profile.id).order('created_at', { ascending: false }).limit(200),
   ]);
   // Outcomes are loaded separately because Supabase does not expose a portable

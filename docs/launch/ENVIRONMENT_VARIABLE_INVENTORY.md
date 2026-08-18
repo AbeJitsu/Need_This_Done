@@ -49,9 +49,10 @@ or external action.
 | Variable name | Boundary / later gate | Production | Preview |
 | --- | --- | --- | --- |
 | `OPENAI_API_KEY` | Optional retained analyzer provider; separately approved provider use. | present | present |
-| `OPENROUTER_API_KEY` | Server-only model provider; item 10. | absent | absent |
-| `OPENROUTER_PRIMARY_MODEL` | Server-only pinned primary model ID; item 10. | absent | absent |
-| `OPENROUTER_TEST_MODEL` | Server-only comparison model ID; item 10. | absent | absent |
+| `OPENROUTER_API_KEY` | Server-only model provider; item 10. | present | present |
+| `OPENROUTER_PRIMARY_MODEL` | Server-only pinned primary model ID; item 10. | present | present |
+| `OPENROUTER_TEST_MODEL` | Server-only comparison model ID; item 10. | present | present |
+| `OPENROUTER_BACKUP_MODEL` | Server-only controlled free-backup probe model; item 10. | present | present |
 | `OPENCLAW_BRIDGE_SECRET` | Server side of the signed Mac bridge; items 12–15. | absent | absent |
 | `GOOGLE_CLIENT_ID` | Google sign-in and Calendar OAuth client; items 9 and 19. | present | present |
 | `GOOGLE_CLIENT_SECRET` | Server-only Google OAuth client secret; items 9 and 19. | present | present |
@@ -101,6 +102,7 @@ the active OpenClaw bridge.
 | `OPENROUTER_API_KEY` | Private worker provider credential. |  |  |
 | `OPENROUTER_PRIMARY_MODEL` | Private worker primary model ID. |  |  |
 | `OPENROUTER_TEST_MODEL` | Private worker comparison model ID. |  |  |
+| `OPENROUTER_BACKUP_MODEL` | Private worker free-router or pinned-free probe model; never a live pin. |  |  |
 | `PROSPECTING_WORKER_SECRET` | Legacy worker request-signing secret. |  |  |
 | `PROSPECTING_WORKER_BASE_URL` | Legacy worker's private server endpoint. |  |  |
 | `PROSPECTING_WORKER_ID` | Legacy worker identity. |  |  |
@@ -131,6 +133,7 @@ aliases below are a separate local contract.
 | `NEXT_PUBLIC_E2E_ADMIN_BYPASS` | Test-only bypass name; must never be enabled in a hosted app. |  |  |
 | `NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL` | Forbidden public model configuration name. |  |  |
 | `NEXT_PUBLIC_OPENROUTER_TEST_MODEL` | Forbidden public comparison-model configuration name. |  |  |
+| `NEXT_PUBLIC_OPENROUTER_BACKUP_MODEL` | Forbidden public free-backup configuration name. |  |  |
 | `NEXT_PUBLIC_APP_URL` | Template-only URL alias retained for local examples; the current release uses `NEXT_PUBLIC_SITE_URL`. |  |  |
 | `NEXT_PUBLIC_BASE_URL` | Template-only URL alias retained for local examples; the current release uses `NEXT_PUBLIC_SITE_URL`. |  |  |
 | `NEXTAUTH_URL` | Template-only/legacy NextAuth URL alias; it is not part of the first hosted baseline. |  |  |
@@ -187,6 +190,7 @@ part of this change.
 | `NEXT_PUBLIC_E2E_ADMIN_BYPASS` | No hosted authorization bypass. | absent | absent |
 | `NEXT_PUBLIC_OPENROUTER_PRIMARY_MODEL` | Provider/model configuration must not be public. | absent | absent |
 | `NEXT_PUBLIC_OPENROUTER_TEST_MODEL` | Comparison model must not be public. | absent | absent |
+| `NEXT_PUBLIC_OPENROUTER_BACKUP_MODEL` | Free-backup model must not be public. | absent | absent |
 | `NEXT_PUBLIC_CHATBOT_MODEL` | Legacy public analyzer override; use the retained server/provider boundary. | present | present |
 | `NEXT_PUBLIC_CHATBOT_MAX_TOKENS` | Retired public analyzer tuning setting. | present | present |
 | `NEXT_PUBLIC_CHATBOT_TEMPERATURE` | Retired public analyzer tuning setting. | present | present |
@@ -227,6 +231,18 @@ to Production and Preview.
 | Preview | 55 | 56 | only `ENV_TARGET` added |
 | Production | 55 | 56 | only `ENV_TARGET` added |
 
+On 2026-08-18, a follow-up names-only check found 64 names in Production,
+64 in Preview, and 55 in Development. The owner-directed change in this slice
+added only `OPENROUTER_BACKUP_MODEL` to Production and Preview, matching the
+existing server-only OpenRouter key, primary, and comparison variables in
+those scopes. Development remains unchanged. No environment value was read or
+recorded, and no deployment or provider request occurred.
+
+A later, separately approved Production deployment promoted the reviewed
+working slice as `dpl_7kr6p3LBfph9VjLMBnYgV627BE2M`. It reached `READY` and
+was aliased to `https://needthisdone.com`. The deployment made no environment
+value inspection, provider request, or hosted database change.
+
 The six hosted baseline names are now present in both Production and Preview:
 `ENV_TARGET`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
 `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`, and `NEXTAUTH_SECRET`.
@@ -264,8 +280,9 @@ rotated.
 - **Approved:** 2026-08-16
 - **Review/removal date:** 2026-09-15
 - **Scope:** Preserve all existing Vercel variables in Production, Preview, and
-  Development. Add only `ENV_TARGET` to Production and Preview; leave
-  Development unchanged.
+  Development. The 2026-08-16 action added only `ENV_TARGET`; the separate
+  2026-08-18 owner directive added only `OPENROUTER_BACKUP_MODEL` to Production
+  and Preview. Development remains unchanged.
 - **Protected values:** Supabase URL, anon key, and service-role key; Google
   client ID and secret; existing `NEXTAUTH_SECRET`; `COOKIE_SECRET`,
   `SESSION_SECRET`, and `SESSION_MAX_AGE`; `REDIS_URL`; email/payment/provider
@@ -292,8 +309,8 @@ source-map references.
 
 ## Audit record and sources
 
-- **Audit date:** 2026-08-16
-- **Code snapshot audited:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
+- **Audit date:** 2026-08-18 (follow-up to the 2026-08-16 baseline)
+- **Code snapshot audited:** Current `dev` working slice; the historical baseline was `e363a5f74ff8ad731272089f8714bd81edb97d3d`.
 - **Method:** names-only scan of `process.env` references, bridge runtime
   environment keys, private-worker environment contracts, dynamic test
   allowlists, local/migration scripts, template-only aliases, Supabase
@@ -302,11 +319,14 @@ source-map references.
   classified above; no Mac-only, local/test/process-only, or forbidden name is
   included in the six-name hosted baseline, while existing out-of-contract
   names remain covered by the approved retention exception.
-- **Hosted verification:** Production deployment `dpl_4XP38V8P6G8NGBb517aMa658m5Qm`
-  and Preview deployment `dpl_6NMvvVgVv2aqGtgxFFvqtwWr7Exh` reached `READY`.
-  Production and Preview public routes returned `200`, anonymous planner and
-  bridge POSTs returned `401`, and Preview health returned `200` with healthy
-  JSON through Vercel's automatic protection bypass.
+- **Hosted verification:** Current Production deployment
+  `dpl_7kr6p3LBfph9VjLMBnYgV627BE2M` reached `READY` and was aliased to
+  `https://needthisdone.com`. Production health reported Redis, Supabase, and
+  the app up; `/` and `/services` returned `200`; the unsigned protected
+  benchmark POST returned `401`; and 15 public scripts contained neither the
+  private backup-variable name nor configured model ID. Preview deployment
+  `dpl_6NMvvVgVv2aqGtgxFFvqtwWr7Exh` remains unchanged and `READY` from the
+  earlier verification.
 - **Primary sources:** [`app/lib/env-validation.ts`](../../app/lib/env-validation.ts),
   [`app/lib/supabase.ts`](../../app/lib/supabase.ts),
   [`app/lib/supabase-server.ts`](../../app/lib/supabase-server.ts),

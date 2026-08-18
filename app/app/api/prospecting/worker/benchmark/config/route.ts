@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { DEEPSEEK_V4_FLASH_FALLBACK, selectModelRoutingPolicy, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
+import { selectModelRoutingPolicy, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 import { consumeWorkerNonce, isSignedWorkerFailure, verifySignedWorkerRequest } from '@/lib/private-worker-auth';
 
 export const dynamic = 'force-dynamic';
@@ -10,7 +10,7 @@ const schema = z.object({ workerId: z.string().trim().min(1).max(160), profileId
 
 function recordFromRow(row: Record<string, unknown>): ModelEvaluationRecord {
   return {
-    candidateId: String(row.candidate_id), providerModelId: String(row.provider_model_id), taskId: row.task_id as ModelEvaluationTaskId,
+    candidateId: String(row.candidate_id), providerModelId: String(row.provider_model_id), actualModelId: row.actual_model_id ? String(row.actual_model_id) : null, taskId: row.task_id as ModelEvaluationTaskId,
     qualityScore: Number(row.quality_score), toolUseScore: Number(row.tool_use_score), latencyMs: Number(row.latency_ms), costUsd: Number(row.cost_usd),
     failed: Boolean(row.failed), repairRequired: Boolean(row.repair_required), evaluatedOn: String(row.evaluated_on),
   };
@@ -38,7 +38,6 @@ export async function POST(request: Request) {
   const policy = selectModelRoutingPolicy(
     (recordResult.data || []).map((row) => recordFromRow(row as Record<string, unknown>)),
     candidates.filter((candidate) => candidate.kind === 'free'),
-    candidates.find((candidate) => candidate.kind === 'deepseek-fallback') || DEEPSEEK_V4_FLASH_FALLBACK,
   );
   return NextResponse.json({ profile: { id: profile.id, timezone: profile.timezone, modelRoute: profile.model_route, selectedModelId: profile.selected_model_id }, candidates: candidateResult.data || [], policy });
 }

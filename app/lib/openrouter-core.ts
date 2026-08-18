@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isDynamicOpenRouterModel } from '@/lib/openrouter-model-config';
 
 export const OPENROUTER_API_BASE_URL = 'https://openrouter.ai/api/v1';
 
@@ -35,6 +36,8 @@ export type OpenRouterUsage = {
 };
 
 export type OpenRouterCompletion = {
+  /** The model OpenRouter reports as the endpoint that actually answered. */
+  model: string;
   content: string;
   citations: OpenRouterCitation[];
   usage: OpenRouterUsage;
@@ -42,12 +45,15 @@ export type OpenRouterCompletion = {
 };
 
 export type OpenRouterMessage = { role: 'system' | 'user'; content: string };
+export type OpenRouterTool = Record<string, unknown>;
 
 export type OpenRouterCompletionRequest = {
   model: string;
   messages: OpenRouterMessage[];
   maxTokens: number;
   responseSchema?: Record<string, unknown>;
+  tools?: OpenRouterTool[];
+  toolChoice?: string | Record<string, unknown>;
   webSearch?: { maxResults: number };
 };
 
@@ -268,6 +274,7 @@ export class OpenRouterClient {
       model: request.model,
       messages: request.messages,
       max_tokens: request.maxTokens,
+      stream: false,
     };
     if (request.responseSchema) {
       payload.response_format = {
@@ -275,11 +282,17 @@ export class OpenRouterClient {
         json_schema: { name: 'prospecting_response', strict: true, schema: request.responseSchema },
       };
     }
+    const tools = [...(request.tools || [])];
     if (request.webSearch) {
       // OpenRouter exposes its openrouter:web_search server tool through the
       // Chat Completions web_search tool type. Bound results limit both scope
       // and variable tool cost.
-      payload.tools = [{ type: 'web_search', max_results: request.webSearch.maxResults }];
+      tools.push({ type: 'web_search', max_results: request.webSearch.maxResults });
+    }
+    if (tools.length) payload.tools = tools;
+    if (request.toolChoice !== undefined) payload.tool_choice = request.toolChoice;
+    if (request.responseSchema || tools.length || request.toolChoice !== undefined) {
+      payload.provider = { require_parameters: true };
     }
     const json = await this.request('/chat/completions', {
       method: 'POST',
@@ -290,8 +303,13 @@ export class OpenRouterClient {
     const message = asRecord(asRecord(choices[0]).message);
     const content = typeof message.content === 'string' ? message.content.trim() : '';
     if (!content) throw new Error('OpenRouter completion did not contain a text response.');
+    const returnedModel = firstString(json.model);
+    if (isDynamicOpenRouterModel(request.model) && (!returnedModel || isDynamicOpenRouterModel(returnedModel))) {
+      throw new Error('OpenRouter dynamic routing response did not include the actual model ID.');
+    }
     const usage = asRecord(json.usage);
     return {
+      model: returnedModel || request.model,
       content,
       citations: extractOpenRouterCitations(json),
       usage: {
