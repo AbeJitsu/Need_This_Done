@@ -20,11 +20,47 @@ verified the published tip exactly.
 
 The planner/OpenClaw proof is included in the canonical `npm run verify:database` gate. It proves draft-only planning, approval-before-dispatch, frozen snapshots, OpenClaw-only claiming, model reservations, strict HTTPS citation validation, provenance linkage, private artifact boundaries, and authenticated direct-write denial.
 
-**Provider and secret boundary:** An OpenRouter API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly clears provider credentials and model configuration and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action.
+**Provider and secret boundary:** An OpenRouter API key and two exact model IDs remain private environment variables. Step 10A used the existing provider key for exactly six sanitized comparison requests and retained provider-reported usage/cost in hosted Supabase; it did not activate a worker, pin a model, change Vercel variables, or run an external action. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly remains provider-free and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action. See [Step 10A evidence](launch/step-10a-model-comparison-2026-08-17.md).
 
 **Release blockers and exceptions:** Hosted history is `91/095`, and the final parity report plus the Step 9 authorization verifier pass with four temporary users cleaned and zero cleanup errors. The historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the final result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair records are [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md) and [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md); the Step 9 record is [step-9-hosted-authorization-2026-08-17.md](launch/step-9-hosted-authorization-2026-08-17.md). Item 8 is an approved retention exception: the names-only Vercel audit found 55 names in each scope before the change, `ENV_TARGET` was added only to Production and Preview, those scopes now have all six baseline names plus the retained existing names, and Development is unchanged. Supabase, Google, `NEXTAUTH_SECRET`, cookie/session, Redis, provider/email/payment, and legacy/test entries were not revoked or rotated. Abe Reyes / `abejitsu` owns the exception; it was renewed for Step 9 on 2026-08-17 and review/removal is due 2026-09-15. The exception is not provider activation approval; item 9 passed under this one-check renewal, and items 10–22 remain blocked until later approvals are complete. `npm audit` reports 16 findings overall and 11 production-tree findings, so later technical promotion remains blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
 **Rollback:** Hosted `090`–`095` completed successfully; no rollback was needed. Preserve the history, backups, and evidence and use only reviewed forward migrations for any database correction. Redeploy `8b8d429` for an application rollback if needed.
+
+## Hosted Step 10A — model comparison — 2026-08-17
+
+The exact DeepSeek V4 Flash 0731 and Nemotron 3 Ultra IDs were both present
+and available in the live OpenRouter catalog. The approved run made exactly
+six completion requests with three fixed sanitized tasks per model. DeepSeek
+returned valid structured JSON for all three tasks at a provider-reported
+cost of `$0.000122624`; Nemotron’s three requests were rejected before
+generation by the account’s OpenRouter privacy/data-policy guardrail, and
+those failures were durably recorded with zero cost and repair-required
+flags. All six usage reservations reconciled.
+
+The hosted comparison profile remains `evaluation-required`, with no selected
+model, schedule, task, prospect, outreach message, or external recipient.
+This is partial evaluation evidence, not provider activation or a primary
+model decision. A privacy-policy change, repeat comparison, and model pin are
+separate approvals. The complete sanitized record is [Step 10A model comparison](launch/step-10a-model-comparison-2026-08-17.md).
+
+### Free replacement discovery — 2026-08-18
+
+A read-only account-filtered catalog check using the [OpenRouter free text
+model view](https://openrouter.ai/models?order=da-elo-high-to-low&max_output_price=0.5&output_modalities=text&variant=free)
+identified `google/gemma-4-31b-it:free` as the recommended next comparison
+candidate. Its current metadata reports text output, zero prompt/completion
+pricing, 262,144-token context, `response_format` and tool support, and an
+Artificial Analysis intelligence index of 29.7. No Design Arena ELO is
+currently attached to this model. The current endpoint list contains Google AI
+Studio's exact free variant `google/gemma-4-31b-it-20260402:free`.
+
+`google/gemma-4-26b-a4b-it:free` is retained as the backup candidate because
+the account-filtered endpoint list currently contains two free providers and
+both advertise `response_format` and tools. The moving `openrouter/free`
+router was not recommended because the worker requires an exact pinned model
+ID. This discovery made no completion request, hosted write, Vercel variable
+change, or model-selection decision; a repeat comparison remains separately
+approval-gated.
 
 ## Hosted parity endgame — 2026-08-15
 

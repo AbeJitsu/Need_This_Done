@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { estimateOpenRouterRequestCost, resolveBenchmarkCandidates, type OpenRouterModel } from '@/lib/openrouter-core';
+import { estimateOpenRouterRequestCost, OpenRouterClient, resolveBenchmarkCandidates, type OpenRouterModel } from '@/lib/openrouter-core';
 
 function model(id: string, options: Partial<OpenRouterModel> = {}): OpenRouterModel {
   return {
@@ -15,6 +15,22 @@ function model(id: string, options: Partial<OpenRouterModel> = {}): OpenRouterMo
 }
 
 describe('OpenRouter catalog resolution', () => {
+  it('accepts provider-specific catalog extensions while preserving benchmark metadata', async () => {
+    const client = new OpenRouterClient('test-key', async () => new Response(JSON.stringify({ data: [
+      {
+        id: 'provider/model-with-extension',
+        name: 'Model with provider extension',
+        context_length: 32_000,
+        pricing: { prompt: '0', completion: '0', overrides: { request: '0' } },
+        supported_parameters: ['tools'],
+      },
+    ] }), { status: 200 }));
+
+    await expect(client.listModels()).resolves.toMatchObject([
+      { id: 'provider/model-with-extension', pricing: { prompt: 0, completion: 0, request: null }, supportedParameters: ['tools'] },
+    ]);
+  });
+
   it('filters for available free models with tools and structured output, without a moving alias', () => {
     const candidates = resolveBenchmarkCandidates([
       model('catalog/free-good'),

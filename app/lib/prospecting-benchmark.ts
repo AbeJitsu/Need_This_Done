@@ -1,7 +1,7 @@
 import { createWorkerSignature } from '@/lib/prospecting';
 import { DEEPSEEK_V4_FLASH_FALLBACK, MODEL_EVALUATION_TASKS, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 import type { OpenRouterModelConfig } from '@/lib/openrouter-model-config';
-import { OpenRouterClient, estimateOpenRouterRequestCost, resolveBenchmarkCandidates, type OpenRouterModel, type ResolvedBenchmarkCandidate } from '@/lib/openrouter-core';
+import { OpenRouterClient, estimateOpenRouterRequestCost, resolveBenchmarkCandidates, supportsStructuredOutput, type OpenRouterModel, type ResolvedBenchmarkCandidate } from '@/lib/openrouter-core';
 
 type FetchLike = typeof fetch;
 
@@ -106,11 +106,11 @@ async function runCandidate(options: {
       const completion = await options.openRouter.chatCompletion({
         model: options.candidate.providerModelId,
         messages: [
-          { role: 'system', content: 'Return only the requested structured JSON. Use only the supplied sanitized evidence and do not make external calls.' },
+          { role: 'system', content: 'Return exactly one JSON object with one string field named answer. Use only the supplied sanitized evidence and do not make external calls.' },
           { role: 'user', content: benchmarkInputs[task.id] },
         ],
         maxTokens: 350,
-        responseSchema: benchmarkResponseSchema,
+        responseSchema: supportsStructuredOutput(options.catalogModel) ? benchmarkResponseSchema : undefined,
       });
       const valid = parseStructuredAnswer(completion.content);
       await options.transport.result(options.workerId, options.profileId, {
@@ -182,13 +182,18 @@ export async function runMeasuredBenchmark(options: {
   return completed.policy;
 }
 
-function configuredCandidate(kind: 'configured-primary' | 'configured-test', modelId: string): BenchmarkCandidate {
+function configuredCandidate(kind: 'configured-primary' | 'configured-test', model: OpenRouterModel): BenchmarkCandidate {
   return {
     candidateId: kind,
-    providerModelId: modelId,
+    providerModelId: model.id,
     label: kind === 'configured-primary' ? 'Configured primary model' : 'Configured comparison model',
     candidateKind: kind,
-    catalogMetadata: {},
+    catalogMetadata: {
+      contextLength: model.contextLength,
+      pricing: model.pricing,
+      supportedParameters: model.supportedParameters,
+      availability: model.availability,
+    },
   };
 }
 
@@ -200,18 +205,20 @@ export async function runConfiguredModelComparison(options: {
   openRouter: OpenRouterClient;
   modelConfig: OpenRouterModelConfig;
 }) {
+  const initial = await options.transport.config(options.workerId, options.profileId);
+  if (initial.profile.modelRoute !== 'evaluation-required' || initial.profile.selectedModelId) {
+    throw new Error('Model comparison is locked after a model has been selected.');
+  }
   const models = await options.openRouter.listModels();
-  const candidates = [
-    configuredCandidate('configured-primary', options.modelConfig.primaryModel),
-    configuredCandidate('configured-test', options.modelConfig.testModel),
-  ];
-  const catalogModels = candidates.map((candidate) => {
-    const catalogModel = models.find((model) => model.id === candidate.providerModelId);
+  const catalogModels = (['configured-primary', 'configured-test'] as const).map((kind) => {
+    const providerModelId = kind === 'configured-primary' ? options.modelConfig.primaryModel : options.modelConfig.testModel;
+    const catalogModel = models.find((model) => model.id === providerModelId);
     if (!catalogModel || catalogModel.availability !== 'available') {
       throw new Error('A configured comparison model is unavailable in the current OpenRouter catalog.');
     }
-    return { candidate, catalogModel };
+    return { candidate: configuredCandidate(kind, catalogModel), catalogModel };
   });
+  const candidates = catalogModels.map(({ candidate }) => candidate);
 
   await options.transport.candidates(options.workerId, options.profileId, candidates);
   for (const { candidate, catalogModel } of catalogModels) {

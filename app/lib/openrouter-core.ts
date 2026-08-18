@@ -54,10 +54,12 @@ export type OpenRouterCompletionRequest = {
 const modelResponseSchema = z.object({
   data: z.array(z.object({
     id: z.string().trim().min(1),
-    name: z.string().optional(),
-    context_length: z.number().optional(),
-    pricing: z.record(z.string(), z.union([z.string(), z.number(), z.null()])).optional(),
-    supported_parameters: z.array(z.string()).optional(),
+    name: z.string().nullable().optional(),
+    context_length: z.number().nullable().optional(),
+    // OpenRouter adds provider-specific pricing extensions such as `overrides`.
+    // Parse the fields this app uses below and preserve the rest in `raw`.
+    pricing: z.record(z.string(), z.unknown()).nullable().optional(),
+    supported_parameters: z.array(z.string()).nullable().optional(),
   }).passthrough()),
 });
 

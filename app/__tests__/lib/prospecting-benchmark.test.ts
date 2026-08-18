@@ -15,13 +15,15 @@ describe('configured model comparison', () => {
       if (url.endsWith('/models')) {
         return new Response(JSON.stringify({ data: [
           { id: primaryModel, name: 'Primary', context_length: 32_000, pricing: { prompt: 0, completion: 0, request: 0, web_search: 0 }, supported_parameters: ['response_format'] },
-          { id: testModel, name: 'Test', context_length: 32_000, pricing: { prompt: 0, completion: 0, request: 0, web_search: 0 }, supported_parameters: ['response_format'] },
+          { id: testModel, name: 'Test', context_length: 32_000, pricing: { prompt: 0, completion: 0, request: 0, web_search: 0 }, supported_parameters: ['tools'] },
         ] }), { status: 200 });
       }
       if (url.endsWith('/chat/completions')) {
-        const body = JSON.parse(String(init?.body)) as { model: string; messages: Array<{ role: string; content: string }> };
+        const body = JSON.parse(String(init?.body)) as { model: string; messages: Array<{ role: string; content: string }>; response_format?: unknown };
         completionModels.push(body.model);
         completionPrompts.push(body.messages[1].content);
+        if (body.model === primaryModel) expect(body.response_format).toBeDefined();
+        if (body.model === testModel) expect(body.response_format).toBeUndefined();
         return new Response(JSON.stringify({ choices: [{ message: { content: '{"answer":"ok"}' } }], usage: { prompt_tokens: 10, completion_tokens: 3, cost: 0 } }), { status: 200 });
       }
       throw new Error(`Unexpected provider request: ${url}`);
@@ -31,9 +33,9 @@ describe('configured model comparison', () => {
       const url = String(input);
       if (url.endsWith('/benchmark/config')) {
         return new Response(JSON.stringify({
-          profile: { id: 'profile-1', timezone: 'UTC', modelRoute: 'selected-primary', selectedModelId: primaryModel },
+          profile: { id: 'profile-1', timezone: 'UTC', modelRoute: 'evaluation-required', selectedModelId: null },
           candidates: [],
-          policy: { status: 'selected-primary', defaultModel: primaryModel, rationale: 'Pinned by explicit approval.' },
+          policy: { status: 'evaluation-required', defaultModel: null, rationale: 'Evaluation required.' },
         }), { status: 200 });
       }
       if (url.endsWith('/benchmark/candidates')) return new Response(JSON.stringify({ candidates: [] }), { status: 201 });

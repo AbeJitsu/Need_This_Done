@@ -50,7 +50,7 @@ OpenRouter is server/host private: the planner uses the target profile's databas
 
 ## Model-evaluation boundary
 
-No live worker model is selected by default. The pending evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for the two exact model IDs supplied through the private `OPENROUTER_PRIMARY_MODEL` and `OPENROUTER_TEST_MODEL` variables:
+No live worker model is selected by default. The evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for the two exact model IDs supplied through the private `OPENROUTER_PRIMARY_MODEL` and `OPENROUTER_TEST_MODEL` variables. Step 10A is partial because the configured free endpoint was rejected by the provider privacy/data-policy guardrail; a current account-filtered catalog check identified `google/gemma-4-31b-it:free` as the next comparison candidate, but no model is selected or pinned and a repeat comparison remains approval-gated:
 
 - the configured primary candidate; and
 - the configured comparison candidate.

@@ -176,7 +176,7 @@ remain separate from technical launch.
 - **Exit proof:** The bounded provider configuration, fixed evaluation results, provider-reported usage/cost, failure and repair records, and approved primary-model pin are retained without exposing the key.
 - **Approval:** Required — provider owner approves the key scope, limits, retention/training settings, evaluation result, and primary model.
 - **Rollback:** Revoke/rotate the provider key, restore `evaluation-required`, unpin the primary, stop workers, and preserve evaluation/usage records.
-- **Evidence link:** [Full-stack external setup](full-stack-external-setup.md), [release evidence](../RELEASE_EVIDENCE.md), and [project status](../PROJECT_STATUS.md).
+- **Evidence link:** [Step 10A model comparison](step-10a-model-comparison-2026-08-17.md), [Full-stack external setup](full-stack-external-setup.md), [release evidence](../RELEASE_EVIDENCE.md), and [project status](../PROJECT_STATUS.md). Step 10 remains blocked: the comparison is partial because the configured free endpoint was rejected by the provider privacy/data-policy guardrail. A read-only 2026-08-18 catalog check identified `google/gemma-4-31b-it:free` for a separately approved repeat comparison; no primary model was pinned.
 
 #### 11. Test the planner live — `BLOCKED`
 

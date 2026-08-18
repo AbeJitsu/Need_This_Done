@@ -49,6 +49,9 @@ export async function POST(request: Request) {
   if (!profile || profile.emergency_stop) return NextResponse.json({ error: 'Candidate selection is unavailable for this profile.' }, { status: 409 });
 
   if (isConfiguredComparison) {
+    if (profile.model_route !== 'evaluation-required') {
+      return NextResponse.json({ error: 'Model comparison is unavailable after a model selection.' }, { status: 409 });
+    }
     let configured: ReturnType<typeof getOpenRouterModelConfig>;
     try { configured = getOpenRouterModelConfig(); } catch { return NextResponse.json({ error: 'Configured model comparison is unavailable.' }, { status: 503 }); }
     const expected = new Map([

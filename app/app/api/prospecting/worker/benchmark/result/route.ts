@@ -48,6 +48,9 @@ export async function POST(request: Request) {
   const comparisonCandidate = candidate.candidate_kind === 'configured-primary' || candidate.candidate_kind === 'configured-test';
   if (parsed.data.comparisonOnly !== comparisonCandidate) return NextResponse.json({ error: 'The benchmark route does not match the registered candidate.' }, { status: 409 });
   if (comparisonCandidate) {
+    if (profile.model_route !== 'evaluation-required' || profile.selected_model_id) {
+      return NextResponse.json({ error: 'Model comparison is unavailable after a model selection.' }, { status: 409 });
+    }
     let configured: ReturnType<typeof getOpenRouterModelConfig>;
     try { configured = getOpenRouterModelConfig(); } catch { return NextResponse.json({ error: 'Configured model comparison is unavailable.' }, { status: 503 }); }
     const expectedModel = candidate.candidate_kind === 'configured-primary' ? configured.primaryModel : configured.testModel;
