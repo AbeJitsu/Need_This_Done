@@ -91,7 +91,7 @@ describe('controlled OpenRouter backup probe', () => {
       if (url.endsWith('/benchmark/candidates')) {
         const body = JSON.parse(String(init?.body)) as { candidates: unknown[] };
         expect(body.candidates).toHaveLength(1);
-        expect(body.candidates[0]).toMatchObject({ providerModelId: 'openrouter/free', candidateKind: 'router-free' });
+        expect(body.candidates[0]).toMatchObject({ providerModelId: 'google/gemma-4-26b-a4b-it:free', candidateKind: 'router-free' });
         return new Response(JSON.stringify({ candidates: body.candidates }), { status: 201 });
       }
       if (url.endsWith('/benchmark/reserve')) {
@@ -109,7 +109,7 @@ describe('controlled OpenRouter backup probe', () => {
       profileId: 'profile-1',
       transport,
       openRouter,
-      backupModel: 'openrouter/free',
+      backupModel: 'google/gemma-4-26b-a4b-it:free',
     });
 
     expect(result.requests).toBe(2);

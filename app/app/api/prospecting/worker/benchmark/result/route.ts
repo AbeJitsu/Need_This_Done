@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     }
     try {
       if (parsed.data.providerModelId === OPENROUTER_FREE_ROUTER_MODEL) {
-        validateOpenRouterModelId(parsed.data.providerModelId, 'providerModelId', { allowDynamicFreeRouter: true });
+        validateOpenRouterModelId(parsed.data.providerModelId, 'providerModelId');
       } else {
         validateOpenRouterBackupModelId(parsed.data.providerModelId, 'providerModelId');
       }

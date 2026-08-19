@@ -4,6 +4,12 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-18
 
+> Current local candidate notice (2026-08-19): `0a934ed` plus subsequent
+> working-tree changes are unreviewed local work. Passing evidence below is
+> historical evidence for `e363a5f` / hosted schema `095`, not evidence for
+> migrations `096+`. Technical launch remains **NOT GO** and provider/hosted
+> actions remain pending separate approval.
+
 **Decision:** **Corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` passed items 1–7, 7.1, and 9; item 8 remains an owner-approved, time-boxed retention `EXCEPTION`, not a clean six-variable allowlist pass.** Item 9 passed only after the item-8 retention scope was expressly renewed for this check on 2026-08-17. This evidence does not authorize provider activation, payment, Calendar, publication, or live external action. `8b8d429` remains the documented application rollback reference.
 
 The reviewed `dev` SHA `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce` passed `NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, bridge build/tests 6/6, the 23-mapping/9-gate migration-stage verifier, and whitespace validation on 2026-08-15. The fresh assembly reset only disposable local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion. No provider credential or hosted state was used by that local assembly.

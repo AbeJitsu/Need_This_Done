@@ -12,7 +12,7 @@ describe('OpenRouter model environment configuration', () => {
     });
   });
 
-  it('allows the moving free router only in the private backup variable', () => {
+  it('allows only the reviewed exact backup model', () => {
     expect(parseOpenRouterModelConfig({
       OPENROUTER_PRIMARY_MODEL: 'deepseek/deepseek-v4-flash-0731',
       OPENROUTER_BACKUP_MODEL: `  ${OPENROUTER_FREE_ROUTER_MODEL}  `,
@@ -27,8 +27,7 @@ describe('OpenRouter model environment configuration', () => {
     expect(() => parseOpenRouterModelConfig({
       OPENROUTER_PRIMARY_MODEL: 'deepseek/deepseek-v4-flash-0731',
       OPENROUTER_BACKUP_MODEL: 'google/gemma-4-26b-a4b-it',
-    })).toThrow('pinned free model variant');
-    expect(() => validateOpenRouterModelId(OPENROUTER_FREE_ROUTER_MODEL, 'OPENROUTER_PRIMARY_MODEL')).toThrow('controlled backup');
+    })).toThrow('reviewed Gemma');
   });
 
   it('rejects missing values and moving aliases', () => {

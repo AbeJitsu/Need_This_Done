@@ -4,17 +4,18 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-17
+**Last reviewed:** 2026-08-19 (local-candidate status correction)
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` candidate SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
+**Current reviewed `dev` candidate SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (historical)
+**Current local implementation candidate:** `0a934ed` plus unreviewed local changes; not deployable
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (2026-08-16; local migrations through `095`)
 **Final pre-apply release-control SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** through `095`
+**Local verification history:** historical proof through `095`; current local migration head is `103` and needs fresh assembly proof
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)

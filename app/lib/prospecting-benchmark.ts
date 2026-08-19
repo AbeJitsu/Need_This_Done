@@ -177,7 +177,7 @@ export async function runOpenRouterBackupProbe(options: {
     // dynamic probe, but it is still never a live selected model here.
     backupModel = validateOpenRouterBackupModelId(options.backupModel);
   } catch {
-    throw new Error('OPENROUTER_BACKUP_MODEL must be openrouter/free or a pinned free model ID.');
+    throw new Error('OPENROUTER_BACKUP_MODEL must use the reviewed Gemma activation candidate.');
   }
   const initial = await options.transport.config(options.workerId, options.profileId);
   if (initial.profile.modelRoute !== 'evaluation-required' || initial.profile.selectedModelId) {
@@ -275,9 +275,6 @@ export async function runOpenRouterBackupProbe(options: {
 }
 
 export async function runOpenRouterFreeRouterProbe(options: Parameters<typeof runOpenRouterBackupProbe>[0]) {
-  if (!isDynamicOpenRouterModel(options.backupModel)) {
-    throw new Error('The free-router probe requires OPENROUTER_BACKUP_MODEL=openrouter/free.');
-  }
   return runOpenRouterBackupProbe(options);
 }
 

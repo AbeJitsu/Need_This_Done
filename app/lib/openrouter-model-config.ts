@@ -10,8 +10,8 @@ export type OpenRouterModelConfig = {
   backupModel?: string;
 };
 
-/** OpenRouter's moving free-model router. It is valid only for controlled fallback probes. */
-export const OPENROUTER_FREE_ROUTER_MODEL = 'openrouter/free';
+/** The sole reviewed activation candidate. Dynamic routing is never allowed. */
+export const OPENROUTER_FREE_ROUTER_MODEL = 'google/gemma-4-26b-a4b-it:free';
 
 const MODEL_ID_MAX_LENGTH = 240;
 const MODEL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*\/[A-Za-z0-9][A-Za-z0-9._:-]*$/;
@@ -22,22 +22,18 @@ export function isMovingOpenRouterModelAlias(value: string) {
   return MOVING_ALIAS_PATTERN.test(value.trim());
 }
 
-export function isDynamicOpenRouterModel(value: string) {
-  return value.trim() === OPENROUTER_FREE_ROUTER_MODEL;
+export function isDynamicOpenRouterModel(_value: string) {
+  return false;
 }
 
 /** Validate one provider/model ID without ever including the configured value in an error. */
-export function validateOpenRouterModelId(value: unknown, environmentKey: string, options: { allowDynamicFreeRouter?: boolean } = {}) {
+export function validateOpenRouterModelId(value: unknown, environmentKey: string) {
   if (typeof value !== 'string' || !value.trim()) {
     throw new Error(`${environmentKey} is required.`);
   }
   const modelId = value.trim();
   if (modelId.length > MODEL_ID_MAX_LENGTH || /[\s\u0000-\u001f\u007f]/.test(modelId)) {
     throw new Error(`${environmentKey} must be a valid OpenRouter provider/model ID.`);
-  }
-  if (isDynamicOpenRouterModel(modelId)) {
-    if (options.allowDynamicFreeRouter) return modelId;
-    throw new Error(`${environmentKey} must use a pinned model ID; openrouter/free is only allowed as a controlled backup.`);
   }
   if (isMovingOpenRouterModelAlias(modelId)) {
     throw new Error(`${environmentKey} must use a pinned model ID, not a moving alias.`);
@@ -48,12 +44,10 @@ export function validateOpenRouterModelId(value: unknown, environmentKey: string
   return modelId;
 }
 
-/** A backup may be the moving free router or an explicitly free model variant. */
+/** The backup probe is intentionally restricted to one exact reviewed model. */
 export function validateOpenRouterBackupModelId(value: unknown, environmentKey = 'OPENROUTER_BACKUP_MODEL') {
-  const modelId = validateOpenRouterModelId(value, environmentKey, { allowDynamicFreeRouter: true });
-  if (!isDynamicOpenRouterModel(modelId) && !/:free$/i.test(modelId)) {
-    throw new Error(`${environmentKey} must use openrouter/free or a pinned free model variant.`);
-  }
+  const modelId = validateOpenRouterModelId(value, environmentKey);
+  if (modelId !== OPENROUTER_FREE_ROUTER_MODEL) throw new Error(`${environmentKey} must use the reviewed Gemma activation candidate.`);
   return modelId;
 }
 

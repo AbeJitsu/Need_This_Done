@@ -10,6 +10,13 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-18
 
+> Superseded local-candidate notice (2026-08-19): `0a934ed` and the current
+> working tree are unreviewed local implementation only. Historical passing
+> evidence remains attached to `e363a5f` and hosted schema `095`; it does not
+> cover migrations `096+`. Technical launch is **NOT GO**. No hosted migration,
+> credential provisioning, provider request, Mac activation, or external action
+> is authorized by this local work.
+
 **Finish-line decision:** **Items 1–7, 7.1, and 9 passed for corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`; item 8 remains an owner-approved, time-boxed retention `EXCEPTION`, not a clean six-variable pass.** The corrected application is live at Vercel Production and Preview. Item 9 passed only after Abe Reyes / `abejitsu` expressly renewed the item-8 retention scope for this check on 2026-08-17; the exception remains due for review/removal on 2026-09-15. Provider, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
 
 The latest full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`. The recorded assembly reset only local Supabase, replayed migrations `001`–`095`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The bridge build and 6/6 offline tests passed separately. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
