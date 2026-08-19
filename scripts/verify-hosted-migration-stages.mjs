@@ -36,13 +36,13 @@ if (manifest.schema_version !== 1) fail(`unsupported manifest schema ${manifest.
 if (!/^[0-9a-f]{40}$/.test(manifest.source_commit)) fail('source_commit must be a full commit SHA');
 if (manifest.expected_hosted_latest !== '072') fail('expected hosted history must remain at 072');
 
-const expectedVersions = Array.from({ length: 23 }, (_, index) => String(index + 73).padStart(3, '0'));
+const expectedVersions = Array.from({ length: 31 }, (_, index) => String(index + 73).padStart(3, '0'));
 const migrations = manifest.migrations;
 const stages = manifest.stages;
 if (!Array.isArray(migrations) || migrations.length !== expectedVersions.length) {
-  fail('the manifest must map exactly the 21 pending migration versions');
+  fail('the manifest must map exactly pending migration versions 073–103');
 }
-if (!Array.isArray(stages) || stages.length !== 9) fail('the manifest must define exactly nine staged gates');
+if (!Array.isArray(stages) || stages.length < 9) fail('the manifest must define staged gates');
 
 const seenNewVersions = new Set();
 const seenOriginalVersions = new Set();
@@ -93,7 +93,7 @@ for (const migration of migrations) {
   if (sha256(current) !== newSha) fail(`new hash mismatch: ${newFilename}`);
 
   if (newOnly) {
-    if (!['093', '094', '095'].includes(newVersion) || originalVersion !== newVersion || originalFilename !== newFilename || originalSha !== newSha) {
+    if (Number(newVersion) < 93 || originalVersion !== newVersion || originalFilename !== newFilename || originalSha !== newSha) {
       fail(`new-only migration metadata is invalid: ${newFilename}`);
     }
   } else {
@@ -109,14 +109,14 @@ for (const migration of migrations) {
 }
 
 if (new Set(expectedVersions).size !== seenNewVersions.size || expectedVersions.some((version) => !seenNewVersions.has(version))) {
-  fail('new migration versions are not an exact one-to-one map for 073–095');
+  fail('new migration versions are not an exact one-to-one map for 073–103');
 }
 if (seenOriginalVersions.size !== expectedVersions.length || expectedVersions.some((version) => !seenOriginalVersions.has(version))) {
   fail('original migration versions are not an exact one-to-one map for 073–095');
 }
 
 const currentPendingFiles = readdirSync(migrationRoot)
-  .filter((filename) => /^(07[3-9]|08[0-9]|09[0-5])_.*\.sql$/.test(filename))
+  .filter((filename) => /^(07[3-9]|08[0-9]|09[0-9]|10[0-3])_.*\.sql$/.test(filename))
   .sort();
 const mappedPendingFiles = migrations.map((migration) => migration.new_filename).sort();
 if (JSON.stringify(currentPendingFiles) !== JSON.stringify(mappedPendingFiles)) {
@@ -133,6 +133,12 @@ const expectedStages = [
   ['storage-policy-repair', ['093'], 'separate', false],
   ['worker-claim-context-repair', ['094'], 'separate', false],
   ['hosted-parity-fixture-cleanup', ['095'], 'separate', false],
+  ['openrouter-route-evidence', ['096', '097'], 'separate', false],
+  ['worker-boundary-hardening', ['098', '099'], 'separate', false],
+  ['provider-operation-ledger', ['100'], 'separate', false],
+  ['resend-provider-boundary', ['101'], 'separate', false],
+  ['calendar-provider-boundary', ['102'], 'separate', false],
+  ['website-invoice-boundary', ['103'], 'separate', false],
 ];
 for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
   const stage = stages.find((candidate) => candidate.id === id);

@@ -10,12 +10,22 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-18
 
-> Superseded local-candidate notice (2026-08-19): `0a934ed` and the current
-> working tree are unreviewed local implementation only. Historical passing
+> Current local-candidate notice (2026-08-19): `5c2b9f9` plus the uncommitted
+> local verification and compatibility repair stack is the unreviewed local candidate. Historical passing
 > evidence remains attached to `e363a5f` and hosted schema `095`; it does not
 > cover migrations `096+`. Technical launch is **NOT GO**. No hosted migration,
 > credential provisioning, provider request, Mac activation, or external action
 > is authorized by this local work.
+
+**Local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
+the disposable local stack. The expanded schema/RLS/RPC manifest, all retained
+database suites, bridge tests (8/8), code gate (221 unit tests, 50 a11y tests,
+and the production build), 31-mapping/15-gate staged verifier, clean
+`npm audit --omit=dev`, and `ASSEMBLY_PRODUCTION_SERVER=true
+NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh` passed.
+That fresh assembly replayed local migrations `001`–`103` and passed public,
+authenticated, prospecting, cockpit, and employee browser suites with provider
+credentials disabled. Hosted history remains `095`; this is local proof only.
 
 **Finish-line decision:** **Items 1–7, 7.1, and 9 passed for corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d`; item 8 remains an owner-approved, time-boxed retention `EXCEPTION`, not a clean six-variable pass.** The corrected application is live at Vercel Production and Preview. Item 9 passed only after Abe Reyes / `abejitsu` expressly renewed the item-8 retention scope for this check on 2026-08-17; the exception remains due for review/removal on 2026-09-15. Provider, runtime, reliability, and business controls remain separate gates. Hosted history is `91/095`; the anonymous Storage defect, worker claim-context defect, and hosted parity fixture-cleanup boundary were repaired through tracked forward migrations. Provider activation, payment, live integrations, and final technical go/no-go remain separate approvals.
 

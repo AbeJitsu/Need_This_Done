@@ -4,11 +4,25 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-18
 
-> Current local candidate notice (2026-08-19): `0a934ed` plus subsequent
-> working-tree changes are unreviewed local work. Passing evidence below is
+> Current local candidate notice (2026-08-19): `5c2b9f9` plus the uncommitted
+> local verification and compatibility repair stack is the unreviewed local work. Passing evidence below is
 > historical evidence for `e363a5f` / hosted schema `095`, not evidence for
 > migrations `096+`. Technical launch remains **NOT GO** and provider/hosted
 > actions remain pending separate approval.
+
+### Local migration-103 proof — 2026-08-19
+
+Committed candidate `5c2b9f9` plus the pending local verification repair was
+reset against disposable local Supabase through migration `103`. Schema lint,
+the retained manifest (9/9), security (14/14), AI employee RLS (10/10), agent
+operations RLS (3/3), planner RLS (2/2), prospecting RLS (2/2), consultation
+integration (1/1), bridge tests (8/8), code gate (221 unit tests, 50 a11y
+tests, and the 49-page build), and the 31-mapping/15-gate staged-manifest
+verifier passed. The production audit is now clean after compatible AI SDK,
+React Email, PostCSS, and NanoID upgrades. A fresh provider-free assembly
+passed through `103`, including the local production server, 47 retained smoke
+passes with one intentional skip, auth 4/4, prospecting 1/1, cockpit 1/1, and
+employee workspace 2/2. No hosted or provider action occurred.
 
 **Decision:** **Corrected candidate `e363a5f74ff8ad731272089f8714bd81edb97d3d` passed items 1–7, 7.1, and 9; item 8 remains an owner-approved, time-boxed retention `EXCEPTION`, not a clean six-variable allowlist pass.** Item 9 passed only after the item-8 retention scope was expressly renewed for this check on 2026-08-17. This evidence does not authorize provider activation, payment, Calendar, publication, or live external action. `8b8d429` remains the documented application rollback reference.
 

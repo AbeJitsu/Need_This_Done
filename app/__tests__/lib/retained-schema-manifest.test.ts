@@ -23,6 +23,7 @@ const retainedTables = [
   'ai_employee_work_items',
   'ai_employees',
   'brand_profiles',
+  'calendar_operation_references',
   'content_schedules',
   'customer_accounts',
   'customer_memberships',
@@ -46,10 +47,15 @@ const retainedTables = [
   'prospect_sources',
   'prospecting_artifact_provenance',
   'prospects',
+  'provider_operations',
+  'provider_webhook_receipts',
+  'resend_transactional_events',
+  'resend_transactional_messages',
   'sender_events',
   'site_reports',
   'suppression_records',
   'user_roles',
+  'website_improvement_invoice_references',
   'worker_callback_nonces',
   'worker_heartbeats',
   'workflow_runs',
@@ -354,6 +360,9 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
 
   it('preserves the critical retained columns and types', async () => {
     const expected = [
+      ['agent_orchestration_tasks', 'actual_model_id', 'text'],
+      ['agent_orchestration_tasks', 'provider_usage', 'jsonb'],
+      ['agent_runs', 'scheduled_for', 'timestamptz'],
       ['ai_employee_decisions', 'idempotency_key', 'uuid'],
       ['ai_employee_outcomes', 'amount_cents', 'int8'],
       ['ai_employee_outcomes', 'cost_category', 'text'],
@@ -392,6 +401,9 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       ['projects', 'consultation_type', 'text'],
       ['projects', 'customer_id', 'uuid'],
       ['projects', 'preferred_consultation_at', 'timestamptz'],
+      ['provider_operations', 'idempotency_key', 'text'],
+      ['provider_webhook_receipts', 'payload_sha256', 'text'],
+      ['website_improvement_invoice_references', 'amount_cents', 'int4'],
       ['workflow_runs', 'idempotency_key', 'text'],
     ];
     const result = await getPool().query<{ table_name: string; column_name: string; udt_name: string }>(
@@ -449,6 +461,9 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       'agent_plans_run_id_key',
       'agent_plans_openclaw_safety_flags_present_check',
       'openclaw_model_usage_reservations_reservation_key_key',
+      'provider_operations_provider_idempotency_key_key',
+      'provider_webhook_receipts_provider_provider_event_id_key',
+      'website_improvement_invoice_references_amount_cents_check',
     ];
     const constraints = await getPool().query<{ conname: string }>(
       `select conname from pg_constraint where conname = any($1::text[]) order by conname`,
@@ -545,7 +560,17 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       ['public.reconcile_openclaw_model_usage(uuid,numeric,jsonb)', true, false, false],
       ['public.record_openclaw_prospecting_result(uuid,text,text,uuid,uuid,jsonb)', true, false, false],
       ['public.complete_openclaw_orchestration_task(uuid,text,text,jsonb,text,jsonb,uuid,jsonb)', true, false, false],
+      ['public.complete_agent_orchestration_task(uuid,text,text,jsonb,text,jsonb)', true, false, false],
       ['public.claim_openclaw_agent_orchestration_task(uuid,text,integer)', true, false, false],
+      ['public.complete_openclaw_task_with_provenance(uuid,text,text,jsonb,text,jsonb,uuid,numeric,text,jsonb,jsonb)', true, false, false],
+      ['public.abort_openclaw_task_before_provider(uuid,text,text)', true, false, false],
+      ['public.upsert_provider_operation(text,text,text,text,text,jsonb,jsonb,text)', true, false, false],
+      ['public.record_provider_webhook_receipt(text,text,text,boolean)', true, false, false],
+      ['public.record_resend_transactional_message(uuid,uuid,text,text,text,text)', true, false, false],
+      ['public.record_resend_transactional_event(uuid,text,text,timestamp with time zone)', true, false, false],
+      ['public.record_calendar_operation_reference(uuid,uuid,uuid,text,text,text)', true, false, false],
+      ['public.record_website_improvement_invoice_reference(uuid,uuid,text,text)', true, false, false],
+      ['public.record_stripe_invoice_event(uuid,text,text)', true, false, false],
     ] as const;
 
     for (const [signature, serviceRole, authenticated, anon] of rpcChecks) {
