@@ -37,15 +37,15 @@ function routeError(error: { code?: string; message?: string } | null, fallback:
   return { error: fallback, status: 500 };
 }
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!idSchema.safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent plan.' }, { status: 400 });
+  if (!idSchema.safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent plan.' }, { status: 400 });
   const supabase = await createSupabaseServerClient();
   const { data: plan, error: planError } = await supabase
     .from('agent_plans')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', (await params).id)
     .maybeSingle();
   if (planError) {
     const mapped = routeError(planError, 'Agent plan could not be loaded.');
@@ -54,9 +54,9 @@ export async function GET(_request: Request, { params }: { params: { id: string 
   if (!plan) return NextResponse.json({ error: 'Agent plan not found.' }, { status: 404 });
 
   const [eventsResult, runResult, provenanceResult] = await Promise.all([
-    supabase.from('agent_plan_events').select('*').eq('plan_id', params.id).order('created_at', { ascending: true }),
+    supabase.from('agent_plan_events').select('*').eq('plan_id', (await params).id).order('created_at', { ascending: true }),
     plan.run_id ? supabase.from('agent_runs').select('*').eq('id', plan.run_id).maybeSingle() : Promise.resolve({ data: null, error: null }),
-    supabase.from('prospecting_artifact_provenance').select('*').eq('plan_id', params.id).order('created_at', { ascending: false }),
+    supabase.from('prospecting_artifact_provenance').select('*').eq('plan_id', (await params).id).order('created_at', { ascending: false }),
   ]);
   const relatedError = eventsResult.error || runResult.error || provenanceResult.error;
   if (relatedError) return NextResponse.json({ error: 'Agent plan provenance could not be loaded.' }, { status: 500 });
@@ -69,21 +69,21 @@ export async function GET(_request: Request, { params }: { params: { id: string 
   });
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!idSchema.safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent plan.' }, { status: 400 });
+  if (!idSchema.safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent plan.' }, { status: 400 });
   const parsed = patchSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid agent plan edit.' }, { status: 400 });
   const supabase = await createSupabaseServerClient();
-  const { data: current, error: currentError } = await supabase.from('agent_plans').select('*').eq('id', params.id).maybeSingle();
+  const { data: current, error: currentError } = await supabase.from('agent_plans').select('*').eq('id', (await params).id).maybeSingle();
   if (currentError) return NextResponse.json({ error: 'Agent plan could not be loaded.' }, { status: 500 });
   if (!current) return NextResponse.json({ error: 'Agent plan not found.' }, { status: 404 });
 
   const idempotencyKey = parsed.data.idempotencyKey || crypto.randomUUID();
   if (parsed.data.action === 'reject') {
     const { data, error } = await supabase.rpc('reject_agent_plan', {
-      target_plan_id: params.id,
+      target_plan_id: (await params).id,
       target_idempotency_key: idempotencyKey,
       target_note: parsed.data.note,
     });
@@ -110,7 +110,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     expectedArtifacts,
   });
   const { data, error } = await supabase.rpc('update_agent_plan', {
-    target_plan_id: params.id,
+    target_plan_id: (await params).id,
     target_rewritten_instruction: rewrittenInstruction,
     target_steps: steps,
     target_allowed_capabilities: allowedCapabilities,

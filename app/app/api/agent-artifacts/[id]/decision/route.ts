@@ -13,16 +13,16 @@ const schema = z.object({
   metadata: z.record(z.string(), z.unknown()).default({}),
 }).strict();
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!z.string().uuid().safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent artifact.' }, { status: 400 });
+  if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent artifact.' }, { status: 400 });
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid artifact decision.' }, { status: 400 });
 
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc('record_agent_artifact_decision', {
-    target_artifact_id: params.id,
+    target_artifact_id: (await params).id,
     target_decision: parsed.data.decision,
     target_idempotency_key: parsed.data.idempotencyKey,
     target_note: parsed.data.note,

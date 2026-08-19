@@ -58,12 +58,6 @@ const nextConfig = {
     // This bypasses the /_next/image API which is causing issues
     unoptimized: true,
 
-    // Allowed external image hostnames
-    domains: [
-      'oxhjtmozsdstbokwtnwa.supabase.co',
-      'images.unsplash.com',
-    ],
-
     // Allowed remote patterns for external images
     remotePatterns: [
       {
@@ -206,4 +200,4 @@ const nextConfig = {
 
 };
 
-module.exports = nextConfig;
+export default nextConfig;

@@ -28,9 +28,9 @@ const databaseErrors: Record<string, { status: number; error: string }> = {
   '42P01': { status: 503, error: 'Employee decisions are not configured yet.' },
 };
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const parsed = decisionSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success || !z.string().uuid().safeParse(params.id).success) {
+  if (!parsed.success || !z.string().uuid().safeParse((await params).id).success) {
     return NextResponse.json({ error: 'Invalid decision details.' }, { status: 400 });
   }
 
@@ -39,7 +39,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { data, error } = await supabase.rpc('record_ai_employee_decision', {
-    target_work_item_id: params.id,
+    target_work_item_id: (await params).id,
     target_decision: parsed.data.decision,
     target_instructions: parsed.data.instructions || '',
     target_idempotency_key: parsed.data.idempotencyKey,

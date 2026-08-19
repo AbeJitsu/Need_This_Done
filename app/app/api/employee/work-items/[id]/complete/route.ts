@@ -14,9 +14,9 @@ const databaseErrors: Record<string, { status: number; error: string }> = {
   '42883': { status: 503, error: 'Work completion is not configured yet.' },
 };
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const parsed = completionSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success || !z.string().uuid().safeParse(params.id).success) {
+  if (!parsed.success || !z.string().uuid().safeParse((await params).id).success) {
     return NextResponse.json({ error: 'Invalid completion details.' }, { status: 400 });
   }
   const supabase = await createSupabaseServerClient();
@@ -24,7 +24,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { data, error } = await supabase.rpc('complete_ai_employee_work_item', {
-    target_work_item_id: params.id,
+    target_work_item_id: (await params).id,
     target_completion_notes: parsed.data.notes,
     target_idempotency_key: parsed.data.idempotencyKey,
   });

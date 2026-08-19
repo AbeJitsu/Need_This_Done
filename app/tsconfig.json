@@ -45,7 +45,7 @@
     // JSX and React
     // ====================================================================
     // Configure how TypeScript handles React components
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "jsxImportSource": "react",
     // ====================================================================
     // Path Aliases - Cleaner Imports
@@ -87,7 +87,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

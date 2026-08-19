@@ -128,4 +128,13 @@ const { handleRequest } = createYoga({
 // Next.js Route Handlers
 // ============================================================================
 
-export { handleRequest as GET, handleRequest as POST };
+// Keep Yoga's framework-neutral handler behind Next's route-handler shape.
+// Next 16 validates the optional second argument as a route context, while
+// Yoga uses its own context type.
+export async function GET(request: Request) {
+  return handleRequest(request, {});
+}
+
+export async function POST(request: Request) {
+  return handleRequest(request, {});
+}

@@ -8,7 +8,6 @@ let admin: SupabaseClient;
 let userId: string;
 let email: string;
 let prospectEmail: string;
-let bounceEventId: string;
 
 async function expectNoError<T>(result: { data: T; error: { message: string } | null }) {
   if (result.error) throw new Error(result.error.message);
@@ -31,7 +30,6 @@ test.beforeAll(async ({}, workerInfo) => {
   admin = createClient(localUrl, serviceRoleKey, { auth: { autoRefreshToken: false, persistSession: false } });
   email = `prospecting-${Date.now()}-${workerInfo.workerIndex}-${crypto.randomUUID().slice(0, 8)}@example.test`;
   prospectEmail = `jordan-${crypto.randomUUID().slice(0, 8)}@example.test`;
-  bounceEventId = `browser-proof-bounce-${crypto.randomUUID()}`;
   const created = await admin.auth.admin.createUser({ email, password, email_confirm: true });
   if (created.error || !created.data.user) throw new Error(created.error?.message || 'Could not create prospecting fixture user.');
   userId = created.data.user.id;
@@ -45,7 +43,7 @@ test.afterAll(async () => {
   await admin.auth.admin.deleteUser(userId);
 });
 
-test('configures, reviews, sends, and suppresses an approved prospecting message', async ({ page }) => {
+test('configures, reviews, sends, and rejects browser event ingestion for an approved prospecting message', async ({ page }) => {
   const loginResponse = await page.request.post('/api/auth/login', {
     headers: { 'x-forwarded-for': '127.0.0.48' },
     data: { email, password },
@@ -142,35 +140,23 @@ test('configures, reviews, sends, and suppresses an approved prospecting message
   expect(duplicateSend.status).toBe(200);
   expect(duplicateSend.body.duplicate).toBe(true);
 
-  const bounce = await api(page, '/api/prospecting/sender/events', {
+  const browserEvent = await api(page, '/api/prospecting/sender/events', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      providerEventId: bounceEventId,
+      providerEventId: `browser-proof-bounce-${crypto.randomUUID()}`,
       eventType: 'bounced',
       providerMessageId: sentMessage.provider_message_id,
       address: prospectEmail,
       payload: { reason: 'test-double' },
     }),
   });
-  expect(bounce.status).toBe(201);
-  const duplicateBounce = await api(page, '/api/prospecting/sender/events', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      providerEventId: bounceEventId,
-      eventType: 'bounced',
-      providerMessageId: sentMessage.provider_message_id,
-      address: prospectEmail,
-    }),
-  });
-  expect(duplicateBounce.status).toBe(200);
-  expect(duplicateBounce.body.duplicate).toBe(true);
+  expect(browserEvent.status).toBe(410);
 
   const queue = await api(page, '/api/prospecting/queue');
   expect(queue.status).toBe(200);
-  expect(queue.body.prospects[0].outreach_status).toBe('bounced');
-  expect(queue.body.stats.bounces).toBe(1);
-  const suppression = await expectNoError(await admin.from('suppression_records').select('normalized_address, reason').eq('normalized_address', prospectEmail).single());
-  expect(suppression).toMatchObject({ normalized_address: prospectEmail, reason: 'bounce' });
+  expect(queue.body.prospects[0].outreach_status).toBe('contacted');
+  expect(queue.body.stats.bounces).toBe(0);
+  const suppression = await expectNoError(await admin.from('suppression_records').select('normalized_address').eq('normalized_address', prospectEmail));
+  expect(suppression).toEqual([]);
 });

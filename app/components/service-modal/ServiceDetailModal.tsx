@@ -386,7 +386,7 @@ export default function ServiceDetailModal() {
       </div>
 
       {/* Animation */}
-      <style jsx>{`
+      <style>{`
         @keyframes modal-enter {
           from {
             opacity: 0;

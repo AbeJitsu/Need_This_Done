@@ -7,25 +7,25 @@ export const dynamic = 'force-dynamic';
 
 const idSchema = z.string().uuid();
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!idSchema.safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent run.' }, { status: 400 });
+  if (!idSchema.safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent run.' }, { status: 400 });
   const supabase = await createSupabaseServerClient();
 
   const { data: run, error: runError } = await supabase
     .from('agent_runs')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', (await params).id)
     .maybeSingle();
   if (runError) return NextResponse.json({ error: 'Agent run could not be loaded.' }, { status: 500 });
   if (!run) return NextResponse.json({ error: 'Agent run not found.' }, { status: 404 });
 
   const [tasksResult, artifactsResult, eventsResult, scheduleResult] = await Promise.all([
-    supabase.from('agent_orchestration_tasks').select('*').eq('run_id', params.id).order('created_at', { ascending: true }),
-    supabase.from('agent_artifacts').select('*').eq('run_id', params.id).order('created_at', { ascending: false }),
-    supabase.from('agent_run_events').select('*').eq('run_id', params.id).order('created_at', { ascending: true }).limit(500),
-    supabase.from('content_schedules').select('*').eq('run_id', params.id).maybeSingle(),
+    supabase.from('agent_orchestration_tasks').select('*').eq('run_id', (await params).id).order('created_at', { ascending: true }),
+    supabase.from('agent_artifacts').select('*').eq('run_id', (await params).id).order('created_at', { ascending: false }),
+    supabase.from('agent_run_events').select('*').eq('run_id', (await params).id).order('created_at', { ascending: true }).limit(500),
+    supabase.from('content_schedules').select('*').eq('run_id', (await params).id).maybeSingle(),
   ]);
   const relatedError = tasksResult.error || artifactsResult.error || eventsResult.error || scheduleResult.error;
   if (relatedError) return NextResponse.json({ error: 'Agent run details could not be loaded.' }, { status: 500 });

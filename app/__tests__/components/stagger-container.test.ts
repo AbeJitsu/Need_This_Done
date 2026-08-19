@@ -5,7 +5,7 @@ import { StaggerItem } from '@/components/motion/StaggerItem';
 
 describe('StaggerContainer child enhancement', () => {
   it('does not pass animation props to native DOM children', () => {
-    const child = createElement('div', { children: 'plain child' });
+    const child = createElement('div', null, 'plain child');
     const [enhancedChild] = enhanceStaggerChildren([child], 0.08, true) as React.ReactElement[];
 
     expect(enhancedChild.props.staggerIndex).toBeUndefined();
@@ -14,7 +14,7 @@ describe('StaggerContainer child enhancement', () => {
   });
 
   it('passes animation props to StaggerItem children', () => {
-    const child = createElement(StaggerItem, { children: 'animated child' });
+    const child = createElement(StaggerItem, null, 'animated child');
     const [enhancedChild] = enhanceStaggerChildren([child], 0.08, true) as React.ReactElement[];
 
     expect(enhancedChild.props.staggerIndex).toBe(0);

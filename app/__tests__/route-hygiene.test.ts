@@ -30,7 +30,7 @@ describe('public route hygiene', () => {
   });
 
   it('keeps permanent redirects and the audit-to-intake handoff aligned', () => {
-    const config = readFileSync(resolve(appRoot, 'next.config.cjs'), 'utf8');
+    const config = readFileSync(resolve(appRoot, 'next.config.mjs'), 'utf8');
     expect(config).toContain("source: '/about'");
     expect(config).toContain("destination: '/work'");
     expect(config).toContain("source: '/resume'");

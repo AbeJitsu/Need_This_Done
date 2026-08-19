@@ -11,16 +11,16 @@ const schema = z.object({
   note: z.string().trim().max(1_000).default(''),
 }).strict();
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!z.string().uuid().safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent run.' }, { status: 400 });
+  if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent run.' }, { status: 400 });
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid agent control request.' }, { status: 400 });
 
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc('control_agent_run', {
-    target_run_id: params.id,
+    target_run_id: (await params).id,
     target_command: parsed.data.action,
     target_idempotency_key: parsed.data.idempotencyKey,
     target_note: parsed.data.note,

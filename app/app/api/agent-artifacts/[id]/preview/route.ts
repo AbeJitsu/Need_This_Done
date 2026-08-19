@@ -6,15 +6,15 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!z.string().uuid().safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent artifact.' }, { status: 400 });
+  if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent artifact.' }, { status: 400 });
   const supabase = await createSupabaseServerClient();
   const { data: artifact, error: artifactError } = await supabase
     .from('agent_artifacts')
     .select('id, current_version_id, owner_id')
-    .eq('id', params.id)
+    .eq('id', (await params).id)
     .eq('owner_id', auth.user.id)
     .maybeSingle();
   if (artifactError) return NextResponse.json({ error: 'Artifact preview is unavailable.' }, { status: 500 });

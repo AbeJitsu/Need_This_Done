@@ -28,8 +28,8 @@ const databaseErrors: Record<string, { status: number; error: string }> = {
   '42883': { status: 503, error: 'Pilot provisioning is not configured yet.' },
 };
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
-  if (!z.string().uuid().safeParse(params.id).success) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!z.string().uuid().safeParse((await params).id).success) {
     return NextResponse.json({ error: 'Invalid project.' }, { status: 400 });
   }
   const authResult = await verifyAdmin();
@@ -42,7 +42,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc('provision_ai_employee_pilot', {
-    target_project_id: params.id,
+    target_project_id: (await params).id,
     target_employee_name: parsed.data.employeeName,
     target_role_name: parsed.data.roleName,
     target_timezone: parsed.data.timezone,

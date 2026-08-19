@@ -16,10 +16,10 @@ const actionSchema = z.object({
   }
 });
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAuth();
   if (auth.error) return auth.error;
-  if (!z.string().uuid().safeParse(params.id).success) return NextResponse.json({ error: 'Invalid cockpit action.' }, { status: 400 });
+  if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid cockpit action.' }, { status: 400 });
 
   const parsed = actionSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid action update.' }, { status: 400 });
@@ -31,7 +31,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       ? { status: 'deferred', deferred_until: parsed.data.deferUntil || null, completed_at: null, completion_note: parsed.data.note || null }
       : { status: 'open', deferred_until: null, completed_at: null, completion_note: null };
 
-  const { data, error } = await supabase.from('operator_cockpit_actions').update(update).eq('id', params.id).eq('owner_id', auth.user.id).select('*').maybeSingle();
+  const { data, error } = await supabase.from('operator_cockpit_actions').update(update).eq('id', (await params).id).eq('owner_id', auth.user.id).select('*').maybeSingle();
   if (error) return NextResponse.json({ error: 'Cockpit action could not be updated.' }, { status: 500 });
   if (!data) return NextResponse.json({ error: 'Cockpit action not found.' }, { status: 404 });
   return NextResponse.json({ action: data });

@@ -26,7 +26,7 @@ test('insights makes the reading path and notes easy to scan', async ({ page }) 
   await page.goto('/blog');
   await expect(page.getByRole('heading', { name: /make the next step clearer/i })).toBeVisible();
   await expect(page.getByRole('heading', { name: /read what helps you move/i })).toBeVisible();
-  await expect(page.getByText('Carry it forward', { exact: true })).toBeVisible();
+  await expect(page.getByText('Carry it forward', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('link', { name: /read note/i }).first()).toBeVisible();
 });
 

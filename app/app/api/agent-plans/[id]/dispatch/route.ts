@@ -14,15 +14,15 @@ function statusFor(error: { code?: string } | null) {
   return 500;
 }
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const auth = await verifyAdmin();
   if (auth.error) return auth.error;
-  if (!z.string().uuid().safeParse(params.id).success) return NextResponse.json({ error: 'Invalid agent plan.' }, { status: 400 });
+  if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid agent plan.' }, { status: 400 });
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid dispatch request.' }, { status: 400 });
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc('dispatch_agent_plan', {
-    target_plan_id: params.id,
+    target_plan_id: (await params).id,
     target_idempotency_key: parsed.data.idempotencyKey || crypto.randomUUID(),
   });
   if (error) return NextResponse.json({ error: 'The plan could not be dispatched. It must be approved first.' }, { status: statusFor(error) });

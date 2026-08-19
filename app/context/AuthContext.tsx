@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
     return () => { cancelled = true; };
-  }, [user?.id]);
+  }, [user]);
 
   const nextAuthEmail = nextAuthSession?.user?.email || null;
   const bridgeHasNotStarted = nextAuthStatus === 'authenticated'

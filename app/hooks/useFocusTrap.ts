@@ -85,8 +85,9 @@ export function useFocusTrap({ isOpen }: UseFocusTrapOptions) {
       e.preventDefault();
     };
 
-    containerRef.current.addEventListener('keydown', handleKeyDown);
-    return () => containerRef.current?.removeEventListener('keydown', handleKeyDown);
+    const container = containerRef.current;
+    container.addEventListener('keydown', handleKeyDown);
+    return () => container.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, getFocusableElements]);
 
   return { containerRef };
