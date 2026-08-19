@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Activity, Check, CircleAlert, ExternalLink, FileCheck2, Loader2, Pause, Play, RotateCcw, ShieldAlert, Square, Video } from 'lucide-react';
+import { Check, CircleAlert, ExternalLink, FileCheck2, Loader2, Pause, Play, RotateCcw, ShieldAlert, Square } from 'lucide-react';
 import AgentPlannerPanel from '@/components/AgentPlannerPanel';
 
 type Task = {
@@ -138,45 +138,6 @@ export default function AgentOperationsDashboard({ previewMode = false }: { prev
 
   useEffect(() => { void load(); }, [load]);
 
-  const createRun = async (workflowType: 'research_outreach' | 'daily_content') => {
-    if (previewMode) {
-      setNotice('Local preview is read-only. Disable NEXT_PUBLIC_DASHBOARD_PREVIEW to use live actions.');
-      return;
-    }
-    setBusy(workflowType);
-    setError(null);
-    try {
-      const response = await fetch('/api/agent-runs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          workflowType,
-          title: workflowType === 'daily_content' ? 'Minimum effective dose content package' : 'Public evidence and outreach preparation',
-          idempotencyKey: key(),
-          input: {
-            humanApprovalRequired: true,
-            automaticPublishing: false,
-            automaticSending: false,
-            mediaCeilingUsd: 0.99,
-          },
-          ...(workflowType === 'daily_content' ? {
-            localDate: new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date()),
-            timezone: 'America/New_York',
-            scheduleTime: '09:00',
-          } : {}),
-        }),
-      });
-      const payload = await response.json() as { error?: string; duplicate?: boolean };
-      if (!response.ok) throw new Error(payload.error || 'Agent run could not be created.');
-      setNotice(payload.duplicate ? 'That scheduled run already exists.' : 'Agent run queued.');
-      await load();
-    } catch (createError) {
-      setError(createError instanceof Error ? createError.message : 'Agent run could not be created.');
-    } finally {
-      setBusy(null);
-    }
-  };
-
   const control = async (run: Run, action: 'pause' | 'resume' | 'cancel' | 'retry' | 'emergency-stop') => {
     if (previewMode) {
       setNotice('Local preview is read-only. No run command was sent.');
@@ -284,22 +245,7 @@ export default function AgentOperationsDashboard({ previewMode = false }: { prev
               <Summary label="Approvals waiting" value={data.counts.pendingApprovals} />
             </section>
 
-            <section className="mt-8 grid gap-4 lg:grid-cols-2" aria-label="Start an agent run">
-              <article className={panelClass}>
-                <div className="flex items-start justify-between gap-4">
-                  <div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Research → draft → review</p><h2 className="mt-2 text-2xl font-black">Start a coordinated run</h2><p className="mt-2 text-sm leading-6 text-[#50675e]">Coordinator, public-web researcher, outreach writer, and reviewer work in dependency order. Sending remains separate.</p></div>
-                  <Activity className="h-6 w-6 text-[#126b4e]" aria-hidden="true" />
-                </div>
-                <button className={buttonClass + ' mt-5 bg-[#126b4e] text-white disabled:opacity-50'} disabled={previewMode || busy === 'research_outreach'} onClick={() => void createRun('research_outreach')}>{busy === 'research_outreach' ? 'Queueing…' : previewMode ? 'Preview only' : 'Queue research run'}</button>
-              </article>
-              <article className={panelClass}>
-                <div className="flex items-start justify-between gap-4">
-                  <div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Daily content</p><h2 className="mt-2 text-2xl font-black">One useful package</h2><p className="mt-2 text-sm leading-6 text-[#50675e]">Default 10 seconds, 9:16 MP4, caption, thumbnail, storyboard, and subtitles. Voiceover is optional; publishing is never automatic.</p></div>
-                  <Video className="h-6 w-6 text-[#126b4e]" aria-hidden="true" />
-                </div>
-                <button className={buttonClass + ' mt-5 bg-[#18372e] text-white disabled:opacity-50'} disabled={previewMode || busy === 'daily_content'} onClick={() => void createRun('daily_content')}>{busy === 'daily_content' ? 'Queueing…' : previewMode ? 'Preview only' : 'Queue today’s package'}</button>
-              </article>
-            </section>
+            <p className={panelClass + ' mt-8 text-sm text-[#50675e]'}>Runs are created only by approving and dispatching a frozen plan above. This view preserves run history and operator controls.</p>
 
             <Runs runs={data.runs} busy={busy} onControl={(run, action) => void control(run, action)} />
             <DailyContent schedules={data.schedules} brandProfile={data.brandProfile} />

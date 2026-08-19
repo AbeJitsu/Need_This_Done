@@ -47,6 +47,7 @@ const schema = z.object({
   actualCost: z.number().finite().nonnegative().max(20).optional(),
   modelReservationKey: z.string().uuid().optional(),
   modelActualCost: z.number().finite().nonnegative().optional(),
+  actualModelId: z.string().trim().min(1).max(240).optional(),
   prospecting: prospectingSchema.optional(),
   provider: z.string().trim().max(160).optional(),
   providerUsage: z.record(z.string(), z.unknown()).default({}),
@@ -115,8 +116,11 @@ export async function POST(request: Request) {
   }
   if (task.plan_id && task.agent_provider === 'openclaw'
     && parsed.data.status === 'succeeded'
-    && (!parsed.data.modelReservationKey || parsed.data.modelActualCost === undefined)) {
+    && (!parsed.data.modelReservationKey || parsed.data.modelActualCost === undefined || !parsed.data.actualModelId || Object.keys(parsed.data.providerUsage).length === 0)) {
     return NextResponse.json({ error: 'An approved OpenClaw task requires a model usage reservation and reconciliation.' }, { status: 400 });
+  }
+  if (task.plan_id && parsed.data.actualModelId && parsed.data.actualModelId !== task.model_id) {
+    return NextResponse.json({ error: 'The Gateway model identity does not match the approved task model.' }, { status: 409 });
   }
   let prospecting: Record<string, unknown> | null = null;
   if (parsed.data.prospecting) {
@@ -162,7 +166,7 @@ export async function POST(request: Request) {
     overage = (reconciled.data as { status?: string }).status === 'overage';
   }
 
-  if (parsed.data.modelReservationKey) {
+  if (parsed.data.modelReservationKey && !(task.plan_id && parsed.data.status === 'succeeded')) {
     const reservation = await admin
       .from('openclaw_model_usage_reservations')
       .select('owner_id, task_id, plan_id, model_id, status')
@@ -197,7 +201,16 @@ export async function POST(request: Request) {
     target_error: finalError || null,
     target_artifacts: overage ? [] : parsed.data.artifacts,
   };
-  const completion = prospecting
+  const completion = task.plan_id && parsed.data.status === 'succeeded'
+    ? await admin.rpc('complete_openclaw_task_with_provenance', {
+      ...completionArgs,
+      target_model_reservation_key: parsed.data.modelReservationKey,
+      target_model_actual_cost: parsed.data.modelActualCost,
+      target_actual_model_id: parsed.data.actualModelId,
+      target_provider_usage: parsed.data.providerUsage,
+      target_prospecting: prospecting,
+    })
+    : prospecting
     ? await admin.rpc('complete_openclaw_orchestration_task', {
       ...completionArgs,
       target_model_reservation_key: parsed.data.modelReservationKey || null,

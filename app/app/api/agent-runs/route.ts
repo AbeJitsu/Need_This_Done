@@ -1,20 +1,8 @@
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
 import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { localDateForTimezone, scheduledInstantForLocalDate } from '@/lib/agent-operations';
 
 export const dynamic = 'force-dynamic';
-
-const createSchema = z.object({
-  workflowType: z.enum(['research_outreach', 'daily_content']),
-  title: z.string().trim().min(1).max(240),
-  input: z.record(z.string(), z.unknown()).default({}),
-  idempotencyKey: z.string().uuid(),
-  localDate: z.string().date().optional(),
-  timezone: z.string().trim().min(1).max(120).default('America/New_York'),
-  scheduleTime: z.string().regex(/^\d{2}:\d{2}$/).default('09:00'),
-}).strict();
 
 function migrationUnavailable(error: { code?: string } | null) {
   return error?.code === '42P01' || error?.code === '42883';
@@ -77,40 +65,8 @@ export async function GET() {
   });
 }
 
-export async function POST(request: Request) {
-  const auth = await verifyAdmin();
-  if (auth.error) return auth.error;
-  const parsed = createSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid agent run request.' }, { status: 400 });
-  }
-
-  let localDate: string | null = null;
-  let scheduledFor: string | null = null;
-  if (parsed.data.workflowType === 'daily_content') {
-    localDate = parsed.data.localDate || localDateForTimezone(parsed.data.timezone);
-    if (!localDate) return NextResponse.json({ error: 'The content timezone is invalid.' }, { status: 400 });
-    const today = localDateForTimezone(parsed.data.timezone);
-    if (!today && !parsed.data.localDate) return NextResponse.json({ error: 'The content timezone is invalid.' }, { status: 400 });
-    scheduledFor = scheduledInstantForLocalDate(localDate, parsed.data.timezone, parsed.data.scheduleTime);
-    if (!scheduledFor) return NextResponse.json({ error: 'The content schedule is invalid.' }, { status: 400 });
-  }
-
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.rpc('create_agent_run', {
-    target_workflow_type: parsed.data.workflowType,
-    target_title: parsed.data.title,
-    target_input: parsed.data.input,
-    target_idempotency_key: parsed.data.idempotencyKey,
-    target_local_date: localDate,
-    target_timezone: parsed.data.timezone,
-    target_scheduled_for: scheduledFor,
-  });
-  if (error) {
-    return NextResponse.json({
-      error: migrationUnavailable(error) ? 'Agent operations are not configured yet.' : 'Agent run could not be created.',
-    }, { status: migrationUnavailable(error) ? 503 : 409 });
-  }
-  const result = data as { duplicate?: boolean };
-  return NextResponse.json(data, { status: result.duplicate ? 200 : 201 });
+export async function POST() {
+  // Plans are the only creation boundary. Keep GET for historical operator
+  // visibility, but never let a dashboard action materialize a runnable run.
+  return NextResponse.json({ error: 'Run creation is retired; approve and dispatch a frozen agent plan instead.' }, { status: 405, headers: { Allow: 'GET' } });
 }

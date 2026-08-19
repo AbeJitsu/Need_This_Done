@@ -94,6 +94,16 @@ function usageFromResult(result: unknown): JsonObject {
   return Object.keys(usage).length ? usage : {};
 }
 
+function actualModelFromResult(result: unknown) {
+  const record = asRecord(result);
+  const usage = asRecord(record.usage);
+  const nested = asRecord(record.result);
+  const value = record.actualModelId ?? record.actual_model_id ?? record.model
+    ?? usage.actualModelId ?? usage.actual_model_id ?? usage.model
+    ?? nested.actualModelId ?? nested.actual_model_id ?? nested.model;
+  return typeof value === 'string' && value.trim() ? value.trim() : null;
+}
+
 function outputFromResult(result: unknown): JsonObject {
   const record = asRecord(result);
   const serialized = JSON.stringify(record);
@@ -271,11 +281,18 @@ export class AgentBridgeRunner {
       await this.api.event(task.id, 'progress', { message: 'Gateway work returned; validating artifacts and usage.' }, 82);
       const artifacts = await this.prepareArtifacts(task, gatewayResult);
       const actualCost = actualCostFromResult(gatewayResult);
+      const actualModelId = actualModelFromResult(gatewayResult);
       if (task.task_type === 'produce_daily_content' && actualCost === null) {
         throw new Error('Provider usage was not reported; daily media completion is failed closed.');
       }
       if (modelReservationKey && actualCost === null) {
         throw new Error('OpenClaw provider usage was not reported; model completion is failed closed.');
+      }
+      if (task.plan_id && (!actualModelId || actualModelId !== task.model_id)) {
+        throw new Error('OpenClaw did not report the exact approved model ID; completion is failed closed.');
+      }
+      if (task.plan_id && Object.keys(usageFromResult(gatewayResult)).length === 0) {
+        throw new Error('OpenClaw did not report provider usage; completion is failed closed.');
       }
       await this.api.complete({
         taskId: task.id,
@@ -284,6 +301,7 @@ export class AgentBridgeRunner {
         artifacts,
         ...(reservationKey ? { reservationKey, actualCost: actualCost as number } : {}),
         ...(modelReservationKey ? { modelReservationKey, modelActualCost: actualCost as number } : {}),
+        ...(actualModelId ? { actualModelId } : {}),
         ...(task.task_type === 'research_public_web' && prospectingFromResult(gatewayResult)
           ? { prospecting: prospectingFromResult(gatewayResult) } : {}),
         provider: task.agent_provider,

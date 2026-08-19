@@ -177,14 +177,16 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
     await asWorker(`select public.record_agent_task_event($1::uuid,$2,'progress','{"stage":"started"}'::jsonb,20)`, [taskId, workerId]);
     const reservationKey = '40000000-0000-4000-8000-0000000000d5';
     await asWorker(`select public.reserve_openclaw_model_usage($1::uuid,$2::uuid,$3::uuid,$4::uuid,$5,$6::uuid,0.02)`, [operator, planId, dispatched[0].result.run.id, taskId, workerId, reservationKey]);
-    await asWorker(`select public.reconcile_openclaw_model_usage($1::uuid,0.01,'{"prompt_tokens":100,"completion_tokens":50,"cost":0.01}'::jsonb)`, [reservationKey]);
-    const completed = await asWorker(`select public.complete_openclaw_orchestration_task($1::uuid,$2,'succeeded','{"source":"fake-gateway"}'::jsonb,null,$3::jsonb,$4::uuid,$5::jsonb)`, [taskId, workerId, JSON.stringify([{ artifactType: 'research_dossier', title: 'Citation-backed dossier', contentText: JSON.stringify(dossier) }]), reservationKey, JSON.stringify({ dossiers: [dossier] })]);
+    const usage = { prompt_tokens: 100, completion_tokens: 50, cost: 0.01 };
+    const completed = await asWorker(`select public.complete_openclaw_task_with_provenance($1::uuid,$2,'succeeded','{"source":"fake-gateway"}'::jsonb,null,$3::jsonb,$4::uuid,0.01,'provider/pinned-model',$5::jsonb,$6::jsonb)`, [taskId, workerId, JSON.stringify([{ artifactType: 'research_dossier', title: 'Citation-backed dossier', contentText: JSON.stringify(dossier) }]), reservationKey, JSON.stringify(usage), JSON.stringify({ dossiers: [dossier] })]);
     expect(completed).toHaveLength(1);
 
     const provenance = await asAdmin<{ validation_status: string; model_id: string; worker_id: string; orchestration_task_id: string }>(`select validation_status, model_id, worker_id, orchestration_task_id from public.prospecting_artifact_provenance where plan_id = $1`, [planId]);
     expect(provenance).toMatchObject([{ validation_status: 'validated', model_id: 'provider/pinned-model', worker_id: workerId, orchestration_task_id: taskId }]);
     const dossiers = await asAdmin<{ orchestration_task_id: string; agent_artifact_id: string; model_usage_reservation_id: string; review_status: string }>(`select orchestration_task_id, agent_artifact_id, model_usage_reservation_id, review_status from public.prospect_dossiers where orchestration_task_id = $1`, [taskId]);
     expect(dossiers).toMatchObject([{ orchestration_task_id: taskId, model_usage_reservation_id: expect.any(String), review_status: 'pending_review' }]);
+    const completedTask = await asAdmin<{ actual_model_id: string; provider_usage: Record<string, unknown> }>(`select actual_model_id, provider_usage from public.agent_orchestration_tasks where id = $1`, [taskId]);
+    expect(completedTask).toEqual([{ actual_model_id: 'provider/pinned-model', provider_usage: { prompt_tokens: 100, completion_tokens: 50, cost: 0.01 } }]);
   });
 
   it('does not allow an authenticated browser to write plan rows directly', async () => {

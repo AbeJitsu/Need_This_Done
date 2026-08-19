@@ -236,14 +236,33 @@ test('AgentBridgeRunner reserves and reconciles model usage for an approved Open
     reserveModelUsage: async (value) => calls.reservations.push(value),
     complete: async (value) => calls.completions.push(value),
   };
-  const gateway = { runTask: async () => ({ text: 'Evidence returned by the fake Gateway.', actualCost: 0.01, usage: { cost: 0.01 } }), close() {} };
+  const gateway = { runTask: async () => ({ text: 'Evidence returned by the fake Gateway.', actualCost: 0.01, model: 'provider/pinned-model', usage: { cost: 0.01 } }), close() {} };
   const runner = new AgentBridgeRunner({ api, gateway, artifactRoot: await mkdtemp(join(tmpdir(), 'needthisdone-bridge-plan-')), capabilities: ['research_public_web'] });
   const result = await runner.runOnce();
   assert.equal(result.status, 'succeeded');
   assert.equal(calls.reservations.length, 1);
   assert.equal(calls.reservations[0].reservedCost, 0.02);
   assert.equal(calls.completions[0].modelActualCost, 0.01);
+  assert.equal(calls.completions[0].actualModelId, 'provider/pinned-model');
   assert.equal(calls.completions[0].status, 'succeeded');
+});
+
+test('AgentBridgeRunner fails closed when an approved task omits or changes Gateway model provenance', async () => {
+  for (const gatewayResult of [
+    { text: 'Missing model.', actualCost: 0.01, usage: { cost: 0.01 } },
+    { text: 'Wrong model.', actualCost: 0.01, model: 'provider/other', usage: { cost: 0.01 } },
+  ]) {
+    const completions = [];
+    const api = {
+      heartbeat: async () => {}, schedule: async () => ({ tasks: [], queued: 1 }),
+      claim: async () => task({ plan_id: '00000000-0000-4000-8000-000000000004', agent_provider: 'openclaw', model_id: 'provider/pinned-model', input: { modelReservationUsd: 0.02 } }),
+      event: async () => {}, reserveModelUsage: async () => {}, complete: async (value) => completions.push(value),
+    };
+    const runner = new AgentBridgeRunner({ api, gateway: { runTask: async () => gatewayResult, close() {} }, artifactRoot: await mkdtemp(join(tmpdir(), 'needthisdone-bridge-provenance-')), capabilities: [] });
+    const result = await runner.runOnce();
+    assert.equal(result.status, 'failed');
+    assert.match(completions[0].error, /exact approved model ID/);
+  }
 });
 
 test('AgentBridgeRunner refuses symlinked artifact files outside its root', async () => {
