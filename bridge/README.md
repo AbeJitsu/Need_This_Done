@@ -62,3 +62,10 @@ npm start
 
 No provider key belongs in this directory. Keep the OpenClaw token and any
 provider credentials on the Mac host, and keep the Gateway bound to loopback.
+## launchd review templates
+
+`launchd/` contains tracked templates for the loopback-only Gateway and signed
+bridge. `install-templates.sh PRIVATE_RUNTIME_DIR OUTPUT_DIR` only renders
+review copies and refuses weak private-file permissions; it never runs
+`launchctl`, creates secrets, or activates a worker. Item 13 still requires
+the Mac runtime owner's separate approval and a reviewed installation.

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.needthisdone.openclaw-gateway</string>
+  <key>ProgramArguments</key><array><string>__OPENCLAW_BINARY__</string><string>gateway</string><string>--host</string><string>127.0.0.1</string><string>--port</string><string>18789</string></array>
+  <key>EnvironmentVariables</key><dict><key>OPENCLAW_CONFIG</key><string>__PRIVATE_CONFIG_PATH__</string></dict>
+  <key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>__LOG_DIR__/openclaw-gateway.log</string>
+  <key>StandardErrorPath</key><string>__LOG_DIR__/openclaw-gateway.error.log</string>
+</dict></plist>

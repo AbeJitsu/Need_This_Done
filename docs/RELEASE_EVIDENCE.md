@@ -20,6 +20,24 @@ verified the published tip exactly.
 
 The planner/OpenClaw proof is included in the canonical `npm run verify:database` gate. It proves draft-only planning, approval-before-dispatch, frozen snapshots, OpenClaw-only claiming, model reservations, strict HTTPS citation validation, provenance linkage, private artifact boundaries, and authenticated direct-write denial.
 
+### Local worker fail-closed hardening — 2026-08-19
+
+Migration `098_fail_closed_openclaw_schedule_and_provenance.sql` is applied
+only to disposable local Supabase. It prevents the private worker from
+claiming a future scheduled run or one whose growth profile has emergency stop
+active, and requires an approved OpenClaw completion to persist a non-empty
+provider-usage object and the Gateway-reported exact model ID. Reconciliation,
+provenance, and task completion share one service-role transaction, so a
+completion failure rolls back the usage reservation update. A missing or
+mismatched model fails before completion. The bridge has tracked, review-only
+launchd templates for the loopback Gateway and signed bridge; its tested
+renderer rejects insecure private files, unsafe XML paths, unresolved
+placeholders, and malformed XML and never loads a job or creates/reads a
+secret. Local schema manifest (9/9), planner RLS tests (2/2), app TypeScript,
+and bridge offline tests (8/8) passed. Hosted
+history remains `91/095`; no provider, Mac, hosted, sender, Calendar, or
+payment action occurred. This does not advance items 10–22.
+
 **Provider and secret boundary:** An OpenRouter API key and exact model IDs remain private environment variables. Step 10A used the existing provider key for exactly six sanitized comparison requests and retained provider-reported usage/cost in hosted Supabase; it did not activate a worker, pin a model, change Vercel variables, or run an external action. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates pinned primary/comparison IDs, permits `OPENROUTER_BACKUP_MODEL` only in the private probe boundary, and persists the actual endpoint model returned for a probe request. A future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly remains provider-free and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action. The backup probe is implementation-only until its separately approved two-request provider check is recorded. See [Step 10A evidence](launch/step-10a-model-comparison-2026-08-17.md).
 
 **Release blockers and exceptions:** Hosted history is `91/095`, and the final parity report plus the Step 9 authorization verifier pass with four temporary users cleaned and zero cleanup errors. The historical blocked result is [hosted-parity-pre-repair-report-2026-08-15.json](launch/hosted-parity-pre-repair-report-2026-08-15.json); the final result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json); the repair records are [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md) and [step-5-hosted-security-repairs-2026-08-15.md](launch/step-5-hosted-security-repairs-2026-08-15.md); the Step 9 record is [step-9-hosted-authorization-2026-08-17.md](launch/step-9-hosted-authorization-2026-08-17.md). Item 8 is an approved retention exception: the names-only Vercel audit found 55 names in each scope before the change, `ENV_TARGET` was added only to Production and Preview, those scopes now have all six baseline names plus the retained existing names, and Development is unchanged. Supabase, Google, `NEXTAUTH_SECRET`, cookie/session, Redis, provider/email/payment, and legacy/test entries were not revoked or rotated. Abe Reyes / `abejitsu` owns the exception; it was renewed for Step 9 on 2026-08-17 and review/removal is due 2026-09-15. The exception is not provider activation approval; item 9 passed under this one-check renewal, and items 10–22 remain blocked until later approvals are complete. `npm audit` reports 16 findings overall and 11 production-tree findings, so later technical promotion remains blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).

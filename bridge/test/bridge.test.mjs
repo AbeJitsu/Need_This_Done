@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import { mkdtemp, symlink, writeFile } from 'node:fs/promises';
+import { chmod, mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { test } from 'node:test';
 import { BridgeApiClient, BridgeApiError } from '../dist/bridge-client.js';
 import { OpenClawGatewayClient } from '../dist/openclaw-gateway.js';
@@ -11,6 +13,7 @@ import { AgentBridgeRunner } from '../dist/runner.js';
 const ownerId = '00000000-0000-4000-8000-000000000001';
 const taskId = '00000000-0000-4000-8000-000000000002';
 const runId = '00000000-0000-4000-8000-000000000003';
+const execFileAsync = promisify(execFile);
 
 function response(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
@@ -64,6 +67,32 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
     assert.equal(error.status, 409);
     return true;
   });
+});
+
+test('launchd renderer is review-only, validates private files, and leaves no placeholders', async () => {
+  const runtime = await mkdtemp(join(tmpdir(), 'needthisdone-launchd-runtime-'));
+  const output = await mkdtemp(join(tmpdir(), 'needthisdone-launchd-output-'));
+  await chmod(runtime, 0o700);
+  await writeFile(join(runtime, 'bridge.env'), 'BRIDGE_SECRET=test\n', { mode: 0o600 });
+  await writeFile(join(runtime, 'openclaw.json'), '{}\n', { mode: 0o600 });
+  await chmod(join(runtime, 'bridge.env'), 0o600);
+  await chmod(join(runtime, 'openclaw.json'), 0o600);
+
+  await execFileAsync('bash', ['launchd/install-templates.sh', runtime, output], { cwd: join(process.cwd(), '..', 'bridge') });
+  const gateway = await readFile(join(output, 'com.needthisdone.openclaw-gateway.plist'), 'utf8');
+  assert.match(gateway, /127\.0\.0\.1/);
+  assert.doesNotMatch(gateway, /__[A-Z_]+__/);
+  assert.doesNotMatch(await readFile('launchd/install-templates.sh', 'utf8'), /^\s*launchctl\s/m);
+
+  await chmod(join(runtime, 'openclaw.json'), 0o644);
+  await assert.rejects(
+    execFileAsync('bash', ['launchd/install-templates.sh', runtime, output], { cwd: join(process.cwd(), '..', 'bridge') }),
+    (error) => /must be mode 600/.test(error.stderr),
+  );
+  await assert.rejects(
+    execFileAsync('bash', ['launchd/install-templates.sh', `${runtime}<unsafe`, output], { cwd: join(process.cwd(), '..', 'bridge') }),
+    (error) => /unsafe XML characters/.test(error.stderr),
+  );
 });
 
 class FakeSocket {
