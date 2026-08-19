@@ -52,9 +52,9 @@ describe('model evaluation policy', () => {
     expect(selectModelRoutingPolicy(failed, freeCandidates)).toEqual(MODEL_ROUTING_POLICY);
   });
 
-  it('keeps router probe candidates out of model selection', () => {
-    const probe: ModelCandidate = { id: 'openrouter-free-router', label: 'Probe', kind: 'router-free', providerModelId: 'openrouter/free' };
-    expect(selectModelRoutingPolicy(recordsFor(probe.id, { providerModelId: 'openrouter/free' }), [probe])).toEqual(MODEL_ROUTING_POLICY);
+  it('keeps the reviewed activation probe out of model selection', () => {
+    const probe: ModelCandidate = { id: 'openrouter-backup-probe', label: 'Probe', kind: 'router-free', providerModelId: 'google/gemma-4-26b-a4b-it:free' };
+    expect(selectModelRoutingPolicy(recordsFor(probe.id, { providerModelId: 'google/gemma-4-26b-a4b-it:free' }), [probe])).toEqual(MODEL_ROUTING_POLICY);
   });
 
   it('accepts finite provider-reported costs without a local dollar ceiling', () => {

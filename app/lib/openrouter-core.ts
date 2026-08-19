@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { isDynamicOpenRouterModel } from '@/lib/openrouter-model-config';
 
 export const OPENROUTER_API_BASE_URL = 'https://openrouter.ai/api/v1';
 
@@ -304,9 +303,6 @@ export class OpenRouterClient {
     const content = typeof message.content === 'string' ? message.content.trim() : '';
     if (!content) throw new Error('OpenRouter completion did not contain a text response.');
     const returnedModel = firstString(json.model);
-    if (isDynamicOpenRouterModel(request.model) && (!returnedModel || isDynamicOpenRouterModel(returnedModel))) {
-      throw new Error('OpenRouter dynamic routing response did not include the actual model ID.');
-    }
     const usage = asRecord(json.usage);
     return {
       model: returnedModel || request.model,

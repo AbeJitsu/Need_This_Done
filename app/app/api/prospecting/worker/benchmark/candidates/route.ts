@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getOpenRouterModelConfig } from '@/lib/openrouter-config';
-import { isDynamicOpenRouterModel, isMovingOpenRouterModelAlias, OPENROUTER_FREE_ROUTER_MODEL, validateOpenRouterBackupModelId } from '@/lib/openrouter-model-config';
+import { isMovingOpenRouterModelAlias, validateOpenRouterBackupModelId } from '@/lib/openrouter-model-config';
 import { consumeWorkerNonce, isSignedWorkerFailure, verifySignedWorkerRequest } from '@/lib/private-worker-auth';
 
 export const dynamic = 'force-dynamic';
@@ -35,22 +35,15 @@ export async function POST(request: Request) {
   const kind = parsed.data.candidates[0].candidateKind;
   const uniqueModels = new Set(parsed.data.candidates.map((candidate) => candidate.providerModelId));
   if (uniqueModels.size !== parsed.data.candidates.length) return NextResponse.json({ error: 'Benchmark candidates must have unique model IDs.' }, { status: 400 });
-  if (parsed.data.candidates.some((candidate) => isDynamicOpenRouterModel(candidate.providerModelId) && candidate.candidateKind !== 'router-free')) {
-    return NextResponse.json({ error: 'openrouter/free is allowed only as a router-free probe candidate.' }, { status: 400 });
-  }
   if (kind === 'router-free' && parsed.data.candidates.length !== 1) {
     return NextResponse.json({ error: 'A backup probe must register exactly one probe candidate.' }, { status: 400 });
   }
   if (kind === 'router-free') {
     const candidate = parsed.data.candidates[0];
-    const isDynamic = candidate.providerModelId === OPENROUTER_FREE_ROUTER_MODEL;
-    const expectedCandidateId = isDynamic ? 'openrouter-free-router' : 'openrouter-backup-probe';
-    if (candidate.candidateId !== expectedCandidateId) {
+    if (candidate.candidateId !== 'openrouter-backup-probe') {
       return NextResponse.json({ error: 'Backup probe candidates must use their fixed probe ID.' }, { status: 400 });
     }
-    if (!isDynamic) {
-      try { validateOpenRouterBackupModelId(candidate.providerModelId, 'providerModelId'); } catch { return NextResponse.json({ error: 'The pinned backup probe model ID is invalid.' }, { status: 400 }); }
-    }
+    try { validateOpenRouterBackupModelId(candidate.providerModelId, 'providerModelId'); } catch { return NextResponse.json({ error: 'The pinned backup probe model ID is invalid.' }, { status: 400 }); }
   }
 
   const admin = getSupabaseAdmin();

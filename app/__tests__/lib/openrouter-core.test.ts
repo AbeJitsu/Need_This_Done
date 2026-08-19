@@ -48,7 +48,7 @@ describe('OpenRouter catalog resolution', () => {
     expect(estimateOpenRouterRequestCost(model('catalog/unknown', { pricing: { prompt: null, completion: null, request: null, webSearch: null } }), { maxPromptTokens: 6_000, maxCompletionTokens: 1_500, maxWebSearchCalls: 1 })).toBeNull();
   });
 
-  it('requires capable providers for structured/tool requests and captures a dynamic router model', async () => {
+  it('uses the pinned activation candidate and requires capable providers for structured/tool requests', async () => {
     const requests: Array<Record<string, unknown>> = [];
     const client = new OpenRouterClient('test-key', async (_input, init) => {
       const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
@@ -61,12 +61,12 @@ describe('OpenRouter catalog resolution', () => {
     });
 
     await expect(client.chatCompletion({
-      model: 'openrouter/free',
+      model: 'google/gemma-4-26b-a4b-it:free',
       messages: [{ role: 'user', content: 'Say hello.' }],
       maxTokens: 20,
     })).resolves.toMatchObject({ model: 'google/gemma-4-26b-a4b-it:free', content: 'ok' });
     await expect(client.chatCompletion({
-      model: 'openrouter/free',
+      model: 'google/gemma-4-26b-a4b-it:free',
       messages: [{ role: 'user', content: 'Return JSON.' }],
       maxTokens: 20,
       responseSchema: { type: 'object', properties: { answer: { type: 'string' } }, required: ['answer'], additionalProperties: false },
@@ -74,7 +74,7 @@ describe('OpenRouter catalog resolution', () => {
       toolChoice: 'none',
     })).resolves.toMatchObject({ model: 'google/gemma-4-26b-a4b-it:free', content: '{"answer":"ok"}' });
 
-    expect(requests[0]).toMatchObject({ model: 'openrouter/free', stream: false });
+    expect(requests[0]).toMatchObject({ model: 'google/gemma-4-26b-a4b-it:free', stream: false });
     expect(requests[0].provider).toBeUndefined();
     expect(requests[1]).toMatchObject({
       provider: { require_parameters: true },
@@ -83,15 +83,15 @@ describe('OpenRouter catalog resolution', () => {
     expect(requests[1].tools).toHaveLength(1);
   });
 
-  it('fails closed when a dynamic router omits the actual model ID', async () => {
+  it('preserves an exact requested model ID when the provider response omits it', async () => {
     const client = new OpenRouterClient('test-key', async () => new Response(JSON.stringify({
       choices: [{ message: { content: 'ok' } }],
       usage: { cost: 0 },
     }), { status: 200 }));
     await expect(client.chatCompletion({
-      model: 'openrouter/free',
+      model: 'google/gemma-4-26b-a4b-it:free',
       messages: [{ role: 'user', content: 'Say hello.' }],
       maxTokens: 20,
-    })).rejects.toThrow('actual model ID');
+    })).resolves.toMatchObject({ model: 'google/gemma-4-26b-a4b-it:free', content: 'ok' });
   });
 });

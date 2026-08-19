@@ -1,4 +1,3 @@
-import { isDynamicOpenRouterModel } from '@/lib/openrouter-model-config';
 
 /**
  * Model selection stays fail-closed. The Mac-mini resolves free candidates
@@ -164,9 +163,10 @@ export function selectModelRoutingPolicy(
   freeCandidates: readonly ModelCandidate[],
 ): ModelRoutingPolicy {
   // Probe candidates are evidence-only. Keep this invariant here as well as
-  // in the signed API routes so a future caller cannot pin a moving router.
+  // in the signed API routes so a future caller cannot select the reviewed
+  // activation probe as an operating model.
   const selectableFreeCandidates = freeCandidates.filter(
-    (candidate) => candidate.kind === 'free' && !isDynamicOpenRouterModel(candidate.providerModelId),
+    (candidate) => candidate.kind === 'free',
   );
   const allFreeCandidatesCompleted = freeCandidatesCompleted(records, selectableFreeCandidates);
   const selectedFree = allFreeCandidatesCompleted

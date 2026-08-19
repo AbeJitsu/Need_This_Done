@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { OpenRouterClient } from '@/lib/openrouter-core';
-import { runConfiguredModelComparison, runOpenRouterFreeRouterProbe, SignedBenchmarkTransport } from '@/lib/prospecting-benchmark';
+import { runConfiguredModelComparison, runOpenRouterBackupProbe, SignedBenchmarkTransport } from '@/lib/prospecting-benchmark';
 
 describe('configured model comparison', () => {
   it('runs the same sanitized tasks against primary and test models without a route update', async () => {
@@ -104,7 +104,7 @@ describe('controlled OpenRouter backup probe', () => {
       throw new Error(`Unexpected benchmark request: ${url}`);
     });
 
-    const result = await runOpenRouterFreeRouterProbe({
+    const result = await runOpenRouterBackupProbe({
       workerId: 'worker-1',
       profileId: 'profile-1',
       transport,

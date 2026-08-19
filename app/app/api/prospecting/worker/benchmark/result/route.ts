@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getOpenRouterModelConfig } from '@/lib/openrouter-config';
-import { isDynamicOpenRouterModel, validateOpenRouterBackupModelId, validateOpenRouterModelId, OPENROUTER_FREE_ROUTER_MODEL } from '@/lib/openrouter-model-config';
+import { validateOpenRouterBackupModelId, validateOpenRouterModelId } from '@/lib/openrouter-model-config';
 import { selectModelRoutingPolicy, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 import { localDateForTimezone } from '@/lib/prospecting';
 import { consumeWorkerNonce, isSignedWorkerFailure, verifySignedWorkerRequest } from '@/lib/private-worker-auth';
@@ -67,15 +67,11 @@ export async function POST(request: Request) {
     try { validateOpenRouterModelId(parsed.data.actualModelId, 'actualModelId'); } catch { return NextResponse.json({ error: 'The actual routed model ID is invalid.' }, { status: 400 }); }
   }
   if (candidate.candidate_kind === 'router-free') {
-    if (parsed.data.providerModelId !== candidate.provider_model_id || !parsed.data.actualModelId || isDynamicOpenRouterModel(parsed.data.actualModelId)) {
-      return NextResponse.json({ error: 'A backup probe result must include the actual routed model ID.' }, { status: 400 });
+    if (parsed.data.providerModelId !== candidate.provider_model_id || !parsed.data.actualModelId || parsed.data.actualModelId !== candidate.provider_model_id) {
+      return NextResponse.json({ error: 'A backup probe result must include the exact approved model ID.' }, { status: 400 });
     }
     try {
-      if (parsed.data.providerModelId === OPENROUTER_FREE_ROUTER_MODEL) {
-        validateOpenRouterModelId(parsed.data.providerModelId, 'providerModelId');
-      } else {
-        validateOpenRouterBackupModelId(parsed.data.providerModelId, 'providerModelId');
-      }
+      validateOpenRouterBackupModelId(parsed.data.providerModelId, 'providerModelId');
     } catch { return NextResponse.json({ error: 'The backup probe model ID is invalid.' }, { status: 400 }); }
   }
 

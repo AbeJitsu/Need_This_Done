@@ -1,7 +1,7 @@
 import { createWorkerSignature } from '@/lib/prospecting';
 import { MODEL_EVALUATION_TASKS, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 import type { OpenRouterModelConfig } from '@/lib/openrouter-model-config';
-import { isDynamicOpenRouterModel, validateOpenRouterBackupModelId } from '@/lib/openrouter-model-config';
+import { validateOpenRouterBackupModelId } from '@/lib/openrouter-model-config';
 import { OpenRouterClient, estimateOpenRouterRequestCost, resolveBenchmarkCandidates, supportsStructuredOutput, type OpenRouterModel, type ResolvedBenchmarkCandidate } from '@/lib/openrouter-core';
 
 type FetchLike = typeof fetch;
@@ -148,14 +148,13 @@ const freeRouterNoOpTool = {
   },
 } as const;
 
-function routerProbeCandidate(providerModelId: string): BenchmarkCandidate {
-  const dynamic = isDynamicOpenRouterModel(providerModelId);
+function backupProbeCandidate(providerModelId: string): BenchmarkCandidate {
   return {
-    candidateId: dynamic ? 'openrouter-free-router' : 'openrouter-backup-probe',
+    candidateId: 'openrouter-backup-probe',
     providerModelId,
-    label: dynamic ? 'OpenRouter free dynamic router (probe only)' : 'Configured free backup (probe only)',
+    label: 'Reviewed Gemma activation candidate (probe only)',
     candidateKind: 'router-free',
-    catalogMetadata: { dynamic, providerModelId },
+    catalogMetadata: { activationCandidate: true, providerModelId },
   };
 }
 
@@ -173,18 +172,16 @@ export async function runOpenRouterBackupProbe(options: {
 }) {
   let backupModel: string;
   try {
-    // The stable backup is allowed as the manual replacement for a failed
-    // dynamic probe, but it is still never a live selected model here.
     backupModel = validateOpenRouterBackupModelId(options.backupModel);
   } catch {
     throw new Error('OPENROUTER_BACKUP_MODEL must use the reviewed Gemma activation candidate.');
   }
   const initial = await options.transport.config(options.workerId, options.profileId);
   if (initial.profile.modelRoute !== 'evaluation-required' || initial.profile.selectedModelId) {
-    throw new Error('The free-router probe is locked unless the profile remains evaluation-required.');
+    throw new Error('The activation probe is locked unless the profile remains evaluation-required.');
   }
 
-  const candidate = routerProbeCandidate(backupModel);
+  const candidate = backupProbeCandidate(backupModel);
   await options.transport.candidates(options.workerId, options.profileId, [candidate]);
   const probeRequests = [
     {
@@ -232,7 +229,7 @@ export async function runOpenRouterBackupProbe(options: {
       });
       actualModelId = completion.model;
       costUsd = completion.usage.costUsd;
-      ok = probe.valid(completion.content) && Boolean(actualModelId) && !isDynamicOpenRouterModel(actualModelId) && costUsd === 0;
+      ok = probe.valid(completion.content) && actualModelId === backupModel && costUsd === 0;
       await options.transport.result(options.workerId, options.profileId, {
         reservationKey,
         candidateId: candidate.candidateId,
@@ -269,14 +266,11 @@ export async function runOpenRouterBackupProbe(options: {
   }
 
   if (results.length !== 2 || results.some((result) => !result.ok)) {
-    throw new Error('The two-request free-router probe did not pass all checks; no retry was performed.');
+    throw new Error('The two-request activation probe did not pass all checks; no retry was performed.');
   }
   return { requests: results.length, results, modelRoute: initial.profile.modelRoute, providerModelId: backupModel };
 }
 
-export async function runOpenRouterFreeRouterProbe(options: Parameters<typeof runOpenRouterBackupProbe>[0]) {
-  return runOpenRouterBackupProbe(options);
-}
 
 /** Execute catalog-resolved free candidates without a hardcoded fallback. */
 export async function runMeasuredBenchmark(options: {

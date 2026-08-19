@@ -22,10 +22,6 @@ export function isMovingOpenRouterModelAlias(value: string) {
   return MOVING_ALIAS_PATTERN.test(value.trim());
 }
 
-export function isDynamicOpenRouterModel(_value: string) {
-  return false;
-}
-
 /** Validate one provider/model ID without ever including the configured value in an error. */
 export function validateOpenRouterModelId(value: unknown, environmentKey: string) {
   if (typeof value !== 'string' || !value.trim()) {
