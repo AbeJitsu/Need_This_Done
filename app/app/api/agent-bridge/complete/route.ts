@@ -48,6 +48,7 @@ const schema = z.object({
   modelReservationKey: z.string().uuid().optional(),
   modelActualCost: z.number().finite().nonnegative().optional(),
   actualModelId: z.string().trim().min(1).max(240).optional(),
+  providerInvoked: z.boolean().optional(),
   prospecting: prospectingSchema.optional(),
   provider: z.string().trim().max(160).optional(),
   providerUsage: z.record(z.string(), z.unknown()).default({}),
@@ -114,8 +115,16 @@ export async function POST(request: Request) {
   if (parsed.data.modelReservationKey && parsed.data.modelActualCost === undefined) {
     return NextResponse.json({ error: 'An OpenClaw model reservation must report its actual cost, including zero.' }, { status: 400 });
   }
-  if (task.plan_id && task.agent_provider === 'openclaw'
-    && parsed.data.status === 'succeeded'
+  const preProviderAbort = Boolean(task.plan_id)
+    && parsed.data.status === 'failed'
+    && parsed.data.providerInvoked === false;
+  if (task.plan_id && parsed.data.status === 'failed' && parsed.data.providerInvoked === undefined) {
+    return NextResponse.json({ error: 'An approved task failure must declare whether the Gateway was invoked.' }, { status: 400 });
+  }
+  if (preProviderAbort && (parsed.data.modelReservationKey || parsed.data.actualModelId || Object.keys(parsed.data.providerUsage).length > 0)) {
+    return NextResponse.json({ error: 'A pre-provider abort cannot report model usage or provenance.' }, { status: 400 });
+  }
+  if (task.plan_id && task.agent_provider === 'openclaw' && !preProviderAbort
     && (!parsed.data.modelReservationKey || parsed.data.modelActualCost === undefined || !parsed.data.actualModelId || Object.keys(parsed.data.providerUsage).length === 0)) {
     return NextResponse.json({ error: 'An approved OpenClaw task requires a model usage reservation and reconciliation.' }, { status: 400 });
   }
@@ -166,7 +175,7 @@ export async function POST(request: Request) {
     overage = (reconciled.data as { status?: string }).status === 'overage';
   }
 
-  if (parsed.data.modelReservationKey && !(task.plan_id && parsed.data.status === 'succeeded')) {
+  if (parsed.data.modelReservationKey && !task.plan_id) {
     const reservation = await admin
       .from('openclaw_model_usage_reservations')
       .select('owner_id, task_id, plan_id, model_id, status')
@@ -201,7 +210,13 @@ export async function POST(request: Request) {
     target_error: finalError || null,
     target_artifacts: overage ? [] : parsed.data.artifacts,
   };
-  const completion = task.plan_id && parsed.data.status === 'succeeded'
+  const completion = preProviderAbort
+    ? await admin.rpc('abort_openclaw_task_before_provider', {
+      target_task_id: parsed.data.taskId,
+      target_worker: parsed.data.workerId,
+      target_error: finalError || null,
+    })
+    : task.plan_id
     ? await admin.rpc('complete_openclaw_task_with_provenance', {
       ...completionArgs,
       target_model_reservation_key: parsed.data.modelReservationKey,

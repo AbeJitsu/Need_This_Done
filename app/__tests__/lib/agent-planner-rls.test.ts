@@ -178,6 +178,14 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
     const reservationKey = '40000000-0000-4000-8000-0000000000d5';
     await asWorker(`select public.reserve_openclaw_model_usage($1::uuid,$2::uuid,$3::uuid,$4::uuid,$5,$6::uuid,0.02)`, [operator, planId, dispatched[0].result.run.id, taskId, workerId, reservationKey]);
     const usage = { prompt_tokens: 100, completion_tokens: 50, cost: 0.01 };
+    await expect(asWorker(`select public.complete_agent_orchestration_task($1::uuid,$2,'failed',null,'legacy path','[]'::jsonb)`, [taskId, workerId]))
+      .rejects.toThrow('planned_task_requires_atomic_completion');
+    await expect(asWorker(`select public.complete_openclaw_orchestration_task($1::uuid,$2,'failed',null,'legacy path','[]'::jsonb,null,null)`, [taskId, workerId]))
+      .rejects.toThrow('planned_task_requires_atomic_completion');
+    await expect(asWorker(`select public.record_openclaw_task_provenance($1::uuid,$2,'provider/pinned-model',$3::jsonb)`, [taskId, workerId, JSON.stringify(usage)]))
+      .rejects.toThrow('planned_task_requires_atomic_completion');
+    await expect(asWorker(`select public.reconcile_openclaw_model_usage($1::uuid,0.01,$2::jsonb)`, [reservationKey, JSON.stringify(usage)]))
+      .rejects.toThrow('planned_task_requires_atomic_completion');
     const completed = await asWorker(`select public.complete_openclaw_task_with_provenance($1::uuid,$2,'succeeded','{"source":"fake-gateway"}'::jsonb,null,$3::jsonb,$4::uuid,0.01,'provider/pinned-model',$5::jsonb,$6::jsonb)`, [taskId, workerId, JSON.stringify([{ artifactType: 'research_dossier', title: 'Citation-backed dossier', contentText: JSON.stringify(dossier) }]), reservationKey, JSON.stringify(usage), JSON.stringify({ dossiers: [dossier] })]);
     expect(completed).toHaveLength(1);
 
