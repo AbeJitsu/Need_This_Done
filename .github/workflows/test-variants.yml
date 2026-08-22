@@ -6,8 +6,66 @@ on:
   pull_request:
     branches: [production]
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+
+      - name: Audit production dependency tree
+        working-directory: ./app
+        run: npm audit --omit=dev
+
+  local-migration-schema-rls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Validate migration/rehearsal controls
+        run: |
+          bash -n scripts/use-env.sh scripts/rehearse-local-data-migration.sh
+          node scripts/verify-hosted-migration-stages.mjs
+
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: bridge/package-lock.json
+
+      - name: Build and test signed bridge offline
+        working-directory: ./bridge
+        run: npm ci && npm test
+
+  code-gate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -26,9 +84,19 @@ jobs:
         working-directory: ./app
         run: npm ci
 
-      - name: Validate release scripts
-        run: bash -n scripts/use-env.sh scripts/rehearse-local-data-migration.sh
-
       - name: Run required code gate
         working-directory: ./app
         run: npm run verify:code
+
+      - name: Emit local-only release metadata
+        env:
+          GATE_MIGRATION_STAGE: passed-in-separate-job
+          GATE_BRIDGE: passed-in-separate-job
+          GATE_CODE: passed
+        run: node scripts/generate-release-metadata.mjs
+
+      - name: Upload release metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-metadata
+          path: test-results/release-metadata.json
