@@ -4,8 +4,8 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-22
 
-> Current local candidate: `8a346da858658401d0e3b3a1e1a9602d387c9401` plus
-> this local-only recovery hardening slice. The reviewed hosted history
+> Current local candidate: `203c4bc71fbae42004b791923d98cbb9e0c2e268`.
+> It is local-only and unreviewed; the reviewed hosted history
 > remains `095`; no hosted migration, deployment, credential change, provider
 > request, or external action occurred. Technical launch is **NOT GO**.
 
@@ -16,8 +16,8 @@ not active configuration or release claims.
 
 ### Local migration-104 proof — 2026-08-22
 
-The local candidate is the reviewed `8a346da858658401d0e3b3a1e1a9602d387c9401`
-plus the uncommitted recovery slice. Disposable local Supabase reset cleanly
+The local candidate is `203c4bc71fbae42004b791923d98cbb9e0c2e268`.
+Disposable local Supabase reset cleanly
 through migration `104`; schema lint and the complete `verify:database` gate
 passed. The generalized staged verifier passed 32 mappings and 16 gates.
 `verify:code` passed with 222 unit tests, 50 accessibility tests, lint,

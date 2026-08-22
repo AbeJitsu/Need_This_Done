@@ -10,8 +10,8 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-22
 
-> Current local candidate: `8a346da858658401d0e3b3a1e1a9602d387c9401` plus
-> this local-only provider-recovery hardening slice. Historical passing
+> Current local candidate: `203c4bc71fbae42004b791923d98cbb9e0c2e268`.
+> It is local-only and unreviewed. Historical passing
 > evidence remains attached to `e363a5f` and hosted schema `095`; it does not
 > cover migration `104`. Technical launch is **NOT GO**. No hosted migration,
 > credential provisioning, provider request, Mac activation, or external action
