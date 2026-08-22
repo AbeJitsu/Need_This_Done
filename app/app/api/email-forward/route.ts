@@ -2,7 +2,8 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
-import { getResend, getEmailConfig } from '@/lib/email';
+import { getEmailConfig } from '@/lib/email';
+import { sendDurableTransactionalEmail } from '@/lib/transactional-email-service';
 
 // ============================================================================
 // Email Forwarding Webhook
@@ -142,29 +143,29 @@ export async function POST(request: NextRequest) {
       receivedAt: event.data.created_at,
     });
 
-    // Send the forwarded email using Resend
-    const resend = getResend();
-    const { data: sendResult, error: sendError } = await resend.emails.send({
-      from: emailConfig.from,
+    // Forwarding is also a transactional provider operation. Use the inbound
+    // Resend email ID as the stable logical-send key, never a retry-generated key.
+    const forwardedEmailId = await sendDurableTransactionalEmail({
       to: emailConfig.adminEmail,
       subject: forwardedSubject,
       html: htmlBody,
       text: textBody,
-      reply_to: from, // Allow replying directly to original sender
+      replyTo: from,
+      operationKey: `forward-${email_id}`,
     });
 
-    if (sendError) {
-      console.error('[Email Forward] Failed to forward email:', sendError);
+    if (!forwardedEmailId) {
+      console.error('[Email Forward] Durable forwarding operation is unavailable or failed');
       return NextResponse.json(
-        { error: 'Failed to forward email', details: sendError },
-        { status: 500 }
+        { error: 'Failed to forward email' },
+        { status: 503 }
       );
     }
 
     return NextResponse.json({
       status: 'forwarded',
       originalEmailId: email_id,
-      forwardedEmailId: sendResult?.id,
+      forwardedEmailId,
     });
 
   } catch (error) {

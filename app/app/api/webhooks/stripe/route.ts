@@ -14,10 +14,14 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
   try { event = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder').webhooks.constructEvent(body, signature, secret); }
   catch { return NextResponse.json({ error: 'Invalid Stripe webhook signature.' }, { status: 401 }); }
+  if (event.livemode) return NextResponse.json({ error: 'Live-mode Stripe events are not accepted.' }, { status: 400 });
   const mapped = statusByEvent[event.type];
   if (!mapped) return NextResponse.json({ ignored: true });
   const invoiceId = typeof event.data.object === 'object' && 'invoice' in event.data.object ? String(event.data.object.invoice || '') : ('id' in event.data.object ? String(event.data.object.id) : '');
   if (!invoiceId) return NextResponse.json({ error: 'Stripe event has no invoice reference.' }, { status: 400 });
+  const stripeObject = event.data.object as { amount_due?: number; amount_paid?: number; amount_refunded?: number; currency?: string };
+  const amount = stripeObject.amount_paid ?? stripeObject.amount_due ?? stripeObject.amount_refunded;
+  if (amount !== 25000 || stripeObject.currency !== 'usd') return NextResponse.json({ error: 'Stripe event does not match the fixed test invoice.' }, { status: 400 });
   const admin = getSupabaseAdmin();
   const receipt = await admin.rpc('record_provider_webhook_receipt', { target_provider: 'stripe', target_provider_event_id: event.id, target_payload_sha256: sha256(body), target_signature_verified: true });
   if (receipt.error || !receipt.data) return NextResponse.json({ error: 'Webhook receipt could not be recorded.' }, { status: 503 });

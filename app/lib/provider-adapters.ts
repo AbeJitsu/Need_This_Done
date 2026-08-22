@@ -1,26 +1,42 @@
 import 'server-only';
 
-import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { Resend } from 'resend';
 import Stripe from 'stripe';
+import { Webhook } from 'svix';
+import { getValidAccessToken } from '@/lib/google-calendar';
 
 export type ProviderMode = 'disabled' | 'fake' | 'live';
 
 function mode(name: string, key?: string): ProviderMode {
-  if (process.env[name] === 'fake' && process.env.OFFLINE_ASSEMBLY_PROOF === 'true') return 'fake';
-  return key ? 'live' : 'disabled';
+  const configured = process.env[name];
+  if (configured === 'fake' && process.env.OFFLINE_ASSEMBLY_PROOF === 'true') return 'fake';
+  // A credential is capability, not activation. Real adapters require both a
+  // reviewed explicit mode and their dedicated credential.
+  if (configured === 'live' && key) return 'live';
+  return 'disabled';
 }
 
 export function sha256(value: string) { return createHash('sha256').update(value).digest('hex'); }
 
-export function verifyWebhookSecret(value: string, signature: string | null, secret?: string) {
-  if (!secret || !signature) return false;
-  const expected = Buffer.from(sha256(`${secret}.${value}`), 'hex');
-  const received = Buffer.from(signature.replace(/^sha256=/, ''), 'hex');
-  return expected.length === received.length && timingSafeEqual(expected, received);
+export function verifyResendWebhook(value: string, headers: Headers, secret?: string) {
+  const id = headers.get('svix-id');
+  const timestamp = headers.get('svix-timestamp');
+  const signature = headers.get('svix-signature');
+  if (!secret || !id || !timestamp || !signature) return false;
+  try {
+    new Webhook(secret).verify(value, {
+      'svix-id': id,
+      'svix-timestamp': timestamp,
+      'svix-signature': signature,
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-export type TransactionalSend = { from: string; to: string; subject: string; text: string; idempotencyKey: string };
+export type TransactionalSend = { from: string; to: string; subject: string; text: string; html?: string; replyTo?: string; attachments?: { filename: string; content: Buffer | string; contentType?: string }[]; idempotencyKey: string };
 export interface TransactionalEmailAdapter { send(input: TransactionalSend): Promise<{ providerMessageId: string }>; }
 
 export function transactionalEmailAdapter(): { mode: ProviderMode; adapter: TransactionalEmailAdapter | null } {
@@ -29,20 +45,49 @@ export function transactionalEmailAdapter(): { mode: ProviderMode; adapter: Tran
   if (providerMode === 'fake') return { mode: providerMode, adapter: { send: async (input) => ({ providerMessageId: `fake-resend-${input.idempotencyKey}` }) } };
   const client = new Resend(process.env.RESEND_API_KEY);
   return { mode: providerMode, adapter: { send: async (input) => {
-    const { data, error } = await client.emails.send({ from: input.from, to: [input.to], subject: input.subject, text: input.text, headers: { 'Idempotency-Key': input.idempotencyKey } });
+    const { data, error } = await client.emails.send({ from: input.from, to: [input.to], subject: input.subject, text: input.text, html: input.html, reply_to: input.replyTo, attachments: input.attachments, headers: { 'Idempotency-Key': input.idempotencyKey } });
     if (error || !data?.id) throw new Error(error?.message || 'Resend did not return a message ID.');
     return { providerMessageId: data.id };
   } } };
 }
 
-export type CalendarInput = { idempotencyKey: string; externalEventId?: string | null; startsAt?: string | null; endsAt?: string | null; summary?: string | null };
+export type CalendarInput = {
+  idempotencyKey: string;
+  calendarUserId: string;
+  calendarId: string;
+  externalEventId?: string | null;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  summary?: string | null;
+};
 export interface CalendarAdapter { execute(action: 'create' | 'update' | 'cancel' | 'delete', input: CalendarInput): Promise<{ externalEventId: string }>; }
 export function calendarAdapter(): { mode: ProviderMode; adapter: CalendarAdapter | null } {
   const providerMode = mode('CALENDAR_PROVIDER', process.env.GOOGLE_CLIENT_SECRET);
   if (providerMode === 'fake') return { mode: providerMode, adapter: { execute: async (_action, input) => ({ externalEventId: input.externalEventId || `fake-calendar-${input.idempotencyKey}` }) } };
-  // Google OAuth use is intentionally unavailable until a separately reviewed
-  // server adapter is configured; credentials alone never activate it.
-  return { mode: 'disabled', adapter: null };
+  if (providerMode === 'disabled') return { mode: providerMode, adapter: null };
+  return { mode: providerMode, adapter: { execute: async (action, input) => {
+    const accessToken = await getValidAccessToken(input.calendarUserId);
+    const eventId = input.externalEventId || `ntd${input.idempotencyKey.replace(/-/g, '')}`;
+    const base = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(input.calendarId)}/events/${encodeURIComponent(eventId)}`;
+    const headers = { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' };
+    let response: Response;
+    if (action === 'delete') {
+      response = await fetch(`${base}?sendUpdates=none`, { method: 'DELETE', headers });
+    } else if (action === 'cancel') {
+      response = await fetch(`${base}?sendUpdates=all`, { method: 'PATCH', headers, body: JSON.stringify({ status: 'cancelled' }) });
+    } else {
+      if (!input.startsAt || !input.endsAt || !input.summary) throw new Error('Calendar create/update requires start, end, and summary.');
+      response = await fetch(action === 'create' ? `${base}?sendUpdates=none` : `${base}?sendUpdates=none`, {
+        method: action === 'create' ? 'PUT' : 'PUT', headers,
+        body: JSON.stringify({ id: eventId, summary: input.summary, start: { dateTime: input.startsAt }, end: { dateTime: input.endsAt } }),
+      });
+    }
+    if (!response.ok) throw new Error(`Google Calendar rejected ${action} (${response.status}).`);
+    if (action === 'delete') return { externalEventId: eventId };
+    const event = await response.json() as { id?: string };
+    if (!event.id) throw new Error('Google Calendar did not return an event ID.');
+    return { externalEventId: event.id };
+  } } };
 }
 
 export interface InvoiceAdapter { createStartInvoice(input: { idempotencyKey: string; projectId: string }): Promise<{ invoiceId: string }>; }

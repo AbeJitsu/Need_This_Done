@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
-import { randomUUID } from 'crypto';
+import { render } from '@react-email/components';
+import { sendDurableTransactionalEmail } from '@/lib/transactional-email-service';
 
 // ============================================================================
 // Resend Email Client
@@ -125,88 +126,21 @@ export async function sendEmailWithRetry(
     return 'test-email-id';
   }
 
-  // Email delivery is optional for the manual internal pilot. The durable
-  // project/report record remains the source of truth when no provider exists.
-  if (!process.env.RESEND_API_KEY) return null;
-
-  const resend = getResend();
-  const idempotencyKey = randomUUID();
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const emailConfig = getEmailConfig();
-      const { data, error } = await resend.emails.send({
-        from: emailConfig.from,
-        to,
-        subject,
-        react,
-        reply_to: emailConfig.replyTo,
-        // Note: Idempotency key moved to request headers in newer SDK versions
-        // The SDK handles retries internally; manual retry logic provides
-        // additional resilience for network-level failures
-        headers: {
-          'X-Idempotency-Key': idempotencyKey,
-        },
-        // Include attachments if provided
-        ...(attachments && { attachments }),
-      });
-
-      if (!error && data) {
-        if (attempt > 1) {
-          console.log(`[Email] Sent successfully on attempt ${attempt}`);
-        }
-        return data.id;
-      }
-
-      // Handle specific error types from Resend API
-      if (error && isResendError(error)) {
-        // Validation errors - don't retry, these won't succeed
-        if (
-          error.name === 'validation_error' ||
-          error.name === 'missing_required_field'
-        ) {
-          console.error(
-            `[Email] Validation error - not retrying:`,
-            error.message
-          );
-          return null;
-        }
-
-        // Application errors - retry with backoff
-        if (error.name === 'application_error' && attempt < maxRetries) {
-          const delay = Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s
-          console.log(
-            `[Email] Attempt ${attempt} failed (application_error), retrying in ${delay}ms...`
-          );
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          continue;
-        }
-
-        console.error(`[Email] Send failed:`, error);
-        return null;
-      }
-
-      // Unknown error format
-      console.error(`[Email] Unexpected error format:`, error);
-      return null;
-    } catch (error) {
-      // Network or unexpected errors - retry with backoff
-      if (attempt < maxRetries) {
-        const delay = Math.pow(2, attempt - 1) * 1000; // Exponential backoff
-        console.error(
-          `[Email] Attempt ${attempt}/${maxRetries} failed (${error instanceof Error ? error.message : 'unknown error'}), retrying in ${delay}ms...`
-        );
-        await new Promise((resolve) => setTimeout(resolve, delay));
-        continue;
-      }
-
-      console.error(`[Email] All retry attempts failed:`, error);
-      return null;
-    }
+  // Retrying an uncertain provider acceptance would risk a duplicate after
+  // Resend's 24-hour idempotency window. Persist the operation once instead;
+  // later reconciliation must reuse its key under an explicit operator action.
+  void maxRetries;
+  try {
+    const html = await render(react);
+    const text = await render(react, { plainText: true });
+    const results = await Promise.all((Array.isArray(to) ? to : [to]).map((recipient) =>
+      sendDurableTransactionalEmail({ to: recipient, subject, text, html, attachments }),
+    ));
+    return results[0] || null;
+  } catch (error) {
+    console.error('[Email] Durable transactional send failed:', error);
+    return null;
   }
-
-  console.error(`[Email] Max retries (${maxRetries}) exceeded`);
-  return null;
 }
 
 /**
@@ -227,25 +161,10 @@ export async function sendEmail(
 ): Promise<string | null> {
   try {
     if (process.env.SKIP_EMAILS === 'true' || process.env.NODE_ENV === 'test') return 'test-email-id';
-    if (!process.env.RESEND_API_KEY) return null;
-    const resend = getResend();
-    const emailConfig = getEmailConfig();
-
-    const { data, error } = await resend.emails.send({
-      from: emailConfig.from,
-      to,
-      subject,
-      html,
-      text,
-      reply_to: emailConfig.replyTo,
-    });
-
-    if (error) {
-      console.error('[Email] Send failed:', error);
-      return null;
-    }
-
-    return data?.id || null;
+    const results = await Promise.all((Array.isArray(to) ? to : [to]).map((recipient) =>
+      sendDurableTransactionalEmail({ to: recipient, subject, html, text: text || '' }),
+    ));
+    return results[0] || null;
   } catch (error) {
     console.error('[Email] Unexpected error:', error);
     return null;

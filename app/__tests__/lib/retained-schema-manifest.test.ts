@@ -566,11 +566,15 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       ['public.abort_openclaw_task_before_provider(uuid,text,text)', true, false, false],
       ['public.upsert_provider_operation(text,text,text,text,text,jsonb,jsonb,text)', true, false, false],
       ['public.record_provider_webhook_receipt(text,text,text,boolean)', true, false, false],
+      ['public.complete_provider_webhook_receipt(uuid)', true, false, false],
+      ['public.accept_resend_transactional_operation(uuid,uuid,text,text,text)', true, false, false],
       ['public.record_resend_transactional_message(uuid,uuid,text,text,text,text)', true, false, false],
       ['public.record_resend_transactional_event(uuid,text,text,timestamp with time zone)', true, false, false],
       ['public.record_calendar_operation_reference(uuid,uuid,uuid,text,text,text)', true, false, false],
+      ['public.accept_calendar_operation(uuid,uuid,uuid,text,text)', true, false, false],
       ['public.record_website_improvement_invoice_reference(uuid,uuid,text,text)', true, false, false],
       ['public.record_stripe_invoice_event(uuid,text,text)', true, false, false],
+      ['public.accept_website_improvement_invoice(uuid,uuid,text)', true, false, false],
     ] as const;
 
     for (const [signature, serviceRole, authenticated, anon] of rpcChecks) {

@@ -2,15 +2,37 @@
 
 This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service. The canonical numbered control record is the [production launch checklist](launch/LAUNCH_CHECKLIST.md); this file is its evidence ledger.
 
-## Current release-control and hosted-stage ledger — 2026-08-18
+## Current release-control and hosted-stage ledger — 2026-08-22
 
-> Current local candidate notice (2026-08-19): `5c2b9f9` plus the uncommitted
-> local verification and compatibility repair stack is the unreviewed local work. Passing evidence below is
-> historical evidence for `e363a5f` / hosted schema `095`, not evidence for
-> migrations `096+`. Technical launch remains **NOT GO** and provider/hosted
-> actions remain pending separate approval.
+> Current local candidate: `8a346da858658401d0e3b3a1e1a9602d387c9401` plus
+> this local-only recovery hardening slice. The reviewed hosted history
+> remains `095`; no hosted migration, deployment, credential change, provider
+> request, or external action occurred. Technical launch is **NOT GO**.
 
-### Local migration-103 proof — 2026-08-19
+The current provider-free release boundary has no selected OpenRouter worker
+model. `google/gemma-4-26b-a4b-it:free` is the only activation candidate;
+historical dynamic-router and catalog-discovery notes below remain evidence,
+not active configuration or release claims.
+
+### Local migration-104 proof — 2026-08-22
+
+The local candidate is the reviewed `8a346da858658401d0e3b3a1e1a9602d387c9401`
+plus the uncommitted recovery slice. Disposable local Supabase reset cleanly
+through migration `104`; schema lint and the complete `verify:database` gate
+passed. The generalized staged verifier passed 32 mappings and 16 gates.
+`verify:code` passed with 222 unit tests, 50 accessibility tests, lint,
+TypeScript, and the production build; bridge build plus all 8 offline tests
+passed. No credential, provider, hosted, deployment, or external action was
+used.
+
+The provider-free fresh assembly reset did reach migration `104` and the code
+gate, but its Playwright browser phase is **not claimable** in this sandbox:
+Chromium was denied the macOS Mach-port registration (`Permission denied`).
+Owner: frontend QA / local-environment owner. Remove by rerunning the exact
+assembly on an approved interactive Mac environment before promotion. This is
+not evidence of a product-browser regression and it does not change **NOT GO**.
+
+### Historical local migration-103 proof — 2026-08-19
 
 Committed candidate `5c2b9f9` plus the pending local verification repair was
 reset against disposable local Supabase through migration `103`. Schema lint,

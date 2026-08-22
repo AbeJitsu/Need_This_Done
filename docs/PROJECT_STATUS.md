@@ -8,16 +8,30 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current release-control and hosted-stage ledger — 2026-08-18
+## Current release-control and hosted-stage ledger — 2026-08-22
 
-> Current local-candidate notice (2026-08-19): `5c2b9f9` plus the uncommitted
-> local verification and compatibility repair stack is the unreviewed local candidate. Historical passing
+> Current local candidate: `8a346da858658401d0e3b3a1e1a9602d387c9401` plus
+> this local-only provider-recovery hardening slice. Historical passing
 > evidence remains attached to `e363a5f` and hosted schema `095`; it does not
-> cover migrations `096+`. Technical launch is **NOT GO**. No hosted migration,
+> cover migration `104`. Technical launch is **NOT GO**. No hosted migration,
 > credential provisioning, provider request, Mac activation, or external action
 > is authorized by this local work.
 
-**Local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
+**Current model claim:** no worker model is selected. The sole future
+activation candidate is exact `google/gemma-4-26b-a4b-it:free`; historic
+dynamic-router and 4-31 catalog notes below are retained only as evidence.
+
+**Local migration-104 update (2026-08-22):** Disposable local Supabase reset
+cleanly through `104`. Schema lint, the entire `verify:database` suite, the
+generalized 32-mapping/16-gate stage verifier, `verify:code` (222 unit tests,
+50 accessibility tests, lint, TypeScript, and production build), and bridge
+build plus 8 offline tests passed with providers disabled. The fresh
+provider-free assembly is not claimable: its browser phase could not launch
+Chromium in this sandbox because macOS denied Mach-port registration. Owner:
+frontend QA / local-environment owner; rerun the exact assembly on an approved
+interactive Mac before promotion. No hosted or provider action occurred.
+
+**Historical local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
 the disposable local stack. The expanded schema/RLS/RPC manifest, all retained
 database suites, bridge tests (8/8), code gate (221 unit tests, 50 a11y tests,
 and the production build), 31-mapping/15-gate staged verifier, clean

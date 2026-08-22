@@ -5,8 +5,8 @@ export type ProspectingSenderProvider = 'disabled' | 'fake' | 'resend';
 
 export function getProspectingSenderProvider(): ProspectingSenderProvider {
   const configured = process.env.PROSPECTING_SENDER_PROVIDER;
-  if (configured === 'fake' || configured === 'resend') return configured;
-  if (process.env.OFFLINE_ASSEMBLY_PROOF === 'true') return 'fake';
+  if (configured === 'fake' && process.env.OFFLINE_ASSEMBLY_PROOF === 'true') return 'fake';
+  if (configured === 'resend' && process.env.PROSPECTING_RESEND_API_KEY) return 'resend';
   return 'disabled';
 }
 

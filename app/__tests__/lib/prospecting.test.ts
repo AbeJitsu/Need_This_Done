@@ -35,6 +35,8 @@ describe('prospecting safety helpers', () => {
       expect(getProspectingSenderProvider()).toBe('disabled');
       expect(createProspectingSender()).toBeNull();
       process.env.PROSPECTING_SENDER_PROVIDER = 'fake';
+      expect(getProspectingSenderProvider()).toBe('disabled');
+      process.env.OFFLINE_ASSEMBLY_PROOF = 'true';
       expect(getProspectingSenderProvider()).toBe('fake');
       expect(createProspectingSender()).not.toBeNull();
     } finally {
