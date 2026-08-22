@@ -46,25 +46,22 @@ Human -> Next.js planner -> approval -> Vercel task queue
 
 Supabase is the durable source of truth for projects, reports, private work, approvals, outcomes, suppression, and model-evaluation records. Redis is transient only. Qdrant and any replacement database are not part of this product.
 
-OpenRouter is server/host private: the planner uses the target profile's database-pinned primary, while the comparison model remains comparison-only. An optional private `OPENROUTER_BACKUP_MODEL` supports only the approval-gated two-request free-backup probe; `openrouter/free` is dynamic evidence and can never be a database-pinned worker model. OpenClaw is the supervised Mac-mini execution runtime, but host credentials, launchd activation, hosted migration, real sender, publication, spend, account changes, and client portal remain separately approved gates.
+OpenRouter is server/host private: the planner uses the target profile's database-pinned primary, while the comparison model remains comparison-only. The only current activation candidate is the exact private `google/gemma-4-26b-a4b-it:free` value; no live worker model is selected or pinned. OpenClaw is the supervised Mac-mini execution runtime, but host credentials, launchd activation, hosted migration, real sender, publication, spend, account changes, and client portal remain separately approved gates.
 
 ## Model-evaluation boundary
 
-No live worker model is selected by default. The evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for the two exact model IDs supplied through the private `OPENROUTER_PRIMARY_MODEL` and `OPENROUTER_TEST_MODEL` variables. Step 10A is partial because the configured free endpoint was rejected by the provider privacy/data-policy guardrail; a current account-filtered catalog check identified `google/gemma-4-31b-it:free` as the next comparison candidate, but no model is selected or pinned and a repeat comparison remains approval-gated:
+No live worker model is selected by default. The evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for the two exact model IDs supplied through the private `OPENROUTER_PRIMARY_MODEL` and `OPENROUTER_TEST_MODEL` variables. Step 10A is partial because the configured free endpoint was rejected by the provider privacy/data-policy guardrail; a repeat comparison using the exact Gemma activation candidate remains approval-gated:
 
 - the configured primary candidate; and
 - the configured comparison candidate.
 
 OpenRouter account and key limits govern model spend; the application records provider-reported usage and cost for evaluation evidence. The comparison runner never changes the primary route. A separate approval-gated worker command is required to pin the configured primary into the database, and real research uses that database-pinned ID.
 
-The controlled backup probe runs exactly two sanitized non-streaming requests
-through the configured backup. Structured-output and tool-bearing requests
-set `provider.require_parameters=true`, and every returned endpoint model ID
-is retained with the requested route and provider usage. The probe is not the
-worker, does not use web search, and cannot send, publish, spend, or contact an
-external recipient. If the dynamic router is unsuitable, the private backup
-may be changed to the exact pinned `google/gemma-4-26b-a4b-it:free` variant for
-a separately approved repeat of the same probe.
+Any future probe runs exactly two sanitized non-streaming requests through the
+exact Gemma candidate. Structured-output and tool-bearing requests set
+`provider.require_parameters=true`, and provider usage is retained as evidence.
+The probe is not the worker, does not use web search, and cannot send, publish,
+spend, or contact an external recipient.
 
 ## Local development and verification
 

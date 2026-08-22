@@ -23,7 +23,7 @@ Technical launch is a separate gate from business proof: checklist items 1–22 
 | --- | --- | --- | --- |
 | 1 | Local verification passed | Public dual-offer experience | Navigation, homepage, services, pricing, intake, audit handoff, work proof, legal/support pages, redirects, metadata, sitemap, and curated Insights accurately describe the two offers. |
 | 2 | Local verification passed | Route, accessibility, and browser coverage | Unit, accessibility, build, public-browser, private-access, and retained security/assembly gates pass without hiding stale routes. |
-| 3 | Partial; replacement candidate identified | Model-routing policy | Step 10A recorded six fixed sanitized-task results for the exact configured pair. DeepSeek completed its three tasks; Nemotron was rejected by the provider privacy/data-policy guardrail. The 2026-08-18 account-filtered catalog check identified `google/gemma-4-31b-it:free` for the next comparison, but a repeat comparison, environment change, or model pin requires separate approval; select no live default until the policy threshold is met. |
+| 3 | Partial; exact activation candidate retained | Model-routing policy | Step 10A recorded six fixed sanitized-task results for the exact configured pair. DeepSeek completed its three tasks; Nemotron was rejected by the provider privacy/data-policy guardrail. Only `google/gemma-4-26b-a4b-it:free` remains an activation candidate; a repeat comparison, environment change, or model pin requires separate approval; select no live default until the policy threshold is met. |
 | 4 | Pending external sale | Paid Website Improvement | Confirm one contained scope, issue the two manual invoices, deliver the fix, and record the handoff/outcome. |
 | 5 | Pending external sale | Paid Managed AI Operator pilot | Agree proposal and approval boundary, operate for 30 days, provide four weekly briefs, and record outcomes. |
 
@@ -43,20 +43,11 @@ Step 10A evidence is partial rather than a model-selection result: the hosted
 profile remains `evaluation-required`, and provider-policy changes or repeat
 requests require separate approval.
 
-The new `OPENROUTER_BACKUP_MODEL` remains private and probe-only. The moving
-`openrouter/free` route is allowed only for exactly two sanitized requests;
-the response's actual endpoint model is persisted, and the profile remains
-`evaluation-required`. A pinned `google/gemma-4-26b-a4b-it:free` value is the
-manual backup if the dynamic route is unsuitable. Neither path authorizes a
-worker, sender, publication, spend, or external-recipient action.
-
-On 2026-08-18, the account-filtered OpenRouter catalog exposed
-`google/gemma-4-31b-it:free` as a current free text candidate with
-`response_format` and tool support, 262,144-token context, and zero prompt /
-completion pricing. It is the recommended next comparison candidate; the
-catalog check made no completion request, environment change, hosted write, or
-model-selection decision. `google/gemma-4-26b-a4b-it:free` is the secondary
-candidate because it currently lists two free endpoints.
+The private `OPENROUTER_BACKUP_MODEL` remains probe-only and must be the exact
+`google/gemma-4-26b-a4b-it:free` candidate. It may be used only for an
+explicitly approved two-request sanitized comparison; the profile remains
+`evaluation-required`. It never authorizes a worker, sender, publication,
+spend, or external-recipient action.
 
 ## Service and safety boundaries
 
