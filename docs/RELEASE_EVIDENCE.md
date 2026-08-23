@@ -118,8 +118,8 @@ roles have neither table access nor function execution. The explicit
 `acceptance_unknown` state prevents an unresolved Resend operation older than
 24 hours from returning to the automatic retry path. Service-only
 reconciliation records confirmed acceptance or confirmed non-acceptance
-without contacting the provider; an operator-facing endpoint is not claimed by
-this database slice.
+without contacting the provider; the operator-facing endpoint is claimed
+separately by the transactional-email proof below.
 
 A disposable local reset replayed migrations `001`–`106` successfully. An
 isolated `105`→`106` rehearsal preserved representative historical sent
@@ -135,6 +135,44 @@ message, or worker activation occurred. Technical launch remains **NOT GO**.
 **Rollback:** Stop the affected callers and use a separately reviewed forward
 migration. Preserve provider operations, receipt history, domain links,
 handoffs, outreach messages, and migration history.
+
+### Transactional email and approved-handoff proof — 2026-08-23
+
+All transactional email workflows now require a caller-owned operation key at
+the logical event boundary. Project confirmations and operator notices, site
+reports, sign-in notices, explicitly confirmed GitHub handoffs, and verified
+inbound forwarding use the same transactional operation service. The prior
+direct Resend construction and helper-generated email retry keys were removed.
+Operation persistence is restricted to a domain reference, recipient hash,
+subject, provider message ID, and status; it excludes addresses, bodies,
+attachments, credentials, tokens, and raw inbound content.
+
+The handoff route remains operator-only and requires `confirm: true` for both
+the first notification and a retry. It reuses the operation ID and exact key
+created with the draft. Provider acceptance and the handoff transition commit
+atomically; an acceptance/database disagreement is durable
+`acceptance_unknown`. The operator reconciliation route records only confirmed
+acceptance or confirmed non-acceptance and has no provider adapter. The 84-route
+capability manifest classifies and tests this new route.
+
+The transactional webhook reads the raw request body once and verifies native
+Svix signatures with `TRANSACTIONAL_RESEND_WEBHOOK_SECRET`. Inbound forwarding
+is a compatibility alias to that same handler. Duplicate completed receipts do
+not repeat work, and forwarding or event-persistence failure marks the receipt
+retryable. Even when a credential exists, inbound body retrieval cannot contact
+Resend unless the transactional lane is explicitly in `live` mode.
+
+Focused service, handoff, reconciliation, webhook, signature, forwarding, and
+manifest contracts passed 29/29. `verify:code` passed lint with zero warnings,
+TypeScript, 269 unit tests, 50 accessibility tests, and the 84-route production
+build. `verify:database` passed schema lint and all 48 behavioral checks through
+migration `106`. This is deterministic local proof only: providers were
+disabled and no hosted state, credential, provider call, deployment, payment,
+external message, or Mac worker changed. Technical launch remains **NOT GO**.
+
+**Rollback:** Revert the transactional application and manifest changes as one
+slice. Keep migration `106`, provider operations, webhook receipts, handoffs,
+and audit records intact; hosted rollback remains forward-only.
 
 ### Historical local migration-103 proof — 2026-08-19
 

@@ -98,6 +98,23 @@ describe('consultation request persistence', () => {
       alternate_consultation_at: '2026-08-04T15:30:00+00:00',
     });
     expect(sendProjectSubmissionEmails).toHaveBeenCalledOnce();
+    expect(sendProjectSubmissionEmails).toHaveBeenCalledWith(
+      expect.objectContaining({ projectId }),
+      testEmail,
+      expect.any(Object),
+      {
+        admin: {
+          operationKey: `project:${projectId}:admin-notification`,
+          domainReference: `project:${projectId}:admin-notification`,
+          projectId,
+        },
+        client: {
+          operationKey: `project:${projectId}:requester-confirmation`,
+          domainReference: `project:${projectId}:requester-confirmation`,
+          projectId,
+        },
+      },
+    );
     expect(invalidatePattern).toHaveBeenCalledWith('admin:projects:*');
   });
 });

@@ -1,4 +1,5 @@
-import { sendEmailWithRetry, getEmailConfig } from "./email";
+import { getEmailConfig, sendRenderedTransactionalEmail } from './email';
+import { sendDurableGithubHandoffEmail, type GithubHandoffSendResult } from './transactional-email-service';
 
 // ============================================================================
 // Email Service Functions
@@ -39,7 +40,19 @@ export type ProjectGithubHandoffProps = {
   name: string;
   githubUrl: string;
   note?: string | null;
-  portalUrl: string;
+};
+
+export type EmailOperationContext = {
+  operationKey: string;
+  domainReference: string;
+  projectId?: string | null;
+};
+
+export type GithubHandoffOperationContext = {
+  operationKey: string;
+  operationId: string;
+  handoffId: string;
+  projectId: string;
 };
 
 export type WelcomeEmailProps = {
@@ -67,6 +80,7 @@ export type LoginNotificationEmailProps = {
  */
 export async function sendAdminNotification(
   data: AdminNotificationProps,
+  operation: EmailOperationContext,
 ): Promise<string | null> {
   const emailConfig = getEmailConfig();
 
@@ -80,10 +94,11 @@ export async function sendAdminNotification(
 
   const subject = `🎯 New Project: ${data.name}${data.service ? ` - ${data.service}` : ""}`;
 
-  return sendEmailWithRetry(
+  return sendRenderedTransactionalEmail(
     emailConfig.adminEmail,
     subject,
     AdminNotification(data),
+    operation,
   );
 }
 
@@ -98,25 +113,31 @@ export async function sendAdminNotification(
 export async function sendClientConfirmation(
   to: string,
   data: ClientConfirmationProps,
+  operation: EmailOperationContext,
 ): Promise<string | null> {
   // Dynamic import to prevent bundling during page prerendering
   const { default: ClientConfirmation } = await import("../emails/ClientConfirmation");
 
   const subject = "✨ We Got Your Message! (Response in 2 Business Days)";
 
-  return sendEmailWithRetry(to, subject, ClientConfirmation(data));
+  return sendRenderedTransactionalEmail(to, subject, ClientConfirmation(data), operation);
 }
 
 export async function sendProjectGithubHandoff(
   data: ProjectGithubHandoffProps,
-): Promise<string | null> {
+  operation: GithubHandoffOperationContext,
+): Promise<GithubHandoffSendResult | null> {
   const { default: ProjectGithubHandoffEmail } = await import('../emails/ProjectGithubHandoffEmail');
-
-  return sendEmailWithRetry(
-    data.email,
-    'Your GitHub project handoff is ready',
-    ProjectGithubHandoffEmail(data),
-  );
+  const react = ProjectGithubHandoffEmail(data);
+  const { render } = await import('@react-email/components');
+  const subject = 'Your GitHub project handoff is ready';
+  return sendDurableGithubHandoffEmail({
+    to: data.email,
+    subject,
+    html: await render(react),
+    text: await render(react, { plainText: true }),
+    ...operation,
+  });
 }
 
 /**
@@ -133,11 +154,12 @@ export async function sendProjectSubmissionEmails(
   adminData: AdminNotificationProps,
   clientEmail: string,
   clientData: ClientConfirmationProps,
+  operations: { admin: EmailOperationContext; client: EmailOperationContext },
 ): Promise<{ adminSent: boolean; clientSent: boolean }> {
   // Send both emails in parallel (don't wait for one to finish)
   const [adminResult, clientResult] = await Promise.allSettled([
-    sendAdminNotification(adminData),
-    sendClientConfirmation(clientEmail, clientData),
+    sendAdminNotification(adminData, operations.admin),
+    sendClientConfirmation(clientEmail, clientData, operations.client),
   ]);
 
   const adminSent =
@@ -169,13 +191,14 @@ export async function sendProjectSubmissionEmails(
  */
 export async function sendWelcomeEmail(
   data: WelcomeEmailProps,
+  operation: EmailOperationContext,
 ): Promise<string | null> {
   // Dynamic import to prevent bundling during page prerendering
   const { default: WelcomeEmail } = await import("../emails/WelcomeEmail");
 
   const subject = "🎉 Welcome to NeedThisDone!";
 
-  return sendEmailWithRetry(data.email, subject, WelcomeEmail(data));
+  return sendRenderedTransactionalEmail(data.email, subject, WelcomeEmail(data), operation);
 }
 
 /**
@@ -187,13 +210,14 @@ export async function sendWelcomeEmail(
  */
 export async function sendLoginNotification(
   data: LoginNotificationEmailProps,
+  operation: EmailOperationContext,
 ): Promise<string | null> {
   // Dynamic import to prevent bundling during page prerendering
   const { default: LoginNotificationEmail } = await import("../emails/LoginNotificationEmail");
 
   const subject = "🔐 New Sign-In to Your NeedThisDone Account";
 
-  return sendEmailWithRetry(data.email, subject, LoginNotificationEmail(data));
+  return sendRenderedTransactionalEmail(data.email, subject, LoginNotificationEmail(data), operation);
 }
 
 // ============================================================================
@@ -219,11 +243,12 @@ export type SiteReportEmailProps = {
  */
 export async function sendSiteReportEmail(
   data: SiteReportEmailProps,
+  operation: EmailOperationContext,
 ): Promise<string | null> {
   const { default: SiteReportEmail } = await import('../emails/SiteReportEmail');
 
   const domain = new URL(data.url).hostname;
   const subject = `Your Site Report: ${domain} scored ${data.score}/100`;
 
-  return sendEmailWithRetry(data.email, subject, SiteReportEmail(data));
+  return sendRenderedTransactionalEmail(data.email, subject, SiteReportEmail(data), operation);
 }

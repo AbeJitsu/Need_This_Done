@@ -7,7 +7,7 @@ type Handoff = {
   id: string;
   github_url: string;
   note: string | null;
-  notification_status?: 'pending' | 'sent' | 'failed';
+  notification_status?: 'draft' | 'pending' | 'acceptance_unknown' | 'sent' | 'failed';
   notification_attempts?: number;
   notification_error?: string | null;
   created_at: string;
@@ -63,9 +63,7 @@ export default function ProjectGithubHandoffs({ projectId, isAdmin }: ProjectGit
       setHandoffs((current) => [data.handoff, ...current]);
       setGithubUrl('');
       setNote('');
-      setMessage(data.notificationSent
-        ? 'GitHub handoff published and the client was notified.'
-        : 'GitHub handoff published, but the email failed. Retry it below.');
+      setMessage('GitHub handoff draft saved. Review it, then confirm the email below.');
     } catch (publishError) {
       setError(publishError instanceof Error ? publishError.message : 'Unable to publish GitHub handoff.');
     } finally {
@@ -80,12 +78,14 @@ export default function ProjectGithubHandoffs({ projectId, isAdmin }: ProjectGit
     try {
       const response = await fetch(`/api/projects/${projectId}/deliveries/${handoffId}/retry-notification`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: true }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Unable to retry delivery email.');
 
       setHandoffs((current) => current.map((handoff) => handoff.id === handoffId ? data.handoff : handoff));
-      setMessage(data.notificationSent ? 'Delivery email sent.' : 'Delivery email failed again. You can retry it later.');
+      setMessage(data.notificationSent ? 'Handoff email sent.' : 'Handoff email remains unsent.');
     } catch (retryError) {
       setError(retryError instanceof Error ? retryError.message : 'Unable to retry delivery email.');
     } finally {
@@ -133,7 +133,7 @@ export default function ProjectGithubHandoffs({ projectId, isAdmin }: ProjectGit
             disabled={submitting || !githubUrl.trim()}
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? 'Publishing…' : 'Publish GitHub handoff'}
+            {submitting ? 'Saving…' : 'Save GitHub handoff draft'}
           </button>
         </form>
       )}
@@ -153,18 +153,25 @@ export default function ProjectGithubHandoffs({ projectId, isAdmin }: ProjectGit
               <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">Posted {new Date(handoff.created_at).toLocaleString()}</p>
               {isAdmin && handoff.notification_status && (
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-                  <span className={handoff.notification_status === 'sent' ? 'text-green-700 dark:text-green-300' : handoff.notification_status === 'failed' ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'}>
+                  <span className={handoff.notification_status === 'sent' ? 'text-green-700 dark:text-green-300' : handoff.notification_status === 'failed' || handoff.notification_status === 'acceptance_unknown' ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300'}>
                     Email: {handoff.notification_status}
                   </span>
-                  {handoff.notification_status === 'failed' && (
+                  {(handoff.notification_status === 'draft' || handoff.notification_status === 'failed') && (
                     <button
                       type="button"
                       onClick={() => retryNotification(handoff.id)}
                       disabled={retryingId === handoff.id}
                       className="rounded-md border border-blue-600 px-3 py-1 text-blue-700 hover:bg-blue-50 disabled:opacity-60 dark:text-blue-300 dark:hover:bg-gray-700"
                     >
-                      {retryingId === handoff.id ? 'Retrying…' : 'Retry email'}
+                      {retryingId === handoff.id
+                        ? 'Sending…'
+                        : handoff.notification_status === 'draft'
+                          ? 'Confirm and send email'
+                          : 'Confirm retry'}
                     </button>
+                  )}
+                  {handoff.notification_status === 'acceptance_unknown' && (
+                    <span className="text-red-700 dark:text-red-300">Reconcile acceptance before retrying.</span>
                   )}
                   {handoff.notification_error && <span className="text-red-700 dark:text-red-300">{handoff.notification_error}</span>}
                 </div>

@@ -7,6 +7,7 @@ import { sendLoginNotification } from '@/lib/email-service';
 import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from '@/lib/rate-limit';
 import { initializeRequestContext, logger, createResponseHeaders } from '@/lib/request-context';
+import { randomUUID } from 'node:crypto';
 
 // Schema uses existing validation helpers for consistency with forms
 const LoginSchema = z.object({
@@ -159,7 +160,8 @@ export async function POST(request: NextRequest) {
         data.user.email,
         data.user.id,
         ipAddress,
-        userAgent
+        userAgent,
+        randomUUID(),
       );
     }
 
@@ -214,7 +216,8 @@ async function sendLoginEmailInBackground(
   email: string,
   userId: string,
   ipAddress: string,
-  userAgent: string
+  userAgent: string,
+  operationKey: string,
 ): Promise<void> {
   try {
     const emailId = await sendLoginNotification({
@@ -230,6 +233,9 @@ async function sendLoginEmailInBackground(
       }),
       ipAddress,
       userAgent,
+    }, {
+      operationKey,
+      domainReference: `user:${userId}:login-notification`,
     });
 
     // Log successful delivery

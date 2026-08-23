@@ -115,6 +115,9 @@ export async function POST(request: NextRequest) {
         categories: result.categories,
         executiveSummary: result.executiveSummary,
         reportUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com'}${reportUrl}`,
+      }, {
+        operationKey: `site-report:${reportId}:delivery`,
+        domainReference: `site-report:${reportId}:delivery`,
       });
     } catch (err) {
       // Email failure shouldn't block the response — report is already saved

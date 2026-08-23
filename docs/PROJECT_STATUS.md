@@ -106,8 +106,8 @@ webhook receipts after a persistence failure, and record
 `acceptance_unknown`. An unresolved Resend operation older than 24 hours fails
 closed until the service boundary records confirmed acceptance or confirmed
 non-acceptance through the reconciliation function; reconciliation itself
-makes no provider request. The operator-facing reconciliation endpoint remains
-part of the later transactional-email slice.
+makes no provider request. The operator-facing endpoint is recorded in the
+subsequent transactional-email slice below.
 
 Disposable local Supabase rebuilt cleanly from migration `001` through `106`.
 An isolated `105`→`106` rehearsal also preserved representative sent handoff
@@ -119,6 +119,35 @@ and 18 gates. The code gate also passed lint with zero warnings, TypeScript,
 hosted state, credential, provider, deployment, payment, external message, or
 Mac worker changed. Rollback is forward-only: stop the provider callers, keep
 the links and audit history, and add a separately reviewed repair migration.
+
+**Transactional email and approved handoffs (2026-08-23):** Every retained
+transactional caller now supplies the durable operation key created at its
+logical event boundary. Project confirmations and operator notices, site
+reports, sign-in notices, GitHub handoffs, and verified inbound forwarding all
+pass through one transactional service. The old direct email constructor and
+helper-created retry keys are removed. Stored operation metadata is limited to
+the domain reference, recipient hash, subject, and provider message ID; email
+addresses, bodies, attachments, tokens, and raw inbound content are not
+persisted in the provider ledger.
+
+GitHub handoffs remain operator-only drafts until the operator explicitly
+confirms a send or retry. That action reuses the migration-managed operation ID
+and exact key. Provider acceptance commits with the handoff transition, while
+an acceptance/database disagreement becomes `acceptance_unknown` and cannot
+resend. The new operator-only reconciliation route records confirmed
+acceptance or confirmed non-acceptance without contacting Resend. Transactional
+delivery events and inbound forwarding share the raw-body Svix handler and
+`TRANSACTIONAL_RESEND_WEBHOOK_SECRET`; receipt persistence failures remain
+retryable. The capability manifest now covers all 84 retained routes.
+
+Focused transactional tests passed 29/29. The complete code gate passed lint
+with zero warnings, TypeScript, 269 unit tests, 50 accessibility tests, and the
+84-route production build. The complete local database gate passed schema lint
+and all 48 behavioral checks through migration `106`. Provider modes remained
+disabled and no credential, provider request, hosted write, deployment,
+payment, external message, or Mac worker action occurred. Rollback is an
+application revert of this email slice while preserving migration `106`,
+provider operations, webhook receipts, handoffs, and audit history.
 
 **Historical local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
 the disposable local stack. The expanded schema/RLS/RPC manifest, all retained

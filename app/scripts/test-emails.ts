@@ -94,6 +94,7 @@ async function main() {
   } = await import("../lib/email-service.js");
 
   const TEST_EMAIL = process.env.RESEND_ADMIN_EMAIL || "test@example.com";
+  const testRun = `manual-email-test:${Date.now()}`;
   console.log(`Sending test emails to: ${TEST_EMAIL}\n`);
 
   // Helper to avoid rate limits (Resend free tier: 2 requests/second)
@@ -105,6 +106,9 @@ async function main() {
     const result = await sendWelcomeEmail({
       email: TEST_EMAIL,
       name: "Test User",
+    }, {
+      operationKey: `${testRun}:welcome`,
+      domainReference: `${testRun}:welcome`,
     });
     console.log(`   ✅ Welcome email sent! ID: ${result}\n`);
   } catch (error) {
@@ -130,6 +134,9 @@ async function main() {
       ipAddress: "192.168.1.100",
       userAgent:
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/120.0.0.0",
+    }, {
+      operationKey: `${testRun}:login`,
+      domainReference: `${testRun}:login`,
     });
     console.log(`   ✅ Login notification sent! ID: ${result}\n`);
   } catch (error) {
@@ -154,6 +161,9 @@ async function main() {
         dateStyle: "medium",
         timeStyle: "short",
       }),
+    }, {
+      operationKey: `${testRun}:admin`,
+      domainReference: `${testRun}:admin`,
     });
     console.log(`   ✅ Admin notification sent! ID: ${result}\n`);
   } catch (error) {
@@ -167,7 +177,10 @@ async function main() {
   try {
     const result = await sendClientConfirmation(TEST_EMAIL, {
       name: "Jane Doe",
-      service: "Managed AI",
+      service: "Managed Automation",
+    }, {
+      operationKey: `${testRun}:confirmation`,
+      domainReference: `${testRun}:confirmation`,
     });
     console.log(`   ✅ Client confirmation sent! ID: ${result}\n`);
   } catch (error) {

@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextResponse } from 'next/server';
 
-const { verifyAdmin, getSupabaseAdmin, invalidate, wrap } = vi.hoisted(() => ({
+const { verifyAdmin, getSupabaseAdmin, sendProjectGithubHandoff, invalidate, wrap } = vi.hoisted(() => ({
   verifyAdmin: vi.fn(),
   getSupabaseAdmin: vi.fn(),
+  sendProjectGithubHandoff: vi.fn(),
   invalidate: vi.fn().mockResolvedValue(undefined),
   wrap: vi.fn(async (_key: string, fetcher: () => Promise<unknown>) => ({
     data: await fetcher(), cached: false, source: 'database' as const,
@@ -12,6 +13,7 @@ const { verifyAdmin, getSupabaseAdmin, invalidate, wrap } = vi.hoisted(() => ({
 
 vi.mock('@/lib/api-auth', () => ({ verifyAdmin }));
 vi.mock('@/lib/supabase', () => ({ getSupabaseAdmin }));
+vi.mock('@/lib/email-service', () => ({ sendProjectGithubHandoff }));
 vi.mock('@/lib/cache', () => ({
   cache: { invalidate, wrap },
   CACHE_KEYS: { projectDeliveries: (id: string) => `project:deliveries:${id}:admin` },
@@ -27,6 +29,12 @@ const handoff = {
   note: 'Ready for operator review.', notification_status: 'draft',
   notification_attempts: 0, notification_sent_at: null,
   notification_error: null, created_at: '2026-08-22T12:00:00.000Z',
+};
+const linkedHandoff = {
+  ...handoff,
+  notification_idempotency_key: '60000000-0000-4000-8000-000000000106',
+  notification_operation_id: 'operation-1',
+  projects: { name: 'Client Name', email: 'client@example.test' },
 };
 
 function request(body: unknown) {
@@ -89,13 +97,43 @@ describe('project GitHub handoff API', () => {
     expect(invalidate).toHaveBeenCalledWith('project:deliveries:project-1:admin');
   });
 
-  it('keeps notification retry unavailable until durable delivery exists', async () => {
-    const response = await retryNotification(new Request('http://localhost', { method: 'POST' }) as never, {
+  it('sends only after explicit operator confirmation and reuses the stored key', async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({ data: linkedHandoff, error: null });
+    const secondEq = vi.fn(() => ({ maybeSingle }));
+    const firstEq = vi.fn(() => ({ eq: secondEq }));
+    const select = vi.fn(() => ({ eq: firstEq }));
+    getSupabaseAdmin.mockReturnValue({ from: vi.fn(() => ({ select })) });
+    sendProjectGithubHandoff.mockResolvedValue({
+      providerMessageId: 'resend-handoff-1',
+      handoff: { ...handoff, notification_status: 'sent', notification_sent_at: '2026-08-23T12:00:00.000Z' },
+    });
+
+    const response = await retryNotification(new Request('http://localhost', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirm: true }),
+    }) as never, {
       params: Promise.resolve({ id: 'project-1', deliveryId: 'handoff-1' }),
     });
-    expect(response.status).toBe(409);
-    await expect(response.json()).resolves.toEqual({
-      error: 'GitHub handoff notifications are draft-only until durable delivery is available.',
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({ notificationSent: true });
+    expect(sendProjectGithubHandoff).toHaveBeenCalledWith(expect.objectContaining({
+      email: 'client@example.test',
+      name: 'Client Name',
+      githubUrl,
+    }), {
+      operationKey: linkedHandoff.notification_idempotency_key,
+      operationId: linkedHandoff.notification_operation_id,
+      handoffId: 'handoff-1',
+      projectId: 'project-1',
     });
+  });
+
+  it('rejects a handoff send without the explicit confirmation flag', async () => {
+    const response = await retryNotification(new Request('http://localhost', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}',
+    }) as never, { params: Promise.resolve({ id: 'project-1', deliveryId: 'handoff-1' }) });
+    expect(response.status).toBe(400);
+    expect(getSupabaseAdmin).not.toHaveBeenCalled();
   });
 });

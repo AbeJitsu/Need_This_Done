@@ -4,10 +4,10 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-23 (local migration-106 provider workflow recovery)
+**Last reviewed:** 2026-08-23 (local transactional email and approved handoffs)
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` candidate SHA:** `62d7060fb8a3b881214ab766c0a510994aa6c7d9` plus this migration-106 recovery slice
+**Current reviewed `dev` candidate SHA:** `59aaa912` plus this transactional-email slice
 **Reviewed pre-key baseline:** `f0d782160a4117cf5aee024dcfd08c1a68276194`; local-only work continues through migration `106`
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** historical provider-free proof through `103` passed on 2026-08-19. The local migration-104 assembly reached its browser phase but is environment-limited by sandbox Chromium Mach-port denial; it is not claimable.
@@ -15,7 +15,7 @@ to these item numbers; they do not define a second activation order.
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** disposable database reset and database/code gates through `106` passed on 2026-08-23; the last complete fresh assembly remains separate and is not advanced by this slice.
+**Local verification history:** the database and code gates through `106` passed on 2026-08-23, including 48 database checks, 269 unit tests, 50 accessibility checks, and the 84-route build; the last complete fresh assembly remains separate and is not advanced by this slice.
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)
@@ -257,6 +257,7 @@ on items 9, 10, and 16.
 - **Owner:** Email/provider owner
 - **Entry condition:** Items 8–9 passed; restricted Resend credentials, a verified sender, signed webhook endpoint, and an owner-controlled mailbox are ready.
 - **Exit proof:** One owner-mailbox message delivers; webhook signature, duplicate, failure, retry, provider event, and cleanup behavior are recorded; no customer address is used.
+- **Local readiness:** The provider-free transactional service, caller-owned operation keys, explicit handoff confirmation, raw-body Svix lane, receipt retry, acceptance-unknown handling, and no-contact operator reconciliation are covered through migration `106`. This does not prove Resend delivery.
 - **Approval:** Required — email owner authorizes the sender, content, mailbox, and one-message canary.
 - **Rollback:** Disable or rotate the key, disable the sender route, preserve event/audit history, and leave customer delivery off.
 - **Evidence link:** [Full-stack external setup](full-stack-external-setup.md) and [release evidence](../RELEASE_EVIDENCE.md).

@@ -13,14 +13,12 @@ export interface ProjectGithubHandoffEmailProps {
   name: string;
   githubUrl: string;
   note?: string | null;
-  portalUrl: string;
 }
 
 export default function ProjectGithubHandoffEmail({
   name,
   githubUrl,
   note,
-  portalUrl,
 }: ProjectGithubHandoffEmailProps) {
   return (
     <Html>
@@ -37,9 +35,7 @@ export default function ProjectGithubHandoffEmail({
             </Text>
             {note && <Text style={noteStyle}>{note}</Text>}
             <Link href={githubUrl} style={button}>Open GitHub handoff</Link>
-            <Text style={paragraph}>
-              You can also view this handoff from your <Link href={portalUrl} style={link}>project portal</Link>.
-            </Text>
+            <Text style={paragraph}>Reply to this email if you need help with the handoff.</Text>
           </Section>
         </Container>
       </Body>
@@ -59,4 +55,3 @@ const section: React.CSSProperties = { padding: '30px' };
 const paragraph: React.CSSProperties = { fontSize: '16px', lineHeight: '1.6', margin: '16px 0' };
 const noteStyle: React.CSSProperties = { backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '16px', fontSize: '15px', lineHeight: '1.5' };
 const button: React.CSSProperties = { backgroundColor: '#2563eb', borderRadius: '6px', color: '#ffffff', display: 'inline-block', fontWeight: 'bold', padding: '12px 18px', textDecoration: 'none' };
-const link: React.CSSProperties = { color: '#2563eb', fontWeight: 'bold' };

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { Webhook } from 'svix';
 
 vi.mock('server-only', () => ({}));
 
@@ -11,6 +12,28 @@ describe('local provider adapter boundary', () => {
     const body = '{"event":"test"}';
     expect(verifyResendWebhook(body, new Headers(), 'whsec_test')).toBe(false);
     expect(sha256(body)).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  it('accepts a current native Svix signature and rejects a stale one', () => {
+    const secret = `whsec_${Buffer.from('needthisdone-transactional-webhook-test').toString('base64')}`;
+    const webhook = new Webhook(secret);
+    const body = '{"type":"email.delivered"}';
+    const messageId = 'msg_transactional_test';
+    const current = new Date();
+    const currentHeaders = new Headers({
+      'svix-id': messageId,
+      'svix-timestamp': String(Math.floor(current.getTime() / 1000)),
+      'svix-signature': webhook.sign(messageId, current, body),
+    });
+    expect(verifyResendWebhook(body, currentHeaders, secret)).toBe(true);
+
+    const stale = new Date(Date.now() - 10 * 60 * 1000);
+    const staleHeaders = new Headers({
+      'svix-id': messageId,
+      'svix-timestamp': String(Math.floor(stale.getTime() / 1000)),
+      'svix-signature': webhook.sign(messageId, stale, body),
+    });
+    expect(verifyResendWebhook(body, staleHeaders, secret)).toBe(false);
   });
 
   it('keeps every adapter disabled when no explicit local fake mode is enabled', () => {

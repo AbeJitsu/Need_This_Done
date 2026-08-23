@@ -262,7 +262,19 @@ export async function POST(request: Request) {
         {
           name: project.name,
           service: project.service || undefined,
-        }
+        },
+        {
+          admin: {
+            operationKey: `project:${project.id}:admin-notification`,
+            domainReference: `project:${project.id}:admin-notification`,
+            projectId: project.id,
+          },
+          client: {
+            operationKey: `project:${project.id}:requester-confirmation`,
+            domainReference: `project:${project.id}:requester-confirmation`,
+            projectId: project.id,
+          },
+        },
       );
     } catch (emailError) {
       // Don't fail the submission if emails break
