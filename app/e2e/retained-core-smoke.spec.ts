@@ -28,7 +28,7 @@ test.describe('Retained core smoke checks', () => {
     const response = await page.goto('/site-analyzer');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /see where your website/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /get a limited website snapshot/i })).toBeVisible();
     await expect(page.getByRole('textbox', { name: /website url|your website/i })).toBeVisible();
   });
 
