@@ -4,18 +4,18 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-22 (local migration-104 recovery hardening)
+**Last reviewed:** 2026-08-23 (local migration-106 provider workflow recovery)
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` candidate SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (historical)
-**Reviewed pre-key baseline:** `b00fcaade7df55c08c0e9b067e526065b99de082`; local-only through migration `104`
+**Current reviewed `dev` candidate SHA:** `62d7060fb8a3b881214ab766c0a510994aa6c7d9` plus this migration-106 recovery slice
+**Reviewed pre-key baseline:** `f0d782160a4117cf5aee024dcfd08c1a68276194`; local-only work continues through migration `106`
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** historical provider-free proof through `103` passed on 2026-08-19. The local migration-104 assembly reached its browser phase but is environment-limited by sandbox Chromium Mach-port denial; it is not claimable.
 **Final pre-apply release-control SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** fresh provider-free database, code, and bridge proof through `104` passed on 2026-08-22; the browser assembly remains environment-limited.
+**Local verification history:** disposable database reset and database/code gates through `106` passed on 2026-08-23; the last complete fresh assembly remains separate and is not advanced by this slice.
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)

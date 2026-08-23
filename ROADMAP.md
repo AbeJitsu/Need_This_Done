@@ -14,7 +14,7 @@ Neither offer is a redesign, integration, multi-page build, client dashboard, au
 ## Current pre-key critical path
 
 Finish a provider-free local candidate before any new cloud action. Local
-migrations currently reach `105`; reviewed hosted migration evidence ends at
+migrations currently reach `106`; reviewed hosted migration evidence ends at
 `095`. The local gate covers code, disposable local database behavior,
 deterministic provider fakes, and the offline bridge. It cannot be represented
 as deployment or provider proof. After the local gate and an independent

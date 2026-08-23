@@ -5,7 +5,7 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 ## Current release-control and hosted-stage ledger — 2026-08-23
 
 > Reviewed pre-key documentation baseline: `f0d78216`.
-> The current local candidate includes migration `105`; reviewed hosted migration evidence ends
+> The current local candidate includes migration `106`; reviewed hosted migration evidence ends
 > at `095`. The production dependency audit is clean. No hosted migration,
 > deployment, credential change, provider request, Mac activation, or external
 > action occurred. Technical launch is **NOT GO**.
@@ -56,8 +56,8 @@ pairs. No hosted write, database migration, secret, provider request,
 deployment, payment, external message, or Mac worker action occurred.
 
 **Rollback:** Revert only the public-journey application/assets/documentation
-commit. Do not roll back migration `105`, delete historical relationships, or
-change hosted state.
+commit. Do not roll back migrations `105`–`106`, delete historical
+relationships, or change hosted state.
 
 ### Local migration-104 proof — 2026-08-22
 
@@ -87,7 +87,7 @@ admin/operator-only; anonymous requests receive `401`, ordinary authenticated
 requests receive `403` without private data, and the historical client project
 list and access-management routes are retired. Public project intake no longer
 creates a user link. GitHub handoffs are operator-only drafts and cannot notify
-until the durable transactional path is implemented.
+until the explicit transactional action is implemented.
 
 The machine-readable capability manifest covers all 83 route files, exact
 methods, exposure classes, capabilities, and evidence references. Its scanner
@@ -100,6 +100,41 @@ planner, 2 prospecting, and 1 consultation checks). The staged verifier passed
 the real-session browser contract passed 4/4. No credential, provider, hosted
 write, deployment, payment, external action, or worker activation occurred.
 Technical launch remains **NOT GO**.
+
+### Local migration-106 provider-recovery proof — 2026-08-23
+
+Forward migration `106_provider_workflow_recovery_links.sql` preserves and
+backfills all handoffs and outreach messages while giving each row exactly one
+durable provider operation. The backfill and insert triggers store only the
+handoff/project or message/profile/prospect identifiers in request metadata;
+recipient addresses, subjects, bodies, notes, attachments, tokens, and raw
+webhook content are excluded. Operation links, idempotency keys, operation
+types, provider identities, and request metadata are immutable.
+
+Provider acceptance and the relevant handoff or outreach transition now commit
+in one service-role transaction. Exact replays are safe, mismatched replays are
+rejected, a failed webhook persistence step remains retryable, and browser
+roles have neither table access nor function execution. The explicit
+`acceptance_unknown` state prevents an unresolved Resend operation older than
+24 hours from returning to the automatic retry path. Service-only
+reconciliation records confirmed acceptance or confirmed non-acceptance
+without contacting the provider; an operator-facing endpoint is not claimed by
+this database slice.
+
+A disposable local reset replayed migrations `001`–`106` successfully. An
+isolated `105`→`106` rehearsal preserved representative historical sent
+handoff and outreach rows and linked each to one safe succeeded operation.
+Local schema lint reported no errors; `verify:database` passed 48 checks (9 schema,
+14 security, 10 AI-employee RLS, 3 agent-operations, 2 planner, 2 prospecting,
+7 provider recovery, and 1 consultation). The migration-stage verifier passed
+34 mappings and 18 gates. `verify:code` passed 249 unit tests, 50 accessibility
+tests, lint with zero warnings, TypeScript, and the 46-page production build.
+No credential, provider request, hosted write, deployment, payment, external
+message, or worker activation occurred. Technical launch remains **NOT GO**.
+
+**Rollback:** Stop the affected callers and use a separately reviewed forward
+migration. Preserve provider operations, receipt history, domain links,
+handoffs, outreach messages, and migration history.
 
 ### Historical local migration-103 proof — 2026-08-19
 

@@ -150,6 +150,7 @@ const expectedStages = [
   ['website-invoice-boundary', ['103'], 'separate', false],
   ['provider-recovery-atomicity', ['104'], 'separate', false],
   ['operator-only-private-surfaces', ['105'], 'separate', false],
+  ['provider-workflow-recovery-links', ['106'], 'separate', false],
 ];
 for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
   const stage = stages.find((candidate) => candidate.id === id);
@@ -164,7 +165,7 @@ for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
   }
 }
 
-console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates, SQL hashes preserved and the new security repair is tracked.`);
+console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates, SQL hashes preserved and provider recovery through ${expectedVersions.at(-1)} is tracked.`);
 for (const stage of stages) {
   console.log(`${stage.id}: ${stage.migrations.join(', ')}${stage.destructive ? ' [destructive, final separate gate]' : ''}`);
 }

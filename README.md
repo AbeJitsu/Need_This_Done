@@ -98,7 +98,7 @@ npm run verify:assembly
 ## Hosted and provider release boundary
 
 The current phase is a provider-free pre-key local candidate. Local migrations
-reach `105`; reviewed hosted migration evidence ends at `095`. Passing the local
+reach `106`; reviewed hosted migration evidence ends at `095`. Passing the local
 gate does not authorize or prove a hosted migration, deployment, provider call,
 or customer outcome. The old production commit `8b8d429` remains the historical
 application rollback reference.

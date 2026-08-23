@@ -42,6 +42,10 @@ async function asPrivateWorker<T>(query: string, values: unknown[] = []) {
 localDescribe.sequential('prospecting approval and suppression boundary', () => {
   beforeAll(async () => {
     const pool = getPool();
+    await pool.query(`delete from public.growth_profiles where id in ($1, $2)`, [profileId, researchProfileId]);
+    await pool.query(`delete from public.provider_operations
+      where provider = 'resend_prospecting'
+        and request_metadata->>'profile_id' in ($1, $2)`, [profileId, researchProfileId]);
     await pool.query(`delete from public.sender_events where provider_event_id = 'provider-event-082'`);
     await pool.query(`delete from public.suppression_records where normalized_address = 'jordan@example.com'`);
     await pool.query(`delete from public.worker_callback_nonces where nonce = 'private-worker-replay-085'`);
@@ -54,6 +58,9 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
   afterAll(async () => {
     await getPool().query(`delete from public.growth_profiles where id = $1`, [profileId]);
     await getPool().query(`delete from public.growth_profiles where id = $1`, [researchProfileId]);
+    await getPool().query(`delete from public.provider_operations
+      where provider = 'resend_prospecting'
+        and request_metadata->>'profile_id' in ($1, $2)`, [profileId, researchProfileId]);
     await getPool().query(`delete from public.user_roles where user_id = $1`, [researchOwnerId]);
     await getPool().query(`delete from auth.users where id = $1`, [researchOwnerId]);
     await getPool().query(`delete from public.user_roles where user_id = $1`, [operatorId]);
