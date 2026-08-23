@@ -82,6 +82,21 @@ credential, provider, deployment, payment, external message, or Mac worker was
 changed. Rollback is an application-only revert of the public-layer commit;
 keep migrations `105`–`106` and all historical records intact.
 
+**Managed Automation outcome-first copy (2026-08-23):** Public Managed
+Automation copy now uses plain language: one repeated problem at work, a
+shared picture of the better result, and focused work to move it forward. The
+public offer page, homepage, services, pricing, work examples, intake, shared
+offer configuration, metadata, JSON-LD, and modal content no longer present
+operator names, private operation, approval mechanics, a 30-day duration, or
+weekly briefs as the sales message. Legal and private operational materials
+remain unchanged. The desktop public-header CTA now uses explicit `px-7 py-3`
+pill spacing; the mobile CTA remains unchanged and the mobile menu now closes
+with Escape. Validation passed: 318 unit tests, 50 accessibility tests, lint,
+TypeScript, production build, and 34 focused public-browser checks across
+desktop and mobile (2 desktop-only project skips). No database, hosted state,
+credential, provider, deployment, payment, external message, or Mac worker
+changed. Rollback is an application-only revert of this copy and header slice.
+
 **Release-control definitions:**
 
 - **Pre-key local gate** proves the checked-out code, disposable local database,

@@ -153,6 +153,28 @@ deployment, payment, external message, or Mac worker action occurred.
 commit. Do not roll back migrations `105`–`106`, delete historical
 relationships, or change hosted state.
 
+### Managed Automation outcome-first public copy — 2026-08-23
+
+Public Managed Automation content now describes one repeated problem at work,
+a shared picture of the better result, and focused work to move it forward.
+The canonical offer page, homepage, services, pricing, work examples, contact
+intake, reusable offer and modal configuration, metadata, and JSON-LD no
+longer use operator names, private-operation language, approval mechanics,
+30-day duration, or weekly briefs as the marketing promise. Legal and private
+operator materials retain their necessary delivery and approval terms.
+
+The desktop header CTA has explicit `px-7 py-3` pill spacing. Its target,
+colors, hover state, placement, and mobile-menu CTA remain unchanged; the
+mobile menu also closes with Escape. Validation passed: 318 unit tests, 50
+accessibility tests, lint, TypeScript, production build, and 34 focused public
+browser checks across desktop and mobile (2 desktop-only project skips),
+including no horizontal overflow at 375, 768, and 1280 pixels. No database,
+hosted state, credential, provider, deployment, payment, external message, or
+Mac worker changed.
+
+**Rollback:** Revert this application and documentation slice only. Preserve
+all migrations, hosted history, and protected backups.
+
 ### Local migration-104 proof — 2026-08-22
 
 The reviewed baseline is `b00fcaade7df55c08c0e9b067e526065b99de082`.
