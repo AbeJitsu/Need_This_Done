@@ -138,9 +138,10 @@ describe('simplified public journey', () => {
     expect(jsonLd).not.toContain('short weekly brief');
   });
 
-  it('gives the desktop public-nav CTA explicit pill padding without changing the mobile CTA', () => {
+  it('gives the desktop public-nav CTA vertical breathing room without changing the mobile CTA', () => {
     const header = source('components/public/PublicHeader.tsx');
-    expect(header).toContain('hidden items-center rounded-full bg-[#126b4e] px-7 py-3');
+    expect(header).toContain('min-h-18 max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]');
+    expect(header).toContain('hidden items-center rounded-full bg-[#126b4e] px-6 py-2.5');
     expect(header).toContain('href="/contact"');
     expect(header).toContain('mt-2 block rounded-lg bg-[#126b4e] px-3 py-3 text-center');
   });

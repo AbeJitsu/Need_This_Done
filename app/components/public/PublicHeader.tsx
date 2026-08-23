@@ -27,13 +27,13 @@ export default function PublicHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[#183229]/10 bg-[#f7f4ed]/95 text-[#183229] backdrop-blur">
-      <div className="mx-auto flex min-h-18 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div className="mx-auto flex min-h-18 max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]">
         <Link href="/" className="font-playfair text-xl font-black tracking-tight" onClick={() => setOpen(false)}>Need This Done</Link>
         <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
           {links.map((link) => <Link key={link.href} href={link.href} aria-current={pathname === link.href ? 'page' : undefined} className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${pathname === link.href ? 'bg-[#e4eee6] text-[#183229]' : 'text-[#40564e] hover:text-[#126b4e]'}`}>{link.label}</Link>)}
         </nav>
         <div className="flex items-center gap-2">
-          <Link href="/contact" className="hidden items-center rounded-full bg-[#126b4e] px-7 py-3 text-sm font-bold text-white transition hover:bg-[#0c563e] sm:inline-flex">Choose a starting point</Link>
+          <Link href="/contact" className="hidden items-center rounded-full bg-[#126b4e] px-6 py-2.5 text-sm font-bold text-white transition hover:bg-[#0c563e] sm:inline-flex">Choose a starting point</Link>
           <button type="button" className="grid h-11 w-11 place-items-center rounded-lg lg:hidden" aria-label={open ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={open} onClick={() => setOpen((value) => !value)}>{open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button>
         </div>
       </div>

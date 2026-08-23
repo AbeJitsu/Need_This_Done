@@ -82,6 +82,18 @@ credential, provider, deployment, payment, external message, or Mac worker was
 changed. Rollback is an application-only revert of the public-layer commit;
 keep migrations `105`–`106` and all historical records intact.
 
+**Desktop public-header CTA spacing (2026-08-23):** The desktop public-header
+row now has an `lg` minimum height of 80px, giving the smaller “Choose a
+starting point” pill clear space above and below it. The CTA text, link,
+colors, and hover state are unchanged; its desktop padding is now `px-6 py-2.5`.
+The base/mobile header and mobile-menu CTA are unchanged. Validation for this
+small application-only change passed TypeScript, lint, the 11-test
+public-journey contract, 50 accessibility tests, and 34 focused desktop/mobile
+public-browser checks (2 intentional desktop-only skips). No database, hosted
+state, credential, provider, deployment, payment, external message, or Mac
+worker changed. Rollback is an application-only revert of this header and
+contract-test slice.
+
 **Managed Automation outcome-first copy (2026-08-23):** Public Managed
 Automation copy now uses plain language: one repeated problem at work, a
 shared picture of the better result, and focused work to move it forward. The

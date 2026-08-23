@@ -111,7 +111,15 @@ test('desktop public navigation follows the public page progression', async ({ p
   for (const label of ['Website Fix', 'Managed Automation', 'How It Works', 'How We Work']) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
-  await expect(page.getByRole('link', { name: 'Choose a starting point', exact: true })).toBeVisible();
+  const cta = page.getByRole('link', { name: 'Choose a starting point', exact: true });
+  await expect(cta).toBeVisible();
+  await expect(cta).toHaveAttribute('href', '/contact');
+  const headerBox = await page.locator('header').first().boundingBox();
+  const ctaBox = await cta.boundingBox();
+  expect(headerBox).not.toBeNull();
+  expect(ctaBox).not.toBeNull();
+  expect(ctaBox!.y - headerBox!.y).toBeGreaterThan(16);
+  expect((headerBox!.y + headerBox!.height) - (ctaBox!.y + ctaBox!.height)).toBeGreaterThan(16);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });
 
