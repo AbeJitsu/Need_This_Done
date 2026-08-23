@@ -4,10 +4,10 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-23 (local transactional email and approved handoffs)
+**Last reviewed:** 2026-08-23 (local isolated prospecting Resend lane)
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` candidate SHA:** `59aaa912` plus this transactional-email slice
+**Current reviewed `dev` candidate SHA:** `f20c5b9e` plus this prospecting-Resend slice
 **Reviewed pre-key baseline:** `f0d782160a4117cf5aee024dcfd08c1a68276194`; local-only work continues through migration `106`
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** historical provider-free proof through `103` passed on 2026-08-19. The local migration-104 assembly reached its browser phase but is environment-limited by sandbox Chromium Mach-port denial; it is not claimable.
@@ -15,7 +15,7 @@ to these item numbers; they do not define a second activation order.
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** the database and code gates through `106` passed on 2026-08-23, including 48 database checks, 269 unit tests, 50 accessibility checks, and the 84-route build; the last complete fresh assembly remains separate and is not advanced by this slice.
+**Local verification history:** the database and code gates through `106` passed on 2026-08-23, including 48 database checks, 281 unit tests, 50 accessibility checks, and the 84-route build; the last complete fresh assembly remains separate and is not advanced by this slice.
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)
@@ -267,6 +267,7 @@ on items 9, 10, and 16.
 - **Owner:** Prospecting/provider owner
 - **Entry condition:** Items 9, 10, and 16 passed; a separate prospecting key/provider mode, suppression rules, signed event endpoint, and owner-controlled mailbox are ready.
 - **Exit proof:** One approved owner-mailbox message proves sender events, bounce/reply handling, suppression, retries, audit history, and isolation from the transactional Resend key; no customer or prospect address appears.
+- **Local readiness:** The isolated disabled/fake/live adapter, original-key retry, atomic outreach acceptance, acceptance-unknown state, signed webhook receipts, suppression, approval, sender, daily-cap, and emergency-stop boundaries are covered through migration `106`. This does not prove Resend delivery.
 - **Approval:** Required — prospecting owner approves the separate key, content, mailbox, and canary.
 - **Rollback:** Disable prospecting mode, revoke the separate key, preserve sender events/suppression history, and leave the transactional key isolated.
 - **Evidence link:** [Full-stack external setup](full-stack-external-setup.md), [Agent operations](../AGENT_OPERATIONS.md), and [release evidence](../RELEASE_EVIDENCE.md).

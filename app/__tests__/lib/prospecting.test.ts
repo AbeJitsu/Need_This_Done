@@ -27,21 +27,21 @@ describe('prospecting safety helpers', () => {
   });
 
   it('keeps real prospecting delivery disabled unless an explicit provider is selected', async () => {
-    const previousProvider = process.env.PROSPECTING_SENDER_PROVIDER;
+    const previousProvider = process.env.PROSPECTING_RESEND_PROVIDER;
     const previousOffline = process.env.OFFLINE_ASSEMBLY_PROOF;
     try {
-      delete process.env.PROSPECTING_SENDER_PROVIDER;
+      delete process.env.PROSPECTING_RESEND_PROVIDER;
       delete process.env.OFFLINE_ASSEMBLY_PROOF;
       expect(getProspectingSenderProvider()).toBe('disabled');
       expect(createProspectingSender()).toBeNull();
-      process.env.PROSPECTING_SENDER_PROVIDER = 'fake';
+      process.env.PROSPECTING_RESEND_PROVIDER = 'fake';
       expect(getProspectingSenderProvider()).toBe('disabled');
       process.env.OFFLINE_ASSEMBLY_PROOF = 'true';
       expect(getProspectingSenderProvider()).toBe('fake');
       expect(createProspectingSender()).not.toBeNull();
     } finally {
-      if (previousProvider === undefined) delete process.env.PROSPECTING_SENDER_PROVIDER;
-      else process.env.PROSPECTING_SENDER_PROVIDER = previousProvider;
+      if (previousProvider === undefined) delete process.env.PROSPECTING_RESEND_PROVIDER;
+      else process.env.PROSPECTING_RESEND_PROVIDER = previousProvider;
       if (previousOffline === undefined) delete process.env.OFFLINE_ASSEMBLY_PROOF;
       else process.env.OFFLINE_ASSEMBLY_PROOF = previousOffline;
     }

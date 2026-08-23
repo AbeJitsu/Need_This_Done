@@ -164,11 +164,11 @@ export function validateEnvironmentVariables(): void {
     },
     // Prospecting delivery is a separate opt-in boundary. It must not reuse
     // the transactional Resend key or activate merely because one exists.
-    PROSPECTING_SENDER_PROVIDER: {
-      name: 'PROSPECTING_SENDER_PROVIDER',
+    PROSPECTING_RESEND_PROVIDER: {
+      name: 'PROSPECTING_RESEND_PROVIDER',
       required: false,
-      validate: (v) => v === 'fake' || v === 'resend' || v === 'disabled',
-      errorMessage: 'Must be fake, resend, or disabled',
+      validate: (v) => v === 'fake' || v === 'live' || v === 'disabled',
+      errorMessage: 'Must be disabled, fake, or live',
     },
     PROSPECTING_RESEND_API_KEY: {
       name: 'PROSPECTING_RESEND_API_KEY',

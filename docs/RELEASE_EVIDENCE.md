@@ -174,6 +174,41 @@ external message, or Mac worker changed. Technical launch remains **NOT GO**.
 slice. Keep migration `106`, provider operations, webhook receipts, handoffs,
 and audit records intact; hosted rollback remains forward-only.
 
+### Isolated prospecting Resend proof — 2026-08-23
+
+The prospecting sender has one explicit `disabled | fake | live` adapter
+boundary under `PROSPECTING_RESEND_PROVIDER`. Fake mode requires the offline
+assembly flag, live mode requires the separately scoped prospecting Resend key,
+and a credential by itself cannot activate delivery. The transactional Resend
+key and webhook secret are not used by this lane.
+
+An outreach draft receives its durable provider operation and idempotency key
+before approval. The explicitly approved send action reuses that exact key,
+prepares the linked operation, and commits provider acceptance with the
+outreach transition through the service-only migration-106 function. Provider
+failure remains retryable; an acceptance/database disagreement becomes
+`acceptance_unknown` rather than an automatic resend. The route retains
+operator authorization, human approval, current sender validation, emergency
+stop, current suppression, and the database-enforced daily approval cap.
+
+Only the raw-body route verified by `PROSPECTING_RESEND_WEBHOOK_SECRET` accepts
+provider events. Completed receipt replays do not repeat work; partial event or
+receipt failures remain retryable. Correlated bounce and unsubscribe events
+maintain the durable suppression record. The event ledger retains the payload
+hash, not the raw webhook body.
+
+Focused sender, route, webhook, signature, suppression, and capability tests
+passed 20/20. `verify:code` passed lint, TypeScript, 281 unit tests, 50
+accessibility tests, and the 84-route production build. `verify:database`
+passed schema lint and all 48 behavioral checks through migration `106`.
+Providers remained disabled; no hosted write, credential, provider call,
+deployment, external message, payment, or worker activation occurred.
+Technical launch remains **NOT GO**.
+
+**Rollback:** Disable the prospecting provider mode and revert this application
+slice if needed. Preserve outreach messages, operation links, webhook receipts,
+sender events, suppression records, and audit history.
+
 ### Historical local migration-103 proof — 2026-08-19
 
 Committed candidate `5c2b9f9` plus the pending local verification repair was

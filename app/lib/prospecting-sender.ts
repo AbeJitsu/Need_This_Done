@@ -1,19 +1,19 @@
 import { Resend } from 'resend';
 import type { ApprovedOutboundMessage, OutboundSender, SenderEvent } from '@/lib/outbound-sender';
 
-export type ProspectingSenderProvider = 'disabled' | 'fake' | 'resend';
+export type ProspectingSenderProvider = 'disabled' | 'fake' | 'live';
 
 export function getProspectingSenderProvider(): ProspectingSenderProvider {
-  const configured = process.env.PROSPECTING_SENDER_PROVIDER;
+  const configured = process.env.PROSPECTING_RESEND_PROVIDER;
   if (configured === 'fake' && process.env.OFFLINE_ASSEMBLY_PROOF === 'true') return 'fake';
-  if (configured === 'resend' && process.env.PROSPECTING_RESEND_API_KEY) return 'resend';
+  if (configured === 'live' && process.env.PROSPECTING_RESEND_API_KEY) return 'live';
   return 'disabled';
 }
 
 export function createProspectingSender(): OutboundSender | null {
   const provider = getProspectingSenderProvider();
   if (provider === 'fake') return new InMemoryProspectingSender();
-  if (provider === 'resend') return new ResendProspectingSender();
+  if (provider === 'live') return new ResendProspectingSender();
   return null;
 }
 

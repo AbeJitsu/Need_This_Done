@@ -149,6 +149,33 @@ payment, external message, or Mac worker action occurred. Rollback is an
 application revert of this email slice while preserving migration `106`,
 provider operations, webhook receipts, handoffs, and audit history.
 
+**Isolated prospecting Resend lane (2026-08-23):** Prospecting delivery now
+uses the explicit `PROSPECTING_RESEND_PROVIDER=disabled|fake|live` boundary.
+Fake mode additionally requires `OFFLINE_ASSEMBLY_PROOF=true`; live mode
+requires the separate `PROSPECTING_RESEND_API_KEY`. A transactional Resend
+credential cannot activate this lane.
+
+Every approved outreach send reuses the message's original idempotency key and
+migration-managed `resend_prospecting` operation. The operation is prepared
+before provider contact, provider acceptance commits through
+`accept_resend_prospecting_operation`, and a provider/database disagreement is
+recorded as `acceptance_unknown` for reconciliation. The operator route still
+requires approval, the approved sender, a clear current suppression state, and
+an inactive emergency stop; database approval continues to enforce the daily
+send cap.
+
+Prospecting events use only the separately signed
+`PROSPECTING_RESEND_WEBHOOK_SECRET` route. Receipt and domain persistence are
+replay-safe, failures remain retryable, and bounce/unsubscribe events durably
+maintain suppression. Focused sender, route, webhook, and manifest tests passed
+20/20. The complete code gate passed lint, TypeScript, 281 unit tests, 50
+accessibility tests, and the 84-route build; the database gate again passed all
+48 checks through migration `106`. Provider modes remained disabled. No
+credential, provider request, hosted state, deployment, external message,
+payment, or Mac worker changed. Rollback is an application-only revert while
+preserving outreach messages, provider operations, receipts, suppression, and
+audit history.
+
 **Historical local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
 the disposable local stack. The expanded schema/RLS/RPC manifest, all retained
 database suites, bridge tests (8/8), code gate (221 unit tests, 50 a11y tests,
