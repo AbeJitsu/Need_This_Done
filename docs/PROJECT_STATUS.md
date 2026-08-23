@@ -202,6 +202,32 @@ disabled. No OAuth, credential, provider request, hosted write, deployment,
 external action, payment, or Mac worker changed. Rollback is application-only;
 preserve operation and event-reference history.
 
+**Test-only Website Fix invoice (2026-08-23):** The canonical operator route is
+now `/api/admin/website-fix/invoices`; the historical Website Improvement path
+is retained only as an authenticated, non-advertised `307` compatibility
+boundary. The browser supplies explicit operator confirmation plus either a
+project ID for a new operation or a server-issued operation ID for retry. It
+cannot supply an idempotency key, Stripe invoice ID, amount, or currency.
+
+The only calling adapter creates a test-mode Website Fix start invoice for
+exactly `25000` cents USD. It has no cart, subscription, Customer Portal,
+recurring charge, checkout session, or card-storage path, and it rejects
+live-mode Stripe keys. Disabled/provider failure remains retryable with the
+same operation ID; provider acceptance followed by reference failure becomes
+`acceptance_unknown` and blocks automatic retry.
+
+The signed webhook accepts only non-live paid, declined, void, and refunded
+events for a known fixed invoice. It rejects bad signatures, live events,
+incorrect currency or amount, unknown invoices, and changed receipt replays;
+failed persistence remains retryable and completed duplicates do not repeat.
+Focused invoice, adapter, webhook, route, compatibility, and capability tests
+passed 26/26. The complete code gate passed lint, TypeScript, 315 unit tests,
+50 accessibility tests, and the 85-route build; all 48 local database checks
+passed through migration `106`. Stripe remained disabled. No credential,
+provider request, hosted write, deployment, external action, payment, or Mac
+worker changed. Rollback disables the adapter and reverts application routes
+while preserving invoice, operation, receipt, and event history.
+
 **Historical local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
 the disposable local stack. The expanded schema/RLS/RPC manifest, all retained
 database suites, bridge tests (8/8), code gate (221 unit tests, 50 a11y tests,

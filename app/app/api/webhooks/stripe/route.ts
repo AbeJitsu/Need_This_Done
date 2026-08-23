@@ -6,6 +6,14 @@ import { sha256 } from '@/lib/provider-adapters';
 export const dynamic = 'force-dynamic';
 const statusByEvent: Record<string, 'paid' | 'declined' | 'void' | 'refunded'> = { 'invoice.paid': 'paid', 'invoice.payment_failed': 'declined', 'invoice.voided': 'void', 'charge.refunded': 'refunded' };
 
+async function markReceiptRetryable(receiptId: string) {
+  await getSupabaseAdmin().rpc('fail_provider_webhook_receipt', {
+    target_receipt_id: receiptId,
+    target_failure_reason: 'Stripe invoice event persistence did not complete.',
+    target_permanent: false,
+  });
+}
+
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   const signature = request.headers.get('stripe-signature');
@@ -23,11 +31,19 @@ export async function POST(request: Request) {
   const amount = stripeObject.amount_paid ?? stripeObject.amount_due ?? stripeObject.amount_refunded;
   if (amount !== 25000 || stripeObject.currency !== 'usd') return NextResponse.json({ error: 'Stripe event does not match the fixed test invoice.' }, { status: 400 });
   const admin = getSupabaseAdmin();
+  const knownInvoice = await admin.from('website_improvement_invoice_references')
+    .select('id').eq('stripe_invoice_id', invoiceId).maybeSingle();
+  if (knownInvoice.error) return NextResponse.json({ error: 'Stripe invoice reference could not be checked.' }, { status: 503 });
+  if (!knownInvoice.data) return NextResponse.json({ error: 'Unknown Stripe invoice.' }, { status: 404 });
   const receipt = await admin.rpc('record_provider_webhook_receipt', { target_provider: 'stripe', target_provider_event_id: event.id, target_payload_sha256: sha256(body), target_signature_verified: true });
   if (receipt.error || !receipt.data) return NextResponse.json({ error: 'Webhook receipt could not be recorded.' }, { status: 503 });
   if ((receipt.data as { duplicate?: boolean }).duplicate) return NextResponse.json({ duplicate: true });
   const receiptId = (receipt.data as { receipt?: { id?: string } }).receipt?.id;
+  if (!receiptId) return NextResponse.json({ error: 'Webhook receipt is malformed.' }, { status: 503 });
   const persisted = await admin.rpc('record_stripe_invoice_event', { target_receipt_id: receiptId, target_stripe_invoice_id: invoiceId, target_status: mapped });
-  if (persisted.error) return NextResponse.json({ error: 'Stripe event could not be recorded.' }, { status: 503 });
+  if (persisted.error || !persisted.data) {
+    await markReceiptRetryable(receiptId);
+    return NextResponse.json({ error: 'Stripe event could not be recorded.' }, { status: 503 });
+  }
   return NextResponse.json({ accepted: true }, { status: 201 });
 }

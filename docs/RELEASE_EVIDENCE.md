@@ -244,6 +244,42 @@ remains **NOT GO**.
 Preserve durable provider operations, Calendar references, encrypted token
 records, and audit history.
 
+### Test-only Website Fix invoice proof — 2026-08-23
+
+The canonical operator-only boundary is
+`/api/admin/website-fix/invoices`. The historical Website Improvement URL is an
+authenticated, non-advertised `307` compatibility redirect. A new request
+contains a project ID and explicit confirmation; retry contains only the
+server-issued operation ID. Strict validation rejects browser idempotency keys,
+Stripe invoice IDs, amounts, and currencies.
+
+The adapter is fixed to one `25000`-cent USD Website Fix start invoice under
+test-mode credentials. A live-mode Stripe secret is rejected even when the
+adapter is explicitly enabled. There is no cart, checkout session,
+subscription, recurring charge, Customer Portal, payment-method creation, or
+card-storage behavior. Provider failure is retryable with the stored exact key;
+provider acceptance/database disagreement records `acceptance_unknown` with
+the returned reference and blocks automatic retry.
+
+The raw-body Stripe webhook requires `STRIPE_WEBHOOK_SECRET`, rejects
+live-mode events, and accepts only signed paid, declined, void, and refunded
+transitions for a known invoice matching 25000 cents USD. Bad signatures,
+unknown invoices, wrong amount/currency, and changed receipt replays fail
+closed. Failed transition persistence marks the receipt retryable; completed
+duplicates do not repeat work.
+
+Focused invoice service, adapter, webhook, route, compatibility, fallback, and
+capability contracts passed 26/26. `verify:code` passed lint, TypeScript, 315
+unit tests, 50 accessibility tests, and the 85-route production build.
+`verify:database` passed schema lint and all 48 behavioral checks through
+migration `106`. Stripe stayed disabled; no credential, provider call, hosted
+state, deployment, external action, payment, or worker activation occurred.
+Technical launch remains **NOT GO**.
+
+**Rollback:** Disable the Stripe invoice provider and revert this application
+slice. Preserve invoice references, operation keys, webhook receipts,
+transitions, and audit history.
+
 ### Historical local migration-103 proof — 2026-08-19
 
 Committed candidate `5c2b9f9` plus the pending local verification repair was

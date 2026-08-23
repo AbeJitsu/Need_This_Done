@@ -4,10 +4,10 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-23 (local durable Calendar operations)
+**Last reviewed:** 2026-08-23 (local test-only Website Fix invoice)
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` candidate SHA:** `9deb8e17` plus this Calendar slice
+**Current reviewed `dev` candidate SHA:** `05c22d57` plus this Stripe invoice slice
 **Reviewed pre-key baseline:** `f0d782160a4117cf5aee024dcfd08c1a68276194`; local-only work continues through migration `106`
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** historical provider-free proof through `103` passed on 2026-08-19. The local migration-104 assembly reached its browser phase but is environment-limited by sandbox Chromium Mach-port denial; it is not claimable.
@@ -15,7 +15,7 @@ to these item numbers; they do not define a second activation order.
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** the database and code gates through `106` passed on 2026-08-23, including 48 database checks, 297 unit tests, 50 accessibility checks, and the 84-route build; the last complete fresh assembly remains separate and is not advanced by this slice.
+**Local verification history:** the database and code gates through `106` passed on 2026-08-23, including 48 database checks, 315 unit tests, 50 accessibility checks, and the 85-route build; the last complete fresh assembly remains separate and is not advanced by this slice.
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)
@@ -282,11 +282,12 @@ on items 9, 10, and 16.
 - **Rollback:** Disconnect the test account, delete test events, remove the server secret through the secret manager, and keep the manual-calendar path. Never reverse the encrypted-token migration ad hoc.
 - **Evidence link:** [Google Calendar readiness](google-calendar-readiness.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-#### 20. Test Stripe live — `BLOCKED`
+#### 20. Test the Stripe test-mode invoice — `BLOCKED`
 
 - **Owner:** Payments owner
 - **Entry condition:** Items 6–9 passed; first offer, price, currency, refund rule, payment references, signed idempotent webhook path, owner-controlled Stripe account, and owner-approved nominal amount are ready.
 - **Exit proof:** One controlled owner-account canary proves success, decline, duplicate webhook, refund/cancellation, signature rejection, and operator visibility; subscriptions, Customer Portal, carts, legacy orders, and card data remain out of scope.
+- **Local readiness:** The fixed 25000-cent USD operation, server-issued retry ID, test-key-only adapter, signed paid/declined/void/refund transitions, duplicate and mismatch handling, and public-contact fallback are covered through migration `106`. This does not prove Stripe.
 - **Approval:** Required — payments owner approves the exact offer, nominal amount, test/live mode, refund/void window, and canary.
 - **Rollback:** Immediately refund/void the canary, disable the payment path, preserve webhook/payment references, and leave the public fallback guarded until the path is reviewed again.
 - **Evidence link:** [Hosted payments readiness](hosted-payments-readiness.md) and [release evidence](../RELEASE_EVIDENCE.md).

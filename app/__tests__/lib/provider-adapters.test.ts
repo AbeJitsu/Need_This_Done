@@ -58,4 +58,10 @@ describe('local provider adapter boundary', () => {
     expect(calendarAdapter()).toMatchObject({ mode: 'disabled', adapter: null });
     expect(invoiceAdapter()).toMatchObject({ mode: 'disabled', adapter: null });
   });
+
+  it('rejects a live-mode Stripe key even when the invoice adapter is explicitly enabled', () => {
+    vi.stubEnv('STRIPE_INVOICE_PROVIDER', 'live');
+    vi.stubEnv('STRIPE_SECRET_KEY', 'sk_live_must_never_be_used_here');
+    expect(invoiceAdapter()).toMatchObject({ mode: 'disabled', adapter: null });
+  });
 });
