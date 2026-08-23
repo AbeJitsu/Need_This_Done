@@ -14,7 +14,7 @@ Neither offer is a redesign, integration, multi-page build, client dashboard, au
 ## Current promotion critical path
 
 The provider-free local gate is **GO** for tested implementation
-`61eaa205058cc3ab93514a8df183b80eb3f1638b`. Local migrations reach `106`;
+`29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`. Local migrations reach `106`;
 reviewed hosted migration evidence ends at `095`. This proves code, disposable
 local database behavior, deterministic provider fakes, provider-disabled
 assembly, and the offline bridge. It is not deployment or provider proof. The

@@ -6,7 +6,7 @@ Stripe, Google, Resend, OpenAI, OpenRouter, and OpenClaw credentials are not
 prerequisites for this gate.
 
 The tested pre-key implementation is
-`61eaa205058cc3ab93514a8df183b80eb3f1638b`. Local migrations reach `106`;
+`29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`. Local migrations reach `106`;
 reviewed hosted evidence ends at `095`. Track later backup, migration,
 deployment, secret, canary, and paid-proof work in the
 [canonical launch checklist](launch/LAUNCH_CHECKLIST.md).
@@ -58,11 +58,11 @@ process. Credentials alone never activate an adapter.
 ## Latest recorded proof
 
 On 2026-08-23, exact implementation
-`61eaa205058cc3ab93514a8df183b80eb3f1638b` passed the fresh assembly in
+`29c87a5850bffe51e6f90b4dff04e40d3c6fdb84` passed the fresh assembly in
 production-server mode:
 
 - migrations `001–106`, sanitized seed restore, and schema lint;
-- 316/316 unit tests and 50/50 accessibility checks;
+- 318/318 unit tests and 50/50 accessibility checks;
 - lint, TypeScript, and the 85-route production build;
 - all 48 database checks;
 - 48 public browser checks with 2 intentional report-fixture skips;

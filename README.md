@@ -111,7 +111,7 @@ rehearsal remains a separate checksum-gated local command.
 ## Hosted and provider release boundary
 
 The provider-free pre-key local gate is **GO** for implementation
-`61eaa205058cc3ab93514a8df183b80eb3f1638b`. Local migrations reach `106`;
+`29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`. Local migrations reach `106`;
 reviewed hosted migration evidence ends at `095`. The local result does not
 authorize or prove a hosted migration, deployment, provider call, or customer
 outcome. The old production commit `8b8d429` remains the historical application

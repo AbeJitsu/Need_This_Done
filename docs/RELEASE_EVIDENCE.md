@@ -4,7 +4,7 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-23
 
-> Tested pre-key implementation: `61eaa205058cc3ab93514a8df183b80eb3f1638b`.
+> Tested pre-key implementation: `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`.
 > **PRE-KEY LOCAL GATE: GO.** Local migration head is `106`; reviewed hosted
 > migration evidence ends at `095`. The production dependency audit is clean.
 > **TECHNICAL LAUNCH: NOT GO.** No hosted migration,
@@ -26,20 +26,27 @@ as either hosted promotion or technical launch.
 
 ### Final pre-key local gate — GO — 2026-08-23
 
-Exact implementation `61eaa205058cc3ab93514a8df183b80eb3f1638b`
+Exact implementation `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`
 passed the complete provider-free gate. The fresh production-server assembly
 reset only disposable local Supabase, applied migrations `001–106`, restored
 the sanitized seed, forced transactional Resend, prospecting Resend, Calendar,
 and Stripe invoice adapters to `disabled`, and passed:
 
 - schema lint and all 48 database/schema/RLS/provider-workflow checks;
-- lint, TypeScript, 316/316 unit tests, 50/50 accessibility checks, and the
+- lint, TypeScript, 318/318 unit tests, 50/50 accessibility checks, and the
   85-route production build;
 - 48 public browser checks with 2 intentional report-fixture skips, 4
   real-session authorization checks, 1 provider-disabled prospecting check, 1
   daily-cockpit check, and 2 operator employee-workspace checks;
 - the 0-vulnerability production dependency audit, 8/8 offline bridge tests,
   and the 34-mapping/18-gate migration and environment contract.
+
+The candidate includes one test-only retained-browser contract correction:
+the analyzer smoke test now asserts the intentionally current “Get a limited
+website snapshot” heading rather than the retired “See where your website”
+copy. The focused public matrix and the full fresh assembly both passed after
+that correction. No runtime behavior, database, hosted state, credential,
+provider, deployment, payment, external message, or Mac worker state changed.
 
 The earlier checksum-gated pre-`073` historical-data rehearsal and the
 hosted-like `095 → 106` rehearsal both passed all 48 database checks and

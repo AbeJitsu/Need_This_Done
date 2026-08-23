@@ -10,7 +10,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-23
 
-> Tested pre-key implementation: `61eaa205058cc3ab93514a8df183b80eb3f1638b`.
+> Tested pre-key implementation: `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`.
 > **PRE-KEY LOCAL GATE: GO.** Local migration head is `106`; reviewed hosted
 > migration evidence ends at `095`.
 > **TECHNICAL LAUNCH: NOT GO.** The production dependency audit is clean.
@@ -23,11 +23,11 @@ and catalog records below are historical evidence, not active configuration or
 an activation claim.
 
 **Final pre-key decision (2026-08-23):** Exact implementation
-`61eaa205058cc3ab93514a8df183b80eb3f1638b` passed the complete
+`29c87a5850bffe51e6f90b4dff04e40d3c6fdb84` passed the complete
 provider-free gate. The fresh production-server assembly reset only disposable
 local Supabase, applied migrations `001–106`, restored sanitized seed data,
 forced all four provider adapters to `disabled`, and passed schema lint,
-316/316 unit tests, 50/50 accessibility checks, lint, TypeScript, the 85-route
+318/318 unit tests, 50/50 accessibility checks, lint, TypeScript, the 85-route
 production build, 48 public browser checks with 2 intentional report-fixture
 skips, 4 real-session authorization checks, 1 provider-disabled prospecting
 check, 1 daily-cockpit check, and 2 operator employee-workspace checks. The
@@ -47,6 +47,16 @@ local tooling owner. Reason: the upgrade requires its own isolated migration
 rehearsal. Review/removal date: 2026-09-15. Chromium required an approved run
 outside the macOS filesystem sandbox to register its Mach port; every browser
 suite then passed, so no browser check remains unavailable.
+
+**Analyzer smoke contract correction (2026-08-23):** The fresh browser run
+exposed one stale retained assertion for the analyzer’s former heading. The
+current page intentionally says “Get a limited website snapshot,” consistent
+with the selected-signal, non-score product boundary. Commit
+`29c87a5850bffe51e6f90b4dff04e40d3c6fdb84` updates only that test assertion; the
+focused public matrix and the complete fresh assembly passed afterward. No
+runtime, database, hosted, credential, provider, deployment, payment,
+external-message, or worker state changed. Rollback is a revert of that
+test-only commit.
 
 Remaining work requires separate approval in this order: independent review
 of the capability matrix and evidence; hosted backup and migration dry run;

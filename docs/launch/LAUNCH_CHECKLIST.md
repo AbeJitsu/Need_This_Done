@@ -8,14 +8,14 @@ to these item numbers; they do not define a second activation order.
 **Pre-key local gate:** **GO**
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current reviewed `dev` implementation SHA:** `61eaa205058cc3ab93514a8df183b80eb3f1638b`
+**Current reviewed `dev` implementation SHA:** `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
-**Last full local assembly proof:** exact implementation `61eaa205058cc3ab93514a8df183b80eb3f1638b` passed provider-free through local migration `106` on 2026-08-23.
+**Last full local assembly proof:** exact implementation `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84` passed provider-free through local migration `106` on 2026-08-23.
 **Final pre-apply release-control SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** the final gate passed 48 database checks, 316 unit tests, 50 accessibility checks, the 85-route build, 56 browser checks with 2 intentional report-fixture skips, 8 bridge tests, the clean dependency audit, both migration rehearsals, and exact metadata with `deploymentIdentity: null`.
+**Local verification history:** the final gate passed 48 database checks, 318 unit tests, 50 accessibility checks, the 85-route build, 50 public browser checks (48 passed and 2 intentional report-fixture skips), 4 real-session authorization checks, 1 prospecting check, 1 daily-cockpit check, 2 employee-workspace checks, 8 bridge tests, the clean dependency audit, both migration rehearsals, and exact metadata with `deploymentIdentity: null`.
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)
