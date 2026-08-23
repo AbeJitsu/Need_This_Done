@@ -401,7 +401,6 @@ export interface LayoutContent {
     brand: string;
     navLinks: NavLink[];
     ctaButton: { text: string; href: string };
-    signInText: string;
   };
   footer: {
     brand: string;
@@ -416,27 +415,23 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
   header: {
     brand: 'Need This Done',
     navLinks: [
-      { href: '/services', label: 'Services' },
+      { href: '/services#website-fix', label: 'Website Fix' },
+      { href: '/services#managed-automation', label: 'Managed Automation' },
       { href: '/how-it-works', label: 'How It Works' },
-      { href: '/pricing', label: 'Pricing' },
       { href: '/work', label: 'Work' },
-      { href: '/blog', label: 'Insights' },
     ],
-    ctaButton: { text: 'Contact', href: '/contact' },
-    signInText: 'Sign in',
+    ctaButton: { text: "Tell us what's stuck", href: '/contact' },
   },
   footer: {
     brand: 'Need This Done',
-    tagline: 'Focused fixes and automation systems for work that keeps getting stuck.',
+    tagline: 'One clear outcome for work that keeps getting stuck.',
     links: [
-      { href: '/services', label: 'Services' },
+      { href: '/services#website-fix', label: 'Website Fix' },
+      { href: '/services#managed-automation', label: 'Managed Automation' },
       { href: '/how-it-works', label: 'How It Works' },
       { href: '/pricing', label: 'Pricing' },
       { href: '/work', label: 'Work' },
-      { href: '/blog', label: 'Insights' },
       { href: '/faq', label: 'FAQ' },
-      { href: '/site-analyzer', label: 'Site Analyzer' },
-      { href: '/ada-compliance', label: 'Accessibility Checks' },
     ],
     legalLinks: [
       { href: '/privacy', label: 'Privacy' },
@@ -476,11 +471,11 @@ export const PAGE_CONFIGS = {
     contentType: 'home_page',
     defaults: {
       hero: {
-        title: 'Put the work in one place.',
-        description: 'Fix one website problem, or set up a browser-based automation system for recurring work.',
+        title: 'Fix the work that’s slowing you down.',
+        description: 'Bring us one website problem or one repeated task. We agree on one outcome and hand the completed work back clearly.',
         buttons: [
-          { text: 'Fix one problem', variant: 'blue', href: '/contact?offer=website-improvement' },
-          { text: 'Set up automation', variant: 'gold', href: '/contact?offer=ai-operator' },
+          { text: 'Start a Website Fix', variant: 'blue', href: '/contact?offer=website-fix' },
+          { text: 'Discuss Managed Automation', variant: 'gold', href: '/contact?offer=managed-automation' },
         ],
       },
       services: {
@@ -489,7 +484,7 @@ export const PAGE_CONFIGS = {
         linkHref: '/services',
         cards: [
           {
-            title: 'Targeted Fix',
+            title: 'Website Fix',
             tagline: 'Fix one website problem',
             description: 'A focused $500 review and one agreed website fix.',
             details: 'One problem, one scope, one handoff',
@@ -507,16 +502,16 @@ export const PAGE_CONFIGS = {
                 '30 days of support included',
               ],
               ctas: {
-                primary: { text: 'Fix one problem', href: '/contact?offer=website-improvement' },
+                primary: { text: 'Start a Website Fix', href: '/contact?offer=website-fix' },
                 secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
           {
-            title: 'Automation System Setup',
-            tagline: 'Make recurring work easier',
-            description: 'Connect tools, LLMs, and agents in one browser workspace.',
-            details: 'Visible work, clear approvals, useful handoffs',
+            title: 'Managed Automation',
+            tagline: 'Run one repeated task for 30 days',
+            description: 'A human-run pilot for one repeated task, priced by proposal.',
+            details: 'One task, weekly briefs, a clear outcome',
             color: 'blue',
             linkText: 'Learn more →',
             modal: {
@@ -531,16 +526,16 @@ export const PAGE_CONFIGS = {
                 'Custom workflows for your specific needs',
               ],
               ctas: {
-                primary: { text: 'Set up automation', href: '/contact?offer=ai-operator' },
+                primary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
                 secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
           {
-            title: 'Human-approved automation',
+            title: 'Human-led work',
             tagline: 'Keep control of important actions',
             description: 'Agents prepare work. A person reviews messages, publishing, changes, and spending.',
-            details: 'LLMs, agents, evidence, approvals',
+            details: 'Preparation, review, clear decisions',
             color: 'purple',
             linkText: 'Learn more →',
             modal: {
@@ -552,10 +547,10 @@ export const PAGE_CONFIGS = {
                 'Document processing and data extraction',
                 'Content generation and scheduling',
                 'Research and competitive analysis',
-                'Custom agents for your specific workflows',
+                'A contained plan for your specific task',
               ],
               ctas: {
-                primary: { text: 'Set up automation', href: '/contact?offer=ai-operator' },
+                primary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
                 secondary: { text: 'See All Services', href: '/services' },
               },
             },
@@ -575,8 +570,8 @@ export const PAGE_CONFIGS = {
         title: 'Ready to start?',
         description: 'Choose the path that fits the problem.',
         buttons: [
-          { text: 'Fix one problem', variant: 'blue', href: '/contact?offer=website-improvement' },
-          { text: 'Set up automation', variant: 'green', href: '/contact?offer=ai-operator' },
+          { text: 'Start a Website Fix', variant: 'blue', href: '/contact?offer=website-fix' },
+          { text: 'Discuss Managed Automation', variant: 'green', href: '/contact?offer=managed-automation' },
         ],
         footer: 'Questions first?',
         footerLinkText: 'Check the FAQ',
@@ -595,7 +590,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Choose the shape of the fix.',
-        description: 'One visible website problem calls for a targeted fix. Work that keeps repeating across tools calls for an automation system.',
+        description: 'One visible website problem fits Website Fix. One repeated task fits a 30-day Managed Automation pilot.',
       },
       chooseYourPath: {
         title: 'Choose by what is stuck.',
@@ -603,18 +598,18 @@ export const PAGE_CONFIGS = {
         paths: [
           {
             badge: 'One problem',
-            title: 'Targeted fix',
+            title: 'Website Fix',
             description: 'A $500 review and one agreed website fix.',
             bullets: ['One contained scope', 'One before-and-after handoff', 'Manual 50/50 invoices'],
-            button: { text: 'Fix one problem', variant: 'green', href: '/contact?offer=website-improvement', size: 'lg' },
+            button: { text: 'Start a Website Fix', variant: 'green', href: '/contact?offer=website-fix', size: 'lg' },
             hoverColor: 'green',
           },
           {
             badge: 'Repeating work',
-            title: 'Automation system setup',
-            description: 'A proposal-based system for work that crosses tools.',
-            bullets: ['Defined result first', 'Visible evidence and approvals', 'Price agreed before setup'],
-            button: { text: 'Set up automation', variant: 'purple', href: '/contact?offer=ai-operator', size: 'lg' },
+            title: 'Managed Automation',
+            description: 'A human-run 30-day pilot for one repeated task.',
+            bullets: ['One result stated first', 'One short weekly brief', 'Price agreed before the pilot'],
+            button: { text: 'Discuss Managed Automation', variant: 'purple', href: '/contact?offer=managed-automation', size: 'lg' },
             hoverColor: 'purple',
           },
         ],
@@ -636,11 +631,11 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Know the commitment before you start.',
-        description: 'The targeted fix has one published price. Automation system setup is priced in a written proposal.',
+        description: 'Website Fix has one published price. Managed Automation is priced in a written proposal.',
       },
       tiers: [
         {
-          name: 'Targeted Fix',
+          name: 'Website Fix',
           price: '$500',
           period: 'one-time',
           description: 'One focused review and one agreed website fix.',
@@ -651,14 +646,14 @@ export const PAGE_CONFIGS = {
             'No recurring payment',
           ],
           color: 'green',
-          cta: 'Request the targeted fix',
-          href: '/contact?offer=website-improvement',
+          cta: 'Start a Website Fix',
+          href: '/contact?offer=website-fix',
         },
         {
-          name: 'Automation System Setup',
+          name: 'Managed Automation',
           price: 'Proposal-based',
           period: 'written proposal',
-          description: 'Price follows the agreed system, scope, and commitment.',
+          description: 'Price follows the agreed task, 30-day outcome, and commitment.',
           features: [
             'Result and scope stated first',
             'Payment terms agreed before setup',
@@ -668,7 +663,7 @@ export const PAGE_CONFIGS = {
           color: 'blue',
           popular: true,
           cta: 'Request a proposal',
-          href: '/contact?offer=ai-operator',
+          href: '/contact?offer=managed-automation',
         },
       ],
       ctaSection: {
@@ -689,7 +684,7 @@ export const PAGE_CONFIGS = {
         enabled: true,
         depositPercent: '50%',
         depositLabel: 'To begin',
-        depositDescription: '$250 manual invoice for the targeted fix',
+        depositDescription: '$250 manual invoice for Website Fix',
         deliveryPercent: '50%',
         deliveryLabel: 'After delivery',
         deliveryDescription: '$250 manual invoice after the agreed fix',
@@ -717,9 +712,9 @@ export const PAGE_CONFIGS = {
         description: 'Short answers about scope, cost, approval, and what happens next.',
       },
       items: [
-        { question: 'What does the targeted fix commit to?', answer: 'A $500 review and one agreed website fix. Redesigns, integrations, multi-page builds, and ongoing maintenance need a separate scope.', links: [{ text: 'See the exact scope', href: '/services#website-improvement' }] },
-        { question: 'How does the fixed price get paid?', answer: '$250 by manual invoice to begin and $250 after the agreed fix is delivered.', links: [{ text: 'Review pricing', href: '/pricing#website-improvement' }] },
-        { question: 'What does setup start with?', answer: 'A defined result and the workflow around it. Tools are selected after the work is clear.', links: [{ text: 'See the process', href: '/how-it-works' }] },
+        { question: 'What does Website Fix include?', answer: 'A $500 review and one agreed website fix. Redesigns, integrations, multi-page builds, and ongoing maintenance need a separate scope.', links: [{ text: 'See the exact scope', href: '/services#website-fix' }] },
+        { question: 'How does the fixed price get paid?', answer: '$250 by manual invoice to begin and $250 after the agreed fix is delivered.', links: [{ text: 'Review pricing', href: '/pricing#website-fix' }] },
+        { question: 'What does Managed Automation start with?', answer: 'One repeated task and one result for a 30-day human-run pilot.', links: [{ text: 'See the process', href: '/how-it-works' }] },
         { question: 'What needs a person to approve?', answer: 'External messages, publishing, system changes, and spending stay behind an explicit human review.' },
         { question: 'What if the request grows?', answer: 'The agreed boundary stays visible. Work outside it is paused and separately scoped before anyone commits to it.' },
         { question: 'Do I need a technical brief?', answer: 'No. Describe the problem, workflow, and desired result in plain language.' },
@@ -752,7 +747,7 @@ export const PAGE_CONFIGS = {
       steps: [
         { number: 1, title: 'Name the outcome', description: 'Start with the result that should be different when the work is done.', details: ['What is stuck now?', 'What would useful improvement look like?', 'What is outside the request?'], color: 'green' },
         { number: 2, title: 'Map the work', description: 'Trace the inputs, tools, evidence, and handoffs around that result.', details: ['Identify the source of truth', 'Separate preparation from decision', 'Set the cost and scope boundary'], color: 'blue' },
-        { number: 3, title: 'Coordinate the pieces', description: 'Tools, LLMs, and agents prepare the work in sequence with evidence attached.', details: ['Keep sources with research', 'Keep versions with drafts', 'Keep blocked work visible'], color: 'purple' },
+        { number: 3, title: 'Do the work', description: 'We prepare the agreed work and keep the evidence attached.', details: ['Keep sources with research', 'Keep versions with drafts', 'Keep blocked work visible'], color: 'purple' },
         { number: 4, title: 'Review and hand off', description: 'A person reviews the evidence, approves the next external action, and records what happened.', details: ['See what is ready and what it cost', 'Approve, revise, defer, or stop', 'Carry the outcome into the next decision'], color: 'gold' },
       ],
       timeline: {
@@ -863,8 +858,8 @@ blog: {
         { title: 'Browse Our Services', icon: '🔍', group: 'getting-started', content: 'Explore what we offer and find the right fit for your needs:\n\n• Visit the Services page to see our full range of professional services\n• Each service includes detailed descriptions, pricing, and what\'s included\n• Check our Pricing page to compare packages and find the best value\n• Use our FAQ for quick answers to common questions' },
         { title: 'Request a Consultation', icon: '📅', group: 'getting-started', content: 'Ready for expert guidance?\n\n1. Visit the Contact page\n2. Tell us what you need and choose your preferred consultation timing\n3. Submit your request\n4. We\'ll review the details and follow up with the next step' },
         { title: 'Start here', icon: '🚀', group: 'getting-started', content: 'Here\'s how to get started:\n\n1. Review Services and Pricing\n2. Choose the smallest useful starting point\n3. Share the context through Contact\n4. We\'ll confirm scope, price, and the next step before work begins' },
-        { title: 'Access Your Account', icon: '👤', group: 'account', content: 'An account gives you access to your project workspace:\n\n• Sign in with Google using the email linked to your workspace\n• An operator can securely link your account to your project\n• Use password recovery only for an existing recovery-enabled account\n• Access your dashboard anytime to check project progress' },
-        { title: 'Your Dashboard', icon: '📊', group: 'account', content: 'Once your account is linked to a project, your dashboard is your home base:\n\n• View project status and details\n• Read and add project comments\n• Access project files and delivery handoffs\n• Start another project when you are ready' },
+        { title: 'Private Team Access', icon: '👤', group: 'account', content: 'The sign-in route is reserved for the NeedThisDone team. Customers receive agreed handoffs and weekly briefs directly.' },
+        { title: 'How Updates Arrive', icon: '📊', group: 'account', content: 'Website Fix ends with a clear handoff. Managed Automation includes a short weekly brief during the 30-day pilot.' },
         { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
         { title: 'Project Updates', icon: '✏️', group: 'admin', content: 'Project operators manage work from the protected dashboard:\n\n• Review new project requests\n• Update project status and notes\n• Link an existing client account after confirming the exact email\n• Publish delivery handoffs and retry failed notifications\n• Keep human approval in control of report follow-up' },
         { title: 'Get in Touch', icon: '💬', group: 'support', content: 'Have questions or need help? We\'re here:\n\n• Visit our Contact page to send us a message\n• Email us directly at hello@needthisdone.com\n• Check our FAQ for immediate answers\n• Book a consultation if you need dedicated time with an expert' },
@@ -885,9 +880,9 @@ blog: {
         items: ['We collect the contact, project, technical, and private-workspace information needed to respond and deliver agreed work', 'A public request does not create a subscription, and the public flow does not collect payment-card details', 'We do not sell personal information', 'Private records remain behind authenticated, role-scoped access'],
       },
       sections: [
-        { title: '1. Information We Collect', content: 'When you submit a project request, we collect the contact details and project context you provide. For a targeted fix, that can include a website URL, the problem you want addressed, and the outcome you want. For automation system setup, that can include recurring workflows, tools, approval boundaries, and desired outcomes.\n\nIf a private workspace is created for an agreed engagement, it may contain the project, decisions, evidence, outcomes, and files needed to deliver that work. We also receive basic technical request and security information needed to operate and protect the site.' },
+        { title: '1. Information We Collect', content: 'When you submit a project request, we collect the contact details and project context you provide. For Website Fix, that can include a website URL, the problem you want addressed, and the outcome you want. For Managed Automation, that can include one repeated task, the tools involved, what should always wait for your say, and the desired outcome.\n\nPrivate team records may contain the project, decisions, evidence, outcomes, and files needed to deliver agreed work. We also receive basic technical request and security information needed to operate and protect the site.' },
         { title: '2. How We Use Information', content: 'We use project-request information to respond, scope work, send relevant service communications, and deliver an accepted engagement. Private-workspace information is used to operate and document the agreed work, including approvals and outcomes.\n\nWe do not sell personal information. A public request does not enroll you in an automatic subscription or purchase, and payment-card data is not collected by the current public site flow.' },
-        { title: '3. Service Providers and Access', content: 'NeedThisDone uses service providers for hosting, database/authentication, email delivery when configured, and security/operational support. Providers may process information only as needed to provide those services.\n\nAccess to private operator records is limited by authenticated, role-scoped controls. The dashboard, employee, prospecting, and administrative surfaces are not public client portals.' },
+        { title: '3. Vendors and Access', content: 'NeedThisDone uses outside vendors for hosting, sign-in, email delivery when configured, and security or operational support. They may process information only as needed to provide those services.\n\nPrivate team records are limited to authorized operators. Customers receive agreed handoffs and weekly briefs directly.' },
         { title: '4. Retention and Your Choices', content: 'We retain request and delivery information for as long as reasonably needed to respond, deliver work, meet legal or operational obligations, resolve disputes, and maintain accurate records. You may ask to access, correct, or request deletion of personal information by contacting us. Some records may need to be retained where required for legitimate operational or legal reasons.' },
         { title: '5. Contact Us', content: 'Questions or requests about privacy?\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
       ],
@@ -900,17 +895,17 @@ blog: {
     displayName: 'Terms of Service',
     contentType: 'terms_page',
     defaults: {
-      header: { title: 'Terms of Service', description: 'The public-site terms for project requests, a contained $500 fix, and proposal-based automation setup.' },
+      header: { title: 'Terms of Service', description: 'The public-site terms for project requests, a $500 Website Fix, and proposal-based Managed Automation.' },
       lastUpdated: 'August 9, 2026',
       quickSummary: {
         title: 'The Short Version',
-        items: ['A request starts a conversation; it is not an automatic purchase, subscription, or binding agreement', '$500 targeted fix: $250 manual invoice to begin and $250 after the agreed contained fix is delivered', 'Automation setup is proposal-based, with written scope, price, payment, and approval boundaries', 'Messages, publishing, system changes, and spending require explicit human approval'],
+        items: ['A request starts a conversation; it is not an automatic purchase, subscription, or binding agreement', 'Website Fix is $500: $250 manual invoice to begin and $250 after the agreed contained fix is delivered', 'Managed Automation is proposal-based, with one repeated task, a 30-day finish line, price, payment, and clear human decisions', 'Messages, publishing, account changes, and spending require explicit human approval'],
       },
       sections: [
         { title: '1. Acceptance and Project Requests', content: "By using NeedThisDone.com, you agree to these terms for your use of the public site. A project request invites a follow-up conversation; it does not create an automatic purchase, subscription, or binding service agreement. Accepted work is governed by the specific written scope, proposal, and invoice agreed for that engagement." },
-        { title: '2. Targeted Fix Scope', content: 'The public targeted fix is $500 and includes an evidence-backed review plus one mutually agreed contained fix. A contained fix is one page- or component-level improvement, accessibility/SEO/performance correction, or focused conversion change.\n\nIt does not include a redesign, integration, multi-page build, or other work outside the written scope. Additional work requires a separate agreement.' },
-        { title: '3. Targeted Fix Payment', content: 'After the contained scope is confirmed, the targeted fix uses two manual invoices: $250 (50%) to begin and $250 (50%) after the agreed fix is delivered. The current public site does not activate a checkout or recurring payment flow. Any payment questions or changes are handled directly in the agreed written scope.' },
-        { title: '4. Automation System Setup', content: 'Automation system setup is a proposal-based engagement. Before work begins, the written proposal or scope sets the requested result, scope, price, payment terms, success measures, approval boundaries, and prohibited-action list. Authenticated operators can review runs, evidence, costs, artifacts, and approvals through the browser workspace.\n\nThe system does not create automatic external authority. Any expansion or continuation requires a separate decision and agreement.' },
+        { title: '2. Website Fix Scope', content: 'Website Fix is $500 and includes an evidence-backed review plus one mutually agreed contained fix. A contained fix is one page- or component-level improvement, accessibility/SEO/performance correction, or focused conversion change.\n\nIt does not include a redesign, integration, multi-page build, or other work outside the written scope. Additional work requires a separate agreement.' },
+        { title: '3. Website Fix Payment', content: 'After the contained scope is confirmed, Website Fix uses two manual invoices: $250 (50%) to begin and $250 (50%) after the agreed fix is delivered. The current public site does not activate a checkout or recurring payment flow. Any payment questions or changes are handled directly in the agreed written scope.' },
+        { title: '4. Managed Automation', content: 'Managed Automation is a proposal-based, human-run 30-day pilot for one repeated task. Before work begins, the written proposal sets the requested result, scope, price, payment terms, success measures, and the actions that always need your say. NeedThisDone operators keep the work, evidence, costs, and decisions together.\n\nThe pilot does not create automatic external authority. Any expansion or continuation requires a separate decision and agreement.' },
         { title: '5. Human Approval and Client Responsibilities', content: 'External messages, publishing, system changes, and spending require explicit human approval. You agree to provide accurate context, timely access or feedback when needed, and authority for any requested work. You remain responsible for your business decisions, content, accounts, and approvals.' },
         { title: '6. Results, Intellectual Property, and Liability', content: 'NeedThisDone does not guarantee traffic, revenue, legal compliance, accessibility certification, conversion results, or any other business outcome. Ownership, license, confidentiality, and portfolio terms for an accepted engagement are defined in its written scope. To the extent allowed by law, liability is limited to the amounts paid for the specific engagement giving rise to the claim.' },
         { title: '7. Privacy and Contact', content: 'Please review the Privacy Policy for how information is handled. Questions about these terms or a project scope can be sent to:\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
@@ -925,8 +920,8 @@ blog: {
     contentType: 'login_page',
     defaults: {
       header: {
-        signIn: { title: 'Welcome Back', description: 'Good to see you! Sign in to check on your projects' },
-        signUp: { title: 'Account Access', description: 'Use Google to access an operator-linked project workspace' },
+        signIn: { title: 'Private Team Sign-In', description: 'Authorized NeedThisDone operators only.' },
+        signUp: { title: 'Private Team Access', description: 'Public account requests are not available.' },
         forgotPassword: { title: 'Reset Your Password', description: "No worries. We'll send you a reset link" },
       },
       buttons: { signIn: 'Sign In', signUp: 'Request Access', resetPassword: 'Send Reset Link', googleSignIn: 'Sign in with Google' },

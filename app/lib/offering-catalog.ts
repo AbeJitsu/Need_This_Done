@@ -16,7 +16,7 @@ export interface Offering {
 export const OFFERING_CATALOG: readonly Offering[] = [
   {
     slug: 'website-improvement',
-    name: 'Targeted Fix',
+    name: 'Website Fix',
     kind: 'website_improvement',
     description: 'A focused $500 review and one agreed website fix.',
     priceCents: 50000,
@@ -32,16 +32,16 @@ export const OFFERING_CATALOG: readonly Offering[] = [
   },
   {
     slug: 'ai-operator',
-    name: 'Automation System Setup',
+    name: 'Managed Automation',
     kind: 'ai_operator',
-    description: 'A proposal-based system for recurring work using tools, LLMs, and agents.',
+    description: 'A human-run 30-day pilot for one repeated task, priced by proposal.',
     priceCents: null,
     billingPeriod: null,
     included: [
-      'A clear outcome and workflow',
-      'Multiple LLMs and agents working together',
-      'A browser workspace for runs, evidence, costs, and approvals',
-      'Human review before external action',
+      'One repeated task and one clear outcome',
+      'A human-run 30-day pilot',
+      'One short weekly brief',
+      'Human review before important action',
     ],
     paymentLinkEnv: null,
     customWorkFallback: '/contact',

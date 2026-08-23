@@ -12,13 +12,14 @@ test.describe('Retained core smoke checks', () => {
   });
 
   test('contact intake adapts to the selected offer', async ({ page }) => {
-    const response = await page.goto('/contact?offer=website-improvement');
+    const response = await page.goto('/contact?offer=website-fix');
 
     expect(response?.ok()).toBe(true);
     await expect(page.getByText(/what are you contacting us about/i, { exact: true })).toBeVisible();
-    await expect(page.getByRole('radio', { name: /targeted fix/i })).toBeChecked();
+    await expect(page.getByRole('radio', { name: /website fix/i })).toBeChecked();
     await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
-    await page.getByText('Automation System Setup', { exact: true }).click();
+    const managedAutomation = page.getByRole('radio', { name: /managed automation/i });
+    await page.locator('label').filter({ has: managedAutomation }).click();
     await expect(page.getByRole('textbox', { name: /where does work get stuck/i })).toBeVisible();
     await expect(page.getByRole('textbox', { name: /website url/i })).toHaveCount(0);
   });
@@ -57,7 +58,7 @@ test.describe('Retained core smoke checks', () => {
       ['/about', '/work'],
       ['/resume', '/work'],
       ['/guide', '/faq'],
-      ['/build', '/contact?offer=website-improvement'],
+      ['/build', '/contact?offer=website-fix'],
     ]) {
       await page.goto(route);
       await expect(page).toHaveURL(new RegExp(destination.replace(/[?]/g, '\\?') + '$'));
@@ -69,7 +70,7 @@ test.describe('Retained core smoke checks', () => {
 
     expect(response?.ok()).toBe(true);
     await expect(page.getByRole('heading').first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /request the \$500 targeted fix/i })).toHaveAttribute('href', '/contact?offer=website-improvement');
+    await expect(page.getByRole('link', { name: /start a website fix/i })).toHaveAttribute('href', '/contact?offer=website-fix');
   });
 
   test('privacy and terms keep their legal boundaries readable at public widths', async ({ page }) => {

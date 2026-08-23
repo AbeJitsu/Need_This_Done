@@ -65,7 +65,7 @@ const LEGAL_DOCUMENT_CONFIG: Record<LegalDocumentKind, LegalDocumentConfig> = {
     cta: {
       eyebrow: 'Questions about the terms?',
       title: 'Make the next step explicit.',
-      description: 'Share the context and we can clarify the scope, proposal, or approval boundary before work begins.',
+      description: 'Share the context and we can clarify the scope, proposal, or decision point before work begins.',
       button: 'Contact us',
       href: '/contact',
     },

@@ -6,8 +6,8 @@ Prove the two managed offers with real paid delivery while preserving the existi
 
 | Offer | Public promise | Paid-proof exit condition |
 | --- | --- | --- |
-| Website Improvement | $500 audit plus one agreed contained fix; $250 manual invoice to begin and $250 on delivery. | One paid engagement is scoped, invoiced, delivered, and handed off with what changed. |
-| Managed AI Operator | Proposal-based 30-day pilot, privately operated by Abe and Andrea, with weekly client briefs. | One paid pilot completes four weekly human-led briefs and records its outcomes. |
+| Website Fix | $500 audit plus one agreed contained fix; $250 manual invoice to begin and $250 on delivery. | One paid engagement is scoped, invoiced, delivered, and handed off with what changed. |
+| Managed Automation | Proposal-based 30-day pilot, privately operated by Abe and Andrea, with weekly client briefs. | One paid pilot completes four weekly human-led briefs and records its outcomes. |
 
 Neither offer is a redesign, integration, multi-page build, client dashboard, autonomous agent, or automatic recurring purchase.
 
@@ -22,7 +22,7 @@ review, execute the numbered [production launch checklist](docs/launch/LAUNCH_CH
 in order, with backup, dry run, migration application, deployment, secret
 provisioning, and each live provider action as separate approvals.
 
-Technical launch is a separate gate from business proof: checklist items 1–22 cover the hosted product, providers, Mac runtime, reliability, and rollback; item 23 requires one paid $500 Website Improvement engagement; item 24 requires one paid 30-day Managed AI Operator pilot with four human-led weekly briefs.
+Technical launch is a separate gate from business proof: checklist items 1–22 cover the hosted product, providers, Mac runtime, reliability, and rollback; item 23 requires one paid $500 Website Fix engagement; item 24 requires one paid 30-day Managed Automation pilot with four human-led weekly briefs.
 
 ## Work sequence
 
@@ -31,8 +31,8 @@ Technical launch is a separate gate from business proof: checklist items 1–22 
 | 1 | Local verification passed | Public dual-offer experience | Navigation, homepage, services, pricing, intake, audit handoff, work proof, legal/support pages, redirects, metadata, sitemap, and curated Insights accurately describe the two offers. |
 | 2 | Local verification passed | Route, accessibility, and browser coverage | Unit, accessibility, build, public-browser, private-access, and retained security/assembly gates pass without hiding stale routes. |
 | 3 | Partial; exact activation candidate retained | Model-routing policy | Step 10A recorded six fixed sanitized-task results for the exact configured pair. DeepSeek completed its three tasks; Nemotron was rejected by the provider privacy/data-policy guardrail. Only `google/gemma-4-26b-a4b-it:free` remains an activation candidate; a repeat comparison, environment change, or model pin requires separate approval; select no live default until the policy threshold is met. |
-| 4 | Pending external sale | Paid Website Improvement | Confirm one contained scope, issue the two manual invoices, deliver the fix, and record the handoff/outcome. |
-| 5 | Pending external sale | Paid Managed AI Operator pilot | Agree proposal and approval boundary, operate for 30 days, provide four weekly briefs, and record outcomes. |
+| 4 | Pending external sale | Paid Website Fix | Confirm one contained scope, issue the two manual invoices, deliver the fix, and record the handoff/outcome. |
+| 5 | Pending external sale | Paid Managed Automation pilot | Agree proposal and approval boundary, operate for 30 days, provide four weekly briefs, and record outcomes. |
 
 ## Model-routing gate
 
@@ -71,7 +71,7 @@ spend, or external-recipient action.
 | --- | --- |
 | `/`, `/services`, `/pricing` | Present the two offers as equal paths. |
 | `/contact` | Adaptive intake for `website-improvement` or `ai-operator`, persisted through the existing project request. |
-| `/site-analyzer → /report/[id]` | Preserved as the Website Improvement conversion path; CTA preselects the website offer. |
+| `/site-analyzer → /report/[id]` | Preserved as the Website Fix conversion path; CTA preselects the website offer. |
 | `/how-it-works` | Shared delivery process for both offers. |
 | `/work` | Compact proof including accurate founder/background material formerly split across About and Resume. |
 | `/about`, `/resume` | Permanent redirect to `/work`. |

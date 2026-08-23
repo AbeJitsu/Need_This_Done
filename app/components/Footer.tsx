@@ -13,14 +13,12 @@ import { ContentValue } from '@/components/content/ContentStructure';
 
 // Fallback footer links (no Contact or Get Started — those are in the header CTA)
 const defaultFooterLinks: FooterLink[] = [
-  { href: '/services', label: 'Services' },
+  { href: '/services#website-fix', label: 'Website Fix' },
+  { href: '/services#managed-automation', label: 'Managed Automation' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/work', label: 'Work' },
-  { href: '/blog', label: 'Insights' },
   { href: '/faq', label: 'FAQ' },
-  { href: '/site-analyzer', label: 'Site Analyzer' },
-  { href: '/ada-compliance', label: 'Accessibility Checks' },
 ];
 
 export default function Footer() {

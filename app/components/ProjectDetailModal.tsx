@@ -8,7 +8,6 @@ import { useBackdropClose } from '@/hooks/useBackdropClose';
 import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
-import ClientAccessSection from './project-modal/ClientAccessSection';
 import PilotSetupSection from './project-modal/PilotSetupSection';
 import ProjectGithubHandoffs from './project-modal/ProjectGithubHandoffs';
 import ProjectComments from './project-modal/ProjectComments';
@@ -141,13 +140,6 @@ export default function ProjectDetailModal({
     }
   };
 
-  const handleClientAccessChanged = (portalAccessEnabled: boolean) => {
-    setProject((currentProject: any) => currentProject
-      ? { ...currentProject, user_id: portalAccessEnabled ? 'linked-client' : null }
-      : currentProject);
-    if (onUpdate) onUpdate();
-  };
-
   // ============================================================================
   // Render
   // ============================================================================
@@ -213,12 +205,6 @@ export default function ProjectDetailModal({
                     submittingStatus={submittingStatus}
                     handleUpdateStatus={handleUpdateStatus}
                     currentStatus={project.status}
-                  />
-                  <ClientAccessSection
-                    projectId={project.id}
-                    email={project.email}
-                    portalAccessEnabled={Boolean(project.user_id)}
-                    onChanged={handleClientAccessChanged}
                   />
                   <PilotSetupSection
                     projectId={project.id}

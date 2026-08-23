@@ -16,8 +16,8 @@ for (const route of ['/', '/services', '/how-it-works', '/pricing', '/work', '/b
 
 test('login keeps the private workspace boundary visible', async ({ page }) => {
   await page.goto('/login');
-  await expect(page.getByRole('heading', { name: /continue where the work is clear/i })).toBeVisible();
-  await expect(page.getByText('A deliberate boundary', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /private team sign-in/i })).toBeVisible();
+  await expect(page.getByText('Private team access', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
   await expect(page.getByLabel('Email Address')).toBeVisible();
 });
@@ -30,9 +30,9 @@ test('insights makes the reading path and notes easy to scan', async ({ page }) 
   await expect(page.getByRole('link', { name: /read note/i }).first()).toBeVisible();
 });
 
-test('contact gives the targeted fix context a clear working area', async ({ page }) => {
-  await page.goto('/contact?offer=website-improvement');
-  await expect(page.getByText('Targeted fix context', { exact: true })).toBeVisible();
+test('contact gives Website Fix a clear working area', async ({ page }) => {
+  await page.goto('/contact?offer=website-fix');
+  await expect(page.getByText('Website Fix context', { exact: true })).toBeVisible();
   await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
   await expect(page.getByRole('textbox', { name: /what needs attention/i })).toBeVisible();
   await expect(page.getByRole('textbox', { name: /what should improve/i })).toBeVisible();
@@ -41,8 +41,8 @@ test('contact gives the targeted fix context a clear working area', async ({ pag
 
 test('contact keeps both context headings inside their fieldset panels', async ({ page }) => {
   for (const context of [
-    { offer: 'website-improvement', heading: 'Targeted fix context', field: /website url/i },
-    { offer: 'ai-operator', heading: 'Automation setup context', field: /where does work get stuck/i },
+    { offer: 'website-fix', heading: 'Website Fix context', field: /website url/i },
+    { offer: 'managed-automation', heading: 'Managed Automation context', field: /where does work get stuck/i },
   ]) {
     await page.goto(`/contact?offer=${context.offer}`);
 
@@ -71,16 +71,16 @@ test('contact keeps both context headings inside their fieldset panels', async (
   }
 });
 
-test('how it works makes the process and review boundary visible', async ({ page }) => {
+test('how it works makes the process and human control visible', async ({ page }) => {
   await page.goto('/how-it-works');
-  await expect(page.getByRole('heading', { name: /work backward from the result/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /make the handoffs visible/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /review is the boundary/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /start with what should be different/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /a short path from stuck to done/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /your say stays in the work/i })).toBeVisible();
 });
 
 test('faq answers questions without overlapping its summary and list', async ({ page }) => {
   await page.goto('/faq');
-  const question = page.getByRole('button', { name: /what does the targeted fix commit to/i });
+  const question = page.getByRole('button', { name: /what does website fix include/i });
   await question.click();
   await expect(page.getByText(/a \$500 review and one agreed website fix/i)).toBeVisible();
 
@@ -98,18 +98,52 @@ test('faq answers questions without overlapping its summary and list', async ({ 
 
 test('homepage makes the problem and the two starting points clear', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /too many tools/i })).toBeVisible();
-  await expect(page.getByText(/no shared next step/i)).toBeVisible();
-  await expect(page.getByRole('link', { name: /fix one problem/i }).first()).toBeVisible();
-  await expect(page.getByRole('link', { name: /set up automation/i }).first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: /fix the work that’s slowing you down/i })).toBeVisible();
+  await expect(page.getByText(/one problem\. one agreed outcome/i)).toBeVisible();
+  await expect(page.getByRole('link', { name: /start a website fix/i }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: /discuss managed automation/i }).first()).toBeVisible();
 });
 
 test('desktop public navigation follows the public page progression', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'Desktop navigation is intentionally collapsed on mobile.');
   await page.goto('/');
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
-  for (const label of ['Services', 'How It Works', 'Pricing', 'Work', 'Insights', 'Contact']) {
+  for (const label of ['Website Fix', 'Managed Automation', 'How It Works', 'Work', "Tell us what's stuck"]) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
+});
+
+test('the simplified journey works by keyboard at phone, tablet, and desktop widths', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'One browser covers the explicit responsive-width matrix.');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
+  for (const viewport of [
+    { width: 375, height: 800 },
+    { width: 768, height: 900 },
+    { width: 1280, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fix the work that’s slowing you down.');
+    await expect(page.locator('main dl')).toHaveCount(2);
+    await expect(page.locator('main ol')).toHaveCount(2);
+    await expect(page.locator('img[alt=""]')).toHaveCount(1);
+    await expect(page.locator('a[href="/login"]')).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)).toBe(false);
+
+    if (viewport.width < 1024) {
+      const menuButton = page.getByRole('button', { name: 'Open navigation menu' });
+      await menuButton.focus();
+      await page.keyboard.press('Enter');
+      await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
+    } else {
+      await page.keyboard.press('Tab');
+      const focused = page.locator(':focus');
+      await expect(focused).toBeVisible();
+      expect(await focused.evaluate((element) => ['A', 'BUTTON'].includes(element.tagName))).toBe(true);
+    }
+  }
 });

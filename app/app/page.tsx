@@ -15,18 +15,18 @@ import HomePageClient from '@/components/home/HomePageClient';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'NeedThisDone | Targeted Fixes & Automation Systems',
-  description: 'Choose a $500 targeted website fix, or set up a supervised automation system that brings LLMs, agents, evidence, and approvals into one browser workspace.',
+  title: 'NeedThisDone | Website Fix & Managed Automation',
+  description: 'Fix one website problem for $500, or discuss a human-run 30-day pilot for one repeated task.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'NeedThisDone | Targeted Fixes & Automation Systems',
-    description: 'Two focused paths: fix one contained problem or set up the automation system around recurring work.',
+    title: 'NeedThisDone | Website Fix & Managed Automation',
+    description: 'Two focused paths: one contained website fix or one human-run automation pilot.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'NeedThisDone | Targeted Fixes & Automation Systems',
-    description: 'Two focused paths: fix one contained problem or set up the automation system around recurring work.',
+    title: 'NeedThisDone | Website Fix & Managed Automation',
+    description: 'Two focused paths: one contained website fix or one human-run automation pilot.',
   },
 };
 

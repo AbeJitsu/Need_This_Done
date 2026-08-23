@@ -24,27 +24,27 @@ export interface ServiceModalContent {
 }
 
 // ============================================================================
-// Automation System Setup Modal Content
+// Managed Automation Modal Content
 // ============================================================================
 
 export const virtualAssistantModal: ServiceModalContent = {
-  title: 'Automation System Setup',
+  title: 'Managed Automation',
   headline: 'Make recurring work easier to coordinate.',
-  hook: 'We shape tools, LLMs, agents, evidence, and approvals around a defined result.',
+  hook: 'A human-run 30-day pilot handles one repeated task and keeps each decision visible.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
     'A defined result and workflow',
-    'Coordinated tools, LLMs, and agents',
-    'Evidence and approval records',
-    'A browser workspace for review',
+    'One repeated task',
+    'Evidence and decision records',
+    'Weekly briefs for review',
   ],
   ctas: {
     primary: {
-      text: 'See All Services',
-      href: '/services',
+      text: 'Discuss Managed Automation',
+      href: '/contact?offer=managed-automation',
     },
     secondary: {
-      text: 'Contact',
+      text: "Tell us what’s stuck",
       href: '/contact',
     },
   },
@@ -55,7 +55,7 @@ export const virtualAssistantModal: ServiceModalContent = {
 // ============================================================================
 
 export const dataDocumentsModal: ServiceModalContent = {
-  title: 'Automation System Setup',
+  title: 'Managed Automation',
   headline: 'Stop losing work between tools.',
   hook: 'We map the repeating workflow before selecting the smallest useful coordination layer.',
   bulletHeader: 'What we handle:',
@@ -63,26 +63,26 @@ export const dataDocumentsModal: ServiceModalContent = {
     'Workflow mapping',
     'Tool and source coordination',
     'Evidence-backed handoffs',
-    'Approval boundaries',
+    'Clear decision points',
   ],
   ctas: {
     primary: {
-      text: 'See All Services',
-      href: '/services',
+      text: 'Discuss Managed Automation',
+      href: '/contact?offer=managed-automation',
     },
     secondary: {
-      text: 'Contact',
+      text: "Tell us what’s stuck",
       href: '/contact',
     },
   },
 };
 
 // ============================================================================
-// Website Builds Modal Content
+// Website Fix Modal Content
 // ============================================================================
 
 export const websiteServicesModal: ServiceModalContent = {
-  title: 'Targeted Fix',
+  title: 'Website Fix',
   headline: 'Fix one website problem.',
   hook: 'A focused review turns one visible issue into one contained change for $500.',
   bulletHeader: 'What we handle:',
@@ -94,11 +94,11 @@ export const websiteServicesModal: ServiceModalContent = {
   ],
   ctas: {
     primary: {
-      text: 'See All Services',
-      href: '/services',
+      text: 'Start a Website Fix',
+      href: '/contact?offer=website-fix',
     },
     secondary: {
-      text: 'Contact',
+      text: "Tell us what’s stuck",
       href: '/contact',
     },
   },
@@ -123,6 +123,9 @@ export const serviceModalContentMap: Record<ServiceType, ServiceModalContent> = 
 // Used by ServiceModalContext and any component that needs to resolve titles
 
 export const TITLE_TO_SERVICE_TYPE: Record<string, ServiceType> = {
+  'Managed Automation': 'virtual-assistant',
+  'Website Fix': 'website-services',
+  // Previous display names remain accepted only as compatibility inputs.
   'Automation System Setup': 'virtual-assistant',
   'Targeted Fix': 'website-services',
   'Managed AI': 'virtual-assistant',
@@ -193,7 +196,7 @@ export interface ServiceFullContent {
 export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
   // Retained internal order: website, automation, automation detail.
   'website-services': {
-    title: 'Targeted Fix',
+    title: 'Website Fix',
     headline: 'Fix one website problem.',
     subtitle: 'A focused review and one agreed page, component, accessibility, SEO, performance, or conversion fix.',
     bulletPoints: [
@@ -213,18 +216,18 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
     reassurance: 'Keep the promise narrow enough to deliver.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
-      secondary: { text: 'Contact', href: '/contact?offer=website-improvement' },
+      secondary: { text: 'Start a Website Fix', href: '/contact?offer=website-fix' },
     },
   },
   'data-documents': {
-    title: 'Automation System Setup',
+    title: 'Managed Automation',
     headline: 'Make recurring work easier to coordinate.',
     subtitle: 'Map the workflow, connect the pieces, and keep evidence with each handoff.',
     bulletPoints: [
       'Workflow mapping',
       'Tool and source coordination',
       'Evidence-backed handoffs',
-      'Approval boundaries',
+      'Clear decision points',
     ],
     examples: {
       title: 'What we do:',
@@ -238,13 +241,13 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
     reassurance: 'Use the smallest useful system for the work at hand.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
-      secondary: { text: 'Contact', href: '/contact?offer=ai-operator' },
+      secondary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
     },
   },
   'virtual-assistant': {
-    title: 'Automation System Setup',
+    title: 'Managed Automation',
     headline: 'Keep recurring work, evidence, and decisions together.',
-    subtitle: 'Multiple tools, LLMs, and agents can prepare work while a person keeps the approval boundary.',
+    subtitle: 'The team prepares one repeated task while a person reviews every important decision.',
     bulletPoints: [
       'A defined result and workflow',
       'Coordinated specialists',
@@ -263,7 +266,7 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
     reassurance: 'Visibility keeps automation useful.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
-      secondary: { text: 'Contact', href: '/contact?offer=ai-operator' },
+      secondary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
     },
   },
 };

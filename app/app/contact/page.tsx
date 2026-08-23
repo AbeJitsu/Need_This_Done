@@ -69,17 +69,17 @@ function ContactIntake() {
 
     const message = offer === 'website-improvement'
       ? [
-          'Offer: website-improvement',
+          'Offer: website-fix',
           `Website URL:\n${form.websiteUrl}`,
           `Problem:\n${form.websiteProblem}`,
           `Desired result:\n${form.websiteGoal}`,
         ].join('\n\n')
       : [
-          'Offer: ai-operator',
+          'Offer: managed-automation',
           `Workflow problem:\n${form.bottlenecks}`,
           `Tools involved:\n${form.tools}`,
           `Desired result:\n${form.outcomes}`,
-          `Approval boundary:\n${form.approvals}`,
+          `Needs your say:\n${form.approvals}`,
         ].join('\n\n');
 
     const body = new FormData();
@@ -126,13 +126,13 @@ function ContactIntake() {
         <div className="relative mx-auto grid max-w-7xl items-end gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:gap-20 lg:px-12">
           <div className="max-w-2xl">
             <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em] text-emerald-200"><Sparkles className="h-4 w-4" aria-hidden="true" /> Contact</p>
-            <h1 className="mt-6 font-playfair text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">Start with the work that is stuck.</h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-emerald-50/75 md:text-xl">Share the context and the result you want. A useful first conversation should make the next decision easier.</p>
+            <h1 className="mt-6 font-playfair text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">Tell us what’s stuck.</h1>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-emerald-50/75 md:text-xl">Share the website problem or repeated task and the result you want. We will help narrow it to one useful outcome.</p>
             <div className="mt-9 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
               {[
                 ['Context', 'What is happening now?'],
                 ['Result', 'What should be different?'],
-                ['Boundary', 'What needs a decision?'],
+                ['Your say', 'What should always wait for you?'],
               ].map(([title, description]) => (
                 <div key={title} className="rounded-2xl border border-white/10 bg-white/[.08] p-4">
                   <p className="text-sm font-bold text-white">{title}</p>
@@ -147,7 +147,7 @@ function ContactIntake() {
               <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-emerald-300 text-[#18372e]"><CheckCircle2 className="h-5 w-5" aria-hidden="true" /></div>
               <div>
                 <p className="text-sm font-bold text-emerald-200">A focused first conversation</p>
-                <h2 className="mt-2 font-playfair text-3xl font-black">Tell us what should be different.</h2>
+              <h2 className="mt-2 font-playfair text-3xl font-black">A short note is enough to begin.</h2>
               </div>
             </div>
             <p className="mt-6 leading-7 text-emerald-50/75">The form keeps the starting point visible, asks for the context needed to review it, and leaves the commitment for a separate confirmation.</p>
@@ -162,7 +162,7 @@ function ContactIntake() {
             <div className="border-b border-[#183229]/10 pb-8">
               <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">A short intake</p>
               <h2 className="mt-3 font-playfair text-4xl font-black">Make the first move concrete.</h2>
-              <p className="mt-4 max-w-2xl leading-7 text-[#50675e]">Start with the offer that best matches the work. You can add detail without writing a full brief.</p>
+              <p className="mt-4 max-w-2xl leading-7 text-[#50675e]">Choose the offer that best matches the work. You can add detail without writing a full brief.</p>
             </div>
 
             <fieldset className="mt-9">
@@ -196,7 +196,7 @@ function ContactIntake() {
 
             {website ? (
               <fieldset className={contextPanelClass}>
-                <legend className={contextLegendClass}>Targeted fix context</legend>
+                <legend className={contextLegendClass}>Website Fix context</legend>
                 <p className="mt-0 max-w-2xl text-sm leading-6 text-[#50675e]">Point to the page, describe the friction, and name the improvement you would recognize when it is done.</p>
                 <label className="mt-7 block font-semibold">Website URL<input className={inputClass} required type="url" name="websiteUrl" value={form.websiteUrl} onChange={update} placeholder="https://example.com/page" /></label>
                 <div className="mt-5 grid gap-5 md:grid-cols-2">
@@ -207,12 +207,12 @@ function ContactIntake() {
               </fieldset>
             ) : (
               <fieldset className={`${contextPanelClass} space-y-6`}>
-                <legend className={contextLegendClass}>Automation setup context</legend>
+                <legend className={contextLegendClass}>Managed Automation context</legend>
                 <label className="block font-semibold">Where does work get stuck or repeat?<textarea className={textAreaClass} required name="bottlenecks" value={form.bottlenecks} onChange={update} placeholder="Describe the recurring workflow or bottleneck." /></label>
                 <label className="block font-semibold">Which tools are involved?<textarea className={textAreaClass} required name="tools" value={form.tools} onChange={update} placeholder="CRM, email, website, calendar, or other tools." /></label>
                 <div className="grid gap-6 md:grid-cols-2">
                   <label className="block font-semibold">What result do you want?<textarea className={textAreaClass} required name="outcomes" value={form.outcomes} onChange={update} placeholder="Describe the result that would make the work better." /></label>
-                  <label className="block font-semibold">What needs your approval?<textarea className={textAreaClass} required name="approvals" value={form.approvals} onChange={update} placeholder="Messages, publishing, system changes, spending, or other decisions." /></label>
+                  <label className="block font-semibold">What should always wait for your say?<textarea className={textAreaClass} required name="approvals" value={form.approvals} onChange={update} placeholder="Messages, publishing, account changes, spending, or other decisions." /></label>
                 </div>
               </fieldset>
             )}
@@ -220,7 +220,7 @@ function ContactIntake() {
             {status === 'error' && <p role="alert" className="mt-8 rounded-xl bg-red-50 p-4 text-red-800">We couldn&apos;t submit this request. Please try again.</p>}
             <div className="mt-9 flex flex-col gap-3 border-t border-[#183229]/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-[#50675e]">We review the context before confirming scope.</p>
-              <button type="submit" disabled={status === 'sending'} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] disabled:opacity-60">{status === 'sending' ? 'Sending…' : 'Send request'} <ArrowRight className="h-4 w-4" aria-hidden="true" /></button>
+              <button type="submit" disabled={status === 'sending'} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] disabled:opacity-60">{status === 'sending' ? 'Sending…' : 'Tell us what’s stuck'} <ArrowRight className="h-4 w-4" aria-hidden="true" /></button>
             </div>
           </form>
 

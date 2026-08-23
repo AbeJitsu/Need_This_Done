@@ -21,11 +21,10 @@ import { ContentValue } from '@/components/content/ContentStructure';
 
 // Fallback navigation links (used if layout content not loaded)
 const defaultNavLinks: NavLink[] = [
-  { href: '/services', label: 'Services' },
+  { href: '/services#website-fix', label: 'Website Fix' },
+  { href: '/services#managed-automation', label: 'Managed Automation' },
   { href: '/how-it-works', label: 'How It Works' },
-  { href: '/pricing', label: 'Pricing' },
   { href: '/work', label: 'Work' },
-  { href: '/blog', label: 'Insights' },
 ];
 
 function isCurrentNavigationLink(pathname: string, href: string): boolean {
@@ -164,25 +163,12 @@ export default function Navigation() {
               </ContentValue>
             </Link>
 
-            {/* Mobile Sign In Icon - visible on small screens when not authenticated */}
-            {!isAuthenticated && !isLoading && (
-              <Link
-                href="/login"
-                className="sm:hidden p-2 text-gray-500 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                aria-label="Sign in"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </Link>
-            )}
-
             {/* Dark Mode Toggle - TEMPORARILY HIDDEN until dark mode colors are fixed */}
             {/* <div className="hidden sm:block">
               <DarkModeToggle />
             </div> */}
 
-            {/* Auth Section - Less prominent, for returning customers */}
+            {/* Authenticated team controls are never promoted to public visitors. */}
             <div className="flex-shrink-0">
               {isLoading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
@@ -209,22 +195,10 @@ export default function Navigation() {
                           {user?.email}
                         </p>
                       </div>
-                      <Link
-                        href="/dashboard"
-                        onClick={() => setShowDropdown(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Dashboard
-                      </Link>
-                      <Link
-                        href="/employee"
-                        onClick={() => setShowDropdown(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Employee Workspace
-                      </Link>
                       {isAdmin && (
                         <>
+                          <Link href="/dashboard" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Team Dashboard</Link>
+                          <Link href="/employee" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Managed Work</Link>
                           <Link
                             href="/prospecting"
                             onClick={() => setShowDropdown(false)}
@@ -251,17 +225,7 @@ export default function Navigation() {
                     </div>
                   )}
                 </div>
-              ) : (
-                // Logged Out - Subtle login link for returning customers
-                <Link
-                  href="/login"
-                  className="hidden sm:inline-flex text-xs text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  <ContentValue path="_layout.header.signInText">
-                    <span>{headerContent.signInText}</span>
-                  </ContentValue>
-                </Link>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -314,38 +278,16 @@ export default function Navigation() {
               <DarkModeToggle />
             </div> */}
 
-            {/* Auth options for mobile */}
-            {!isAuthenticated ? (
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm text-gray-500 hover:text-gray-700"
-              >
-                <ContentValue path="_layout.header.signInText">
-                  <span>{headerContent.signInText}</span>
-                </ContentValue>
-              </Link>
-            ) : (
+            {/* Authenticated team controls for mobile. */}
+            {isAuthenticated && (
               <div className="pt-2 mt-2 border-t border-gray-200">
                 <div className="px-3 py-2 text-xs text-gray-500">
                   Signed in as {user?.email}
                 </div>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={"block px-3 py-2 text-sm text-gray-600 hover:text-gray-900"}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/employee"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900"
-                >
-                  Employee Workspace
-                </Link>
                 {isAdmin && (
                   <>
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Team Dashboard</Link>
+                    <Link href="/employee" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Managed Work</Link>
                     <Link href="/prospecting" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Prospecting & Outreach</Link>
                     <Link href="/admin/users" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Manage Users</Link>
                   </>

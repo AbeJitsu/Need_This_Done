@@ -10,17 +10,17 @@ import AnalyzerForm from '@/components/site-analyzer/AnalyzerForm';
 export const metadata: Metadata = {
   title: 'Free Website Audit - NeedThisDone',
   description:
-    'Get an evidence-based website audit with SEO, accessibility, and performance signals, then decide whether a focused $500 targeted fix fits.',
+    'Get an evidence-based website audit with SEO, accessibility, and performance signals, then decide whether a $500 Website Fix fits.',
   alternates: { canonical: '/site-analyzer' },
   openGraph: {
     title: 'Free Website Audit - NeedThisDone',
-    description: 'Review SEO, accessibility, and performance signals before choosing a contained targeted fix.',
+    description: 'Review SEO, accessibility, and performance signals before choosing one contained Website Fix.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Free Website Audit - NeedThisDone',
-    description: 'Review SEO, accessibility, and performance signals before choosing a contained targeted fix.',
+    description: 'Review SEO, accessibility, and performance signals before choosing one contained Website Fix.',
   },
 };
 
@@ -51,7 +51,7 @@ export default function SiteAnalyzerPage() {
 
           <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mb-12">
             Get a free evidence-based review of your website&apos;s SEO, accessibility, and
-            performance. Use the report to decide whether one contained $500 targeted fix is the right next step.
+            performance. Use the report to decide whether one contained $500 Website Fix is the right next step.
           </p>
 
           {/* Form */}

@@ -121,12 +121,12 @@ const nextConfig = {
       // Legacy routes
       {
         source: '/build',
-        destination: '/contact?offer=website-improvement',
+        destination: '/contact?offer=website-fix',
         permanent: true,
       },
       {
         source: '/build/success',
-        destination: '/contact?offer=website-improvement',
+        destination: '/contact?offer=website-fix',
         permanent: true,
       },
       {

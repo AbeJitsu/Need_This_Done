@@ -22,6 +22,33 @@ activation candidate is exact `google/gemma-4-26b-a4b-it:free`. Earlier model
 and catalog records below are historical evidence, not active configuration or
 an activation claim.
 
+**Simplified public journey (2026-08-23):** The public site now consistently
+offers **Website Fix** and **Managed Automation**, leads with “Fix the work
+that’s slowing you down,” and uses the canonical Website Fix, Managed
+Automation, and general-intake calls to action. Old offer query values and
+section anchors remain accepted as compatibility inputs, while canonical links
+emit `website-fix` and `managed-automation`. Public navigation no longer
+promotes sign-in; `/login` remains directly reachable and is explicitly a
+private team route. Work is labeled as process examples rather than paid-client
+proof. The prior public client-access control was removed from the project
+modal; historical database relationships remain preserved by migration `105`.
+
+The public pages share three semantic, code-native visuals for offer
+comparison, the three-step delivery path, and human control. The homepage also
+uses the decorative, generated, repository-owned responsive WebP
+`app/public/needthisdone-work-to-outcome.webp`; its adjacent copy carries the
+meaning and its alternate text is intentionally empty. Validation passed:
+249/249 unit tests, 50/50 accessibility checks, lint with zero warnings,
+TypeScript, the production build, and the public production-server browser
+suite with 48 passes and 2 intentional project skips. The browser suite covers
+phone, tablet, and desktop overflow, headings, keyboard navigation,
+reduced-motion preference, canonical offer selection, legacy redirects, and
+private-route denial. Palette pairs used by the new public system meet the
+4.5:1 normal-text threshold in the unit contract. No database, hosted state,
+credential, provider, deployment, payment, external message, or Mac worker was
+changed. Rollback is an application-only revert of the public-journey commit;
+keep migration `105` and all historical records intact.
+
 **Release-control definitions:**
 
 - **Pre-key local gate** proves the checked-out code, disposable local database,

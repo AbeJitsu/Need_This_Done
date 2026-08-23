@@ -37,8 +37,8 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   project: {
     name: 'NeedThisDone',
-    tagline: 'Website improvements and a managed AI operator.',
-    description: 'A focused $500 website improvement or a proposal-based managed AI operator pilot, both run with clear human accountability.',
+    tagline: 'Website fixes and managed automation.',
+    description: 'A focused $500 Website Fix or a proposal-based Managed Automation pilot, both run with clear human accountability.',
     url: 'https://needthisdone.com',
   },
 
@@ -48,17 +48,17 @@ const siteConfig: SiteConfig = {
   // Core service offerings - colors match page-config.ts: Website=green, Automation=blue, AI=purple
   services: [
     {
-      title: 'Website Improvement',
+      title: 'Website Fix',
       tagline: '$500 audit + one contained fix',
       description: 'A focused review of one website path, followed by one agreed page-, component-, accessibility-, SEO-, performance-, or conversion-level improvement.',
       details: 'Audit, Contained Fix, Before/After Handoff, Manual 50/50 Invoice',
       color: 'green',
     },
     {
-      title: 'Managed AI Operator',
-      tagline: 'A private 30-day supervised pilot',
-      description: 'Abe and Andrea operate a bounded role privately, bring decisions for human approval, and send weekly client briefs.',
-      details: 'Operating Brief, Approval Boundaries, Weekly Briefs, Recorded Outcomes',
+      title: 'Managed Automation',
+      tagline: 'A human-run 30-day pilot',
+      description: 'Abe and Andrea run one repeated task privately, bring decisions for human review, and send weekly client briefs.',
+      details: 'Operating Brief, Decision Points, Weekly Briefs, Recorded Outcomes',
       color: 'blue',
     },
   ],
@@ -68,7 +68,7 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   metadata: {
     siteName: 'NeedThisDone',
-    siteDescription: 'Focused website improvements and human-led managed AI operator pilots for busy owners and managers.',
+    siteDescription: 'Focused website fixes and human-run managed automation pilots for busy owners and managers.',
     author: 'NeedThisDone',
   },
 };

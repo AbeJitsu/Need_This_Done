@@ -105,7 +105,7 @@ const schemas = {
       '@type': 'Country',
       name: 'United States',
     },
-    serviceType: ['Targeted Fix', 'Automation System Setup'],
+    serviceType: ['Website Fix', 'Managed Automation'],
   },
 
   FAQPage: {
@@ -114,7 +114,7 @@ const schemas = {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What is the targeted fix?',
+        name: 'What is Website Fix?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'It is a $500 evidence-backed website review plus one mutually agreed contained fix, such as a page, component, accessibility, SEO, performance, or conversion correction.',
@@ -125,20 +125,20 @@ const schemas = {
         name: 'How does website payment work?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'After the contained scope is confirmed, the targeted fix uses manual invoices: $250 to begin and $250 after the agreed fix is delivered.',
+          text: 'After the contained scope is confirmed, Website Fix uses manual invoices: $250 to begin and $250 after the agreed fix is delivered.',
         },
       },
       {
         '@type': 'Question',
-        name: 'What is automation system setup?',
+        name: 'What is Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It is a proposal-based engagement to map recurring work, connect approved tools and multiple LLMs or agents, and provide a browser workspace for runs, evidence, costs, artifacts, and approvals.',
+          text: 'It is a proposal-based, human-run 30-day pilot for one repeated task, with a short weekly brief and a clear outcome record.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Can the automation system take external actions on its own?',
+        name: 'Can Managed Automation take important actions on its own?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'No. External messages, publishing, system changes, and spending require explicit human approval.',
@@ -237,7 +237,7 @@ export function AllServicesJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Professional Services',
-    description: 'A $500 targeted fix or a proposal-based automation system setup.',
+    description: 'A $500 Website Fix or a proposal-based Managed Automation pilot.',
     itemListElement: seoConfig.services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,

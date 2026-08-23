@@ -4,25 +4,22 @@ import WorkPageClient from '@/components/work/WorkPageClient';
 // ============================================================================
 // Work Page - /work
 // ============================================================================
-// Portfolio showcase following the About page's dark editorial pattern.
-// Static content with ISR for performance. No CMS dependency.
+// Honest process examples. Paid outcomes are added only after delivery proof.
 
 export const metadata: Metadata = {
   title: 'Work | NeedThisDone',
   description:
-    'Evidence of clear scope, coordinated systems, and reviewable delivery.',
+    'Process examples for a contained Website Fix and a human-run Managed Automation pilot.',
   alternates: { canonical: '/work' },
   openGraph: {
     title: 'Work | NeedThisDone',
-    description:
-    'Evidence of durable workflows, browser-based coordination, and reviewable outcomes.',
+    description: 'Process examples that show clear scope, human review, and a useful handoff.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Work | NeedThisDone',
-    description:
-    'Evidence of durable workflows, browser-based coordination, and reviewable outcomes.',
+    description: 'Process examples that show clear scope, human review, and a useful handoff.',
   },
 };
 

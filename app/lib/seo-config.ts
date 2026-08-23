@@ -11,7 +11,7 @@ export const seoConfig = {
   // Site identity
   siteName: 'NeedThisDone',
   description:
-    'Fix one website problem for $500, or set up a browser-based automation system for recurring work.',
+    'Fix one website problem for $500, or discuss a human-run 30-day pilot for one repeated task.',
 
   // Business information for structured data
   business: {
@@ -36,41 +36,28 @@ export const seoConfig = {
 
   // SEO keywords
   keywords: [
-    // Core skills (long-tail)
-    'full stack developer Orlando',
-    'React Next.js developer',
-    'TypeScript developer for hire',
-    'AI RAG developer',
-    'Python automation specialist',
-    // Differentiators
-    'veteran developer',
-    'Claude Code developer',
-    'e-commerce developer Next.js',
-    'Supabase developer',
-    // Services
-    'web development Orlando Florida',
-    'custom website development',
-    'workflow automation',
-    'AI chatbot development',
-    'data automation Python',
-    // Business terms
-    'freelance full stack developer',
-    'technical consulting',
-    'remote developer',
+    'website fix',
+    'website accessibility fix',
+    'website performance fix',
+    'website conversion fix',
+    'managed automation',
+    'repeated task automation',
+    'human run automation pilot',
+    'small business workflow help',
   ],
 
   // Services for structured data
   services: [
     {
-      name: 'Targeted Fix',
-      description: 'A $500 review plus one agreed website fix.',
-      serviceType: 'Targeted Fix',
+      name: 'Website Fix',
+      description: 'A $500 review plus one agreed contained website fix.',
+      serviceType: 'Website Fix',
       price: '$500',
     },
     {
-      name: 'Automation System Setup',
-      description: 'A proposal-based system for recurring work using multiple LLMs and agents.',
-      serviceType: 'Automation System Setup',
+      name: 'Managed Automation',
+      description: 'A human-run 30-day pilot for one repeated task, priced by proposal.',
+      serviceType: 'Managed Automation',
       price: 'Proposal-based',
     },
   ],

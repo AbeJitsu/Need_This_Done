@@ -23,6 +23,42 @@ credentials, bounded live provider canaries, reliability and rollback proof,
 and an explicit go/no-go decision. Passing the local gate cannot be represented
 as either hosted promotion or technical launch.
 
+### Simplified public-journey proof — 2026-08-23
+
+The public route contract now presents only **Website Fix** and **Managed
+Automation**, with the agreed plain descriptions and canonical calls to action.
+Canonical links use `website-fix` and `managed-automation`; the old offer query
+values and section anchors remain accepted without being displayed. Public
+navigation and the footer do not advertise a customer account or portal.
+`/login` remains available as a no-index, private team sign-in. The Work page
+explicitly identifies its material as process examples and not paid client
+outcomes.
+
+The homepage, Services, Pricing, How It Works, and Work pages reuse semantic
+offer-comparison, three-step, and Prepared/Reviewed/Approved flows instead of
+repeating card-wall diagrams. The decorative homepage illustration was created
+with the built-in image generator without a project API key and stored as the
+optimized 1536×1024 WebP
+`app/public/needthisdone-work-to-outcome.webp` (about 50 KB). Its responsive
+Image declaration includes intrinsic dimensions, `sizes`, `preload`, the
+repository-required `unoptimized` behavior, and empty alternate text because
+the adjacent heading and paragraph explain the outcome.
+
+Validation passed on the public-journey change: 249/249 unit tests, 50/50
+accessibility checks, lint with zero warnings, TypeScript, and the production
+build. The local production-server browser matrix passed 48 checks with 2
+intentional project skips across desktop and mobile projects; its explicit
+responsive contract additionally exercises 375, 768, and 1280 pixel widths,
+keyboard-opened mobile navigation, headings, overflow, decorative image
+semantics, absence of public sign-in links, and reduced-motion preference.
+New palette assertions require at least 4.5:1 contrast for normal-text color
+pairs. No hosted write, database migration, secret, provider request,
+deployment, payment, external message, or Mac worker action occurred.
+
+**Rollback:** Revert only the public-journey application/assets/documentation
+commit. Do not roll back migration `105`, delete historical relationships, or
+change hosted state.
+
 ### Local migration-104 proof — 2026-08-22
 
 The reviewed baseline is `b00fcaade7df55c08c0e9b067e526065b99de082`.

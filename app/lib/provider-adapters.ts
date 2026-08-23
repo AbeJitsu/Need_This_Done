@@ -100,7 +100,7 @@ export function invoiceAdapter(): { mode: ProviderMode; adapter: InvoiceAdapter 
   const client = new Stripe(key);
   return { mode: providerMode, adapter: { createStartInvoice: async (input) => {
     const customer = await client.customers.create({ metadata: { needthisdone_project_id: input.projectId } }, { idempotencyKey: `${input.idempotencyKey}:customer` });
-    await client.invoiceItems.create({ customer: customer.id, currency: 'usd', amount: 25000, description: 'Website Improvement start invoice' }, { idempotencyKey: `${input.idempotencyKey}:item` });
+    await client.invoiceItems.create({ customer: customer.id, currency: 'usd', amount: 25000, description: 'Website Fix start invoice' }, { idempotencyKey: `${input.idempotencyKey}:item` });
     const invoice = await client.invoices.create({ customer: customer.id, collection_method: 'send_invoice', days_until_due: 30, metadata: { needthisdone_project_id: input.projectId, idempotency_key: input.idempotencyKey } }, { idempotencyKey: `${input.idempotencyKey}:invoice` });
     return { invoiceId: invoice.id };
   } } };

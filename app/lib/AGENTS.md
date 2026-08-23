@@ -17,7 +17,7 @@ reusable code under `app/lib`; current product claims and release status live in
   or worker credentials to browser code.
 - The site analyzer and all other external fetches must be SSRF-safe, bounded,
   timeout-protected, and explicit about failures.
-- Website Improvement payments remain a manual, separately approved boundary;
+- Website Fix payments remain a manual, separately approved boundary;
   do not restore carts, catalogs, Medusa/Railway, custom checkout, or automatic
   recurring purchase behavior.
 

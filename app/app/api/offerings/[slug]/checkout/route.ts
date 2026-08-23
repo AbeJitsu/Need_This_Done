@@ -28,6 +28,9 @@ export async function GET(
   }
 
   const contactUrl = new URL('/contact', request.url);
-  contactUrl.searchParams.set('offer', offering.slug);
+  contactUrl.searchParams.set(
+    'offer',
+    offering.slug === 'website-improvement' ? 'website-fix' : 'managed-automation',
+  );
   return NextResponse.redirect(contactUrl, 303);
 }

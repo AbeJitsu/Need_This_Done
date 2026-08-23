@@ -51,7 +51,7 @@ describe('retired order commerce surface', () => {
       resolve(APP_ROOT, 'components/pricing/UnifiedPricingPage.tsx'),
       'utf8',
     );
-    expect(pricing).toContain('Proposal-based');
+    expect(pricing).toContain('priced by proposal');
     expect(pricing).not.toContain('/checkout');
     expect(pricing).not.toContain('href="/quote"');
   });

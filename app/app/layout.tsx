@@ -86,7 +86,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   // Basic metadata
   title: {
-    default: `${seoConfig.siteName} - Targeted Fixes & Automation Systems`,
+    default: `${seoConfig.siteName} - Website Fix & Managed Automation`,
     template: `%s | ${seoConfig.siteName}`,
   },
   description: seoConfig.description,
@@ -123,14 +123,14 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: seoConfig.baseUrl,
     siteName: seoConfig.siteName,
-    title: `${seoConfig.siteName} - Targeted Fixes & Automation Systems`,
+    title: `${seoConfig.siteName} - Website Fix & Managed Automation`,
     description: seoConfig.description,
     images: [
       {
         url: `${seoConfig.baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: `${seoConfig.siteName} - Targeted Fixes & Automation Systems`,
+        alt: `${seoConfig.siteName} - Website Fix & Managed Automation`,
       },
     ],
   },
@@ -138,7 +138,7 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: 'summary_large_image',
-    title: `${seoConfig.siteName} - Targeted Fixes & Automation Systems`,
+    title: `${seoConfig.siteName} - Website Fix & Managed Automation`,
     description: 'A $500 targeted website fix, or a browser-based automation system for recurring work.',
     images: [`${seoConfig.baseUrl}/og-image.png`],
   },

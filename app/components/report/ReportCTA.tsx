@@ -1,7 +1,7 @@
 // ============================================================================
 // Report CTA — Tiered call-to-action at bottom of report
 // ============================================================================
-// The audit conversion path always opens the contained targeted-fix intake.
+// The audit conversion path always opens the contained Website Fix intake.
 
 import Link from 'next/link';
 
@@ -17,15 +17,15 @@ export default function ReportCTA() {
           Ready to address one of these findings?
         </h2>
         <p className="text-slate-400 max-w-xl mx-auto mb-8">
-          Turn this report into a focused targeted fix: a $500 evidence review plus one agreed, contained accessibility, SEO, performance, conversion, page, or component fix.
+          Website Fix turns this report into one agreed, contained accessibility, SEO, performance, conversion, page, or component fix for $500.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
-            href="/contact?offer=website-improvement"
+            href="/contact?offer=website-fix"
             className="px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/25 transition-all"
           >
-          Request the $500 targeted fix
+          Start a Website Fix
           </Link>
           <Link
             href="/how-it-works"

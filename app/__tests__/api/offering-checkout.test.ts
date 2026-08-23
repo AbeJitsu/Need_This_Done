@@ -2,22 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { GET } from '@/app/api/offerings/[slug]/checkout/route';
 
 describe('offering checkout handoff', () => {
-  it('keeps the targeted fix on the project-request fallback', async () => {
+  it('keeps Website Fix on the project-request fallback', async () => {
     const response = await GET(new Request('https://needthisdone.com/api/offerings/website-improvement/checkout') as never, {
       params: Promise.resolve({ slug: 'website-improvement' }),
     });
 
     expect(response.status).toBe(303);
-    expect(response.headers.get('location')).toBe('https://needthisdone.com/contact?offer=website-improvement');
+    expect(response.headers.get('location')).toBe('https://needthisdone.com/contact?offer=website-fix');
   });
 
-  it('keeps automation setup on the project-request fallback', async () => {
+  it('keeps Managed Automation on the project-request fallback', async () => {
     const response = await GET(new Request('https://needthisdone.com/api/offerings/ai-operator/checkout') as never, {
       params: Promise.resolve({ slug: 'ai-operator' }),
     });
 
     expect(response.status).toBe(303);
-    expect(response.headers.get('location')).toBe('https://needthisdone.com/contact?offer=ai-operator');
+    expect(response.headers.get('location')).toBe('https://needthisdone.com/contact?offer=managed-automation');
   });
 
   it('returns not found for a retired package', async () => {

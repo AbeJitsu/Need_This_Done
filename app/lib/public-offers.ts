@@ -6,7 +6,7 @@ export interface PublicOffer {
   id: PublicOfferId;
   name: string;
   serviceName: string;
-  contactHref: `/contact?offer=${PublicOfferId}`;
+  contactHref: '/contact?offer=website-fix' | '/contact?offer=managed-automation';
   summary: string;
   payment: string;
 }
@@ -18,19 +18,19 @@ export interface PublicOffer {
 export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
   'website-improvement': {
     id: 'website-improvement',
-    name: 'Targeted Fix',
-    serviceName: 'Targeted Fix',
-    contactHref: '/contact?offer=website-improvement',
-    summary: 'A $500 review plus one agreed website fix.',
+    name: 'Website Fix',
+    serviceName: 'Website Fix',
+    contactHref: '/contact?offer=website-fix',
+    summary: 'We review one website problem, agree on one contained fix, and deliver it for $500.',
     payment: '50% by manual invoice to begin and 50% after the agreed fix is delivered.',
   },
   'ai-operator': {
     id: 'ai-operator',
-    name: 'Automation System Setup',
-    serviceName: 'Automation System Setup',
-    contactHref: '/contact?offer=ai-operator',
-    summary: 'A proposal-based system for recurring work.',
-    payment: 'We agree on the system, price, and payment terms before work begins.',
+    name: 'Managed Automation',
+    serviceName: 'Managed Automation',
+    contactHref: '/contact?offer=managed-automation',
+    summary: 'A human-run 30-day pilot for one repeated task, priced by proposal.',
+    payment: 'We agree on the task, outcome, price, and payment terms before the pilot begins.',
   },
 };
 
@@ -40,6 +40,8 @@ export function isPublicOfferId(value: string | null | undefined): value is Publ
 
 /** Accept the prior checkout handoff names without making them public offers. */
 export function normalizePublicOfferId(value: string | null | undefined): PublicOfferId | null {
+  if (value === 'website-fix') return 'website-improvement';
+  if (value === 'managed-automation') return 'ai-operator';
   if (isPublicOfferId(value)) return value;
   if (value === 'ai-growth-employee-pilot' || value === 'managed-ai-growth-employee') return 'ai-operator';
   return null;

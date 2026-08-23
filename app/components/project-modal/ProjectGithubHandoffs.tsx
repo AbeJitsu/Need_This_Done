@@ -98,7 +98,7 @@ export default function ProjectGithubHandoffs({ projectId, isAdmin }: ProjectGit
       <div>
         <h3 className={`font-semibold ${headingColors.primary}`}>GitHub Handoffs</h3>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          GitHub controls repository membership. This portal records the handoff link for this project.
+          GitHub controls repository membership. This private record keeps the handoff link with the project.
         </p>
       </div>
 

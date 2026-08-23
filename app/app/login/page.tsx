@@ -6,6 +6,13 @@
 // correctly while still using client-side features like useContext.
 
 import LoginClient from './LoginClient';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Private Team Sign-In | NeedThisDone',
+  description: 'Authorized NeedThisDone team access only.',
+  robots: { index: false, follow: false },
+};
 
 // Force dynamic rendering - prevents static prerendering
 // This must be in a Server Component (no 'use client') to work

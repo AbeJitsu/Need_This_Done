@@ -11,13 +11,12 @@ const repositoryRoot = resolve(appRoot, '..');
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
     expect(DEFAULT_LAYOUT_CONTENT.header.navLinks).toEqual([
-      { href: '/services', label: 'Services' },
+      { href: '/services#website-fix', label: 'Website Fix' },
+      { href: '/services#managed-automation', label: 'Managed Automation' },
       { href: '/how-it-works', label: 'How It Works' },
-      { href: '/pricing', label: 'Pricing' },
       { href: '/work', label: 'Work' },
-      { href: '/blog', label: 'Insights' },
     ]);
-    expect(DEFAULT_LAYOUT_CONTENT.header.ctaButton).toEqual({ text: 'Contact', href: '/contact' });
+    expect(DEFAULT_LAYOUT_CONTENT.header.ctaButton).toEqual({ text: "Tell us what's stuck", href: '/contact' });
   });
 
   it('does not publish retired route entries in the sitemap and keeps private surfaces out of indexing', async () => {
@@ -37,12 +36,12 @@ describe('public route hygiene', () => {
     expect(config).toContain("source: '/guide'");
     expect(config).toContain("destination: '/faq'");
     expect(config).toContain("source: '/build'");
-    expect(config).toContain("destination: '/contact?offer=website-improvement'");
+    expect(config).toContain("destination: '/contact?offer=website-fix'");
 
     for (const page of ['about', 'resume', 'guide']) {
       expect(readFileSync(resolve(appRoot, `app/${page}/page.tsx`), 'utf8')).toContain('permanentRedirect');
     }
-    expect(readFileSync(resolve(appRoot, 'components/report/ReportCTA.tsx'), 'utf8')).toContain('href="/contact?offer=website-improvement"');
+    expect(readFileSync(resolve(appRoot, 'components/report/ReportCTA.tsx'), 'utf8')).toContain('href="/contact?offer=website-fix"');
     const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');
     expect(modelEvaluationMigration).toContain('model_evaluation_records');
     expect(modelEvaluationMigration).not.toContain('daily_model_cap');

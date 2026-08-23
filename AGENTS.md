@@ -19,8 +19,8 @@ status, command inventories, or product prose into this file.
 
 NeedThisDone has two equal, human-led paths:
 
-- Website Improvement: a $500 evidence-based audit and one agreed contained fix.
-- Managed AI Operator: a proposal-based 30-day pilot privately operated by Abe
+- Website Fix: a $500 evidence-based audit and one agreed contained fix.
+- Managed Automation: a proposal-based 30-day pilot privately operated by Abe
   and Andrea, with weekly client briefs.
 
 The finish line is one paid, delivered outcome from each offer. The software

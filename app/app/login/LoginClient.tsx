@@ -175,17 +175,17 @@ export default function LoginClient({ googleEnabled }: { googleEnabled: boolean 
             </div>
 
             <h1 className="max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.05]">
-              Continue where the work is <span className="text-emerald-600">clear.</span>
+              Private team <span className="text-emerald-600">sign-in.</span>
             </h1>
             <p className="mt-5 max-w-lg text-lg leading-8 text-gray-600">
-              Sign in to review your work, evidence, approvals, and next step in one focused place.
+              This route is for authorized NeedThisDone operators. Customer updates are delivered through agreed handoffs and weekly briefs.
             </p>
 
             <ul className="mt-8 space-y-4 text-sm text-gray-700" aria-label="Workspace features">
               {[
                 'Review active work and its handoffs',
-                'See evidence alongside each decision',
-                'Keep approvals explicit before action',
+                'See evidence alongside each team decision',
+                'Keep important actions behind a clear human yes',
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
@@ -198,9 +198,9 @@ export default function LoginClient({ googleEnabled }: { googleEnabled: boolean 
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" aria-hidden="true" />
                 <div>
-                  <p className="text-sm font-semibold">A deliberate boundary</p>
+                  <p className="text-sm font-semibold">Private team access</p>
                   <p className="mt-1 text-sm leading-6 text-gray-300">
-                    Your workspace is for review and coordination. People stay in the loop where a decision matters.
+                    A valid sign-in is not enough on its own; the operator role is checked before private work is shown.
                   </p>
                 </div>
               </div>

@@ -2,8 +2,8 @@
 
 NeedThisDone has two equal, human-led service paths:
 
-- **Website Improvement** — a $500 evidence-based audit and one agreed contained fix, invoiced manually as $250 to begin and $250 on delivery.
-- **Managed AI Operator** — a proposal-based 30-day pilot operated privately by Abe and Andrea, with four weekly client briefs.
+- **Website Fix** — a $500 evidence-based audit and one agreed contained fix, invoiced manually as $250 to begin and $250 on delivery.
+- **Managed Automation** — a proposal-based 30-day pilot operated privately by Abe and Andrea, with four weekly client briefs.
 
 The finish line is business proof, not a redesign: one paid, delivered engagement from each offer. The software supports the work but does not replace human scope, judgment, approval, or client communication.
 
@@ -20,7 +20,7 @@ Historical audits, launch notes, `docs/TECH_STACK.md`, and `docs/PROJECT_STATUS.
 
 ## Public experience
 
-The public navigation is **Website Improvement · AI Operator · How It Works · Work · Insights**, followed by **Start a Project**.
+The public navigation is **Website Fix · Managed Automation · How It Works · Work**, followed by **Tell us what's stuck**.
 
 `/site-analyzer → /report/[id] → /contact?offer=website-improvement` is the website-improvement path. The report is a free evidence-based starting point, not a promised score increase or accessibility certification. `/contact` is one adaptive intake that stores the selected offer and its tailored context through the existing project-request flow.
 
@@ -103,6 +103,6 @@ gate does not authorize or prove a hosted migration, deployment, provider call,
 or customer outcome. The old production commit `8b8d429` remains the historical
 application rollback reference.
 
-Hosted changes are separately approved work. Follow the numbered [production launch checklist](docs/launch/LAUNCH_CHECKLIST.md): backup, migration, deployment, secret provisioning, and live provider actions remain separate approvals. Before any hosted migration or deployment: rehearse the backup and pending migrations, inspect the dry run, verify parity, and record the result in [release evidence](docs/RELEASE_EVIDENCE.md). Before any provider is activated: approve the exact sender/model/payment configuration and prove its bounded behavior. Technical launch is items 1–22; the paid Website Improvement and Managed AI Operator proof gates remain separate items 23 and 24.
+Hosted changes are separately approved work. Follow the numbered [production launch checklist](docs/launch/LAUNCH_CHECKLIST.md): backup, migration, deployment, secret provisioning, and live provider actions remain separate approvals. Before any hosted migration or deployment: rehearse the backup and pending migrations, inspect the dry run, verify parity, and record the result in [release evidence](docs/RELEASE_EVIDENCE.md). Before any provider is activated: approve the exact sender/model/payment configuration and prove its bounded behavior. Technical launch is items 1–22; the paid Website Fix and Managed Automation proof gates remain separate items 23 and 24.
 
 The paid website engagement and paid AI-operator pilot are still operational milestones. Record their actual delivery, weekly briefs, and outcomes in release evidence only after they occur.
