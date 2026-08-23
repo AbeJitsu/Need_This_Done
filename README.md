@@ -22,9 +22,9 @@ Historical audits, launch notes, `docs/TECH_STACK.md`, and `docs/PROJECT_STATUS.
 
 The public navigation is **Website Fix · Managed Automation · How It Works · Work**, followed by **Tell us what's stuck**.
 
-`/site-analyzer → /report/[id] → /contact?offer=website-improvement` is the website-improvement path. The report is a free evidence-based starting point, not a promised score increase or accessibility certification. `/contact` is one adaptive intake that stores the selected offer and its tailored context through the existing project-request flow.
+`/site-analyzer → /report/[id] → /contact?offer=website-fix` is the Website Fix path. The report is a free evidence-based starting point, not a promised score increase or accessibility certification. `/contact` is one adaptive intake that stores the selected offer and its tailored context through the existing project-request flow.
 
-`/work` is the compact proof destination. `/about` and `/resume` permanently redirect there; `/guide` redirects to `/faq`; and `/build` redirects to the website-improvement intake. The sitemap contains only maintained public pages and the curated Insights posts.
+`/work` is the compact proof destination. `/about` and `/resume` permanently redirect there; `/guide` redirects to `/faq`; and `/build` redirects to the Website Fix intake. The sitemap contains only maintained public pages and the curated Insights posts.
 
 ## Private operator boundary
 
@@ -91,6 +91,11 @@ npm run test:retained-smoke
 npm run verify:code
 npm run verify:database
 npm run verify:assembly
+```
+
+From the repository root, release-control checks are:
+
+```bash
 npm run verify:pre-key-ci
 npm run rehearse:hosted-like -- --preflight
 ```
@@ -105,11 +110,12 @@ rehearsal remains a separate checksum-gated local command.
 
 ## Hosted and provider release boundary
 
-The current phase is a provider-free pre-key local candidate. Local migrations
-reach `106`; reviewed hosted migration evidence ends at `095`. Passing the local
-gate does not authorize or prove a hosted migration, deployment, provider call,
-or customer outcome. The old production commit `8b8d429` remains the historical
-application rollback reference.
+The provider-free pre-key local gate is **GO** for implementation
+`61eaa205058cc3ab93514a8df183b80eb3f1638b`. Local migrations reach `106`;
+reviewed hosted migration evidence ends at `095`. The local result does not
+authorize or prove a hosted migration, deployment, provider call, or customer
+outcome. The old production commit `8b8d429` remains the historical application
+rollback reference.
 
 Hosted changes are separately approved work. Follow the numbered [production launch checklist](docs/launch/LAUNCH_CHECKLIST.md): backup, migration, deployment, secret provisioning, and live provider actions remain separate approvals. Before any hosted migration or deployment: rehearse the backup and pending migrations, inspect the dry run, verify parity, and record the result in [release evidence](docs/RELEASE_EVIDENCE.md). Before any provider is activated: approve the exact sender/model/payment configuration and prove its bounded behavior. Technical launch is items 1–22; the paid Website Fix and Managed Automation proof gates remain separate items 23 and 24.
 

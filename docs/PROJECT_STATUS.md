@@ -10,10 +10,10 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-23
 
-> Reviewed pre-key documentation baseline: `f0d78216`.
-> The current local candidate includes migration `106`; hosted migration
-> evidence ends at `095`.
-> The production dependency audit is clean. Technical launch is **NOT GO**.
+> Tested pre-key implementation: `61eaa205058cc3ab93514a8df183b80eb3f1638b`.
+> **PRE-KEY LOCAL GATE: GO.** Local migration head is `106`; reviewed hosted
+> migration evidence ends at `095`.
+> **TECHNICAL LAUNCH: NOT GO.** The production dependency audit is clean.
 > No hosted migration, credential provisioning, provider request, deployment,
 > Mac activation, or external action is authorized by this local work.
 
@@ -21,6 +21,42 @@ This is the implementation ledger. Update it in the same commit as every complet
 activation candidate is exact `google/gemma-4-26b-a4b-it:free`. Earlier model
 and catalog records below are historical evidence, not active configuration or
 an activation claim.
+
+**Final pre-key decision (2026-08-23):** Exact implementation
+`61eaa205058cc3ab93514a8df183b80eb3f1638b` passed the complete
+provider-free gate. The fresh production-server assembly reset only disposable
+local Supabase, applied migrations `001–106`, restored sanitized seed data,
+forced all four provider adapters to `disabled`, and passed schema lint,
+316/316 unit tests, 50/50 accessibility checks, lint, TypeScript, the 85-route
+production build, 48 public browser checks with 2 intentional report-fixture
+skips, 4 real-session authorization checks, 1 provider-disabled prospecting
+check, 1 daily-cockpit check, and 2 operator employee-workspace checks. The
+separate database gate passed all 48 checks, the bridge passed 8/8 offline
+tests, the production dependency audit found 0 vulnerabilities, and the
+34-mapping/18-gate migration contract passed.
+
+Release metadata was generated for the exact implementation SHA with local
+head `106`, all four individual results `passed`, and
+`deploymentIdentity: null`. The worktree was clean before this evidence-only
+documentation update. The pre-`073` historical-data rehearsal and hosted-like
+`095 → 106` rehearsal also passed and restored sanitized local state.
+
+The only remaining local warning is the Supabase CLI update notice: proven
+version `2.65.5` reports `2.115.0` available. Scope: local/CI tooling. Owner:
+local tooling owner. Reason: the upgrade requires its own isolated migration
+rehearsal. Review/removal date: 2026-09-15. Chromium required an approved run
+outside the macOS filesystem sandbox to register its Mach port; every browser
+suite then passed, so no browser check remains unavailable.
+
+Remaining work requires separate approval in this order: independent review
+of the capability matrix and evidence; hosted backup and migration dry run;
+forward-only hosted migrations `096–106`; deployment; secret/API-key
+configuration; individually approved provider canaries and evidence updates;
+then paid-delivery proof for both offers. Mac worker installation and launchd
+activation remain deferred with no scheduled date. Rollback for the local
+candidate is application/code reversion plus a disposable local reset. Hosted
+history and protected backups must remain intact; any hosted correction is a
+reviewed forward migration.
 
 **Simplified public journey (2026-08-23):** The public site now consistently
 offers **Website Fix** and **Managed Automation**, leads with “Fix the work
@@ -466,7 +502,9 @@ Any later hosted work still follows [launch checklist](launch/LAUNCH_CHECKLIST.m
 items 1–22 with backup, dry run, forward migration, deployment, credentials,
 provider canaries, reliability, and rollback treated as separate approvals.
 
-Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
+Technical launch and paid business proof are separate. Checklist items 23 and
+24 remain incomplete until one paid Website Fix and one paid Managed Automation
+pilot with four human-led weekly briefs are actually delivered.
 
 ## Current public-site progression slice — 2026-08-09
 

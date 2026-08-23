@@ -4,9 +4,10 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-23
 
-> Reviewed pre-key documentation baseline: `f0d78216`.
-> The current local candidate includes migration `106`; reviewed hosted migration evidence ends
-> at `095`. The production dependency audit is clean. No hosted migration,
+> Tested pre-key implementation: `61eaa205058cc3ab93514a8df183b80eb3f1638b`.
+> **PRE-KEY LOCAL GATE: GO.** Local migration head is `106`; reviewed hosted
+> migration evidence ends at `095`. The production dependency audit is clean.
+> **TECHNICAL LAUNCH: NOT GO.** No hosted migration,
 > deployment, credential change, provider request, Mac activation, or external
 > action occurred. Technical launch is **NOT GO**.
 
@@ -22,6 +23,56 @@ hosted verification sequence. **Technical launch** additionally requires
 credentials, bounded live provider canaries, reliability and rollback proof,
 and an explicit go/no-go decision. Passing the local gate cannot be represented
 as either hosted promotion or technical launch.
+
+### Final pre-key local gate — GO — 2026-08-23
+
+Exact implementation `61eaa205058cc3ab93514a8df183b80eb3f1638b`
+passed the complete provider-free gate. The fresh production-server assembly
+reset only disposable local Supabase, applied migrations `001–106`, restored
+the sanitized seed, forced transactional Resend, prospecting Resend, Calendar,
+and Stripe invoice adapters to `disabled`, and passed:
+
+- schema lint and all 48 database/schema/RLS/provider-workflow checks;
+- lint, TypeScript, 316/316 unit tests, 50/50 accessibility checks, and the
+  85-route production build;
+- 48 public browser checks with 2 intentional report-fixture skips, 4
+  real-session authorization checks, 1 provider-disabled prospecting check, 1
+  daily-cockpit check, and 2 operator employee-workspace checks;
+- the 0-vulnerability production dependency audit, 8/8 offline bridge tests,
+  and the 34-mapping/18-gate migration and environment contract.
+
+The earlier checksum-gated pre-`073` historical-data rehearsal and the
+hosted-like `095 → 106` rehearsal both passed all 48 database checks and
+automatically restored sanitized local state. Release metadata for the exact
+implementation SHA records local head `106`, each of the four CI results as
+`passed`, and exact `deploymentIdentity: null`. The worktree was clean before
+this evidence-only documentation update.
+
+The only warning is the Supabase CLI update notice. Scope: local/CI tooling.
+Owner: local tooling owner. Reason: proven version `2.65.5` reports `2.115.0`
+available, and the upgrade needs its own isolated migration rehearsal.
+Review/removal date: 2026-09-15. Chromium needed an approved run outside the
+macOS filesystem sandbox to register its Mach port; all browser suites passed
+there, so no required check remains warning-only or unavailable.
+
+The pre-key result is not hosted or customer proof. The remaining sequence is:
+
+1. Independent review of the capability matrix and release evidence.
+2. Hosted backup and migration dry run.
+3. Forward-only hosted migration application for `096–106`.
+4. Deployment.
+5. Secret and API-key configuration.
+6. Individually approved provider canaries and evidence updates.
+7. Paid-delivery proof for Website Fix and Managed Automation.
+
+Mac worker installation and launchd activation remain deferred with no
+scheduled date. Technical launch remains **NOT GO** until the applicable
+hosted, credential, canary, reliability, and rollback controls pass.
+
+**Rollback:** Revert the local application/tooling commits as a reviewed unit
+and reset only disposable local Supabase. Preserve hosted history, provider
+operation evidence, and protected backups. Any hosted database correction must
+be a separately reviewed forward migration.
 
 ### Complete local-candidate CI and rehearsal proof — 2026-08-23
 
@@ -640,7 +691,9 @@ This historical section records the paid-proof position at that point. The curre
 | A model routing default is measured and safe. | Sanitized fixed-task records for the private primary and comparison model IDs; quality, tool use, latency, provider-reported cost, failures, and repair rate recorded in Supabase. | The worker is fail-closed at `evaluation-required` until the explicit primary pin command runs. Local migrations `081` and `084` plus their unit/RLS gates pass; comparison evidence is durable and cannot change the primary route. No provider has been called and no candidate has been selected. | Local implementation proven; routing selection not claimable. |
 | The model-evaluation migration is safe for hosted use. | Backup rehearsal, local reset/lint/RLS gate, hosted dry run, and separate explicit approval. | `081_bound_model_evaluation_budget.sql` records evaluation observations without a local model-spend ceiling and passed the local lint/RLS/assembly gate. | Hosted review, dry run, and approval required. |
 
-The current paid-proof finish line remains two real outcomes: one paid, delivered Website Improvement and one paid AI-operator pilot with four weekly human-led briefs. Do not mark either complete from code or local test evidence.
+The current paid-proof finish line remains two real outcomes: one paid,
+delivered Website Fix and one paid Managed Automation pilot with four weekly
+human-led briefs. Do not mark either complete from code or local test evidence.
 
 Latest current-slice verification (2026-08-08): `npm run verify:assembly` passed with local Supabase after applying migration `084`. It ran lint, TypeScript, 199 required unit tests with one existing isolated skip, 50 accessibility checks, a production build, 7 schema-manifest checks, 14 security checks, 10 AI-employee RLS checks, 1 consultation integration check, 23 public browser checks with one intentional desktop-nav/mobile skip, 4 authenticated lifecycle checks, 1 prospecting approval/suppression check, 1 daily-cockpit check, and 2 employee-workspace checks. Optional external-provider credentials were absent; no hosted state, provider, deployment, payment, or client data changed.
 

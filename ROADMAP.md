@@ -11,14 +11,15 @@ Prove the two managed offers with real paid delivery while preserving the existi
 
 Neither offer is a redesign, integration, multi-page build, client dashboard, autonomous agent, or automatic recurring purchase.
 
-## Current pre-key critical path
+## Current promotion critical path
 
-Finish a provider-free local candidate before any new cloud action. Local
-migrations currently reach `106`; reviewed hosted migration evidence ends at
-`095`. The local gate covers code, disposable local database behavior,
-deterministic provider fakes, and the offline bridge. It cannot be represented
-as deployment or provider proof. After the local gate and an independent
-review, execute the numbered [production launch checklist](docs/launch/LAUNCH_CHECKLIST.md)
+The provider-free local gate is **GO** for tested implementation
+`61eaa205058cc3ab93514a8df183b80eb3f1638b`. Local migrations reach `106`;
+reviewed hosted migration evidence ends at `095`. This proves code, disposable
+local database behavior, deterministic provider fakes, provider-disabled
+assembly, and the offline bridge. It is not deployment or provider proof. The
+next action is independent review, followed by the numbered
+[production launch checklist](docs/launch/LAUNCH_CHECKLIST.md)
 in order, with backup, dry run, migration application, deployment, secret
 provisioning, and each live provider action as separate approvals.
 
@@ -42,9 +43,12 @@ The live worker defaults to `evaluation-required`. The test set is deliberately 
 2. Draft an approved-boundary outreach message.
 3. Summarize sanitized activity notes into a client-ready weekly brief without inventing outcomes.
 
-The record for every task includes quality score, tool-use score, latency, provider-reported cost, failure, and repair-needed flag. The shared threshold is quality ≥ 0.80, tool use ≥ 0.90, failure rate ≤ 0.10, and repair rate ≤ 0.20. OpenRouter account and key limits govern model spend. All three catalog-resolved free candidates must complete the set before selection; if none clears the threshold, the route stays `evaluation-required`. There is no hardcoded model fallback.
+The record for every task includes quality score, tool-use score, latency, provider-reported cost, failure, and repair-needed flag. The shared threshold is quality ≥ 0.80, tool use ≥ 0.90, failure rate ≤ 0.10, and repair rate ≤ 0.20. OpenRouter account and key limits govern model spend. The exact Gemma candidate must complete the fixed set before any selection; if it does not clear the threshold, the route stays `evaluation-required`. There is no hardcoded model fallback.
 
-Catalog availability changes, so the two non-Poolside free candidates must be resolved and pinned from the then-current catalog before results are recorded. The evaluation-record API and applied migrations store observations in Supabase; the API records evidence but does not itself make provider calls.
+Catalog availability changes, so the exact Gemma candidate must be verified from
+the then-current catalog before any separately approved comparison is recorded.
+The evaluation-record API and applied migrations store observations in
+Supabase; the API records evidence but does not itself make provider calls.
 
 Step 10A evidence is partial rather than a model-selection result: the hosted
 profile remains `evaluation-required`, and provider-policy changes or repeat
@@ -70,13 +74,13 @@ spend, or external-recipient action.
 | Public surface | Decision |
 | --- | --- |
 | `/`, `/services`, `/pricing` | Present the two offers as equal paths. |
-| `/contact` | Adaptive intake for `website-improvement` or `ai-operator`, persisted through the existing project request. |
+| `/contact` | Adaptive intake for canonical `website-fix` or `managed-automation`; legacy values normalize at the boundary. |
 | `/site-analyzer → /report/[id]` | Preserved as the Website Fix conversion path; CTA preselects the website offer. |
 | `/how-it-works` | Shared delivery process for both offers. |
 | `/work` | Compact proof including accurate founder/background material formerly split across About and Resume. |
 | `/about`, `/resume` | Permanent redirect to `/work`. |
 | `/guide` | Permanent redirect to `/faq`; support material remains in maintained FAQ/process pages. |
-| `/build` | Redirect to `/contact?offer=website-improvement`; no sitemap entry. |
+| `/build` | Redirect to `/contact?offer=website-fix`; no sitemap entry. |
 | `/dashboard`, `/employee`, `/prospecting`, `/admin/*` | Admin/operator only; unauthenticated access is denied and ordinary authenticated access receives no private data. |
 | `/api/projects/mine`, `/api/projects/[id]/access` | Retired compatibility boundaries; historical links and memberships remain stored. |
 
