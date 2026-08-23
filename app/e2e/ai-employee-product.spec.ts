@@ -71,11 +71,11 @@ test('contact keeps both context headings inside their fieldset panels', async (
   }
 });
 
-test('how it works makes the process and human control visible', async ({ page }) => {
+test('how it works keeps the process and better result visible', async ({ page }) => {
   await page.goto('/how-it-works');
   await expect(page.getByRole('heading', { name: /start with what should be different/i })).toBeVisible();
   await expect(page.getByRole('heading', { name: /a short path from stuck to done/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /your say stays in the work/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /keep the better state in view/i })).toBeVisible();
 });
 
 test('faq answers questions without overlapping its summary and list', async ({ page }) => {
@@ -108,9 +108,10 @@ test('desktop public navigation follows the public page progression', async ({ p
   test.skip(testInfo.project.name !== 'public', 'Desktop navigation is intentionally collapsed on mobile.');
   await page.goto('/');
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
-  for (const label of ['Website Fix', 'Managed Automation', 'How It Works', 'Work', "Tell us what's stuck"]) {
+  for (const label of ['Website Fix', 'Managed Automation', 'How It Works', 'How We Work']) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
+  await expect(page.getByRole('link', { name: 'Choose a starting point', exact: true })).toBeVisible();
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });
 
@@ -128,7 +129,7 @@ test('the simplified journey works by keyboard at phone, tablet, and desktop wid
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fix the work that’s slowing you down.');
     await expect(page.locator('main dl')).toHaveCount(2);
     await expect(page.locator('main ol')).toHaveCount(2);
-    await expect(page.locator('img[alt=""]')).toHaveCount(1);
+    await expect(page.locator('img[alt=""]')).toHaveCount(0);
     await expect(page.locator('a[href="/login"]')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)).toBe(false);
 

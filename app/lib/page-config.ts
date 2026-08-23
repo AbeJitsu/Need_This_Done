@@ -509,9 +509,9 @@ export const PAGE_CONFIGS = {
           },
           {
             title: 'Managed Automation',
-            tagline: 'Run one repeated task for 30 days',
-            description: 'A human-run pilot for one repeated task, priced by proposal.',
-            details: 'One task, weekly briefs, a clear outcome',
+            tagline: 'Improve one repeated problem at work',
+            description: 'A proposal-based way to move one better result forward.',
+            details: 'One repeated problem, one better result',
             color: 'blue',
             linkText: 'Learn more →',
             modal: {
@@ -532,22 +532,21 @@ export const PAGE_CONFIGS = {
             },
           },
           {
-            title: 'Human-led work',
-            tagline: 'Keep control of important actions',
-            description: 'Agents prepare work. A person reviews messages, publishing, changes, and spending.',
-            details: 'Preparation, review, clear decisions',
+            title: 'Focused work',
+            tagline: 'Keep the better result in view',
+            description: 'Start with one repeated problem and agree on what better looks like.',
+            details: 'A clear problem, a clear result',
             color: 'purple',
             linkText: 'Learn more →',
             modal: {
-              headline: 'Automation with a clear boundary.',
-              hook: 'The system prepares work without creating automatic authority.',
-              bulletHeader: 'What AI can do for you:',
+              headline: 'Work with a clear focus.',
+              hook: 'Keep the work centered on one better result.',
+              bulletHeader: 'What to start with:',
               bulletPoints: [
-                'Customer inquiry handling and routing',
-                'Document processing and data extraction',
-                'Content generation and scheduling',
-                'Research and competitive analysis',
-                'A contained plan for your specific task',
+                'One repeated problem',
+                'The work it affects',
+                'The better result you want',
+                'A focused plan for moving it forward',
               ],
               ctas: {
                 primary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
@@ -590,7 +589,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Choose the shape of the fix.',
-        description: 'One visible website problem fits Website Fix. One repeated task fits a 30-day Managed Automation pilot.',
+        description: 'One visible website problem fits Website Fix. One repeated problem at work fits Managed Automation.',
       },
       chooseYourPath: {
         title: 'Choose by what is stuck.',
@@ -607,8 +606,8 @@ export const PAGE_CONFIGS = {
           {
             badge: 'Repeating work',
             title: 'Managed Automation',
-            description: 'A human-run 30-day pilot for one repeated task.',
-            bullets: ['One result stated first', 'One short weekly brief', 'Price agreed before the pilot'],
+            description: 'A proposal-based way to improve one repeated problem at work.',
+            bullets: ['One repeated problem', 'One better result', 'Price agreed in the proposal'],
             button: { text: 'Discuss Managed Automation', variant: 'purple', href: '/contact?offer=managed-automation', size: 'lg' },
             hoverColor: 'purple',
           },
@@ -618,7 +617,7 @@ export const PAGE_CONFIGS = {
       expectations: [
         { title: 'Clear scope', description: 'The work and the boundary are agreed before it starts.' },
         { title: 'Visible progress', description: 'Evidence and handoffs stay attached to the work.' },
-        { title: 'Human review', description: 'External actions wait for an explicit decision.' },
+        { title: 'Clear focus', description: 'The work stays centered on the better result you named.' },
       ],
     } as ServicesPageContent,
   },
@@ -653,7 +652,7 @@ export const PAGE_CONFIGS = {
           name: 'Managed Automation',
           price: 'Proposal-based',
           period: 'written proposal',
-          description: 'Price follows the agreed task, 30-day outcome, and commitment.',
+          description: 'Price follows the repeated problem, better result, and scope in the proposal.',
           features: [
             'Result and scope stated first',
             'Payment terms agreed before setup',
@@ -709,13 +708,13 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Questions, answered.',
-        description: 'Short answers about scope, cost, approval, and what happens next.',
+        description: 'Short answers about scope, cost, and what happens next.',
       },
       items: [
         { question: 'What does Website Fix include?', answer: 'A $500 review and one agreed website fix. Redesigns, integrations, multi-page builds, and ongoing maintenance need a separate scope.', links: [{ text: 'See the exact scope', href: '/services#website-fix' }] },
         { question: 'How does the fixed price get paid?', answer: '$250 by manual invoice to begin and $250 after the agreed fix is delivered.', links: [{ text: 'Review pricing', href: '/pricing#website-fix' }] },
-        { question: 'What does Managed Automation start with?', answer: 'One repeated task and one result for a 30-day human-run pilot.', links: [{ text: 'See the process', href: '/how-it-works' }] },
-        { question: 'What needs a person to approve?', answer: 'External messages, publishing, system changes, and spending stay behind an explicit human review.' },
+        { question: 'What does Managed Automation start with?', answer: 'One repeated problem at work and a shared picture of the better result you want.', links: [{ text: 'See the process', href: '/how-it-works' }] },
+        { question: 'How do I get started?', answer: 'Share the problem and the better result you want. We will help you shape the next useful step.' },
         { question: 'What if the request grows?', answer: 'The agreed boundary stays visible. Work outside it is paused and separately scoped before anyone commits to it.' },
         { question: 'Do I need a technical brief?', answer: 'No. Describe the problem, workflow, and desired result in plain language.' },
         { question: 'Is a site audit a compliance certification?', answer: 'No. It is a technical review, not legal advice or an accessibility certification.', links: [{ text: 'Read the accessibility notes', href: '/ada-compliance' }] },
@@ -737,18 +736,18 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Work backward from the result.',
-        description: 'An outcome-first process with visible work and human approval before external action.',
+        description: 'A simple process that starts with the result you want to improve.',
       },
       trustBadges: [
-        { text: 'Outcome first', description: 'Define the result before tools' },
-        { text: 'Visible work', description: 'Keep evidence with each handoff' },
-        { text: 'Human review', description: 'Approve external action explicitly' },
+        { text: 'Start with the result', description: 'Name what should be better' },
+        { text: 'Keep it clear', description: 'Make the next step easy to see' },
+        { text: 'Stay focused', description: 'Keep the work aimed at the result' },
       ],
       steps: [
         { number: 1, title: 'Name the outcome', description: 'Start with the result that should be different when the work is done.', details: ['What is stuck now?', 'What would useful improvement look like?', 'What is outside the request?'], color: 'green' },
-        { number: 2, title: 'Map the work', description: 'Trace the inputs, tools, evidence, and handoffs around that result.', details: ['Identify the source of truth', 'Separate preparation from decision', 'Set the cost and scope boundary'], color: 'blue' },
-        { number: 3, title: 'Do the work', description: 'We prepare the agreed work and keep the evidence attached.', details: ['Keep sources with research', 'Keep versions with drafts', 'Keep blocked work visible'], color: 'purple' },
-        { number: 4, title: 'Review and hand off', description: 'A person reviews the evidence, approves the next external action, and records what happened.', details: ['See what is ready and what it cost', 'Approve, revise, defer, or stop', 'Carry the outcome into the next decision'], color: 'gold' },
+        { number: 2, title: 'Understand the work', description: 'Look at the people, tools, and steps around that result.', details: ['See where work gets stuck', 'Keep the scope clear', 'Set the price and scope'], color: 'blue' },
+        { number: 3, title: 'Move it forward', description: 'Focus the agreed work on the better result.', details: ['Keep useful details together', 'Make the next step clear', 'Show what is still blocked'], color: 'purple' },
+        { number: 4, title: 'Share what changed', description: 'See what moved forward and decide the next useful step.', details: ['See what is ready', 'See what changed', 'Carry the result into the next step'], color: 'gold' },
       ],
       timeline: {
         title: 'Review boundary',

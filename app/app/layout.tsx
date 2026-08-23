@@ -122,7 +122,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `${seoConfig.siteName} - Website Fix & Managed Automation`,
-    description: 'A $500 Website Fix or a proposal-based, human-led 30-day Managed Automation pilot.',
+    description: 'A $500 Website Fix or a proposal-based way to improve one repeated problem at work.',
     images: [`${seoConfig.baseUrl}/og-image.png`],
   },
 

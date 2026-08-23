@@ -19,13 +19,13 @@ export const metadata = {
   alternates: { canonical: '/faq' },
   openGraph: {
     title: 'FAQ - NeedThisDone',
-    description: 'Common questions about scope, payment, approval, and what happens next.',
+    description: 'Common questions about scope, payment, and what happens next.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'FAQ - NeedThisDone',
-    description: 'Common questions about scope, payment, approval, and what happens next.',
+    description: 'Common questions about scope, payment, and what happens next.',
   },
 };
 

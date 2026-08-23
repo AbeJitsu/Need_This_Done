@@ -10,7 +10,7 @@ export default function UnifiedPricingPage() {
         <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Pricing</p>
           <h1 className="mt-5 font-playfair text-5xl font-black leading-tight md:text-7xl">Know the commitment before you start.</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#50675e]">Website Fix is $500. Managed Automation is priced by proposal for one 30-day pilot.</p>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#50675e]">Website Fix is $500. Managed Automation is priced by proposal for one repeated problem at work.</p>
         </div>
       </section>
 
@@ -33,9 +33,9 @@ export default function UnifiedPricingPage() {
           </section>
           <section aria-labelledby="managed-automation-payment" className="border-t border-[#183229]/10 pt-10 md:border-l md:border-t-0 md:pl-10 md:pt-0">
             <h2 id="managed-automation-payment" className="font-playfair text-3xl font-black">Managed Automation proposal</h2>
-            <p className="mt-4 leading-7 text-[#50675e]">The proposal states the repeated task, 30-day finish line, weekly brief, price, and payment terms.</p>
+            <p className="mt-4 leading-7 text-[#50675e]">The proposal states the repeated problem, the better result you want, how you will recognize progress, price, and payment terms.</p>
             <ul className="mt-6 space-y-3 text-sm leading-6 text-[#40564e]">
-              {['One repeated task', 'One 30-day pilot', 'No automatic renewal'].map((item) => <li key={item} className="flex gap-3"><Check className="mt-0.5 h-5 w-5 shrink-0 text-[#126b4e]" aria-hidden="true" />{item}</li>)}
+              {['One repeated problem', 'One shared picture of a better result', 'A focused proposal'].map((item) => <li key={item} className="flex gap-3"><Check className="mt-0.5 h-5 w-5 shrink-0 text-[#126b4e]" aria-hidden="true" />{item}</li>)}
             </ul>
             <Link href={PUBLIC_OFFERS['ai-operator'].contactHref} className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full border border-[#183229]/20 px-6 py-3 font-bold">Discuss Managed Automation <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
           </section>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { HumanControlFlow, ThreeStepFlow } from '@/components/public/PublicServiceVisuals';
+import { OutcomeFocusFlow, ThreeStepFlow } from '@/components/public/PublicServiceVisuals';
 import { seoConfig } from '@/lib/seo-config';
 
 export const metadata: Metadata = {
@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   alternates: { canonical: '/how-it-works' },
   openGraph: {
     title: 'How It Works | NeedThisDone',
-    description: 'A three-step, human-led path from a stuck task to a clear handoff.',
+    description: 'A three-step path from a stuck task to a clear handoff.',
     url: `${seoConfig.baseUrl}/how-it-works`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How It Works | NeedThisDone',
-    description: 'A three-step, human-led path from a stuck task to a clear handoff.',
+    description: 'A three-step path from a stuck task to a clear handoff.',
   },
 };
 
@@ -39,11 +39,11 @@ export default function HowItWorksPage() {
       <section className="border-y border-[#183229]/10 bg-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.72fr_1.28fr] lg:items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Who decides</p>
-            <h2 className="mt-4 font-playfair text-4xl font-black">Important actions always wait for a person.</h2>
-            <p className="mt-5 leading-7 text-[#50675e]">We can prepare work and recommendations. Messages, publication, account changes, and spending move only after a clear human decision.</p>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Keep the focus clear</p>
+            <h2 className="mt-4 font-playfair text-4xl font-black">Keep the work aimed at what should be better.</h2>
+            <p className="mt-5 leading-7 text-[#50675e]">Start with the problem, name the better result, and keep the next useful step clear.</p>
           </div>
-          <HumanControlFlow />
+          <OutcomeFocusFlow />
         </div>
       </section>
 

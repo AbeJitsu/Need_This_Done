@@ -11,7 +11,7 @@ export const seoConfig = {
   // Site identity
   siteName: 'Need This Done',
   description:
-    'Fix one website problem for $500, or discuss a human-run 30-day pilot for one repeated task.',
+    'Fix one website problem for $500, or discuss a focused way to improve one repeated problem at work.',
 
   // Business information for structured data
   business: {
@@ -23,10 +23,7 @@ export const seoConfig = {
       region: 'FL',
       country: 'US',
     },
-    socialLinks: [
-      'https://github.com/AbeJitsu',
-      'https://linkedin.com/in/weneedthisdone',
-    ],
+    socialLinks: ['https://linkedin.com/in/weneedthisdone'],
     openingHours: {
       days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       opens: '09:00',
@@ -41,8 +38,8 @@ export const seoConfig = {
     'website performance fix',
     'website conversion fix',
     'managed automation',
-    'repeated task automation',
-    'human run automation pilot',
+    'repeated work problem',
+    'better work outcome',
     'small business workflow help',
   ],
 
@@ -56,7 +53,7 @@ export const seoConfig = {
     },
     {
       name: 'Managed Automation',
-      description: 'A human-run 30-day pilot for one repeated task, priced by proposal.',
+      description: 'A proposal-based way to improve one repeated problem at work.',
       serviceType: 'Managed Automation',
       price: 'Proposal-based',
     },

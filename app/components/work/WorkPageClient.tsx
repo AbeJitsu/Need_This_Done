@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { HumanControlFlow } from '@/components/public/PublicServiceVisuals';
+import { OutcomeFocusFlow } from '@/components/public/PublicServiceVisuals';
 import { PUBLIC_OFFERS } from '@/lib/public-offers';
 
 const examples = [
@@ -13,8 +13,8 @@ const examples = [
   },
   {
     offer: 'Managed Automation',
-    stuck: 'One repeated task keeps crossing inboxes, documents, or tools.',
-    outcome: 'A human runs the task for 30 days, shares a short weekly brief, and records what happened.',
+    stuck: 'One repeated problem keeps crossing inboxes, documents, or tools.',
+    outcome: 'A shared picture of the better result keeps the work focused on moving that result forward.',
     href: PUBLIC_OFFERS['ai-operator'].contactHref,
     cta: 'Discuss Managed Automation',
   },
@@ -49,11 +49,11 @@ export default function WorkPageClient() {
       <section className="border-y border-[#183229]/10 bg-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.72fr_1.28fr] lg:items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">A visible decision</p>
-            <h2 className="mt-4 font-playfair text-4xl font-black">The work does not outrun your judgment.</h2>
-            <p className="mt-5 leading-7 text-[#50675e]">Preparation, review, and approval stay distinct so the next move is easy to inspect.</p>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">A clear result</p>
+            <h2 className="mt-4 font-playfair text-4xl font-black">Keep the work aimed at what should be better.</h2>
+            <p className="mt-5 leading-7 text-[#50675e]">A shared picture of the better result keeps the work focused without promising it before the proposal.</p>
           </div>
-          <HumanControlFlow />
+          <OutcomeFocusFlow />
         </div>
       </section>
 

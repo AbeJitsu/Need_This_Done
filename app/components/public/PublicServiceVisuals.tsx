@@ -18,11 +18,11 @@ const comparison = [
     name: 'Managed Automation',
     tone: 'dark',
     rows: [
-      ['Choose this when', 'One repeated task keeps taking time or getting stuck.'],
-      ['You get', 'A human-run 30-day pilot and a short weekly brief.'],
+      ['Choose this when', 'One repeated problem keeps slowing important work.'],
+      ['You get', 'Focused work around a shared picture of a better result.'],
       ['Price', 'Priced by proposal'],
     ],
-    cta: 'Discuss automation',
+    cta: 'Discuss Managed Automation',
     href: PUBLIC_OFFERS['ai-operator'].contactHref,
   },
 ] as const;
@@ -85,21 +85,21 @@ export function ThreeStepFlow() {
   );
 }
 
-const controlSteps = [
-  ['Prepared', 'We prepare the agreed work.'],
-  ['Reviewed', 'A person checks the work and its evidence.'],
-  ['Approved', 'Nothing important moves forward without a clear yes.'],
+const outcomeSteps = [
+  ['Repeated problem', 'Name the work that keeps getting stuck.'],
+  ['Better result', 'Say what should be different when the work improves.'],
+  ['Focused work', 'Keep the work aimed at moving that result forward.'],
 ] as const;
 
-export function HumanControlFlow() {
+export function OutcomeFocusFlow() {
   return (
     <section aria-labelledby="human-control-heading" className="rounded-[2rem] bg-[#18372e] p-7 text-white sm:p-9">
-      <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Human control</p>
-      <h2 id="human-control-heading" className="mt-4 font-playfair text-4xl font-black">Your say stays in the work.</h2>
-      <ol className="mt-8 grid gap-3 sm:grid-cols-2" aria-label="Prepared, reviewed, approved">
-        {controlSteps.map(([title, description], index) => (
-          <li key={title} className={`flex gap-3 rounded-2xl border border-white/15 bg-white/[.06] p-4${index === controlSteps.length - 1 ? ' sm:col-span-2' : ''}`}>
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-300 font-black text-[#18372e]">{index === controlSteps.length - 1 ? <Check className="h-4 w-4" aria-hidden="true" /> : index + 1}</span>
+      <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Outcome focus</p>
+      <h2 id="human-control-heading" className="mt-4 font-playfair text-4xl font-black">Keep the better state in view.</h2>
+      <ol className="mt-8 grid gap-3 sm:grid-cols-2" aria-label="Repeated problem, better result, focused work">
+        {outcomeSteps.map(([title, description], index) => (
+          <li key={title} className={`flex gap-3 rounded-2xl border border-white/15 bg-white/[.06] p-4${index === outcomeSteps.length - 1 ? ' sm:col-span-2' : ''}`}>
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-300 font-black text-[#18372e]">{index === outcomeSteps.length - 1 ? <Check className="h-4 w-4" aria-hidden="true" /> : index + 1}</span>
             <div className="min-w-0"><h3 className="font-black">{title}</h3><p className="mt-1 text-sm leading-6 text-emerald-50/70">{description}</p></div>
           </li>
         ))}

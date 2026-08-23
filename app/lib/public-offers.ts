@@ -29,8 +29,8 @@ export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
     name: 'Managed Automation',
     serviceName: 'Managed Automation',
     contactHref: '/contact?offer=managed-automation',
-    summary: 'A human-run 30-day pilot for one repeated task, priced by proposal.',
-    payment: 'We agree on the task, outcome, price, and payment terms before the pilot begins.',
+    summary: 'A proposal-based way to improve one repeated problem at work.',
+    payment: 'The proposal sets the problem, better result, scope, price, and payment terms.',
   },
 };
 

@@ -10,12 +10,12 @@ import ServicesPageClient from '@/components/services/ServicesPageClient';
 export const metadata: Metadata = {
   title: 'Website Fix & Managed Automation | NeedThisDone',
   description:
-    'Choose a $500 Website Fix or a human-run 30-day Managed Automation pilot for one repeated task.',
+    'Choose a $500 Website Fix or a proposal-based way to improve one repeated problem at work.',
   alternates: { canonical: '/services' },
   openGraph: {
     title: 'Website Fix & Managed Automation | NeedThisDone',
     description:
-      'Two focused, human-led paths with clear scope and a useful handoff.',
+      'Two focused paths with clear scope and a useful handoff.',
     url: `${seoConfig.baseUrl}/services`,
     type: 'website',
   },
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Website Fix & Managed Automation | NeedThisDone',
     description:
-      'Two focused, human-led paths with clear scope and a useful handoff.',
+      'Two focused paths with clear scope and a useful handoff.',
   },
 };
 

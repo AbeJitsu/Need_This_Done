@@ -133,15 +133,15 @@ const schemas = {
         name: 'What is Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It is a proposal-based, human-run 30-day pilot for one repeated task, with a short weekly brief and a clear outcome record.',
+          text: 'It is a proposal-based way to improve one repeated problem at work, centered on a shared picture of a better result.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Can Managed Automation take important actions on its own?',
+        name: 'How do I start Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. External messages, publishing, system changes, and spending require explicit human approval.',
+          text: 'Share the repeated problem at work and the better result you want. The proposal then sets the scope, price, and payment terms.',
         },
       },
       {
@@ -237,7 +237,7 @@ export function AllServicesJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Professional Services',
-    description: 'A $500 Website Fix or a proposal-based Managed Automation pilot.',
+    description: 'A $500 Website Fix or a proposal-based way to improve one repeated problem at work.',
     itemListElement: seoConfig.services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -292,7 +292,7 @@ export function BlogPostingJsonLd({ post }: BlogPostingJsonLdProps) {
     ...(post.updated_at && { dateModified: post.updated_at }),
     author: {
       '@type': 'Person',
-      name: post.author_name || 'Abe Reyes',
+      name: post.author_name || seoConfig.siteName,
       url: `${seoConfig.baseUrl}/work`,
     },
     publisher: {

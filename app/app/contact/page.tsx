@@ -20,7 +20,6 @@ interface ContactFormState {
   websiteGoal: string;
   bottlenecks: string;
   tools: string;
-  approvals: string;
   outcomes: string;
 }
 
@@ -33,7 +32,6 @@ const initialForm: ContactFormState = {
   websiteGoal: '',
   bottlenecks: '',
   tools: '',
-  approvals: '',
   outcomes: '',
 };
 
@@ -83,8 +81,7 @@ function ContactIntake() {
           'Offer: managed-automation',
           `Workflow problem:\n${form.bottlenecks}`,
           `Tools involved:\n${form.tools}`,
-          `Desired result:\n${form.outcomes}`,
-          `Needs your say:\n${form.approvals}`,
+          `Better result:\n${form.outcomes}`,
         ].join('\n\n');
 
     const body = new FormData();
@@ -137,7 +134,7 @@ function ContactIntake() {
               {[
                 ['Context', 'What is happening now?'],
                 ['Result', 'What should be different?'],
-                ['Your say', 'What should always wait for you?'],
+                ['Focus', 'What one better result matters most?'],
               ].map(([title, description]) => (
                 <div key={title} className="rounded-2xl border border-white/10 bg-white/[.08] p-4">
                   <p className="text-sm font-bold text-white">{title}</p>
@@ -216,8 +213,8 @@ function ContactIntake() {
                 <label className="block font-semibold">Where does work get stuck or repeat?<textarea className={textAreaClass} required name="bottlenecks" value={form.bottlenecks} onChange={update} placeholder="Describe the recurring workflow or bottleneck." /></label>
                 <label className="block font-semibold">Which tools are involved?<textarea className={textAreaClass} required name="tools" value={form.tools} onChange={update} placeholder="CRM, email, website, calendar, or other tools." /></label>
                 <div className="grid gap-6 md:grid-cols-2">
-                  <label className="block font-semibold">What result do you want?<textarea className={textAreaClass} required name="outcomes" value={form.outcomes} onChange={update} placeholder="Describe the result that would make the work better." /></label>
-                  <label className="block font-semibold">What should always wait for your say?<textarea className={textAreaClass} required name="approvals" value={form.approvals} onChange={update} placeholder="Messages, publishing, account changes, spending, or other decisions." /></label>
+                  <label className="block font-semibold">What better result do you want?<textarea className={textAreaClass} required name="outcomes" value={form.outcomes} onChange={update} placeholder="Describe what would be better if this work improved." /></label>
+                  <p className="rounded-2xl border border-[#183229]/10 bg-white p-4 text-sm leading-6 text-[#50675e]">Start with one repeated problem and the better result you want. We can shape the details together.</p>
                 </div>
               </fieldset>
             ) : null}

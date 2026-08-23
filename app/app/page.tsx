@@ -16,17 +16,17 @@ export const revalidate = 3600;
 
 export const metadata = {
   title: 'Need This Done | Website Fix & Managed Automation',
-  description: 'Fix one website problem for $500, or discuss a human-run 30-day pilot for one repeated task.',
+  description: 'Fix one website problem for $500, or discuss a focused way to improve one repeated problem at work.',
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Need This Done | Website Fix & Managed Automation',
-    description: 'Two focused paths: one contained website fix or one human-run automation pilot.',
+    description: 'Two focused paths: one contained website fix or one better result from a repeated problem at work.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'Need This Done | Website Fix & Managed Automation',
-    description: 'Two focused paths: one contained website fix or one human-run automation pilot.',
+    description: 'Two focused paths: one contained website fix or one better result from a repeated problem at work.',
   },
 };
 

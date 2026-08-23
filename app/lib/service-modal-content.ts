@@ -29,14 +29,14 @@ export interface ServiceModalContent {
 
 export const virtualAssistantModal: ServiceModalContent = {
   title: 'Managed Automation',
-  headline: 'Make recurring work easier to coordinate.',
-  hook: 'A human-run 30-day pilot handles one repeated task and keeps each decision visible.',
-  bulletHeader: 'What we handle:',
+  headline: 'Make one repeated problem easier to solve.',
+  hook: 'Start with work that keeps getting stuck and focus on a better result.',
+  bulletHeader: 'What we focus on:',
   bulletPoints: [
-    'A defined result and workflow',
-    'One repeated task',
-    'Evidence and decision records',
-    'Weekly briefs for review',
+    'One repeated problem',
+    'A better result to aim for',
+    'A clear picture of success',
+    'Focused work to move it forward',
   ],
   ctas: {
     primary: {
@@ -57,13 +57,13 @@ export const virtualAssistantModal: ServiceModalContent = {
 export const dataDocumentsModal: ServiceModalContent = {
   title: 'Managed Automation',
   headline: 'Stop losing work between tools.',
-  hook: 'We map the repeating workflow before selecting the smallest useful coordination layer.',
-  bulletHeader: 'What we handle:',
+  hook: 'Start with the repeated problem and the better result you want.',
+  bulletHeader: 'What we focus on:',
   bulletPoints: [
-    'Workflow mapping',
-    'Tool and source coordination',
-    'Evidence-backed handoffs',
-    'Clear decision points',
+    'The repeated problem',
+    'The tools involved',
+    'The better result you want',
+    'A focused next step',
   ],
   ctas: {
     primary: {
@@ -221,24 +221,24 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
   },
   'data-documents': {
     title: 'Managed Automation',
-    headline: 'Make recurring work easier to coordinate.',
-    subtitle: 'Map the workflow, connect the pieces, and keep evidence with each handoff.',
+    headline: 'Make one repeated problem easier to solve.',
+    subtitle: 'Start with the work that keeps getting stuck and the better result you want.',
     bulletPoints: [
-      'Workflow mapping',
-      'Tool and source coordination',
-      'Evidence-backed handoffs',
-      'Clear decision points',
+      'One repeated problem',
+      'A better result to aim for',
+      'A clear picture of success',
+      'Focused work to move it forward',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Define the outcome',
-        'Coordinate the work',
-        'Review the evidence',
-        'Improve the next run',
+        'Name the problem',
+        'Describe the better result',
+        'Agree on what success means',
+        'Focus on the next useful step',
       ],
     },
-    reassurance: 'Use the smallest useful system for the work at hand.',
+    reassurance: 'Keep the work focused on one useful result.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
       secondary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
@@ -246,24 +246,24 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
   },
   'virtual-assistant': {
     title: 'Managed Automation',
-    headline: 'Keep recurring work, evidence, and decisions together.',
-    subtitle: 'The team prepares one repeated task while a person reviews every important decision.',
+    headline: 'Keep one repeated problem moving toward a better result.',
+    subtitle: 'Start with the work that is stuck and keep the focus on what should be better.',
     bulletPoints: [
-      'A defined result and workflow',
-      'Coordinated specialists',
-      'Durable evidence and costs',
-      'Human review before external action',
+      'One repeated problem',
+      'A better result to aim for',
+      'A clear picture of success',
+      'Focused work to move it forward',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Research with sources',
-        'Drafts with versions',
-        'Decisions with context',
-        'Outcomes with a record',
+        'Name the problem',
+        'Describe the better result',
+        'Agree on what success means',
+        'Focus on the next useful step',
       ],
     },
-    reassurance: 'Visibility keeps automation useful.',
+    reassurance: 'A clear result keeps the work useful.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
       secondary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },

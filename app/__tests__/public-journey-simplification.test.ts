@@ -11,6 +11,7 @@ const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
 const publicCopySources = [
   'app/page.tsx',
+  'app/managed-automation/page.tsx',
   'app/services/page.tsx',
   'app/pricing/page.tsx',
   'app/how-it-works/page.tsx',
@@ -23,6 +24,9 @@ const publicCopySources = [
   'components/services/ServicesPageClient.tsx',
   'components/pricing/UnifiedPricingPage.tsx',
   'components/work/WorkPageClient.tsx',
+  'components/public/PublicFooter.tsx',
+  'components/public/PublicHeader.tsx',
+  'components/public/PublicServiceVisuals.tsx',
   'components/report/ReportCTA.tsx',
   'lib/page-config.ts',
   'lib/public-offers.ts',
@@ -39,7 +43,7 @@ describe('simplified public journey', () => {
     expect(PUBLIC_OFFERS['ai-operator']).toMatchObject({
       name: 'Managed Automation',
       contactHref: '/contact?offer=managed-automation',
-      summary: 'A human-run 30-day pilot for one repeated task, priced by proposal.',
+      summary: 'A proposal-based way to improve one repeated problem at work.',
     });
     expect(normalizePublicOfferId('website-fix')).toBe('website-improvement');
     expect(normalizePublicOfferId('managed-automation')).toBe('ai-operator');
@@ -74,7 +78,7 @@ describe('simplified public journey', () => {
     const visualsPath = 'components/public/PublicServiceVisuals.tsx';
     expect(existsSync(resolve(appRoot, visualsPath))).toBe(true);
     const visuals = source(visualsPath);
-    for (const component of ['OfferComparison', 'ThreeStepFlow', 'HumanControlFlow']) {
+    for (const component of ['OfferComparison', 'ThreeStepFlow', 'OutcomeFocusFlow']) {
       expect(visuals).toContain(`export function ${component}`);
     }
     expect(visuals).toContain('Choose this when');
@@ -84,15 +88,61 @@ describe('simplified public journey', () => {
     expect(visuals).toContain('Tell us what’s stuck');
     expect(visuals).toContain('Agree on one outcome');
     expect(visuals).toContain('We do the work and hand it off');
-    expect(visuals).toContain('Prepared');
-    expect(visuals).toContain('Reviewed');
-    expect(visuals).toContain('Approved');
+    expect(visuals).toContain('Repeated problem');
+    expect(visuals).toContain('Better result');
+    expect(visuals).toContain('Focused work');
     expect(visuals).toMatch(/<(?:dl|ol)\b/);
   });
 
   it('keeps technical implementation vocabulary out of first-facing public copy', () => {
     expect(publicCopySources).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
     expect(publicCopySources).not.toMatch(/(?:client|customer) portal|approval boundary/i);
+  });
+
+  it('keeps Managed Automation public copy focused on a repeated problem and better result', () => {
+    const managedPage = source('app/managed-automation/page.tsx');
+    expect(managedPage).toContain('Make one repeated problem at work easier to solve.');
+    expect(managedPage).toContain('One repeated problem worth fixing.');
+    expect(managedPage).toContain('A shared picture of the better result and what success means.');
+    expect(managedPage).toContain('Focused work that moves that result forward.');
+    expect(PUBLIC_OFFERS['ai-operator'].payment).toBe('The proposal sets the problem, better result, scope, price, and payment terms.');
+
+    const managedMarketingSources = [
+      'app/managed-automation/page.tsx',
+      'app/page.tsx',
+      'app/services/page.tsx',
+      'app/pricing/page.tsx',
+      'app/work/page.tsx',
+      'app/layout.tsx',
+      'app/contact/page.tsx',
+      'components/home/HomePageClient.tsx',
+      'components/pricing/UnifiedPricingPage.tsx',
+      'components/work/WorkPageClient.tsx',
+      'components/public/PublicFooter.tsx',
+      'components/public/PublicServiceVisuals.tsx',
+      'lib/public-offers.ts',
+      'lib/seo-config.ts',
+      'lib/service-modal-content.ts',
+    ].map(source).join('\n');
+
+    expect(managedMarketingSources).not.toMatch(/\b(?:Abe|Andrea)\b/i);
+    expect(managedMarketingSources).not.toMatch(/human[- ](?:led|run)/i);
+    expect(managedMarketingSources).not.toMatch(/\b30[- ]day\b/i);
+    expect(managedMarketingSources).not.toMatch(/weekly (?:brief|client)/i);
+    expect(managedMarketingSources).not.toMatch(/privately operated|private operation/i);
+    expect(managedMarketingSources).not.toMatch(/\bapproval\b/i);
+
+    const jsonLd = source('components/seo/JsonLd.tsx');
+    expect(jsonLd).toContain('proposal-based way to improve one repeated problem at work');
+    expect(jsonLd).not.toContain('human-run 30-day pilot');
+    expect(jsonLd).not.toContain('short weekly brief');
+  });
+
+  it('gives the desktop public-nav CTA explicit pill padding without changing the mobile CTA', () => {
+    const header = source('components/public/PublicHeader.tsx');
+    expect(header).toContain('hidden items-center rounded-full bg-[#126b4e] px-7 py-3');
+    expect(header).toContain('href="/contact"');
+    expect(header).toContain('mt-2 block rounded-lg bg-[#126b4e] px-3 py-3 text-center');
   });
 
   it('labels Work as examples until paid outcomes exist and keeps old boundaries compatible', () => {
