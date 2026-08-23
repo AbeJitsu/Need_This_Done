@@ -59,26 +59,62 @@ export type CalendarInput = {
   startsAt?: string | null;
   endsAt?: string | null;
   summary?: string | null;
+  cleanupReason?: 'test_or_accidental' | null;
 };
 export interface CalendarAdapter { execute(action: 'create' | 'update' | 'cancel' | 'delete', input: CalendarInput): Promise<{ externalEventId: string }>; }
+
+/** Google Calendar accepts lower-case base32hex IDs. Derive one from the
+ * durable operation key so retries address the same provider event. */
+export function calendarEventId(operationKey: string) {
+  const alphabet = '0123456789abcdefghijklmnopqrstuv';
+  const bytes = createHash('sha256').update(operationKey).digest();
+  let bits = 0;
+  let accumulator = 0;
+  let encoded = '';
+  for (const byte of bytes) {
+    accumulator = (accumulator << 8) | byte;
+    bits += 8;
+    while (bits >= 5) {
+      bits -= 5;
+      encoded += alphabet[(accumulator >>> bits) & 31];
+    }
+  }
+  if (bits > 0) encoded += alphabet[(accumulator << (5 - bits)) & 31];
+  return `ntd${encoded.slice(0, 32)}`;
+}
+
 export function calendarAdapter(): { mode: ProviderMode; adapter: CalendarAdapter | null } {
   const providerMode = mode('CALENDAR_PROVIDER', process.env.GOOGLE_CLIENT_SECRET);
-  if (providerMode === 'fake') return { mode: providerMode, adapter: { execute: async (_action, input) => ({ externalEventId: input.externalEventId || `fake-calendar-${input.idempotencyKey}` }) } };
+  if (providerMode === 'fake') return { mode: providerMode, adapter: { execute: async (action, input) => {
+    if ((action === 'create' || action === 'update') && (!input.startsAt || !input.endsAt || !input.summary)) {
+      throw new Error('Calendar create/update requires start, end, and summary.');
+    }
+    if (action === 'delete' && input.cleanupReason !== 'test_or_accidental') {
+      throw new Error('Calendar delete requires cleanup reason test_or_accidental.');
+    }
+    const externalEventId = action === 'create' ? calendarEventId(input.idempotencyKey) : input.externalEventId;
+    if (!externalEventId) throw new Error(`Calendar ${action} requires the stored project event reference.`);
+    return { externalEventId };
+  } } };
   if (providerMode === 'disabled') return { mode: providerMode, adapter: null };
   return { mode: providerMode, adapter: { execute: async (action, input) => {
     const accessToken = await getValidAccessToken(input.calendarUserId);
-    const eventId = input.externalEventId || `ntd${input.idempotencyKey.replace(/-/g, '')}`;
+    const eventId = action === 'create' ? calendarEventId(input.idempotencyKey) : input.externalEventId;
+    if (!eventId) throw new Error(`Calendar ${action} requires the stored project event reference.`);
     const base = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(input.calendarId)}/events/${encodeURIComponent(eventId)}`;
     const headers = { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' };
     let response: Response;
     if (action === 'delete') {
+      if (input.cleanupReason !== 'test_or_accidental') {
+        throw new Error('Calendar delete requires cleanup reason test_or_accidental.');
+      }
       response = await fetch(`${base}?sendUpdates=none`, { method: 'DELETE', headers });
     } else if (action === 'cancel') {
       response = await fetch(`${base}?sendUpdates=all`, { method: 'PATCH', headers, body: JSON.stringify({ status: 'cancelled' }) });
     } else {
       if (!input.startsAt || !input.endsAt || !input.summary) throw new Error('Calendar create/update requires start, end, and summary.');
-      response = await fetch(action === 'create' ? `${base}?sendUpdates=none` : `${base}?sendUpdates=none`, {
-        method: action === 'create' ? 'PUT' : 'PUT', headers,
+      response = await fetch(`${base}?sendUpdates=${action === 'create' ? 'none' : 'all'}`, {
+        method: 'PUT', headers,
         body: JSON.stringify({ id: eventId, summary: input.summary, start: { dateTime: input.startsAt }, end: { dateTime: input.endsAt } }),
       });
     }

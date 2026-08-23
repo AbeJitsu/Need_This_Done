@@ -209,6 +209,41 @@ Technical launch remains **NOT GO**.
 slice if needed. Preserve outreach messages, operation links, webhook receipts,
 sender events, suppression records, and audit history.
 
+### Durable Calendar operation proof — 2026-08-23
+
+The operator Calendar boundary now creates idempotency keys server-side and
+returns a durable operation ID. Retry input contains only that operation ID;
+the server reloads the immutable operation key and request metadata. Strict
+route validation rejects browser idempotency keys and provider event IDs.
+Encrypted OAuth tokens remain behind the server token service and neither the
+operation response nor the provider input contains a decrypted token.
+
+Create addresses one deterministic Google event ID: `ntd` followed by a
+32-character lower-case base32hex SHA-256 prefix derived from the durable key.
+Update, cancel, and delete use only the latest stored project reference. Cancel
+uses a status update with attendee notifications; delete is notification-free
+and requires the exact cleanup reason `test_or_accidental`. Deterministic fake
+mode uses the same identity and validation semantics without network access.
+
+Disabled mode and provider failures persist a retryable operation and return
+its ID. A provider-returned ID mismatch or provider acceptance/database
+disagreement records `acceptance_unknown`, including the returned reference,
+and cannot be automatically retried. Successful acceptance commits the
+provider operation and Calendar reference through the service-only database
+function.
+
+Focused provider, service, route, replay, cleanup, and capability contracts
+passed 21/21. `verify:code` passed lint, TypeScript, 297 unit tests, 50
+accessibility tests, and the 84-route production build. `verify:database`
+passed schema lint and all 48 behavioral checks through migration `106`.
+Calendar stayed disabled; no OAuth, credential, provider call, hosted state,
+deployment, external action, payment, or Mac worker changed. Technical launch
+remains **NOT GO**.
+
+**Rollback:** Disable the Calendar provider and revert this application slice.
+Preserve durable provider operations, Calendar references, encrypted token
+records, and audit history.
+
 ### Historical local migration-103 proof — 2026-08-19
 
 Committed candidate `5c2b9f9` plus the pending local verification repair was

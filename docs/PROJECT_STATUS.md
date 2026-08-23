@@ -176,6 +176,32 @@ payment, or Mac worker changed. Rollback is an application-only revert while
 preserving outreach messages, provider operations, receipts, suppression, and
 audit history.
 
+**Durable Calendar operations (2026-08-23):** The operator Calendar endpoint
+now creates operation keys only on the server and returns the durable operation
+ID. A retry accepts only that operation ID and reloads the stored key, action,
+project, token reference, schedule fields, and cleanup reason. Browser input
+cannot supply an idempotency key or provider event ID, and OAuth tokens remain
+encrypted and server-only.
+
+Create derives the Google event ID as `ntd` plus a 32-character lower-case
+base32hex SHA-256 prefix of the durable key. Update, cancel, and delete load the
+latest stored project event reference; they cannot target a browser-selected
+event. Cancel marks that event `cancelled` with attendee updates. Delete sends
+no notifications and is allowed only for the explicit cleanup reason
+`test_or_accidental`. Fake mode mirrors the same IDs and validation without
+provider contact.
+
+Provider failure is retryable with the same operation ID. A returned event-ID
+mismatch or provider acceptance followed by database failure records
+`acceptance_unknown` and blocks automatic retry. Focused create, update,
+cancel, delete, replay, disabled-mode, fake-failure, token-isolation, and
+notification contracts passed 21/21. The complete code gate passed lint,
+TypeScript, 297 unit tests, 50 accessibility tests, and the 84-route build; the
+database gate passed all 48 checks through migration `106`. Calendar remained
+disabled. No OAuth, credential, provider request, hosted write, deployment,
+external action, payment, or Mac worker changed. Rollback is application-only;
+preserve operation and event-reference history.
+
 **Historical local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
 the disposable local stack. The expanded schema/RLS/RPC manifest, all retained
 database suites, bridge tests (8/8), code gate (221 unit tests, 50 a11y tests,
