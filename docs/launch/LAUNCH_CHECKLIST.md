@@ -9,6 +9,7 @@ to these item numbers; they do not define a second activation order.
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current reviewed `dev` implementation SHA:** `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`
+**Current promotion state:** The candidate is verified only against disposable local infrastructure. `origin/dev` remains `14429af0fca619505849cb643552691a9d00ce56`; no push or production deployment has been made for `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`. Items 2 and 7 must be rerun for this candidate under their separate approvals.
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** exact implementation `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84` passed provider-free through local migration `106` on 2026-08-23.
 **Final pre-apply release-control SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
@@ -60,9 +61,11 @@ Items 17, 19, and 20 are independent provider-canary lanes and may run in
 parallel once their own entry conditions are met. Item 18 remains separately
 dependent on items 9, 10, and 16.
 
-**Current gate state:** Items 1–7, 7.1, and 9 are `PASSED`; item 8 is the active
-`EXCEPTION` gate; items 10–22 are `BLOCKED`; items 23–24 are `NOT_STARTED` and
-remain separate from technical launch.
+**Current gate state:** Item 1 is `PASSED` for the local candidate; items 2 and
+7 are `PENDING_APPROVAL` for this candidate’s promotion; items 3–6, 7.1, and 9
+remain `PASSED` as retained evidence for their previously approved hosted
+targets; item 8 is the active `EXCEPTION` gate; items 10–22 are `BLOCKED`; items
+23–24 are `NOT_STARTED` and remain separate from technical launch.
 
 ## Cutover safeguards
 
@@ -88,12 +91,12 @@ remain separate from technical launch.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 - **Evidence link:** [Final assembly](../FINAL_ASSEMBLY.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
-#### 2. Push the reviewed `dev` branch — `PASSED`
+#### 2. Push the reviewed `dev` branch — `PENDING_APPROVAL`
 
 - **Owner:** Release owner
 - **Entry condition:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Exit proof:** The exact reviewed candidate is published to `origin/dev` without force-push, and the remote ref is recorded at the reviewed SHA; production was fast-forwarded separately under item 7.
-- **Approval:** Recorded — release-owner approval covered publishing the reviewed gate-repair commit only. It did not authorize hosted migration, deployment, provider, secret, or live-action work.
+- **Approval:** Required — the prior release-owner approval covered publishing the older gate-repair candidate only. A new release-owner approval is required to publish `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`; it does not authorize hosted migration, deployment, provider, secret, or live-action work.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 - **Evidence link:** [Release evidence](../RELEASE_EVIDENCE.md) and [project status](../PROJECT_STATUS.md).
 
@@ -144,12 +147,12 @@ remain separate from technical launch.
 - **Rollback:** Keep `8b8d429` as the application rollback reference until the later launch controls pass. If the candidate is rejected, redeploy that prior application or a reviewed replacement; hosted database rollback remains forward-only.
 - **Evidence link:** [Corrected Step 7 deployment](step-7-corrected-contact-deployment-2026-08-16.md), [release evidence](../RELEASE_EVIDENCE.md), and [project status](../PROJECT_STATUS.md).
 
-#### 7. Fast-forward production to `dev` — `PASSED`
+#### 7. Fast-forward production to `dev` — `PENDING_APPROVAL`
 
 - **Owner:** Release/deployment owner
 - **Entry condition:** Items 1–6 and 7.1 passed; `production` is an ancestor of the verified `dev` SHA; the deployment target and rollback owner are named.
 - **Exit proof:** `origin/production` and `origin/dev` resolve to the reviewed candidate, and the corrected Vercel deployment identity, readiness, health, public-route, protected-route, and contact checks are retained.
-- **Approval:** Recorded — the owner explicitly authorized the fast-forward, exact-commit deployment, and post-deployment checks. This approval does not authorize step 8 secret or provider configuration.
+- **Approval:** Required — the prior owner authorization covered the older deployed candidate. A new explicit authorization is required before fast-forwarding or deploying `29c87a5850bffe51e6f90b4dff04e40d3c6fdb84`; it does not authorize step 8 secret or provider configuration.
 - **Rollback:** Re-deploy `8b8d429` as the application rollback reference if the application fails. Do not roll hosted migrations backward; preserve the forward-only database plan.
 - **Evidence link:** [Corrected Step 7 deployment](step-7-corrected-contact-deployment-2026-08-16.md) and [release evidence](../RELEASE_EVIDENCE.md).
 
