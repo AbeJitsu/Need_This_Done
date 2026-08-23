@@ -6,25 +6,40 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+function normalizeGate(name) {
+  const value = process.env[name];
+  if (value === 'success' || value === 'passed') return 'passed';
+  throw new Error(`${name} must report success or passed before release metadata can be emitted.`);
+}
+
+if (process.env.DEPLOYMENT_IDENTITY) {
+  throw new Error('Pre-key release metadata cannot contain a deployment identity.');
+}
+
 const migrations = readdirSync(resolve(root, 'supabase/migrations'))
   .map((name) => /^(\d+)_.*\.sql$/.exec(name)?.[1])
   .filter(Boolean)
   .sort((left, right) => Number(left) - Number(right));
+
 const metadata = {
-  generated_at: new Date().toISOString(),
+  schemaVersion: 2,
+  generatedAt: new Date().toISOString(),
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
-  local_migration_head: migrations.at(-1) || null,
-  gates: {
-    migration_stage: process.env.GATE_MIGRATION_STAGE || 'not_run',
-    database: process.env.GATE_DATABASE || 'not_run',
-    bridge: process.env.GATE_BRIDGE || 'not_run',
-    code: process.env.GATE_CODE || 'not_run',
-    provider_free_assembly: process.env.GATE_PROVIDER_FREE_ASSEMBLY || 'not_run',
+  localMigrationHead: migrations.at(-1) || null,
+  results: {
+    dependencyAudit: normalizeGate('GATE_DEPENDENCY_AUDIT'),
+    databaseSchemaRls: normalizeGate('GATE_DATABASE'),
+    bridge: normalizeGate('GATE_BRIDGE'),
+    code: normalizeGate('GATE_CODE'),
   },
-  // Deployment is intentionally unset in local/CI proof. A later separately
-  // approved promotion must set this identity rather than infer one.
-  deployment_identity: process.env.DEPLOYMENT_IDENTITY || null,
+  deploymentIdentity: null,
 };
+
+if (metadata.localMigrationHead !== '106') {
+  throw new Error(`Pre-key release metadata requires local migration head 106; found ${metadata.localMigrationHead || 'none'}.`);
+}
+
 const output = resolve(root, process.env.RELEASE_METADATA_PATH || 'test-results/release-metadata.json');
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, `${JSON.stringify(metadata, null, 2)}\n`, { mode: 0o600 });

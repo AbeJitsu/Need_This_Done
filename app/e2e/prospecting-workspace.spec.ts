@@ -43,7 +43,7 @@ test.afterAll(async () => {
   await admin.auth.admin.deleteUser(userId);
 });
 
-test('configures, reviews, sends, and rejects browser event ingestion for an approved prospecting message', async ({ page }) => {
+test('configures, reviews, and exercises the approved prospecting provider boundary', async ({ page }) => {
   const loginResponse = await page.request.post('/api/auth/login', {
     headers: { 'x-forwarded-for': '127.0.0.48' },
     data: { email, password },
@@ -124,21 +124,42 @@ test('configures, reviews, sends, and rejects browser event ingestion for an app
   await page.getByRole('button', { name: 'Approve' }).click();
   await expect(page.getByRole('heading', { name: 'Approved and ready to send' })).toBeVisible();
   await page.getByRole('button', { name: 'Send approved message' }).click();
-  await expect(page.getByText('Approved message sent through the configured sender.')).toBeVisible();
+  const fakeProviderEnabled = process.env.PROSPECTING_RESEND_PROVIDER === 'fake'
+    && process.env.OFFLINE_ASSEMBLY_PROOF === 'true';
+  if (process.env.PROSPECTING_RESEND_PROVIDER === 'live') {
+    throw new Error('Prospecting browser proof refuses live provider mode.');
+  }
+  await expect(page.getByText(fakeProviderEnabled
+    ? 'Approved message sent through the configured sender.'
+    : 'No approved prospecting sender is configured (provider: disabled).')).toBeVisible();
 
   const sentQueue = await api(page, '/api/prospecting/queue');
   expect(sentQueue.status).toBe(200);
   const sentMessage = sentQueue.body.messages.find((item: { id: string }) => item.id === messageId);
-  expect(sentMessage.approval_status).toBe('sent');
-  expect(sentMessage.provider_message_id).toMatch(/^fake-/);
+  if (fakeProviderEnabled) {
+    expect(sentMessage.approval_status).toBe('sent');
+    expect(sentMessage.provider_message_id).toMatch(/^fake-/);
 
-  const duplicateSend = await api(page, '/api/prospecting/sender/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messageId }),
-  });
-  expect(duplicateSend.status).toBe(200);
-  expect(duplicateSend.body.duplicate).toBe(true);
+    const duplicateSend = await api(page, '/api/prospecting/sender/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messageId }),
+    });
+    expect(duplicateSend.status).toBe(200);
+    expect(duplicateSend.body.duplicate).toBe(true);
+  } else {
+    expect(sentMessage.approval_status).toBe('approved');
+    expect(sentMessage.provider_message_id).toBeNull();
+    const operation = await expectNoError(await admin
+      .from('provider_operations')
+      .select('status, idempotency_key')
+      .eq('id', sentMessage.provider_operation_id)
+      .single());
+    expect(operation).toMatchObject({
+      status: 'failed_retryable',
+      idempotency_key: sentMessage.idempotency_key,
+    });
+  }
 
   const browserEvent = await api(page, '/api/prospecting/sender/events', {
     method: 'POST',
@@ -146,7 +167,7 @@ test('configures, reviews, sends, and rejects browser event ingestion for an app
     body: JSON.stringify({
       providerEventId: `browser-proof-bounce-${crypto.randomUUID()}`,
       eventType: 'bounced',
-      providerMessageId: sentMessage.provider_message_id,
+      providerMessageId: sentMessage.provider_message_id || 'provider-disabled-no-message',
       address: prospectEmail,
       payload: { reason: 'test-double' },
     }),
@@ -155,7 +176,7 @@ test('configures, reviews, sends, and rejects browser event ingestion for an app
 
   const queue = await api(page, '/api/prospecting/queue');
   expect(queue.status).toBe(200);
-  expect(queue.body.prospects[0].outreach_status).toBe('contacted');
+  expect(queue.body.prospects[0].outreach_status).toBe(fakeProviderEnabled ? 'contacted' : 'approved');
   expect(queue.body.stats.bounces).toBe(0);
   const suppression = await expectNoError(await admin.from('suppression_records').select('normalized_address').eq('normalized_address', prospectEmail));
   expect(suppression).toEqual([]);

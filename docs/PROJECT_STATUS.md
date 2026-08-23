@@ -60,6 +60,41 @@ keep migrations `105`–`106` and all historical records intact.
   provider canaries, reliability evidence, rollback ownership, and a recorded
   go/no-go decision. A local pass cannot satisfy this gate.
 
+**Complete local-candidate CI and migration proof (2026-08-23):** Provider
+configuration now has four explicit `disabled | fake | live` controls:
+`TRANSACTIONAL_RESEND_PROVIDER`, `PROSPECTING_RESEND_PROVIDER`,
+`CALENDAR_PROVIDER`, and `STRIPE_INVOICE_PROVIDER`. Example modes and
+credentials remain blank. Credentials alone do not activate an adapter; fake
+mode requires `OFFLINE_ASSEMBLY_PROOF=true`, and the Website Fix invoice
+adapter rejects live Stripe keys. Transactional and prospecting webhooks use
+separate Resend secrets. The provider-free assembly forces all four controls
+to `disabled` and clears every provider credential and webhook secret.
+
+The manifest now records historical hosted stages `073–095`, expected hosted
+head `095`, and the contiguous pending range `096–106`. Two disposable-local
+rehearsals passed: the checksum-verified pre-`073` historical snapshot migrated
+through `106`, preserving its legacy inventory until the isolated retirement
+gate, and a hosted-like database stopped at `095` before applying exactly 11
+pending migrations through `106`. Both ran schema lint and all 48 database
+checks, then automatically restored the sanitized local database.
+
+CI is split into production dependency audit, real local database/schema/RLS,
+offline bridge, and code jobs. Release metadata depends on all four and emits
+the checked-out commit, local head `106`, each individual result, and exact
+`deploymentIdentity: null`; it refuses incomplete gates or a deployment
+identity. Local validation passed the zero-vulnerability production audit,
+8/8 bridge tests, the 34-mapping/18-gate manifest and environment contract,
+316/316 unit tests, 50/50 accessibility checks, lint, TypeScript, the 46-page
+production build, both rehearsals, workflow YAML parsing, and whitespace
+validation. The installed local Supabase CLI `2.65.5` reports `2.115.0`
+available; this did not change schema behavior. Owner: local tooling owner.
+Reason: keep the release gate pinned to its already-proven CLI until an
+isolated upgrade rehearsal. Review/removal date: 2026-09-15. No hosted state,
+credential, provider, deployment, payment, external message, or Mac worker
+changed. Rollback is to revert this CI/tooling/docs slice and reset only the
+disposable local database; preserve hosted history and use forward-only hosted
+repair if later required.
+
 **Reviewed pre-key baseline (2026-08-22):** Candidate `b00fcaad` includes the
 production dependency-audit repair and the local migration-104 evidence.
 Disposable local Supabase reset

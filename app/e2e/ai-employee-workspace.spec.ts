@@ -71,10 +71,14 @@ test.beforeAll(async ({}, workerInfo) => {
   });
   if (error || !data.user) throw new Error(error?.message || 'Could not create workspace UI fixture user.');
   userId = data.user.id;
+  const role = await admin.from('user_roles').insert({ user_id: userId, role: 'admin' });
+  if (role.error) throw new Error(role.error.message);
 });
 
 test.afterAll(async () => {
-  if (admin && userId) await admin.auth.admin.deleteUser(userId);
+  if (!admin || !userId) return;
+  await admin.from('user_roles').delete().eq('user_id', userId);
+  await admin.auth.admin.deleteUser(userId);
 });
 
 test.beforeEach(async ({ page }, testInfo) => {

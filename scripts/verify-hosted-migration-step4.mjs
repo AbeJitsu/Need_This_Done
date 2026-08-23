@@ -197,7 +197,7 @@ function verifyRehearsalOutput(output) {
     'Pre-cleanup page_views constraint and retained historical objects verified.',
     'Applying isolated final destructive stage: destructive-retirement',
     'Retired objects are absent and retained objects remain present.',
-    'Historical-data staged migration rehearsal passed through 092.',
+    'Historical-data staged migration rehearsal passed from the pre-073 snapshot through 106.',
   ];
   for (const marker of requiredMarkers) {
     if (!output.includes(marker)) fail(`historical-data rehearsal did not emit required proof: ${marker}`);
@@ -211,7 +211,7 @@ function verifyRehearsalOutput(output) {
     unchanged_legacy_inventory_assertions: unchangedChecks,
     pre_cleanup_constraint_and_retention_assertion: 'passed',
     retired_objects_after_092: 'absent',
-    retained_objects_after_092: 'present',
+    retained_objects_through_106: 'present',
   };
 }
 
@@ -219,8 +219,8 @@ function main() {
   if (process.argv.length !== 2) {
     fail('this gate accepts no command-line arguments; hosted execution is never in scope');
   }
-  if (manifest.expected_hosted_latest !== expectedHostedLatest) {
-    fail(`staged manifest expected hosted latest is not ${expectedHostedLatest}`);
+  if (manifest.source_hosted_latest !== expectedHostedLatest) {
+    fail(`staged manifest historical source latest is not ${expectedHostedLatest}`);
   }
 
   const backupResult = verifyBackupManifest();
@@ -238,7 +238,7 @@ function main() {
     ...process.env,
     NEEDTHISDONE_STAGED_BACKUP_DIR: backupRoot,
   };
-  for (const stage of manifest.stages) {
+  for (const stage of manifest.stages.filter((candidate) => candidate.state === 'hosted')) {
     summary.technical_pass.hosted_dry_runs.push(runHostedDryRun(stage.id, stage, hostedEnvironment));
   }
   summary.technical_pass.status = 'passed';

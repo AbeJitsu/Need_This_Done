@@ -104,21 +104,26 @@ NEXTAUTH_URL=http://localhost:3000
 # API & SERVICES
 # ============================================================================
 
-# [REQUIRED] Stripe
-# Get from: https://dashboard.stripe.com/apikeys
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_PLACEHOLDER
-STRIPE_SECRET_KEY=sk_test_PLACEHOLDER
-STRIPE_WEBHOOK_SECRET=whsec_test_PLACEHOLDER
+# Provider modes accept only disabled | fake | live. Leave modes and values
+# blank in examples. Credentials alone never activate a provider; fake mode
+# additionally requires OFFLINE_ASSEMBLY_PROOF=true.
+TRANSACTIONAL_RESEND_PROVIDER=
+PROSPECTING_RESEND_PROVIDER=
+CALENDAR_PROVIDER=
+STRIPE_INVOICE_PROVIDER=
 
-# Price ID for Managed AI subscription (Stripe)
-STRIPE_MANAGED_AI_PRICE_ID=price_PLACEHOLDER
+# Transactional and prospecting Resend lanes
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+RESEND_ADMIN_EMAIL=
+TRANSACTIONAL_RESEND_WEBHOOK_SECRET=
+PROSPECTING_RESEND_API_KEY=
+PROSPECTING_RESEND_WEBHOOK_SECRET=
 
-# [REQUIRED] Email Service (Resend)
-# Get from: https://resend.com/api-keys
-RESEND_API_KEY=re_PLACEHOLDER
-RESEND_FROM_EMAIL=noreply@needthisdone.com
-RESEND_ADMIN_EMAIL=admin@needthisdone.com
-RESEND_WEBHOOK_SECRET=whsec_PLACEHOLDER
+# Test-only Website Fix invoice lane
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
 
 # [REQUIRED] OpenAI (AI features)
 # Get from: https://platform.openai.com/api-keys

@@ -23,6 +23,49 @@ credentials, bounded live provider canaries, reliability and rollback proof,
 and an explicit go/no-go decision. Passing the local gate cannot be represented
 as either hosted promotion or technical launch.
 
+### Complete local-candidate CI and rehearsal proof — 2026-08-23
+
+The environment contract now exposes only four provider activation controls:
+`TRANSACTIONAL_RESEND_PROVIDER`, `PROSPECTING_RESEND_PROVIDER`,
+`CALENDAR_PROVIDER`, and `STRIPE_INVOICE_PROVIDER`, each accepting
+`disabled | fake | live`. Example values are blank. Credentials alone do not
+activate adapters, local fakes additionally require
+`OFFLINE_ASSEMBLY_PROOF=true`, and the Website Fix invoice adapter rejects a
+live-mode Stripe key. Transactional and prospecting Resend webhook secrets are
+separate. The provider-free assembly explicitly disables all four adapters and
+clears provider credentials and webhook secrets.
+
+The manifest-driven stage gate verified 34 byte-tracked mappings and 18 gates,
+classifying `073–095` as historical hosted stages and `096–106` as one
+contiguous pending range against expected hosted head `095`. The protected,
+checksum-verified pre-`073` snapshot was restored only into disposable local
+Supabase and migrated through `106`; historical inventory stayed unchanged
+through all five additive stages, retired objects disappeared only at the
+isolated `090–092` gate, and retained objects remained through `106`. A second
+disposable database rebuilt to `095`, applied exactly 11 migrations through
+`106`, and proved the hosted-like path. Each rehearsal passed schema lint and
+all 48 database checks, then restored sanitized local state.
+
+The CI workflow now has four independent jobs: production dependency audit,
+local database/schema/RLS, offline bridge, and code. The final metadata job can
+run only after all four succeed; its schema requires the checked-out commit,
+local migration head `106`, individual passed results, and exact
+`deploymentIdentity: null`. It rejects an incomplete gate or any deployment
+identity. Local validation passed the clean production audit, 8/8 bridge tests,
+316/316 unit tests, 50/50 accessibility checks, lint, TypeScript, the 46-page
+production build, environment/CI contract, both rehearsals, workflow YAML
+parsing, and whitespace checks.
+
+The only warning is the local Supabase CLI update notice: proven version
+`2.65.5` reports `2.115.0` available. Scope: local/CI tooling only. Owner:
+local tooling owner. Reason: upgrade only in an isolated migration rehearsal.
+Review/removal date: 2026-09-15. This is not a hosted, provider, deployment, or
+customer proof. Technical launch remains **NOT GO**.
+
+**Rollback:** Revert the CI/environment/rehearsal tooling slice and reset only
+disposable local Supabase. Preserve hosted migration history and protected
+backups; any hosted database correction remains a reviewed forward migration.
+
 ### Simplified public-journey proof — 2026-08-23
 
 The public route contract now presents only **Website Fix** and **Managed

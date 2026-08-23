@@ -328,7 +328,29 @@ apply_migration "$PROJECT_ROOT/supabase/migrations/091_remove_content_and_search
 apply_migration "$PROJECT_ROOT/supabase/migrations/092_remove_marketplace_and_commerce_schema.sql"
 assert_final_object_boundaries
 
+apply_stage "historical-hosted-security-repairs" \
+  093_revoke_anonymous_project_attachments_policies.sql \
+  094_restore_service_worker_claim_context.sql \
+  095_allow_hosted_parity_fixture_cleanup.sql
+
+apply_stage "pending-model-and-worker-boundary" \
+  096_openrouter_dynamic_route_evidence.sql \
+  097_retire_hardcoded_deepseek_fallback.sql \
+  098_fail_closed_openclaw_schedule_and_provenance.sql \
+  099_harden_frozen_plan_worker_boundary.sql
+
+apply_stage "pending-provider-boundaries" \
+  100_provider_operation_and_webhook_ledger.sql \
+  101_resend_provider_records.sql \
+  102_calendar_provider_references.sql \
+  103_website_improvement_invoice_references.sql \
+  104_provider_recovery_atomicity.sql \
+  105_operator_only_private_surfaces.sql \
+  106_provider_workflow_recovery_links.sql
+
+assert_final_object_boundaries
+
 echo "Running the required retained database gate against migrated historical data."
 npm run verify:database
 
-echo "Historical-data staged migration rehearsal passed through 092."
+echo "Historical-data staged migration rehearsal passed from the pre-073 snapshot through 106."

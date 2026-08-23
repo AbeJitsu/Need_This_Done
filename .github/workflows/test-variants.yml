@@ -33,18 +33,74 @@ jobs:
         working-directory: ./app
         run: npm audit --omit=dev
 
-  local-migration-schema-rls:
+  database:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Validate migration/rehearsal controls
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.65.5
+
+      - name: Install application dependencies
+        working-directory: ./app
+        run: npm ci
+
+      - name: Start disposable local Supabase
+        run: supabase start
+
+      - name: Configure local-only test environment
+        shell: bash
         run: |
-          bash -n scripts/use-env.sh scripts/rehearse-local-data-migration.sh
-          node scripts/verify-hosted-migration-stages.mjs
+          set -euo pipefail
+          status_file="$RUNNER_TEMP/needthisdone-supabase.env"
+          supabase status -o env > "$status_file"
+          set -a
+          source "$status_file"
+          set +a
+          test "$API_URL" = "http://127.0.0.1:54321"
+          umask 077
+          {
+            echo "ENV_TARGET=local"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY"
+            echo "NEXT_PUBLIC_SITE_URL=http://localhost:3000"
+            echo "TRANSACTIONAL_RESEND_PROVIDER=disabled"
+            echo "PROSPECTING_RESEND_PROVIDER=disabled"
+            echo "CALENDAR_PROVIDER=disabled"
+            echo "STRIPE_INVOICE_PROVIDER=disabled"
+            echo "OFFLINE_ASSEMBLY_PROOF=true"
+            echo "SKIP_EMAILS=true"
+            echo "SKIP_CACHE=true"
+          } > .env.local.profile
+          ln -s .env.local.profile .env.local
+          ln -s "$GITHUB_WORKSPACE/.env.local" app/.env.local
+
+      - name: Verify manifest and rehearsal controls
+        run: |
+          bash -n scripts/use-env.sh scripts/rehearse-local-data-migration.sh scripts/rehearse-hosted-095-to-106.sh
+          npm run verify:pre-key-ci
+
+      - name: Rehearse hosted-like 095 to 106 and run schema/RLS gate
+        env:
+          ALLOW_HOSTED_LIKE_REHEARSAL: I_UNDERSTAND_THIS_RESETS_LOCAL_SUPABASE
+        run: npm run rehearse:hosted-like -- --execute
+
+      - name: Stop disposable local Supabase
+        if: always()
+        run: supabase stop
 
   bridge:
     runs-on: ubuntu-latest
@@ -61,11 +117,15 @@ jobs:
           cache: 'npm'
           cache-dependency-path: bridge/package-lock.json
 
+      - name: Install bridge dependencies
+        working-directory: ./bridge
+        run: npm ci
+
       - name: Build and test signed bridge offline
         working-directory: ./bridge
-        run: npm ci && npm test
+        run: npm test
 
-  code-gate:
+  code:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -85,14 +145,23 @@ jobs:
         run: npm ci
 
       - name: Run required code gate
-        working-directory: ./app
         run: npm run verify:code
 
-      - name: Emit local-only release metadata
+  release-metadata:
+    needs: [audit, database, bridge, code]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Emit pre-key release metadata
         env:
-          GATE_MIGRATION_STAGE: passed-in-separate-job
-          GATE_BRIDGE: passed-in-separate-job
-          GATE_CODE: passed
+          GATE_DEPENDENCY_AUDIT: ${{ needs.audit.result }}
+          GATE_DATABASE: ${{ needs.database.result }}
+          GATE_BRIDGE: ${{ needs.bridge.result }}
+          GATE_CODE: ${{ needs.code.result }}
         run: node scripts/generate-release-metadata.mjs
 
       - name: Upload release metadata

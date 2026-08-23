@@ -64,7 +64,7 @@ function verifyBackup() {
     if (actualHash !== expectedHash) fail(`protected backup checksum mismatch: ${filename}`);
   }
   const history = JSON.parse(readFileSync(join(backupRoot, 'hosted-migration-history.json'), 'utf8'));
-  if (history.latest?.version !== manifest.expected_hosted_latest) fail('protected backup latest migration is not 072');
+  if (history.latest?.version !== manifest.source_hosted_latest) fail(`protected backup latest migration is not ${manifest.source_hosted_latest}`);
   return history.migrations.map((migration) => migration.version);
 }
 
@@ -105,7 +105,7 @@ function sanitize(output, env) {
 
 function assertSameVersions(label, actual, expected) {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-    fail(`${label} differs from the protected 072 history\nexpected: ${expected.join(', ')}\nactual:   ${actual.join(', ')}`);
+    fail(`${label} differs from the protected ${manifest.source_hosted_latest} history\nexpected: ${expected.join(', ')}\nactual:   ${actual.join(', ')}`);
   }
 }
 
@@ -117,6 +117,7 @@ if (args.some((arg, index) => arg === '--stage' && index !== stageIndex)) fail('
 const stageId = args[stageIndex + 1];
 const stage = manifest.stages.find((candidate) => candidate.id === stageId);
 if (!stage) fail(`unknown stage ${stageId}`);
+if (stage.state !== 'hosted') fail(`stage ${stageId} is not part of the historical 073–095 review`);
 if (stage.destructive) {
   console.error(`Reviewing final destructive stage ${stageId} in dry-run mode only; no hosted write is permitted.`);
 }
@@ -141,7 +142,7 @@ try {
 
   // The CLI needs the complete local history through the hosted baseline to
   // compare a selected pending stage. Only the requested stage is copied
-  // after 072; later pending migrations are deliberately absent.
+  // after the original 072 review baseline; later stages are deliberately absent.
   for (const filename of readdirSync(resolve(repositoryRoot, 'supabase/migrations'))) {
     if (Number(filename.slice(0, 3)) <= 72) {
       cpSync(resolve(repositoryRoot, 'supabase/migrations', filename), join(tempSupabase, 'migrations', filename));
@@ -170,7 +171,7 @@ try {
   assertSameVersions('remote history after dry run', after.versions, backupVersions);
   console.log(`Read-only hosted stage dry run passed: ${stageId}`);
   console.log(`Allowlisted migrations: ${stageFiles.join(', ')}`);
-  console.log(`Remote history before and after remains at ${manifest.expected_hosted_latest} (${after.versions.length} rows).`);
+  console.log(`Remote history before and after remains at ${manifest.source_hosted_latest} (${after.versions.length} rows).`);
   console.log('Dry-run transcript:');
   console.log(sanitize(dryRunOutput, env).trim());
 } finally {

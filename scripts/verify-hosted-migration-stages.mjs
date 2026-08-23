@@ -32,29 +32,70 @@ function gitShow(commit, path) {
   }
 }
 
-if (manifest.schema_version !== 1) fail(`unsupported manifest schema ${manifest.schema_version}`);
-if (!/^[0-9a-f]{40}$/.test(manifest.source_commit)) fail('source_commit must be a full commit SHA');
-if (manifest.expected_hosted_latest !== '072') fail('expected hosted history must remain at 072');
+function versionRange(first, last, label) {
+  if (!/^\d{3}$/.test(first) || !/^\d{3}$/.test(last) || Number(first) > Number(last)) {
+    fail(`${label} must define a valid three-digit first/last range`);
+  }
+  return Array.from(
+    { length: Number(last) - Number(first) + 1 },
+    (_, index) => String(Number(first) + index).padStart(3, '0'),
+  );
+}
 
+if (manifest.schema_version !== 2) fail(`unsupported manifest schema ${manifest.schema_version}`);
+if (!/^[0-9a-f]{40}$/.test(manifest.source_commit)) fail('source_commit must be a full commit SHA');
+if (manifest.source_hosted_latest !== '072') fail('historical mapping source must remain at hosted head 072');
+if (manifest.expected_hosted_latest !== '095') fail('expected hosted head must be 095');
+
+const hostedVersions = versionRange(
+  manifest.historical_hosted_range?.first,
+  manifest.historical_hosted_range?.last,
+  'historical_hosted_range',
+);
+const pendingVersions = versionRange(
+  manifest.pending_range?.first,
+  manifest.pending_range?.last,
+  'pending_range',
+);
+if (hostedVersions[0] !== '073' || hostedVersions.at(-1) !== manifest.expected_hosted_latest) {
+  fail('historical hosted stages must cover exactly 073–095');
+}
+if (pendingVersions[0] !== '096' || pendingVersions.at(-1) !== '106') {
+  fail('pending stages must cover exactly 096–106');
+}
+if (Number(pendingVersions[0]) !== Number(hostedVersions.at(-1)) + 1) {
+  fail('hosted and pending migration ranges must be contiguous');
+}
+
+const expectedVersions = [...hostedVersions, ...pendingVersions];
 const migrations = manifest.migrations;
 const stages = manifest.stages;
-if (!Array.isArray(migrations) || migrations.length === 0) {
-  fail('the manifest must define at least one pending migration');
-}
-if (!Array.isArray(stages) || stages.length < 9) fail('the manifest must define staged gates');
-const migrationVersions = migrations.map((migration) => migration.new_version);
-const firstVersion = Math.min(...migrationVersions.map(Number));
-const lastVersion = Math.max(...migrationVersions.map(Number));
-const expectedVersions = Array.from({ length: lastVersion - firstVersion + 1 }, (_, index) => String(firstVersion + index).padStart(3, '0'));
-if (firstVersion !== 73 || migrationVersions.length !== expectedVersions.length) {
-  fail(`the manifest must map a contiguous pending migration range beginning at 073 (through ${String(lastVersion).padStart(3, '0')})`);
-}
+if (!Array.isArray(migrations) || !migrations.length) fail('the manifest must define migration mappings');
+if (!Array.isArray(stages) || !stages.length) fail('the manifest must define staged gates');
 
 const seenNewVersions = new Set();
 const seenOriginalVersions = new Set();
 const seenNewFilenames = new Set();
 const seenOriginalFilenames = new Set();
 const migrationsByStage = new Map();
+const stagesById = new Map();
+
+for (const stage of stages) {
+  if (!/^[a-z0-9-]+$/.test(stage.id || '') || stagesById.has(stage.id)) {
+    fail(`invalid or duplicate stage id: ${stage.id}`);
+  }
+  if (stage.state !== 'hosted' && stage.state !== 'pending') fail(`invalid state for stage ${stage.id}`);
+  if (!['separate', 'batch', 'final-separate'].includes(stage.gate)) fail(`invalid gate for stage ${stage.id}`);
+  if (typeof stage.destructive !== 'boolean' || typeof stage.rationale !== 'string' || !stage.rationale.trim()) {
+    fail(`stage ${stage.id} must define destructive and rationale fields`);
+  }
+  if (!Array.isArray(stage.migrations) || !stage.migrations.length) fail(`stage ${stage.id} is empty`);
+  const allowedRange = stage.state === 'hosted' ? hostedVersions : pendingVersions;
+  if (stage.migrations.some((version) => !allowedRange.includes(version))) {
+    fail(`${stage.state} stage ${stage.id} crosses its manifest range`);
+  }
+  stagesById.set(stage.id, stage);
+}
 
 for (const migration of migrations) {
   const {
@@ -87,12 +128,15 @@ for (const migration of migrations) {
   if (!/^[0-9a-f]{64}$/.test(originalSha) || !/^[0-9a-f]{64}$/.test(newSha)) {
     fail(`invalid SHA-256 mapping for ${newFilename}`);
   }
-  if (!stages.some((candidate) => candidate.id === stage)) fail(`unknown stage ${stage}`);
+  const stageDefinition = stagesById.get(stage);
+  if (!stageDefinition) fail(`unknown stage ${stage}`);
+  if (!stageDefinition.migrations.includes(newVersion)) {
+    fail(`stage ${stage} does not list mapped migration ${newVersion}`);
+  }
 
-  const currentPath = resolve(migrationRoot, newFilename);
   let current;
   try {
-    current = readFileSync(currentPath);
+    current = readFileSync(resolve(migrationRoot, newFilename));
   } catch {
     fail(`new migration file is missing: ${newFilename}`);
   }
@@ -114,58 +158,41 @@ for (const migration of migrations) {
   migrationsByStage.get(stage).push(newVersion);
 }
 
-if (new Set(expectedVersions).size !== seenNewVersions.size || expectedVersions.some((version) => !seenNewVersions.has(version))) {
-  fail(`new migration versions are not an exact one-to-one map for ${expectedVersions[0]}–${expectedVersions.at(-1)}`);
-}
-if (seenOriginalVersions.size !== expectedVersions.length || expectedVersions.some((version) => !seenOriginalVersions.has(version))) {
-  fail(`original migration versions are not an exact one-to-one map for ${expectedVersions[0]}–${expectedVersions.at(-1)}`);
+for (const [label, seen] of [['new', seenNewVersions], ['original', seenOriginalVersions]]) {
+  if (seen.size !== expectedVersions.length || expectedVersions.some((version) => !seen.has(version))) {
+    fail(`${label} migration versions are not an exact one-to-one map for 073–106`);
+  }
 }
 
-const currentPendingFiles = readdirSync(migrationRoot)
+const currentStagedFiles = readdirSync(migrationRoot)
   .filter((filename) => {
     const match = /^(\d{3})_.*\.sql$/.exec(filename);
-    return match && Number(match[1]) >= firstVersion && Number(match[1]) <= lastVersion;
+    return match && expectedVersions.includes(match[1]);
   })
   .sort();
-const mappedPendingFiles = migrations.map((migration) => migration.new_filename).sort();
-if (JSON.stringify(currentPendingFiles) !== JSON.stringify(mappedPendingFiles)) {
-  fail(`pending migration files do not match the manifest: ${currentPendingFiles.join(', ')}`);
+const mappedStagedFiles = migrations.map((migration) => migration.new_filename).sort();
+if (JSON.stringify(currentStagedFiles) !== JSON.stringify(mappedStagedFiles)) {
+  fail(`migration files do not match the manifest: ${currentStagedFiles.join(', ')}`);
 }
 
-const expectedStages = [
-  ['calendar-token-security', ['073'], 'separate', false],
-  ['storage-bucket-normalization', ['074'], 'separate', false],
-  ['additive-product-workflow', ['075', '076', '077', '078', '079', '080'], 'batch', false],
-  ['growth-profile-evaluation', ['081'], 'separate', false],
-  ['research-agent-planner', ['082', '083', '084', '085', '086', '087', '088', '089'], 'batch', false],
-  ['destructive-retirement', ['090', '091', '092'], 'final-separate', true],
-  ['storage-policy-repair', ['093'], 'separate', false],
-  ['worker-claim-context-repair', ['094'], 'separate', false],
-  ['hosted-parity-fixture-cleanup', ['095'], 'separate', false],
-  ['openrouter-route-evidence', ['096', '097'], 'separate', false],
-  ['worker-boundary-hardening', ['098', '099'], 'separate', false],
-  ['provider-operation-ledger', ['100'], 'separate', false],
-  ['resend-provider-boundary', ['101'], 'separate', false],
-  ['calendar-provider-boundary', ['102'], 'separate', false],
-  ['website-invoice-boundary', ['103'], 'separate', false],
-  ['provider-recovery-atomicity', ['104'], 'separate', false],
-  ['operator-only-private-surfaces', ['105'], 'separate', false],
-  ['provider-workflow-recovery-links', ['106'], 'separate', false],
-];
-for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
-  const stage = stages.find((candidate) => candidate.id === id);
-  if (!stage) fail(`missing stage ${id}`);
-  const actualVersions = stage.migrations || [];
-  if (stage.gate !== gate || stage.destructive !== destructive || JSON.stringify(actualVersions) !== JSON.stringify(expectedStageVersions)) {
-    fail(`stage definition mismatch: ${id}`);
-  }
-  const mappedVersions = [...(migrationsByStage.get(id) || [])].sort();
-  if (JSON.stringify(mappedVersions) !== JSON.stringify([...expectedStageVersions].sort())) {
-    fail(`migration-to-stage mapping mismatch: ${id}`);
-  }
-}
-
-console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates, SQL hashes preserved and provider recovery through ${expectedVersions.at(-1)} is tracked.`);
+const stagedVersions = [];
 for (const stage of stages) {
-  console.log(`${stage.id}: ${stage.migrations.join(', ')}${stage.destructive ? ' [destructive, final separate gate]' : ''}`);
+  const mappedVersions = migrationsByStage.get(stage.id) || [];
+  if (JSON.stringify(mappedVersions) !== JSON.stringify(stage.migrations)) {
+    fail(`migration-to-stage mapping mismatch: ${stage.id}`);
+  }
+  stagedVersions.push(...stage.migrations);
+}
+if (stagedVersions.length !== expectedVersions.length || expectedVersions.some((version) => !stagedVersions.includes(version))) {
+  fail('stage coverage is not an exact one-to-one map for 073–106');
+}
+
+const hostedStageVersions = stages.filter((stage) => stage.state === 'hosted').flatMap((stage) => stage.migrations);
+const pendingStageVersions = stages.filter((stage) => stage.state === 'pending').flatMap((stage) => stage.migrations);
+if (JSON.stringify(hostedStageVersions) !== JSON.stringify(hostedVersions)) fail('hosted stages are not contiguous 073–095');
+if (JSON.stringify(pendingStageVersions) !== JSON.stringify(pendingVersions)) fail('pending stages are not contiguous 096–106');
+
+console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates; hosted through ${manifest.expected_hosted_latest}; pending ${pendingVersions[0]}–${pendingVersions.at(-1)}. SQL hashes preserved.`);
+for (const stage of stages) {
+  console.log(`${stage.state}: ${stage.id}: ${stage.migrations.join(', ')}${stage.destructive ? ' [destructive, final separate gate]' : ''}`);
 }

@@ -162,6 +162,12 @@ export function validateEnvironmentVariables(): void {
       validate: (v) => v.includes('@'),
       errorMessage: 'Must be valid email',
     },
+    TRANSACTIONAL_RESEND_PROVIDER: {
+      name: 'TRANSACTIONAL_RESEND_PROVIDER',
+      required: false,
+      validate: (v) => v === 'fake' || v === 'live' || v === 'disabled',
+      errorMessage: 'Must be disabled, fake, or live',
+    },
     // Prospecting delivery is a separate opt-in boundary. It must not reuse
     // the transactional Resend key or activate merely because one exists.
     PROSPECTING_RESEND_PROVIDER: {
@@ -176,6 +182,12 @@ export function validateEnvironmentVariables(): void {
       validate: (v) => v.startsWith('re_'),
       errorMessage: 'Must start with re_',
     },
+    CALENDAR_PROVIDER: {
+      name: 'CALENDAR_PROVIDER',
+      required: false,
+      validate: (v) => v === 'fake' || v === 'live' || v === 'disabled',
+      errorMessage: 'Must be disabled, fake, or live',
+    },
 
     // Stripe (required if payments enabled)
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: {
@@ -189,6 +201,12 @@ export function validateEnvironmentVariables(): void {
       required: false,
       validate: (v) => v.startsWith('sk_'),
       errorMessage: 'Must start with sk_',
+    },
+    STRIPE_INVOICE_PROVIDER: {
+      name: 'STRIPE_INVOICE_PROVIDER',
+      required: false,
+      validate: (v) => v === 'fake' || v === 'live' || v === 'disabled',
+      errorMessage: 'Must be disabled, fake, or live',
     },
 
     // Google is optional because email/password remains the canonical local

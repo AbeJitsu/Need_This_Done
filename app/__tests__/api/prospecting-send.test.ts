@@ -79,6 +79,7 @@ describe('operator prospecting send route', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     verifyAdmin.mockResolvedValue({ user: { id: 'operator-1' } });
+    getProspectingSenderProvider.mockReturnValue('fake');
   });
 
   it('rejects a message before explicit approval', async () => {
@@ -110,6 +111,22 @@ describe('operator prospecting send route', () => {
     expect(response.status).toBe(201);
     expect(sendApprovedProspectingMessage).toHaveBeenCalledWith(expect.objectContaining({
       id: message.id,
+      idempotencyKey: 'original-outreach-key',
+      operationId: 'operation-1',
+    }));
+  });
+
+  it('fails closed after durably recording a disabled provider attempt', async () => {
+    clientWith();
+    getProspectingSenderProvider.mockReturnValue('disabled');
+    sendApprovedProspectingMessage.mockResolvedValue(null);
+
+    const response = await POST(request());
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      error: 'No approved prospecting sender is configured (provider: disabled).',
+    });
+    expect(sendApprovedProspectingMessage).toHaveBeenCalledWith(expect.objectContaining({
       idempotencyKey: 'original-outreach-key',
       operationId: 'operation-1',
     }));

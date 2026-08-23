@@ -1,10 +1,14 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source_commit": "468a7d78ec7229975e115f6f13a1b73dc0a39336",
-  "expected_hosted_latest": "072",
+  "source_hosted_latest": "072",
+  "expected_hosted_latest": "095",
+  "historical_hosted_range": {"first":"073","last":"095"},
+  "pending_range": {"first":"096","last":"106"},
   "stages": [
     {
       "id": "calendar-token-security",
+      "state": "hosted",
       "gate": "separate",
       "destructive": false,
       "rationale": "Encrypt Calendar credentials and narrow function grants before any other hosted change.",
@@ -12,6 +16,7 @@
     },
     {
       "id": "storage-bucket-normalization",
+      "state": "hosted",
       "gate": "separate",
       "destructive": false,
       "rationale": "Normalize the retained private project-attachments bucket without moving or deleting objects.",
@@ -19,6 +24,7 @@
     },
     {
       "id": "additive-product-workflow",
+      "state": "hosted",
       "gate": "batch",
       "destructive": false,
       "rationale": "Apply additive outcome, pilot, queue, and completion-evidence changes while retired data remains intact.",
@@ -26,6 +32,7 @@
     },
     {
       "id": "growth-profile-evaluation",
+      "state": "hosted",
       "gate": "separate",
       "destructive": false,
       "rationale": "Normalize growth-profile routing and add evaluation records; review the affected-row meaning separately.",
@@ -33,6 +40,7 @@
     },
     {
       "id": "research-agent-planner",
+      "state": "hosted",
       "gate": "batch",
       "destructive": false,
       "rationale": "Add private research, agent operations, configured-model, planner, and worker-boundary records without external activation.",
@@ -40,6 +48,7 @@
     },
     {
       "id": "destructive-retirement",
+      "state": "hosted",
       "gate": "final-separate",
       "destructive": true,
       "rationale": "Retire legacy local, content/search/media, marketplace, commerce, and Medusa data only after a later retention decision.",
@@ -47,6 +56,7 @@
     },
     {
       "id": "storage-policy-repair",
+      "state": "hosted",
       "gate": "separate",
       "destructive": false,
       "rationale": "Remove out-of-band anonymous read and upload policies from the retained private project-attachments bucket.",
@@ -54,6 +64,7 @@
     },
     {
       "id": "worker-claim-context-repair",
+      "state": "hosted",
       "gate": "separate",
       "destructive": false,
       "rationale": "Restore the service-role signal inside protected worker functions without granting browser roles any worker access.",
@@ -61,20 +72,21 @@
     },
     {
       "id": "hosted-parity-fixture-cleanup",
+      "state": "hosted",
       "gate": "separate",
       "destructive": false,
       "rationale": "Allow only the service identity to remove the verifier's reserved disposable fixture history while preserving normal immutability.",
       "migrations": ["095"]
     },
-    {"id":"openrouter-route-evidence","gate":"separate","destructive":false,"rationale":"Record exact OpenRouter route evidence without activation.","migrations":["096","097"]},
-    {"id":"worker-boundary-hardening","gate":"separate","destructive":false,"rationale":"Fail closed around frozen-plan scheduling, claims, provenance, and completion.","migrations":["098","099"]},
-    {"id":"provider-operation-ledger","gate":"separate","destructive":false,"rationale":"Add service-role-only provider operations and signed receipt ledger.","migrations":["100"]},
-    {"id":"resend-provider-boundary","gate":"separate","destructive":false,"rationale":"Add durable transactional Resend records.","migrations":["101"]},
-    {"id":"calendar-provider-boundary","gate":"separate","destructive":false,"rationale":"Add private Calendar operation references.","migrations":["102"]},
-    {"id":"website-invoice-boundary","gate":"separate","destructive":false,"rationale":"Add fixed test-mode Website Improvement invoice references.","migrations":["103"]},
-    {"id":"provider-recovery-atomicity","gate":"separate","destructive":false,"rationale":"Make provider replays immutable, webhook persistence retryable, and acceptance/reference persistence atomic.","migrations":["104"]},
-    {"id":"operator-only-private-surfaces","gate":"separate","destructive":false,"rationale":"Retire client access grants while preserving historical identities, memberships, projects, comments, files, and handoffs.","migrations":["105"]},
-    {"id":"provider-workflow-recovery-links","gate":"separate","destructive":false,"rationale":"Link handoffs and outreach to one durable provider operation and add service-only atomic acceptance, unknown-acceptance reconciliation, and webhook retry handling.","migrations":["106"]}
+    {"id":"openrouter-route-evidence","state":"pending","gate":"separate","destructive":false,"rationale":"Record exact OpenRouter route evidence without activation.","migrations":["096","097"]},
+    {"id":"worker-boundary-hardening","state":"pending","gate":"separate","destructive":false,"rationale":"Fail closed around frozen-plan scheduling, claims, provenance, and completion.","migrations":["098","099"]},
+    {"id":"provider-operation-ledger","state":"pending","gate":"separate","destructive":false,"rationale":"Add service-role-only provider operations and signed receipt ledger.","migrations":["100"]},
+    {"id":"resend-provider-boundary","state":"pending","gate":"separate","destructive":false,"rationale":"Add durable transactional Resend records.","migrations":["101"]},
+    {"id":"calendar-provider-boundary","state":"pending","gate":"separate","destructive":false,"rationale":"Add private Calendar operation references.","migrations":["102"]},
+    {"id":"website-invoice-boundary","state":"pending","gate":"separate","destructive":false,"rationale":"Add fixed test-mode Website Fix invoice references.","migrations":["103"]},
+    {"id":"provider-recovery-atomicity","state":"pending","gate":"separate","destructive":false,"rationale":"Make provider replays immutable, webhook persistence retryable, and acceptance/reference persistence atomic.","migrations":["104"]},
+    {"id":"operator-only-private-surfaces","state":"pending","gate":"separate","destructive":false,"rationale":"Retire client access grants while preserving historical identities, memberships, projects, comments, files, and handoffs.","migrations":["105"]},
+    {"id":"provider-workflow-recovery-links","state":"pending","gate":"separate","destructive":false,"rationale":"Link handoffs and outreach to one durable provider operation and add service-only atomic acceptance, unknown-acceptance reconciliation, and webhook retry handling.","migrations":["106"]}
   ],
   "migrations": [
     {"new_version":"073","new_filename":"073_secure_google_calendar_tokens.sql","original_version":"073","original_filename":"073_secure_google_calendar_tokens.sql","original_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","new_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","stage":"calendar-token-security"},

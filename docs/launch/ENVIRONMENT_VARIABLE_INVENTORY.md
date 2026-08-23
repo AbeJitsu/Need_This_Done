@@ -62,9 +62,13 @@ or external action.
 | `RESEND_API_KEY` | Transactional email provider key; item 17. | present | present |
 | `RESEND_FROM_EMAIL` | Approved transactional sender identity; item 17. | present | present |
 | `RESEND_ADMIN_EMAIL` | Owner-controlled transactional notification destination; item 17. | present | present |
-| `RESEND_WEBHOOK_SECRET` | Server-only transactional webhook verifier; item 17. | present | present |
-| `PROSPECTING_SENDER_PROVIDER` | Explicit prospecting sender mode; item 18. |  |  |
+| `TRANSACTIONAL_RESEND_PROVIDER` | Explicit transactional mode (`disabled`, `fake`, or `live`); item 17. |  |  |
+| `TRANSACTIONAL_RESEND_WEBHOOK_SECRET` | Server-only transactional webhook verifier; item 17. |  |  |
+| `PROSPECTING_RESEND_PROVIDER` | Explicit prospecting mode (`disabled`, `fake`, or `live`); item 18. |  |  |
 | `PROSPECTING_RESEND_API_KEY` | Separate prospecting sender key; item 18. |  |  |
+| `PROSPECTING_RESEND_WEBHOOK_SECRET` | Server-only prospecting webhook verifier; item 18. |  |  |
+| `CALENDAR_PROVIDER` | Explicit Calendar mode (`disabled`, `fake`, or `live`); item 19. |  |  |
+| `STRIPE_INVOICE_PROVIDER` | Explicit Website Fix invoice mode (`disabled`, `fake`, or `live`); item 20. |  |  |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Browser-side Stripe publishable key, only after payment scope approval; item 20. | present | present |
 | `STRIPE_SECRET_KEY` | Server-only Stripe key; item 20. | present | present |
 | `STRIPE_WEBHOOK_SECRET` | Server-only Stripe webhook verifier; item 20. | present | present |
@@ -138,7 +142,6 @@ aliases below are a separate local contract.
 | `NEXT_PUBLIC_BASE_URL` | Template-only URL alias retained for local examples; the current release uses `NEXT_PUBLIC_SITE_URL`. |  |  |
 | `NEXTAUTH_URL` | Template-only/legacy NextAuth URL alias; it is not part of the first hosted baseline. |  |  |
 | `NEXTAUTH_DEBUG` | Non-production authentication debugging. |  |  |
-| `STRIPE_TEST_SECRET_KEY` | Local/test-only Stripe credential name. |  |  |
 | `ASSEMBLY_PRODUCTION_SERVER` | Local assembly mode selector. |  |  |
 | `ASSEMBLY_SERVER_PORT` | Local assembly server port. |  |  |
 | `NODE_ENV` | Runtime-managed Node environment marker. |  |  |
@@ -207,8 +210,6 @@ part of this change.
 | `OPENAI_EMBEDDING_MODEL` or `EMBEDDING_BATCH_SIZE` | Retired embedding-pipeline settings; embeddings are not part of the retained application boundary. | present | present |
 | `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | Retired vector-search setting. | present | present |
 | `VECTOR_SEARCH_MAX_RESULTS` | Retired vector-search setting. | present | present |
-| `STRIPE_TEST_SECRET_KEY` | Test-only secret must not enter hosted application settings. | absent | absent |
-| `STRIPE_PAYMENT_LINK_*` | Retired catalog/payment-link variables are outside the current manual fallback. | absent | absent |
 | `BRIDGE_*` except `OPENCLAW_BRIDGE_SECRET` | Mac bridge runtime settings do not belong in Vercel. | absent | absent |
 | `OPENCLAW_GATEWAY_TOKEN` | Loopback Gateway credential is Mac-only. | absent | absent |
 | `OPENCLAW_GATEWAY_URL` | Loopback Gateway endpoint is Mac-only. | absent | absent |
@@ -251,7 +252,7 @@ Presence is not provider activation or approval for a customer workflow.
 Optional/later-gated names currently present in all three scopes are
 `REDIS_URL`, `OPENAI_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`,
 `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `RESEND_ADMIN_EMAIL`,
-`RESEND_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
+the retired shared Resend webhook verifier, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
 `STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET`. OpenRouter, Calendar,
 OpenClaw bridge, and private-worker names were not added by this change.
 

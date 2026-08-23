@@ -91,9 +91,17 @@ npm run test:retained-smoke
 npm run verify:code
 npm run verify:database
 npm run verify:assembly
+npm run verify:pre-key-ci
+npm run rehearse:hosted-like -- --preflight
 ```
 
 `verify:database` is the single local database gate: it selects the local profile, runs local schema lint, and runs every retained security, RLS, planner/OpenClaw, prospecting, and consultation persistence check. Authenticated/RLS tests require a running local Supabase stack. `verify:assembly:fresh` remains the full release gate and resets only the disposable local Supabase database; neither command targets hosted Supabase.
+
+The migration manifest records historical hosted stages `073–095` and pending
+stages `096–106`. The hosted-like rehearsal is preflight-only by default;
+execution requires the explicit acknowledgement printed by the command and
+resets only disposable local Supabase. The protected pre-`073` historical-data
+rehearsal remains a separate checksum-gated local command.
 
 ## Hosted and provider release boundary
 
