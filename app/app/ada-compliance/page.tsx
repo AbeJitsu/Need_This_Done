@@ -31,7 +31,7 @@ const commonChecks = [
 
 export default function AdaCompliancePage() {
   return (
-    <main className="bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
       <section className="relative overflow-hidden bg-[#18372e] text-white">
         <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
         <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8 md:py-28">

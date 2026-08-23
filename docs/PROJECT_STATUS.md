@@ -58,7 +58,7 @@ candidate is application/code reversion plus a disposable local reset. Hosted
 history and protected backups must remain intact; any hosted correction is a
 reviewed forward migration.
 
-**Simplified public journey (2026-08-23):** The public site now consistently
+**Public clarity and design overhaul (2026-08-23):** The public site now consistently
 offers **Website Fix** and **Managed Automation**, leads with “Fix the work
 that’s slowing you down,” and uses the canonical Website Fix, Managed
 Automation, and general-intake calls to action. Old offer query values and
@@ -69,20 +69,17 @@ private team route. Work is labeled as process examples rather than paid-client
 proof. The prior public client-access control was removed from the project
 modal; historical database relationships remain preserved by migration `105`.
 
-The public pages share three semantic, code-native visuals for offer
-comparison, the three-step delivery path, and human control. The homepage also
-uses the decorative, generated, repository-owned responsive WebP
-`app/public/needthisdone-work-to-outcome.webp`; its adjacent copy carries the
-meaning and its alternate text is intentionally empty. Validation passed:
-249/249 unit tests, 50/50 accessibility checks, lint with zero warnings,
-TypeScript, the production build, and the public production-server browser
-suite with 48 passes and 2 intentional project skips. The browser suite covers
-phone, tablet, and desktop overflow, headings, keyboard navigation,
-reduced-motion preference, canonical offer selection, legacy redirects, and
-private-route denial. Palette pairs used by the new public system meet the
-4.5:1 normal-text threshold in the unit contract. No database, hosted state,
+The public layer now uses a dedicated warm public header/footer and only Inter
+and Playfair in that layer; private workspace chrome stays separate. The
+homepage is text-led and no longer renders the old WebP or generic hero PNG.
+`/website-fix` and `/managed-automation` are canonical pages, while `/services`
+retains its historical anchors. Generic contact begins with no selected offer;
+offer-specific links retain preselection. The analyzer and report now present
+selected signals rather than a grade or compliance conclusion. TypeScript,
+lint, the 316-test unit suite, the 50-test accessibility suite, and the
+production build passed for this slice. No database, hosted state,
 credential, provider, deployment, payment, external message, or Mac worker was
-changed. Rollback is an application-only revert of the public-journey commit;
+changed. Rollback is an application-only revert of the public-layer commit;
 keep migrations `105`–`106` and all historical records intact.
 
 **Release-control definitions:**

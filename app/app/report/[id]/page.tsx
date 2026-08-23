@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
 
   const domain = new URL(report.url).hostname;
   return {
-    title: `Site Report: ${domain} — ${report.score}/100 | NeedThisDone`,
+    title: `Website Snapshot: ${domain} | Need This Done`,
     description: report.executive_summary,
     robots: { index: false, follow: false },
   };
@@ -70,12 +70,10 @@ export default async function ReportPage({ params }: ReportPageProps) {
     : {};
 
   return (
-    <div className="min-h-screen">
+    <main id="main-content" className="min-h-screen bg-[#f7f4ed]">
       <ReportHero
         domain={domain}
         url={report.url}
-        score={report.score}
-        grade={report.grade}
         executiveSummary={report.executive_summary}
         pagesCrawled={report.pages_crawled}
       />
@@ -87,6 +85,6 @@ export default async function ReportPage({ params }: ReportPageProps) {
         <AIAnalysis aiAnalysis={report.ai_analysis} />
         <ReportCTA />
       </div>
-    </div>
+    </main>
   );
 }

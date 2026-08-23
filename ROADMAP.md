@@ -74,8 +74,9 @@ spend, or external-recipient action.
 | Public surface | Decision |
 | --- | --- |
 | `/`, `/services`, `/pricing` | Present the two offers as equal paths. |
+| `/website-fix`, `/managed-automation` | Canonical offer pages explaining fit, contained scope, exclusions, and the offer-specific intake. `/services` remains a short chooser with legacy anchors. |
 | `/contact` | Adaptive intake for canonical `website-fix` or `managed-automation`; legacy values normalize at the boundary. |
-| `/site-analyzer → /report/[id]` | Preserved as the Website Fix conversion path; CTA preselects the website offer. |
+| `/site-analyzer → /report/[id]` | Preserved as the Website Fix conversion path; it presents selected website signals, not a score, compliance verdict, or certification, and its CTA preselects the website offer. |
 | `/how-it-works` | Shared delivery process for both offers. |
 | `/work` | Compact proof including accurate founder/background material formerly split across About and Resume. |
 | `/about`, `/resume` | Permanent redirect to `/work`. |

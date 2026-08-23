@@ -96,7 +96,7 @@ export default function AnalyzerForm() {
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://yoursite.com"
             disabled={isSubmitting}
-            className="flex-1 px-5 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all disabled:opacity-50"
+            className="flex-1 rounded-xl border border-[#183229]/15 bg-[#f7f4ed] px-5 py-4 text-[#183229] placeholder:text-[#50675e] focus:outline-none focus:ring-2 focus:ring-[#126b4e]/30 focus:border-[#126b4e] disabled:opacity-50"
             aria-label="Website URL"
           />
           <input
@@ -105,7 +105,7 @@ export default function AnalyzerForm() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@email.com"
             disabled={isSubmitting}
-            className="flex-1 px-5 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all disabled:opacity-50"
+            className="flex-1 rounded-xl border border-[#183229]/15 bg-[#f7f4ed] px-5 py-4 text-[#183229] placeholder:text-[#50675e] focus:outline-none focus:ring-2 focus:ring-[#126b4e]/30 focus:border-[#126b4e] disabled:opacity-50"
             aria-label="Email address"
           />
         </div>
@@ -113,7 +113,7 @@ export default function AnalyzerForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full sm:w-auto px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full rounded-full bg-[#126b4e] px-8 py-4 text-lg font-bold text-white hover:bg-[#0c563e] transition-all disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-3">
@@ -124,7 +124,7 @@ export default function AnalyzerForm() {
               {PROGRESS_MESSAGES[state] || 'Processing...'}
             </span>
           ) : (
-            'Analyze My Site'
+            'Create my website snapshot'
           )}
         </button>
       </form>

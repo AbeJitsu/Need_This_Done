@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Poppins, Playfair_Display, Manrope } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
+import PublicChrome from '@/components/public/PublicChrome';
 import { AuthProvider } from '@/context/AuthContext';
 import SessionProvider from '@/components/providers/SessionProvider';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
@@ -37,22 +36,6 @@ export const revalidate = 3600; // Regenerate every hour
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-  display: 'swap',
-});
-
-// Manrope font - geometric, bold, distinctive (headings)
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['700', '800'],
-  variable: '--font-manrope',
-  display: 'swap',
-});
-
-// Poppins font - geometric, authoritative (logo/brand)
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-poppins',
   display: 'swap',
 });
 
@@ -139,7 +122,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `${seoConfig.siteName} - Website Fix & Managed Automation`,
-    description: 'A $500 targeted website fix, or a browser-based automation system for recurring work.',
+    description: 'A $500 Website Fix or a proposal-based, human-led 30-day Managed Automation pilot.',
     images: [`${seoConfig.baseUrl}/og-image.png`],
   },
 
@@ -171,7 +154,7 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${inter.variable} ${manrope.variable} ${poppins.variable} ${playfair.variable}`}
+      className={`${inter.variable} ${playfair.variable}`}
     >
       <head>
         {/* JSON-LD Structured Data for rich search results */}
@@ -197,18 +180,7 @@ export default function RootLayout({
                       <HeroPreviewDetector />
                     </Suspense>
 
-                    {/* Site-wide navigation (includes dark mode toggle) */}
-                    <Navigation />
-
-                    {/* Page content - gradient background applied here once for all pages */}
-                    <main id="main-content" className="min-h-screen bg-white">
-                      {children}
-                    </main>
-
-                    {/* Site-wide footer */}
-                    <div data-noindex>
-                      <Footer />
-                    </div>
+                    <PublicChrome>{children}</PublicChrome>
 
                     {/* Service detail modal - available on all pages */}
                     <ServiceDetailModal />

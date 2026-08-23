@@ -104,12 +104,12 @@ describe('simplified public journey', () => {
     expect(source('components/report/ReportCTA.tsx')).toContain('href="/contact?offer=website-fix"');
   });
 
-  it('ships the generated decorative WebP through responsive image rendering', () => {
-    expect(existsSync(resolve(appRoot, 'public/needthisdone-work-to-outcome.webp'))).toBe(true);
+  it('uses a text-led two-offer homepage without a decorative hero image', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('needthisdone-work-to-outcome.webp');
-    expect(home).toMatch(/<Image[\s\S]+alt=""/);
-    expect(home).toContain('sizes=');
+    expect(home).toContain('href="/website-fix"');
+    expect(home).toContain('href="/managed-automation"');
+    expect(home).not.toContain('needthisdone-work-to-outcome');
+    expect(home).not.toContain("from 'next/image'");
   });
 
   it('keeps the public palette readable and honors reduced-motion preferences', () => {

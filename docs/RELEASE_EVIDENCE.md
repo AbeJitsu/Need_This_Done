@@ -130,17 +130,17 @@ outcomes.
 
 The homepage, Services, Pricing, How It Works, and Work pages reuse semantic
 offer-comparison, three-step, and Prepared/Reviewed/Approved flows instead of
-repeating card-wall diagrams. The decorative homepage illustration was created
-with the built-in image generator without a project API key and stored as the
-optimized 1536×1024 WebP
-`app/public/needthisdone-work-to-outcome.webp` (about 50 KB). Its responsive
-Image declaration includes intrinsic dimensions, `sizes`, `preload`, the
-repository-required `unoptimized` behavior, and empty alternate text because
-the adjacent heading and paragraph explain the outcome.
+repeating card-wall diagrams. The current public homepage is intentionally
+text-led: it does not render the legacy WebP or generic hero PNG. Canonical
+offer pages are `/website-fix` and `/managed-automation`; `/services` is a
+brief chooser retaining old anchors only for inbound compatibility. The public
+shell is separate from private workspace chrome, and generic contact requires
+an explicit offer choice. The snapshot/report presentation describes selected
+signals rather than a grade, compliance verdict, or certification.
 
-Validation passed on the public-journey change: 249/249 unit tests, 50/50
+Validation passed on the public-layer change: 316/316 unit tests, 50/50
 accessibility checks, lint with zero warnings, TypeScript, and the production
-build. The local production-server browser matrix passed 48 checks with 2
+build. The prior local production-server browser matrix passed 48 checks with 2
 intentional project skips across desktop and mobile projects; its explicit
 responsive contract additionally exercises 375, 768, and 1280 pixel widths,
 keyboard-opened mobile navigation, headings, overflow, decorative image

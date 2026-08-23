@@ -1,0 +1,6 @@
+import type { Metadata } from 'next';
+import OfferPage from '@/components/public/OfferPage';
+
+export const metadata: Metadata = { title: 'Managed Automation | Need This Done', description: 'A proposal-based, human-led 30-day pilot for one repeated task.', alternates: { canonical: '/managed-automation' } };
+
+export default function ManagedAutomationPage() { return <OfferPage eyebrow="Managed Automation · 30-day pilot" title="Give one repeated task a human-led operating rhythm." introduction="Abe and Andrea privately run one agreed pilot, keeping decisions visible and sending a concise client brief each week." commitment="The written proposal defines the task, desired outcome, price, payment terms, success measures, and every action that must wait for your approval." included={['One repeated task with a clear 30-day finish line.', 'Private human operation by Abe and Andrea.', 'Four weekly client briefs that explain progress, decisions, and next steps.']} excluded={['Autonomous actions, automatic purchases, or unchecked external messages.', 'A client dashboard, broad integration program, or indefinite retainer.', 'Named workflows or results that have not been agreed in a proposal.']} cta="Discuss Managed Automation" href="/contact?offer=managed-automation" />; }

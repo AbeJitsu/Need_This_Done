@@ -40,7 +40,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
   const noteCountLabel = `${filteredPosts.length} ${filteredPosts.length === 1 ? 'note' : 'notes'}`;
 
   return (
-    <main className="bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
       <section className="relative overflow-hidden border-b border-[#183229]/10 bg-[#18372e] text-white">
         <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />

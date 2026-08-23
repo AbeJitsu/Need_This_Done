@@ -15,17 +15,17 @@ import HomePageClient from '@/components/home/HomePageClient';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'NeedThisDone | Website Fix & Managed Automation',
+  title: 'Need This Done | Website Fix & Managed Automation',
   description: 'Fix one website problem for $500, or discuss a human-run 30-day pilot for one repeated task.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'NeedThisDone | Website Fix & Managed Automation',
+    title: 'Need This Done | Website Fix & Managed Automation',
     description: 'Two focused paths: one contained website fix or one human-run automation pilot.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'NeedThisDone | Website Fix & Managed Automation',
+    title: 'Need This Done | Website Fix & Managed Automation',
     description: 'Two focused paths: one contained website fix or one human-run automation pilot.',
   },
 };

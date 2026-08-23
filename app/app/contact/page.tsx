@@ -47,7 +47,7 @@ function ContactIntake() {
   const searchParams = useSearchParams();
   const requestedOffer = searchParams.get('offer') || searchParams.get('offering');
   const [status, setStatus] = useState<SubmissionStatus>('idle');
-  const [offer, setOffer] = useState<PublicOfferId>('website-improvement');
+  const [offer, setOffer] = useState<PublicOfferId | null>(null);
   const [form, setForm] = useState<ContactFormState>(initialForm);
 
   useEffect(() => {
@@ -66,6 +66,11 @@ function ContactIntake() {
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus('sending');
+
+    if (!offer) {
+      setStatus('error');
+      return;
+    }
 
     const message = offer === 'website-improvement'
       ? [
@@ -98,7 +103,7 @@ function ContactIntake() {
     }
   };
 
-  const activeOffer = PUBLIC_OFFERS[offer];
+  const activeOffer = offer ? PUBLIC_OFFERS[offer] : null;
   const website = offer === 'website-improvement';
   const textAreaClass = 'mt-2 min-h-32 w-full rounded-2xl border border-[#183229]/15 bg-white px-4 py-3 leading-6 text-[#183229] outline-none transition focus:border-[#126b4e] focus:ring-2 focus:ring-[#126b4e]/20';
   const inputClass = 'mt-2 min-h-12 w-full rounded-xl border border-[#183229]/15 bg-white px-4 text-[#183229] outline-none transition focus:border-[#126b4e] focus:ring-2 focus:ring-[#126b4e]/20';
@@ -107,19 +112,19 @@ function ContactIntake() {
 
   if (status === 'success') {
     return (
-      <main className="grid min-h-[75vh] place-items-center bg-[#f7f4ed] px-5 py-16 text-[#183229]">
+      <main id="main-content" className="grid min-h-[75vh] place-items-center bg-[#f7f4ed] px-5 py-16 text-[#183229]">
         <section className="max-w-xl rounded-[2rem] border border-[#183229]/15 bg-white p-9 text-center shadow-xl shadow-emerald-950/10 sm:p-12">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#e4eee6]"><Check className="h-7 w-7 text-[#126b4e]" aria-hidden="true" /></div>
           <p className="mt-7 text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Contact</p>
           <h1 className="mt-4 font-playfair text-4xl font-black">Request received.</h1>
-          <p className="mt-4 leading-7 text-[#50675e]">We&apos;ll review the context for your {activeOffer.name.toLowerCase()} and confirm the next step before work begins.</p>
+          <p className="mt-4 leading-7 text-[#50675e]">We&apos;ll review the context for your {activeOffer?.name.toLowerCase()} and confirm the next step before work begins.</p>
         </section>
       </main>
     );
   }
 
   return (
-    <main className="bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
       <section className="relative overflow-hidden bg-[#18372e] text-white">
         <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
@@ -162,7 +167,7 @@ function ContactIntake() {
             <div className="border-b border-[#183229]/10 pb-8">
               <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">A short intake</p>
               <h2 className="mt-3 font-playfair text-4xl font-black">Make the first move concrete.</h2>
-              <p className="mt-4 max-w-2xl leading-7 text-[#50675e]">Choose the offer that best matches the work. You can add detail without writing a full brief.</p>
+              <p className="mt-4 max-w-2xl leading-7 text-[#50675e]">Choose the offer that best matches the work. A general visit starts with no offer selected.</p>
             </div>
 
             <fieldset className="mt-9">
@@ -194,7 +199,7 @@ function ContactIntake() {
               <label className="font-semibold sm:col-span-2">Company <span className="font-normal text-[#50675e]">(optional)</span><input className={inputClass} name="company" value={form.company} onChange={update} autoComplete="organization" /></label>
             </fieldset>
 
-            {website ? (
+            {offer && website ? (
               <fieldset className={contextPanelClass}>
                 <legend className={contextLegendClass}>Website Fix context</legend>
                 <p className="mt-0 max-w-2xl text-sm leading-6 text-[#50675e]">Point to the page, describe the friction, and name the improvement you would recognize when it is done.</p>
@@ -205,7 +210,7 @@ function ContactIntake() {
                 </div>
                 <div className="mt-5 flex gap-3 rounded-2xl border border-[#183229]/10 bg-white p-4 text-sm leading-6 text-[#50675e]"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#126b4e]" aria-hidden="true" /><span><strong className="text-[#183229]">Keep it specific.</strong> One page, path, or component is enough to start.</span></div>
               </fieldset>
-            ) : (
+            ) : offer ? (
               <fieldset className={`${contextPanelClass} space-y-6`}>
                 <legend className={contextLegendClass}>Managed Automation context</legend>
                 <label className="block font-semibold">Where does work get stuck or repeat?<textarea className={textAreaClass} required name="bottlenecks" value={form.bottlenecks} onChange={update} placeholder="Describe the recurring workflow or bottleneck." /></label>
@@ -215,21 +220,21 @@ function ContactIntake() {
                   <label className="block font-semibold">What should always wait for your say?<textarea className={textAreaClass} required name="approvals" value={form.approvals} onChange={update} placeholder="Messages, publishing, account changes, spending, or other decisions." /></label>
                 </div>
               </fieldset>
-            )}
+            ) : null}
 
-            {status === 'error' && <p role="alert" className="mt-8 rounded-xl bg-red-50 p-4 text-red-800">We couldn&apos;t submit this request. Please try again.</p>}
+            {status === 'error' && <p role="alert" className="mt-8 rounded-xl bg-red-50 p-4 text-red-800">{offer ? "We couldn't submit this request. Please try again." : 'Choose an offer before sending your request.'}</p>}
             <div className="mt-9 flex flex-col gap-3 border-t border-[#183229]/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-[#50675e]">We review the context before confirming scope.</p>
-              <button type="submit" disabled={status === 'sending'} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] disabled:opacity-60">{status === 'sending' ? 'Sending…' : 'Tell us what’s stuck'} <ArrowRight className="h-4 w-4" aria-hidden="true" /></button>
+              <button type="submit" disabled={status === 'sending' || !offer} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] disabled:opacity-60">{status === 'sending' ? 'Sending…' : 'Tell us what’s stuck'} <ArrowRight className="h-4 w-4" aria-hidden="true" /></button>
             </div>
           </form>
 
           <div className="space-y-5 lg:sticky lg:top-24">
             <div className="rounded-[2rem] border border-[#183229]/10 bg-[#e4eee6] p-6 sm:p-7">
               <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Selected starting point</p>
-              <h2 className="mt-4 font-playfair text-3xl font-black">{activeOffer.name}</h2>
-              <p className="mt-3 leading-7 text-[#50675e]">{activeOffer.summary}</p>
-              <p className="mt-5 border-t border-[#183229]/10 pt-5 text-sm font-semibold leading-6 text-[#183229]">{activeOffer.payment}</p>
+              <h2 className="mt-4 font-playfair text-3xl font-black">{activeOffer?.name || 'Choose an offer'}</h2>
+              <p className="mt-3 leading-7 text-[#50675e]">{activeOffer?.summary || 'Select Website Fix or Managed Automation to reveal the focused questions.'}</p>
+              {activeOffer && <p className="mt-5 border-t border-[#183229]/10 pt-5 text-sm font-semibold leading-6 text-[#183229]">{activeOffer.payment}</p>}
             </div>
             <div className="rounded-[2rem] border border-[#183229]/15 bg-white p-6 sm:p-7">
               <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">What happens next</p>
@@ -251,7 +256,7 @@ function ContactIntake() {
 
 export default function ContactPage() {
   return (
-    <Suspense fallback={<main className="grid min-h-[60vh] place-items-center bg-[#f7f4ed] text-[#183229]">Loading contact form…</main>}>
+    <Suspense fallback={<main id="main-content" className="grid min-h-[60vh] place-items-center bg-[#f7f4ed] text-[#183229]">Loading contact form…</main>}>
       <ContactIntake />
     </Suspense>
   );

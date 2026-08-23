@@ -27,7 +27,7 @@ function getBarBg(earned: number, possible: number): string {
 export default function ScoreBreakdown({ categories }: { categories: Category[] }) {
   return (
     <section>
-      <h2 className="text-2xl font-bold text-slate-900 mb-6">Score Breakdown</h2>
+      <h2 className="text-2xl font-bold text-slate-900 mb-2">Selected signals</h2><p className="mb-6 text-sm leading-6 text-slate-600">These observations are prompts for review, not a site grade or completeness claim.</p>
 
       <div className="space-y-4">
         {categories.map((cat) => {

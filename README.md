@@ -20,9 +20,9 @@ Historical audits, launch notes, `docs/TECH_STACK.md`, and `docs/PROJECT_STATUS.
 
 ## Public experience
 
-The public navigation is **Website Fix · Managed Automation · How It Works · Work**, followed by **Tell us what's stuck**.
+The public navigation is **Website Fix · Managed Automation · How It Works · How We Work**, followed by **Choose a starting point**. The canonical offer pages are `/website-fix` and `/managed-automation`; `/services` remains a short chooser and keeps its legacy offer anchors for inbound links.
 
-`/site-analyzer → /report/[id] → /contact?offer=website-fix` is the Website Fix path. The report is a free evidence-based starting point, not a promised score increase or accessibility certification. `/contact` is one adaptive intake that stores the selected offer and its tailored context through the existing project-request flow.
+`/site-analyzer → /report/[id] → /contact?offer=website-fix` is the Website Fix path. The analyzer is a limited website snapshot of selected signals, and the report is not a score, compliance verdict, or accessibility certification. `/contact` requires a visitor who arrives without an offer query to choose one before it stores the selected offer and tailored context through the existing project-request flow.
 
 `/work` is the compact proof destination. `/about` and `/resume` permanently redirect there; `/guide` redirects to `/faq`; and `/build` redirects to the Website Fix intake. The sitemap contains only maintained public pages and the curated Insights posts.
 

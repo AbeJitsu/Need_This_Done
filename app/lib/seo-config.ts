@@ -9,13 +9,13 @@ export const seoConfig = {
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com',
 
   // Site identity
-  siteName: 'NeedThisDone',
+  siteName: 'Need This Done',
   description:
     'Fix one website problem for $500, or discuss a human-run 30-day pilot for one repeated task.',
 
   // Business information for structured data
   business: {
-    name: 'NeedThisDone',
+    name: 'Need This Done',
     email: 'hello@needthisdone.com',
     priceRange: '$$',
     address: {

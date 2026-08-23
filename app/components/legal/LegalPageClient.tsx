@@ -99,7 +99,7 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
   const PageIcon = config.icon;
 
   return (
-    <div className="min-h-screen bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="min-h-screen bg-[#f7f4ed] text-[#183229]">
       <section aria-labelledby="legal-page-title" className="bg-[#18372e] text-white">
         <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 md:py-20">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
@@ -225,6 +225,6 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
           </aside>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

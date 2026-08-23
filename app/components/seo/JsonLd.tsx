@@ -94,7 +94,7 @@ const schemas = {
   Service: {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: 'NeedThisDone Services',
+    name: 'Need This Done Services',
     provider: {
       '@type': 'LocalBusiness',
       name: businessInfo.name,

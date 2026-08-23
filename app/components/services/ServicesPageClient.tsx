@@ -5,7 +5,7 @@ import { PUBLIC_OFFERS } from '@/lib/public-offers';
 
 export default function ServicesPageClient() {
   return (
-    <main className="bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
       <section className="border-b border-[#183229]/10 bg-[#18372e] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Services</p>
@@ -28,6 +28,7 @@ export default function ServicesPageClient() {
         <span id="ai-operator" className="absolute top-0 scroll-mt-24" aria-hidden="true" />
         <span id="managed-automation" className="absolute top-0 scroll-mt-24" aria-hidden="true" />
         <OfferComparison heading="Choose this when the finish line can be stated plainly." />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2"><Link href="/website-fix" className="rounded-xl border border-[#183229]/15 bg-white p-5 font-bold hover:border-[#126b4e]">Website Fix details <span className="float-right text-[#126b4e]">→</span></Link><Link href="/managed-automation" className="rounded-xl border border-[#183229]/15 bg-white p-5 font-bold hover:border-[#126b4e]">Managed Automation details <span className="float-right text-[#126b4e]">→</span></Link></div>
       </div>
 
       <section className="border-y border-[#183229]/10 bg-white">

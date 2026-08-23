@@ -8,78 +8,24 @@ import AnalyzerForm from '@/components/site-analyzer/AnalyzerForm';
 // analysis report emailed to them and viewable at /report/[id].
 
 export const metadata: Metadata = {
-  title: 'Free Website Audit - NeedThisDone',
+  title: 'Website Snapshot | Need This Done',
   description:
-    'Get an evidence-based website audit with SEO, accessibility, and performance signals, then decide whether a $500 Website Fix fits.',
+    'Get a limited website snapshot of selected SEO, accessibility, and performance signals before deciding whether a Website Fix fits.',
   alternates: { canonical: '/site-analyzer' },
   openGraph: {
-    title: 'Free Website Audit - NeedThisDone',
-    description: 'Review SEO, accessibility, and performance signals before choosing one contained Website Fix.',
+    title: 'Website Snapshot | Need This Done',
+    description: 'Review selected website signals before choosing one contained Website Fix.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free Website Audit - NeedThisDone',
-    description: 'Review SEO, accessibility, and performance signals before choosing one contained Website Fix.',
+    title: 'Website Snapshot | Need This Done',
+    description: 'Review selected website signals before choosing one contained Website Fix.',
   },
 };
 
 export default function SiteAnalyzerPage() {
   return (
-    <div className="min-h-screen">
-      {/* Hero Section - Dark */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        {/* Decorative blurs */}
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-
-        <div className="relative max-w-4xl mx-auto px-6 sm:px-10 md:px-12 pt-16 md:pt-24 pb-16 md:pb-20">
-          {/* Accent line + label */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Free Audit
-            </span>
-          </div>
-
-          <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6">
-            See where your website{' '}
-            <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Stack Up?
-            </span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mb-12">
-            Get a free evidence-based review of your website&apos;s SEO, accessibility, and
-            performance. Use the report to decide whether one contained $500 Website Fix is the right next step.
-          </p>
-
-          {/* Form */}
-          <AnalyzerForm />
-
-          {/* Trust badges */}
-          <div className="flex flex-wrap gap-6 mt-10 text-sm text-slate-500">
-            <span className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              Report-first improvement path
-            </span>
-            <span className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              Accessibility signal check
-            </span>
-            <span className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              No obligation to proceed
-            </span>
-          </div>
-        </div>
-      </section>
-    </div>
+    <main id="main-content" className="min-h-screen bg-[#f7f4ed] text-[#183229]"><section className="border-b border-[#183229]/10 bg-[#183229] text-white"><div className="mx-auto max-w-4xl px-5 py-16 sm:px-8 md:py-24"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#b9d5bd]">Website Fix tool</p><h1 className="mt-5 font-playfair text-5xl font-black leading-[.98] sm:text-6xl">Get a limited website snapshot.</h1><p className="mt-6 max-w-2xl text-lg leading-8 text-[#dce8dd]">We check selected public SEO, accessibility, and performance signals. It is a starting point for review—not a grade, compliance verdict, or guarantee.</p></div></section><section className="mx-auto max-w-4xl px-5 py-14 sm:px-8 md:py-20"><div className="rounded-2xl border border-[#183229]/10 bg-white p-6 sm:p-9"><h2 className="font-playfair text-3xl font-black">Send the snapshot to your inbox.</h2><p className="mt-3 max-w-2xl leading-7 text-[#50675e]">We collect your email so we can send a link to this private report and a short summary. We do not treat the selected signals as a certification.</p><div className="mt-8"><AnalyzerForm /></div></div></section></main>
   );
 }

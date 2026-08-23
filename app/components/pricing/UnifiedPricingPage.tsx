@@ -5,7 +5,7 @@ import { PUBLIC_OFFERS } from '@/lib/public-offers';
 
 export default function UnifiedPricingPage() {
   return (
-    <main className="min-h-screen bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="min-h-screen bg-[#f7f4ed] text-[#183229]">
       <section className="border-b border-[#183229]/10">
         <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Pricing</p>

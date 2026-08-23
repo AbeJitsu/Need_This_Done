@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function HowItWorksPage() {
   return (
-    <main className="bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
       <section className="border-b border-[#183229]/10 bg-[#18372e] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">How it works</p>
