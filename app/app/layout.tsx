@@ -167,7 +167,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${manrope.variable} ${poppins.variable} ${playfair.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+      className={`${inter.variable} ${manrope.variable} ${poppins.variable} ${playfair.variable}`}
+    >
       <head>
         {/* JSON-LD Structured Data for rich search results */}
         <ProfessionalServiceJsonLd />

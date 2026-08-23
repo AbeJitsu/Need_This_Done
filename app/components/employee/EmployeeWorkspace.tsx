@@ -187,7 +187,7 @@ export default function EmployeeWorkspace() {
         <section className="mt-8">
           {(view === 'morning' || view === 'midday' || view === 'evening') && (
             <>
-            {workspace.membershipRole !== 'viewer' && <AddWorkItemForm workspace={workspace} queue={view} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}
+            <AddWorkItemForm workspace={workspace} queue={view} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />
             {queueItems.length === 0
               ? <EmptyState title="This check-in is clear" description="There are no pending decisions in this capped queue. Completed and deferred work remains available in Activity." />
               : <div className="space-y-5">{queueItems.map((item, index) => (
@@ -202,8 +202,7 @@ export default function EmployeeWorkspace() {
                   </dl>
                   <label className="mt-7 block font-semibold">Optional instructions<textarea value={instructions[item.id] || ''} onChange={(event) => setInstructions((current) => ({ ...current, [item.id]: event.target.value }))} maxLength={2000} className="mt-2 min-h-24 w-full rounded-xl border border-[#183229]/20 p-3" placeholder="Adjust tone, add context, or explain your decision…" /></label>
                   <label className="mt-4 block font-semibold">Defer until<input type="date" min={new Date(Date.now() + 86_400_000).toISOString().slice(0, 10)} value={deferDates[item.id] || ''} onChange={(event) => setDeferDates((current) => ({ ...current, [item.id]: event.target.value }))} className="mt-2 block min-h-11 rounded-xl border border-[#183229]/20 px-3" /></label>
-                  {workspace.membershipRole === 'viewer' && <p className="mt-5 rounded-xl bg-[#f7f4ed] p-3 text-sm font-semibold">Viewers can review this queue but only owners and managers can record decisions.</p>}
-                  <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">{(['approve', 'revise', 'defer', 'reject'] as EmployeeDecision[]).map((action) => <button key={action} disabled={submittingId === item.id || workspace.membershipRole === 'viewer' || (action === 'revise' && !instructions[item.id]?.trim()) || (action === 'defer' && !deferDates[item.id])} onClick={() => void decide(item, action)} className={action === 'approve' ? 'min-h-11 rounded-full bg-[#126b4e] px-4 font-bold capitalize text-white disabled:opacity-60' : 'min-h-11 rounded-full border border-[#183229]/20 px-4 font-bold capitalize disabled:opacity-60'}>{submittingId === item.id ? 'Saving…' : action}</button>)}</div>
+                  <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">{(['approve', 'revise', 'defer', 'reject'] as EmployeeDecision[]).map((action) => <button key={action} disabled={submittingId === item.id || (action === 'revise' && !instructions[item.id]?.trim()) || (action === 'defer' && !deferDates[item.id])} onClick={() => void decide(item, action)} className={action === 'approve' ? 'min-h-11 rounded-full bg-[#126b4e] px-4 font-bold capitalize text-white disabled:opacity-60' : 'min-h-11 rounded-full border border-[#183229]/20 px-4 font-bold capitalize disabled:opacity-60'}>{submittingId === item.id ? 'Saving…' : action}</button>)}</div>
                 </article>
               ))}</div>}
             </>
@@ -213,13 +212,13 @@ export default function EmployeeWorkspace() {
             workspace.decisions.length === 0 ? <EmptyState title="No decisions recorded yet" description="Approved, revised, deferred, and rejected work will form the immutable activity history." /> :
             <div className="space-y-3">{workspace.decisions.map((decision) => {
               const item = workspace.workItems.find((candidate) => candidate.id === decision.work_item_id);
-              return <article key={decision.id} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">{item?.title || 'Work item'}</h2><time className="text-sm text-[#50675e]">{new Date(decision.created_at).toLocaleString()}</time></div><p className="mt-2 text-sm capitalize"><Activity className="mr-2 inline h-4 w-4 text-[#126b4e]" />{decision.decision}{item?.status === 'completed' ? ' · completed' : ''}</p>{decision.instructions && <p className="mt-3 rounded-xl bg-[#f7f4ed] p-3 text-sm">{decision.instructions}</p>}{item?.completion_notes && <p className="mt-3 rounded-xl bg-[#e4eee6] p-3 text-sm"><strong>Completion evidence:</strong> {item.completion_notes}</p>}{item?.status === 'approved' && workspace.membershipRole !== 'viewer' && <CompletionForm item={item} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}</article>;
+              return <article key={decision.id} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">{item?.title || 'Work item'}</h2><time className="text-sm text-[#50675e]">{new Date(decision.created_at).toLocaleString()}</time></div><p className="mt-2 text-sm capitalize"><Activity className="mr-2 inline h-4 w-4 text-[#126b4e]" />{decision.decision}{item?.status === 'completed' ? ' · completed' : ''}</p>{decision.instructions && <p className="mt-3 rounded-xl bg-[#f7f4ed] p-3 text-sm">{decision.instructions}</p>}{item?.completion_notes && <p className="mt-3 rounded-xl bg-[#e4eee6] p-3 text-sm"><strong>Completion evidence:</strong> {item.completion_notes}</p>}{item?.status === 'approved' && <CompletionForm item={item} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}</article>;
             })}</div>
           )}
 
           {view === 'outcomes' && (
             <div className="space-y-6">
-              {workspace.membershipRole !== 'viewer' && <OutcomeForm workspace={workspace} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}
+              <OutcomeForm workspace={workspace} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />
               <section aria-labelledby="daily-scorecard-title">
                 <h2 id="daily-scorecard-title" className="text-2xl font-black">Today&apos;s scorecard</h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

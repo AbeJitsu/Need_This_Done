@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 const reflectionSchema = z.object({ reflection: z.string().trim().min(1).max(2000) });
@@ -10,7 +10,7 @@ function todayInUtc() {
 }
 
 export async function PUT(request: Request) {
-  const auth = await verifyAuth();
+  const auth = await verifyAdmin();
   if (auth.error) return auth.error;
 
   const parsed = reflectionSchema.safeParse(await request.json().catch(() => null));

@@ -1,18 +1,16 @@
 // ============================================================================
-// Customer Account Profile API
+// Private operator profile API
 // ============================================================================
-// What: Get and update customer profile information
-// Why: Allow customers to manage their account details
-// How: Read the authenticated Supabase user and return the app profile.
+// The retained team profile is available only to database-backed operators.
 
 export const dynamic = 'force-dynamic';
 
 import { NextResponse, NextRequest } from 'next/server';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 
 export async function GET() {
   try {
-    const auth = await verifyAuth();
+    const auth = await verifyAdmin();
     if (auth.error) return auth.error;
     const authUser = auth.user;
 
@@ -34,7 +32,7 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    const auth = await verifyAuth();
+    const auth = await verifyAdmin();
     if (auth.error) return auth.error;
     const authUser = auth.user;
 

@@ -16,23 +16,19 @@ import AgentOperationsDashboard from '@/components/AgentOperationsDashboard';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const localPreview = process.env.NODE_ENV === 'development'
-    && process.env.NEXT_PUBLIC_DASHBOARD_PREVIEW === 'true';
+  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
 
   // ============================================================================
   // Redirect if Not Authenticated
   // ============================================================================
 
   useEffect(() => {
-    if (!localPreview && !authLoading && !isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login');
+    } else if (!authLoading && isAuthenticated && !isAdmin) {
       router.push('/login');
     }
-  }, [isAuthenticated, authLoading, localPreview, router]);
-
-  if (localPreview) {
-    return <AgentOperationsDashboard previewMode />;
-  }
+  }, [isAuthenticated, isAdmin, authLoading, router]);
 
   // ============================================================================
   // Show Loading State
@@ -50,7 +46,7 @@ export default function DashboardPage() {
   // Don't Render if Not Authenticated (Will Redirect)
   // ============================================================================
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !isAdmin) {
     return null;
   }
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { verifyProjectAccess, verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
 export const dynamic = 'force-dynamic';
@@ -22,10 +22,8 @@ export async function GET(
     // Verify Project Access
     // ====================================================================
 
-    const accessResult = await verifyProjectAccess(id);
-    if (accessResult.error) return accessResult.error;
-
-    const isAdmin = accessResult.isAdmin;
+    const auth = await verifyAdmin();
+    if (auth.error) return auth.error;
 
     // ====================================================================
     // Fetch Comments (with Caching)
@@ -36,7 +34,7 @@ export async function GET(
     const supabase = await createSupabaseServerClient();
 
     const result = await cache.wrap(
-      CACHE_KEYS.projectComments(id, isAdmin),
+      CACHE_KEYS.projectComments(id, true),
       async () => {
         let query = supabase
           .from('project_comments')
@@ -49,11 +47,6 @@ export async function GET(
           `)
           .eq('project_id', id)
           .order('created_at', { ascending: true });
-
-        // Non-admin users should not see internal comments
-        if (!isAdmin) {
-          query = query.eq('is_internal', false);
-        }
 
         const { data: comments, error: fetchError } = await query;
 
@@ -102,10 +95,8 @@ export async function POST(
     // Verify Project Access
     // ====================================================================
 
-    const accessResult = await verifyProjectAccess(id);
-    if (accessResult.error) return accessResult.error;
-
-    const isAdmin = accessResult.isAdmin;
+    const auth = await verifyAdmin();
+    if (auth.error) return auth.error;
 
     // ====================================================================
     // Parse Request Body
@@ -125,16 +116,14 @@ export async function POST(
     // Get User for Comment Creation
     // ====================================================================
 
-    const authResult = await verifyAuth();
-    if (authResult.error) return authResult.error;
-    const user = authResult.user;
+    const user = auth.user;
 
     // ====================================================================
     // Validate Internal Note Flag
     // ====================================================================
     // Only admins can create internal notes
 
-    const isInternalNote = is_internal === true && isAdmin;
+    const isInternalNote = is_internal === true;
 
     // ====================================================================
     // Create Comment

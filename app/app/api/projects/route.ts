@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import {
   validateFiles,
@@ -13,7 +12,7 @@ import {
   serverError,
   handleApiError,
 } from '@/lib/api-errors';
-import { cache, CACHE_KEYS } from '@/lib/cache';
+import { cache } from '@/lib/cache';
 import { sendProjectSubmissionEmails } from '@/lib/email-service';
 import { withSupabaseRetry, isUniqueViolation } from '@/lib/supabase-retry';
 import {
@@ -117,23 +116,6 @@ export async function POST(request: Request) {
     }
 
     // ====================================================================
-    // Check for Authenticated User (Optional)
-    // ====================================================================
-    // If user is logged in, link the project to their account
-
-    const supabase = await createSupabaseServerClient();
-
-    let userId: string | null = null;
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        userId = user.id;
-      }
-    } catch {
-      // User not logged in - that's OK, continue as guest
-    }
-
-    // ====================================================================
     // Get Admin Client
     // ====================================================================
     // Contact form submissions need the admin client to bypass RLS
@@ -192,7 +174,7 @@ export async function POST(request: Request) {
       name: name.trim(),
       message: message.trim(),
       service: service?.trim() || '',
-    }, userId || undefined);
+    });
 
     const isNewRequest = await checkAndMarkRequest(requestFingerprint, 'project submission');
     if (!isNewRequest) {
@@ -218,7 +200,7 @@ export async function POST(request: Request) {
             message: message.trim(),
             status: 'submitted',
             attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
-            user_id: userId,
+            user_id: null,
             consultation_type: consultationDetails.consultationType,
             preferred_consultation_at: consultationDetails.preferredConsultationAt,
             alternate_consultation_at: consultationDetails.alternateConsultationAt,
@@ -292,9 +274,6 @@ export async function POST(request: Request) {
     // ====================================================================
     // New project submitted - invalidate dashboard and admin caches
 
-    if (userId) {
-      await cache.invalidate(CACHE_KEYS.userProjects(userId));
-    }
     await cache.invalidatePattern('admin:projects:*');
 
     // ====================================================================

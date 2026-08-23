@@ -14,7 +14,7 @@ Neither offer is a redesign, integration, multi-page build, client dashboard, au
 ## Current pre-key critical path
 
 Finish a provider-free local candidate before any new cloud action. Local
-migrations currently reach `104`; reviewed hosted migration evidence ends at
+migrations currently reach `105`; reviewed hosted migration evidence ends at
 `095`. The local gate covers code, disposable local database behavior,
 deterministic provider fakes, and the offline bridge. It cannot be represented
 as deployment or provider proof. After the local gate and an independent
@@ -60,6 +60,7 @@ spend, or external-recipient action.
 
 - Supabase is durable truth; Redis is transient only. Do not add Qdrant or another database.
 - Every external action remains human-approved. The public site never opens the worker boundary.
+- Private workspaces are operator-only. Historical client links and memberships remain durable records but grant no access.
 - Real outreach requires the scoped worker boundary, public evidence, suppression/unsubscribe handling, verified sender events, and an approved send.
 - Client-facing delivery is the website handoff or weekly brief; it is not a client dashboard.
 - Do not activate a provider, deploy, or apply a hosted migration as part of this roadmap without separate approval.
@@ -76,7 +77,8 @@ spend, or external-recipient action.
 | `/about`, `/resume` | Permanent redirect to `/work`. |
 | `/guide` | Permanent redirect to `/faq`; support material remains in maintained FAQ/process pages. |
 | `/build` | Redirect to `/contact?offer=website-improvement`; no sitemap entry. |
-| `/dashboard`, `/employee`, `/prospecting`, `/admin/*` | Private only; no client-facing operator access. |
+| `/dashboard`, `/employee`, `/prospecting`, `/admin/*` | Admin/operator only; unauthenticated access is denied and ordinary authenticated access receives no private data. |
+| `/api/projects/mine`, `/api/projects/[id]/access` | Retired compatibility boundaries; historical links and memberships remain stored. |
 
 ## Insights audit — 2026-08-08
 

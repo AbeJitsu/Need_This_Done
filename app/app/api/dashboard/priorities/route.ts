@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 const prioritySchema = z.object({
@@ -18,7 +18,7 @@ function weekStartFor(value: Date) {
 }
 
 export async function POST(request: Request) {
-  const auth = await verifyAuth();
+  const auth = await verifyAdmin();
   if (auth.error) return auth.error;
 
   const parsed = prioritySchema.safeParse(await request.json().catch(() => null));

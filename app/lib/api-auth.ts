@@ -105,15 +105,14 @@ export async function hasAdminRole(userId: string): Promise<boolean> {
 // ============================================================================
 // Verify Project Access
 // ============================================================================
-// Checks if the authenticated user has access to a specific project.
-// Access is granted if the user owns the project or is an admin.
+// Checks if an authenticated operator can access a specific project.
+// Historical project ownership is retained data and no longer grants access.
 // Returns 401/403/404 errors as appropriate.
 
 export async function verifyProjectAccess(
   projectId: string
 ): Promise<ProjectAccessResult> {
-  // First verify authentication
-  const authResult = await verifyAuth();
+  const authResult = await verifyAdmin();
 
   if (authResult.error) {
     return {
@@ -124,22 +123,17 @@ export async function verifyProjectAccess(
     };
   }
 
-  const user = authResult.user;
-  const isAdmin = await hasAdminRole(user.id);
-
-  // Fetch project to check ownership
-  const supabase = await createSupabaseServerClient();
-  const { data: project } = await supabase
+  const { data: project } = await getSupabaseAdmin()
     .from('projects')
-    .select('user_id')
+    .select('id')
     .eq('id', projectId)
-    .single();
+    .maybeSingle();
 
   if (!project) {
     return {
       hasAccess: false,
       isOwner: false,
-      isAdmin,
+      isAdmin: true,
       error: NextResponse.json(
         { error: 'Project not found' },
         { status: 404 }
@@ -147,24 +141,9 @@ export async function verifyProjectAccess(
     };
   }
 
-  const isOwner = project.user_id === user.id;
-  const hasAccess = isAdmin || isOwner;
-
-  if (!hasAccess) {
-    return {
-      hasAccess: false,
-      isOwner,
-      isAdmin,
-      error: NextResponse.json(
-        { error: 'Forbidden. No access to this project.' },
-        { status: 403 }
-      ),
-    };
-  }
-
   return {
     hasAccess: true,
-    isOwner,
-    isAdmin,
+    isOwner: false,
+    isAdmin: true,
   };
 }

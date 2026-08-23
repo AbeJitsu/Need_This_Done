@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 const statusSchema = z.object({ status: z.enum(['active', 'completed', 'dropped']) });
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await verifyAuth();
+  const auth = await verifyAdmin();
   if (auth.error) return auth.error;
   if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid priority.' }, { status: 400 });
 

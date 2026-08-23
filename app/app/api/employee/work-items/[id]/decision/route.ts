@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyAdmin } from '@/lib/api-auth';
 
 const decisionSchema = z.object({
   decision: z.enum(['approve', 'revise', 'defer', 'reject']),
@@ -29,15 +30,15 @@ const databaseErrors: Record<string, { status: number; error: string }> = {
 };
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await verifyAdmin();
+  if (auth.error) return auth.error;
+
   const parsed = decisionSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success || !z.string().uuid().safeParse((await params).id).success) {
     return NextResponse.json({ error: 'Invalid decision details.' }, { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
   const { data, error } = await supabase.rpc('record_ai_employee_decision', {
     target_work_item_id: (await params).id,
     target_decision: parsed.data.decision,

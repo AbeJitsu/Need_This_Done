@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyAdmin } from '@/lib/api-auth';
 
 const outcomeSchema = z.object({
   employeeId: z.string().uuid(),
@@ -37,14 +38,14 @@ const databaseErrors: Record<string, { status: number; error: string }> = {
 };
 
 export async function POST(request: Request) {
+  const auth = await verifyAdmin();
+  if (auth.error) return auth.error;
+
   const parsed = outcomeSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid outcome details.' }, { status: 400 });
   }
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
   const { data, error } = await supabase.rpc('record_ai_employee_outcome', {
     target_employee_id: parsed.data.employeeId,
     target_work_item_id: parsed.data.workItemId || null,

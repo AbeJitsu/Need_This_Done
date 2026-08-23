@@ -35,8 +35,8 @@ describe('Google-first authentication boundary', () => {
     expect(protectedSources).not.toContain('previewMode');
 
     const dashboard = source('app/dashboard/page.tsx');
-    expect(dashboard).toContain("process.env.NODE_ENV === 'development'");
-    expect(dashboard).toContain('NEXT_PUBLIC_DASHBOARD_PREVIEW');
-    expect(dashboard).toContain('if (!localPreview && !authLoading && !isAuthenticated)');
+    expect(dashboard).not.toContain('NEXT_PUBLIC_DASHBOARD_PREVIEW');
+    expect(dashboard).not.toContain('localPreview');
+    expect(dashboard).toContain('!isAuthenticated || !isAdmin');
   });
 });

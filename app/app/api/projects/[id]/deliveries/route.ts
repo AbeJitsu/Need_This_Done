@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdmin, verifyProjectAccess } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { cache, CACHE_KEYS } from '@/lib/cache';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { sendProjectGithubHandoff } from '@/lib/email-service';
 
 export const dynamic = 'force-dynamic';
 
 type ProjectRecord = {
   id: string;
-  name: string;
-  email: string;
-  user_id: string | null;
 };
 
 type HandoffRecord = {
@@ -18,7 +14,7 @@ type HandoffRecord = {
   project_id: string;
   github_url: string;
   note: string | null;
-  notification_status: 'pending' | 'sent' | 'failed';
+  notification_status: 'draft' | 'pending' | 'sent' | 'failed';
   notification_attempts: number;
   notification_sent_at: string | null;
   notification_error: string | null;
@@ -46,15 +42,9 @@ function parseNote(value: unknown): string | null | undefined {
   return note.length <= 2_000 ? note || null : undefined;
 }
 
-function portalUrl() {
-  return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com'}/dashboard`;
-}
-
-async function invalidateProjectDeliveryCaches(projectId: string, userId: string) {
+async function invalidateProjectDeliveryCaches(projectId: string) {
   await Promise.all([
-    cache.invalidate(CACHE_KEYS.userProjects(userId)),
     cache.invalidate(CACHE_KEYS.projectDeliveries(projectId, true)),
-    cache.invalidate(CACHE_KEYS.projectDeliveries(projectId, false)),
   ]);
 }
 
@@ -62,12 +52,12 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await verifyAdmin();
+  if (auth.error) return auth.error;
   const { id } = await params;
-  const access = await verifyProjectAccess(id);
-  if (access.error) return access.error;
 
   const result = await cache.wrap(
-    CACHE_KEYS.projectDeliveries(id, access.isAdmin),
+    CACHE_KEYS.projectDeliveries(id, true),
     async () => {
       const { data, error } = await getSupabaseAdmin()
         .from('project_github_handoffs')
@@ -79,11 +69,7 @@ export async function GET(
     },
   );
 
-  const handoffs = access.isAdmin
-    ? result.data
-    : result.data.map(({ notification_status: _status, notification_attempts: _attempts, notification_sent_at: _sentAt, notification_error: _error, ...handoff }) => handoff);
-
-  return NextResponse.json({ handoffs, cached: result.cached, source: result.source });
+  return NextResponse.json({ handoffs: result.data, cached: result.cached, source: result.source });
 }
 
 export async function POST(
@@ -107,19 +93,12 @@ export async function POST(
   const admin = getSupabaseAdmin();
   const { data: project, error: projectError } = await admin
     .from('projects')
-    .select('id, name, email, user_id')
+    .select('id')
     .eq('id', id)
     .maybeSingle<ProjectRecord>();
 
   if (projectError) return NextResponse.json({ error: 'Failed to load project.' }, { status: 500 });
   if (!project) return NextResponse.json({ error: 'Project not found.' }, { status: 404 });
-  if (!project.user_id) {
-    return NextResponse.json(
-      { error: 'Link this project to an existing client account before publishing a GitHub handoff.' },
-      { status: 409 },
-    );
-  }
-
   const { data: handoff, error: insertError } = await admin
     .from('project_github_handoffs')
     .insert({
@@ -127,38 +106,16 @@ export async function POST(
       github_url: githubUrl,
       note,
       created_by: auth.user.id,
-      notification_status: 'pending',
-      notification_attempts: 1,
+      notification_status: 'draft',
+      notification_attempts: 0,
     })
     .select('id, project_id, github_url, note, notification_status, notification_attempts, notification_sent_at, notification_error, created_at')
     .single<HandoffRecord>();
 
   if (insertError || !handoff) {
-    return NextResponse.json({ error: 'Failed to publish GitHub handoff.' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to save GitHub handoff draft.' }, { status: 500 });
   }
 
-  const emailId = await sendProjectGithubHandoff({
-    email: project.email,
-    name: project.name,
-    githubUrl,
-    note,
-    portalUrl: portalUrl(),
-  }).catch(() => null);
-
-  const notificationUpdate = emailId
-    ? { notification_status: 'sent', notification_sent_at: new Date().toISOString(), notification_provider_id: emailId, notification_error: null }
-    : { notification_status: 'failed', notification_error: 'The delivery email could not be sent. Retry it from this project.' };
-  const { data: updatedHandoff, error: notificationError } = await admin
-    .from('project_github_handoffs')
-    .update(notificationUpdate)
-    .eq('id', handoff.id)
-    .select('id, project_id, github_url, note, notification_status, notification_attempts, notification_sent_at, notification_error, created_at')
-    .single<HandoffRecord>();
-
-  if (notificationError || !updatedHandoff) {
-    return NextResponse.json({ error: 'GitHub handoff was published but its notification status could not be recorded.' }, { status: 500 });
-  }
-
-  await invalidateProjectDeliveryCaches(id, project.user_id);
-  return NextResponse.json({ handoff: updatedHandoff, notificationSent: Boolean(emailId) }, { status: 201 });
+  await invalidateProjectDeliveryCaches(id);
+  return NextResponse.json({ handoff, notificationSent: false, draft: true }, { status: 201 });
 }

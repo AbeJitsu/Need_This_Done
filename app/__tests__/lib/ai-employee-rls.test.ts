@@ -48,6 +48,7 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
       insert into public.customer_memberships (customer_id, user_id, role)
       values ($1, $2, 'owner'), ($1, $3, 'manager'), ($1, $4, 'viewer'), ($5, $6, 'owner')
     `, [customerA, ownerA, managerA, viewerA, customerB, ownerB]);
+    await pool.query(`insert into public.user_roles (user_id, role) values ($1, 'admin')`, [ownerA]);
     await pool.query(`insert into public.ai_employees (id, customer_id, name) values ($1, $2, 'Employee A'), ($3, $4, 'Employee B')`, [employeeA, customerA, employeeB, customerB]);
     await pool.query(`
       insert into public.ai_employee_work_items (id, employee_id, queue, scheduled_date, title, proposed_action, priority)
@@ -61,25 +62,38 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
 
   afterAll(async () => {
     const pool = getPool();
+    await pool.query(`delete from public.user_roles where user_id = $1`, [ownerA]);
     await pool.query(`delete from public.customer_accounts where id in ($1, $2)`, [customerA, customerB]);
     await pool.query(`delete from auth.users where id in ($1, $2, $3, $4)`, [ownerA, managerA, viewerA, ownerB]);
     await closePool();
   });
 
-  it('allows members to read only their own customer employee and work', async () => {
-    const own = await asUser<{ id: string }>(viewerA, `select id from public.ai_employees`);
-    const foreign = await asUser<{ id: string }>(ownerB, `select id from public.ai_employee_work_items where employee_id = $1`, [employeeA]);
-    expect(own.map((row) => row.id)).toEqual([employeeA]);
-    expect(foreign).toEqual([]);
+  it('preserves memberships but grants private reads only to an operator', async () => {
+    const historicalCount = await getPool().query(
+      `select count(*)::int as count from public.customer_memberships where customer_id in ($1, $2)`,
+      [customerA, customerB],
+    );
+    const operatorRows = await asUser<{ id: string }>(
+      ownerA,
+      `select id from public.ai_employees where id in ($1, $2) order by id`,
+      [employeeA, employeeB],
+    );
+    const formerOwnerRows = await asUser<{ id: string }>(ownerB, `select id from public.ai_employees`);
+    const managerRows = await asUser<{ id: string }>(managerA, `select id from public.ai_employee_work_items`);
+    const viewerRows = await asUser<{ id: string }>(viewerA, `select id from public.customer_accounts`);
+    expect(historicalCount.rows[0].count).toBe(4);
+    expect(operatorRows.map((row) => row.id)).toEqual([employeeA, employeeB]);
+    expect(formerOwnerRows).toEqual([]);
+    expect(managerRows).toEqual([]);
+    expect(viewerRows).toEqual([]);
   });
 
   it('atomically provisions an internal pilot from a project for an operator', async () => {
     const projectId = '50000000-0000-4000-8000-0000000000a1';
-    await getPool().query(`insert into public.user_roles (user_id, role) values ($1, 'admin')`, [ownerA]);
     await getPool().query(`
-      insert into public.projects (id, name, email, company, message)
-      values ($1, 'Pilot Lead', 'pilot@example.test', 'Pilot Company', 'Need a supervised growth employee')
-    `, [projectId]);
+      insert into public.projects (id, name, email, company, message, user_id)
+      values ($1, 'Pilot Lead', 'pilot@example.test', 'Pilot Company', 'Need a supervised growth employee', $2)
+    `, [projectId, viewerA]);
 
     const provisioned = await asUser<{ result: { customer_id: string; employee_id: string; duplicate: boolean } }>(ownerA, `
       select public.provision_ai_employee_pilot(
@@ -111,15 +125,19 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
       [provisioned[0].result.employee_id],
     );
     expect(schedules.rows).toHaveLength(3);
+    const clientMembership = await getPool().query(
+      `select 1 from public.customer_memberships where customer_id = $1 and user_id = $2`,
+      [provisioned[0].result.customer_id, viewerA],
+    );
+    expect(clientMembership.rows).toHaveLength(0);
 
     await getPool().query(`delete from public.projects where id = $1`, [projectId]);
     await getPool().query(`delete from public.customer_accounts where id = $1`, [provisioned[0].result.customer_id]);
-    await getPool().query(`delete from public.user_roles where user_id = $1`, [ownerA]);
   });
 
-  it('allows owners and managers to decide while viewers and other customers are denied', async () => {
+  it('allows only the operator to decide while all historical member roles are denied', async () => {
     await expect(asUser(ownerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [work('a1'), '40000000-0000-4000-8000-0000000000a1'])).resolves.toHaveLength(1);
-    await expect(asUser(managerA, `select public.record_ai_employee_decision($1, 'reject', '', $2, null)`, [work('a2'), '40000000-0000-4000-8000-0000000000a2'])).resolves.toHaveLength(1);
+    await expect(asUser(managerA, `select public.record_ai_employee_decision($1, 'reject', '', $2, null)`, [work('a2'), '40000000-0000-4000-8000-0000000000a2'])).rejects.toThrow();
     await expect(asUser(viewerA, `select public.record_ai_employee_decision($1, 'reject', '', $2, null)`, [work('a3'), '40000000-0000-4000-8000-0000000000a3'])).rejects.toThrow();
     await expect(asUser(ownerB, `select public.record_ai_employee_decision($1, 'reject', '', $2, null)`, [work('a3'), '40000000-0000-4000-8000-0000000000b1'])).rejects.toThrow();
   });
@@ -160,11 +178,11 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
     `, [employeeA])).rejects.toThrow();
   });
 
-  it('lets managers author work, complete approvals, and record idempotent outcomes', async () => {
+  it('lets an operator author work, complete approvals, and record idempotent outcomes', async () => {
     const workItemKey = '60000000-0000-4000-8000-0000000000a1';
     const completionKey = '60000000-0000-4000-8000-0000000000a2';
     const outcomeKey = '60000000-0000-4000-8000-0000000000a3';
-    const created = await asUser<{ result: { id: string; duplicate: boolean } }>(managerA, `
+    const created = await asUser<{ result: { id: string; duplicate: boolean } }>(ownerA, `
       select public.create_ai_employee_work_item(
         $1, 'morning', current_date + 20, 'Prepare retained proof',
         '["Project context"]'::jsonb, 'Draft the manual follow-up',
@@ -180,31 +198,31 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
       )
     `, [employeeA, crypto.randomUUID()])).rejects.toThrow();
 
-    await asUser(managerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [itemId, crypto.randomUUID()]);
-    await expect(asUser(managerA, `
+    await asUser(ownerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [itemId, crypto.randomUUID()]);
+    await expect(asUser(ownerA, `
       select public.complete_ai_employee_work_item($1, '   ', $2)
     `, [itemId, crypto.randomUUID()])).rejects.toThrow();
-    const completed = await asUser<{ result: { status: string; duplicate: boolean } }>(managerA, `
+    const completed = await asUser<{ result: { status: string; duplicate: boolean } }>(ownerA, `
       select public.complete_ai_employee_work_item($1, 'Sent manually and saved the reply URL', $2) as result
     `, [itemId, completionKey]);
-    const completionReplay = await asUser<{ result: { status: string; duplicate: boolean } }>(managerA, `
+    const completionReplay = await asUser<{ result: { status: string; duplicate: boolean } }>(ownerA, `
       select public.complete_ai_employee_work_item($1, 'Sent manually and saved the reply URL', $2) as result
     `, [itemId, completionKey]);
     expect(completed[0].result).toMatchObject({ status: 'completed', duplicate: false });
     expect(completionReplay[0].result).toMatchObject({ status: 'completed', duplicate: true });
 
-    const outcome = await asUser<{ result: { id: string; duplicate: boolean } }>(managerA, `
+    const outcome = await asUser<{ result: { id: string; duplicate: boolean } }>(ownerA, `
       select public.record_ai_employee_outcome(
         $1, $2, 'reply', 1, null, null, null, 'Qualified reply received', null, $3
       ) as result
     `, [employeeA, itemId, outcomeKey]);
-    const outcomeReplay = await asUser<{ result: { id: string; duplicate: boolean } }>(managerA, `
+    const outcomeReplay = await asUser<{ result: { id: string; duplicate: boolean } }>(ownerA, `
       select public.record_ai_employee_outcome(
         $1, $2, 'reply', 1, null, null, null, 'Qualified reply received', null, $3
       ) as result
     `, [employeeA, itemId, outcomeKey]);
     expect(outcomeReplay[0].result).toMatchObject({ id: outcome[0].result.id, duplicate: true });
-    await expect(asUser(managerA, `update public.ai_employee_outcomes set value = 2 where id = $1`, [outcome[0].result.id])).rejects.toThrow();
+    await expect(asUser(ownerA, `update public.ai_employee_outcomes set value = 2 where id = $1`, [outcome[0].result.id])).rejects.toThrow();
   });
 
   it('keeps history immutable to authenticated users and permits privileged customer cleanup', async () => {
@@ -240,9 +258,9 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
         (coalesce(sum(amount_cents) filter (where kind = 'revenue'), 0)
           - coalesce(sum(amount_cents) filter (where kind = 'cost'), 0))::text as net
       from public.ai_employee_outcomes
-      where occurred_at::date = current_date and kind in ('revenue', 'cost')
+      where occurred_at::date = current_date and kind in ('revenue', 'cost') and employee_id = $1
       group by currency order by currency
-    `);
+    `, [employeeA]);
     expect(own).toEqual([
       { currency: 'EUR', gross: '20000', costs: '0', net: '20000' },
       { currency: 'USD', gross: '75000', costs: '15000', net: '60000' },

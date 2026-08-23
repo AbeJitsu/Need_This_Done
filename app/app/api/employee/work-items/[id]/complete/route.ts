@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyAdmin } from '@/lib/api-auth';
 
 const completionSchema = z.object({
   notes: z.string().trim().min(1).max(4000),
@@ -15,14 +16,14 @@ const databaseErrors: Record<string, { status: number; error: string }> = {
 };
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await verifyAdmin();
+  if (auth.error) return auth.error;
+
   const parsed = completionSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success || !z.string().uuid().safeParse((await params).id).success) {
     return NextResponse.json({ error: 'Invalid completion details.' }, { status: 400 });
   }
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
   const { data, error } = await supabase.rpc('complete_ai_employee_work_item', {
     target_work_item_id: (await params).id,
     target_completion_notes: parsed.data.notes,

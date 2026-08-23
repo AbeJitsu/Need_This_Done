@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { hasAdminRole } from '@/lib/api-auth';
 import AccountSettingsClient from '@/components/account/AccountSettingsClient';
 
 export const dynamic = 'force-dynamic';
@@ -8,9 +9,8 @@ export const dynamic = 'force-dynamic';
 // ============================================================================
 // Account Settings Page - /account
 // ============================================================================
-// What: Customer-facing account settings and profile management
-// Why: Let users view and manage their account information
-// How: Server component handles auth, client component handles interactivity
+// Private team profile settings. Historical customer identities do not grant
+// access to this route.
 
 export const metadata: Metadata = {
   title: 'Account Settings - NeedThisDone',
@@ -22,7 +22,7 @@ export default async function AccountPage() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user || !(await hasAdminRole(user.id))) {
     redirect('/login');
   }
 

@@ -54,8 +54,8 @@ export interface EmployeeDailyScorecard {
 
 export interface EmployeeWorkspaceData {
   customer: { id: string; name: string };
-  availableCustomers: Array<{ id: string; name: string; role: 'owner' | 'manager' | 'viewer' }>;
-  membershipRole: 'owner' | 'manager' | 'viewer';
+  availableCustomers: Array<{ id: string; name: string; role: 'operator' }>;
+  membershipRole: 'operator';
   scheduledDate: string;
   timezone: string;
   employee: { id: string; name: string; role_name: string; status: 'pilot' | 'managed' | 'paused' };

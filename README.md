@@ -30,6 +30,14 @@ The public navigation is **Website Improvement · AI Operator · How It Works ·
 
 `/dashboard`, `/employee`, `/prospecting`, and `/admin/*` are private operational surfaces. Clients do not operate the dashboard. The operator may prepare research, drafts, and internal queues, but a human must approve every external message, publication, system change, or spend.
 
+Only an authenticated admin/operator may use private workspace APIs. Historical
+project links, customer memberships, files, comments, handoffs, and delivery
+records remain stored for continuity and audit, but they do not grant client or
+ordinary authenticated access. Unauthenticated private requests fail with
+`401`; authenticated non-admin requests fail with `403` without private data.
+The historical client project list and project access-management endpoints are
+retired.
+
 Production outreach additionally requires the scoped worker boundary, public-evidence sourcing, suppression/unsubscribe handling, verified sender events, and a human-approved send. The app-side planner is draft-only; the signed Mac-mini bridge can execute only an approved frozen plan through loopback OpenClaw. No public route reaches the Mac mini worker.
 
 ## Architecture
@@ -90,7 +98,7 @@ npm run verify:assembly
 ## Hosted and provider release boundary
 
 The current phase is a provider-free pre-key local candidate. Local migrations
-reach `104`; reviewed hosted migration evidence ends at `095`. Passing the local
+reach `105`; reviewed hosted migration evidence ends at `095`. Passing the local
 gate does not authorize or prove a hosted migration, deployment, provider call,
 or customer outcome. The old production commit `8b8d429` remains the historical
 application rollback reference.

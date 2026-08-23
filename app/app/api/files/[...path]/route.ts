@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { verifyAuth, verifyProjectAccess } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +19,7 @@ export async function GET(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   // Require authentication - only logged-in users can access project files
-  const auth = await verifyAuth();
+  const auth = await verifyAdmin();
   if (auth.error) {
     return auth.error;
   }
@@ -58,9 +58,6 @@ export async function GET(
   if (projectError || !project) {
     return NextResponse.json({ error: 'File not found' }, { status: 404 });
   }
-
-  const access = await verifyProjectAccess(project.id);
-  if (access.error) return access.error;
 
   // Generate a signed URL (valid for 24 hours)
   const { data, error } = await supabase.storage

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 export const dynamic = 'force-dynamic';
@@ -176,7 +176,7 @@ async function upsertSuggestedActions(
 }
 
 export async function GET() {
-  const auth = await verifyAuth();
+  const auth = await verifyAdmin();
   if (auth.error) return auth.error;
 
   const supabase = await createSupabaseServerClient();

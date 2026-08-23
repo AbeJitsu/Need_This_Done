@@ -115,7 +115,7 @@ for (const migration of migrations) {
 }
 
 if (new Set(expectedVersions).size !== seenNewVersions.size || expectedVersions.some((version) => !seenNewVersions.has(version))) {
-  fail('new migration versions are not an exact one-to-one map for 073–103');
+  fail(`new migration versions are not an exact one-to-one map for ${expectedVersions[0]}–${expectedVersions.at(-1)}`);
 }
 if (seenOriginalVersions.size !== expectedVersions.length || expectedVersions.some((version) => !seenOriginalVersions.has(version))) {
   fail(`original migration versions are not an exact one-to-one map for ${expectedVersions[0]}–${expectedVersions.at(-1)}`);
@@ -149,6 +149,7 @@ const expectedStages = [
   ['calendar-provider-boundary', ['102'], 'separate', false],
   ['website-invoice-boundary', ['103'], 'separate', false],
   ['provider-recovery-atomicity', ['104'], 'separate', false],
+  ['operator-only-private-surfaces', ['105'], 'separate', false],
 ];
 for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
   const stage = stages.find((candidate) => candidate.id === id);

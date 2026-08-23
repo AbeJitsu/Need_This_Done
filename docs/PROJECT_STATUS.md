@@ -8,10 +8,11 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current release-control and hosted-stage ledger — 2026-08-22
+## Current release-control and hosted-stage ledger — 2026-08-23
 
-> Reviewed pre-key baseline: `b00fcaade7df55c08c0e9b067e526065b99de082`.
-> It is local-only at migration `104`; hosted migration evidence ends at `095`.
+> Reviewed pre-key documentation baseline: `f0d78216`.
+> The current local candidate includes migration `105`; hosted migration
+> evidence ends at `095`.
 > The production dependency audit is clean. Technical launch is **NOT GO**.
 > No hosted migration, credential provisioning, provider request, deployment,
 > Mac activation, or external action is authorized by this local work.
@@ -43,6 +44,26 @@ provider-free assembly is not claimable: its browser phase could not launch
 Chromium in this sandbox because macOS denied Mach-port registration. Owner:
 frontend QA / local-environment owner; rerun the exact assembly on an approved
 interactive Mac before promotion. No hosted or provider action occurred.
+
+**Operator-only private boundary (2026-08-23):** Migration `105` preserves
+historical client-linked users, project links, memberships, files, comments,
+handoffs, and delivery records while removing their ability to authorize
+private access. Private route handlers and `/dashboard` and `/employee` now
+require the admin/operator role; unauthenticated API requests return `401` and
+ordinary authenticated requests return `403` without private data. New public
+project requests no longer create user links, the historical project-list and
+access-management routes are retired, and GitHub handoffs remain operator-only
+drafts until durable notification work is complete. The 83-entry capability
+manifest classifies every retained route and its methods as public, operator,
+signed worker, signed webhook, or retired and ties each entry to test evidence.
+
+Disposable local Supabase reset cleanly through `105`. `verify:database`
+passed schema lint plus 9 schema, 14 security, 10 AI-employee RLS, 3 agent
+operations, 2 planner, 2 prospecting, and 1 consultation checks. The staged
+migration verifier passed 33 mappings and 17 gates. Unit tests passed 240/240;
+lint, TypeScript, and the four-case real-session operator browser contract also
+passed. This is local provider-free evidence only. No hosted state, provider,
+credential, deployment, external message, payment, or Mac worker changed.
 
 **Historical local proof update (2026-08-19):** migrations `099`–`103` reset cleanly on
 the disposable local stack. The expanded schema/RLS/RPC manifest, all retained
@@ -219,7 +240,7 @@ Item 9 is `PASSED`; item 8 remains an `EXCEPTION` due for review/removal on
 
 ```text
 production/origin/production `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> corrected deployed application; `8b8d429` remains the application rollback reference
-local dev                     `b00fcaade7df55c08c0e9b067e526065b99de082` -> reviewed pre-key baseline through migration 104
+local dev                     `f0d78216` plus this operator-only slice -> local candidate through migration 105
 origin/dev                    `b00fcaade7df55c08c0e9b067e526065b99de082` -> published baseline; no new push is authorized by this phase
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
@@ -229,8 +250,8 @@ approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> latest protected recovery point is 90/094 before the 095 repair
 
 local Supabase
-  -> disposable migrations applied through 104; schema/security/provider-recovery proof passed
-  -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, auth, plan approval, and provenance proof passed
+  -> disposable migrations applied through 105; schema/security/provider-recovery proof passed
+  -> operator-only private access, preserved historical membership rows, retained provisioning, RLS, completion, outcome, prospecting, cockpit, auth, plan approval, and provenance proof passed
 ```
 
 ## App planner and OpenClaw execution slice — 2026-08-10
@@ -290,6 +311,7 @@ Historical change-log rows below retain the migration filenames used before the 
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-23 | Operator-only private surfaces | This commit | Added forward migration `105`, retired client project-list and access-management capabilities, stopped creating new client links/memberships, made private application routes admin/operator-only, left GitHub handoffs as operator-confirmed drafts, and added an exhaustive 83-route capability manifest with fail-closed tests. Disposable reset through `105`, the complete database gate, 240 unit tests, lint, TypeScript, the 33-mapping/17-gate stage verifier, and 4/4 real-session browser checks passed. Historical rows remain stored. No hosted state, provider, key, deployment, external action, or Mac worker changed. | Revert the application callers and manifest together if needed. Preserve historical records and migration history; if `105` is promoted later, restore any capability only through a separately reviewed forward migration. |
 | 2026-08-18 | OpenRouter free-backup route boundary | This working slice | Added private `OPENROUTER_BACKUP_MODEL`, capability-constrained requests, actual endpoint persistence, and migrations `096`–`097`. A current public catalog check confirmed the old hardcoded DeepSeek-free ID does not exist, so the active fallback path was removed and historical routes fail closed to `evaluation-required`. The exact Gemma free backup is configured in `.env.local.profile` and Vercel Production/Preview. Production deployment `dpl_7kr6p3LBfph9VjLMBnYgV627BE2M` reached `READY`; health was fully healthy, `/` and `/services` returned `200`, the unsigned benchmark POST returned `401`, and 15 public scripts contained neither the private variable name nor configured model ID. No value was exposed and no provider request ran. Lint, TypeScript, 219 unit tests, the 49-page build, all 41 database checks, and whitespace validation passed. | Roll back to prior Production deployment `dpl_4XP38V8P6G8NGBb517aMa658m5Qm`; remove only `OPENROUTER_BACKUP_MODEL` from local/Vercel if rejected, preserve evidence, and use forward-only database repair. Do not restore a model ID in code. |
 | 2026-08-19 | Local worker provenance and scheduling hardening | `0bdf735` plus this review-only renderer slice | Added migration `098`, so a private worker cannot claim a future scheduled run or an emergency-stopped profile and an approved OpenClaw completion fails without its exact Gateway model ID and non-empty provider usage. Reconciliation, provenance, and completion now share one RPC transaction. Added review-only launchd templates and a tested renderer that rejects weak private-file permissions, unsafe paths, placeholder leakage, and malformed XML but never installs a daemon. Local reset applied `001`–`098`; planner RLS 2/2, schema manifest 9/9, app TypeScript, and bridge offline tests 8/8 passed. No hosted migration, provider request, Mac activation, customer/prospect contact, payment, Calendar, or sender action occurred. | Keep the added durable provenance fields and use a reviewed forward-only migration for any correction. Do not load the templates or apply `098` to hosted Supabase without the separate item-12/13 and hosted-migration approvals. |
 | 2026-08-17 | Step 10A OpenRouter model comparison | This working slice | Hardened live catalog parsing for provider extensions, omitted structured-output request parameters for models that do not advertise them, recorded catalog metadata, and locked comparison writes to `evaluation-required`. The hosted run made exactly six sanitized completion requests: DeepSeek completed 3/3 with `$0.000122624` total provider cost; Nemotron was rejected 3/3 by the provider privacy/data-policy guardrail. Six evaluation and six reconciled usage records were retained; the route stayed unselected and no worker/live external action ran. | Preserve model-evaluation and usage evidence. Keep `evaluation-required`; do not rerun after a provider-policy change or pin a model without separate approval. |

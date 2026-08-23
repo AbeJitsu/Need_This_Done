@@ -137,13 +137,23 @@ async function createFixture(): Promise<Fixture> {
   return { admin, customerA, customerB, employeeA, work, users };
 }
 
-async function login(page: Page, user: FixtureUser, employeeName = 'Authenticated Growth Employee') {
+async function authenticate(page: Page, user: FixtureUser) {
+  await page.goto('/login');
   const loginResponse = await page.request.post('/api/auth/login', {
     headers: { 'x-forwarded-for': `127.0.0.${Number.parseInt(user.id.slice(-2), 16) % 200 + 20}` },
     data: { email: user.email, password: user.password },
   });
   expect(loginResponse.ok()).toBe(true);
-  await page.goto('/employee');
+}
+
+async function login(
+  page: Page,
+  user: FixtureUser,
+  employeeName = 'Authenticated Growth Employee',
+  customerId?: string,
+) {
+  await authenticate(page, user);
+  await page.goto(customerId ? `/employee?customerId=${customerId}` : '/employee');
   await expect(page.getByRole('heading', { name: employeeName })).toBeVisible({ timeout: 15_000 });
 }
 
@@ -184,62 +194,57 @@ test.describe('real authenticated employee authorization', () => {
     await context.close();
   });
 
-  test('owner and manager use real sessions and can record supervised decisions', async ({ browser }) => {
-    for (const [role, workItemId, expectedQueue] of [
-      ['owner', fixture.work.owner, 'Morning Brief'],
-      ['manager', fixture.work.manager, 'Midday Decisions'],
-    ] as const) {
+  test('historical customer memberships remain stored but grant no workspace access', async ({ browser }) => {
+    const historicalMemberships = await expectNoError(await fixture.admin
+      .from('customer_memberships')
+      .select('user_id')
+      .in('user_id', Object.values(fixture.users).map((user) => user.id)));
+    expect(historicalMemberships).toHaveLength(4);
+
+    for (const user of Object.values(fixture.users)) {
       const context = await browser.newContext();
       const page = await context.newPage();
-      await login(page, fixture.users[role]);
+      await authenticate(page, user);
       const workspace = await api(page, '/api/employee/workspace');
-      expect(workspace.status).toBe(200);
-      expect(workspace.body.workspace.membershipRole).toBe(role);
-      await page.getByRole('button', { name: expectedQueue, exact: false }).click();
-      await expect(page.getByRole('button', { name: 'approve', exact: true })).toBeEnabled();
+      expect(workspace.status).toBe(403);
+      expect(JSON.stringify(workspace.body)).not.toContain(fixture.employeeA);
+      const decision = await api(page, `/api/employee/work-items/${fixture.work.owner}/decision`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision: 'approve', instructions: '', idempotencyKey: crypto.randomUUID() }),
+      });
+      expect(decision.status).toBe(403);
+      await page.goto('/employee');
+      await expect(page).toHaveURL(/\/login$/);
+      await context.close();
+    }
+  });
 
-      const decision = await api(page, `/api/employee/work-items/${workItemId}/decision`, {
+  test('an operator can select retained customer work and record a supervised decision', async ({ browser }) => {
+    await expectNoError(await fixture.admin.from('user_roles').upsert({ user_id: fixture.users.owner.id, role: 'admin' }));
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    try {
+      await login(page, fixture.users.owner, 'Authenticated Growth Employee', fixture.customerA);
+      const workspace = await api(page, `/api/employee/workspace?customerId=${fixture.customerA}`);
+      expect(workspace.status).toBe(200);
+      expect(workspace.body.workspace.membershipRole).toBe('operator');
+      expect(workspace.body.workspace.availableCustomers).toEqual(expect.arrayContaining([
+        expect.objectContaining({ id: fixture.customerA, role: 'operator' }),
+        expect.objectContaining({ id: fixture.customerB, role: 'operator' }),
+      ]));
+      await page.getByRole('button', { name: 'Morning Brief', exact: false }).click();
+      await expect(page.getByRole('button', { name: 'approve', exact: true })).toBeEnabled();
+      const decision = await api(page, `/api/employee/work-items/${fixture.work.owner}/decision`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ decision: 'approve', instructions: '', idempotencyKey: crypto.randomUUID() }),
       });
       expect(decision.status).toBe(201);
+    } finally {
       await context.close();
+      await fixture.admin.from('user_roles').delete().eq('user_id', fixture.users.owner.id);
     }
-  });
-
-  test('viewer is read-only and another customer cannot decide customer A work', async ({ browser }) => {
-    const viewerContext = await browser.newContext();
-    const viewerPage = await viewerContext.newPage();
-    await login(viewerPage, fixture.users.viewer);
-    const viewerWorkspace = await api(viewerPage, '/api/employee/workspace');
-    expect(viewerWorkspace.status).toBe(200);
-    expect(viewerWorkspace.body.workspace.membershipRole).toBe('viewer');
-    await viewerPage.getByRole('button', { name: 'End-of-Day Review', exact: false }).click();
-    await expect(viewerPage.getByRole('button', { name: 'approve', exact: true })).toBeDisabled();
-
-    const viewerDecision = await api(viewerPage, `/api/employee/work-items/${fixture.work.viewer}/decision`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ decision: 'approve', instructions: '', idempotencyKey: crypto.randomUUID() }),
-    });
-    expect(viewerDecision.status).toBe(403);
-    await viewerContext.close();
-
-    const otherContext = await browser.newContext();
-    const otherPage = await otherContext.newPage();
-    await login(otherPage, fixture.users.otherCustomer, 'Other Customer Employee');
-    const otherWorkspace = await api(otherPage, '/api/employee/workspace');
-    expect(otherWorkspace.status).toBe(200);
-    expect(otherWorkspace.body.workspace.customer.id).toBe(fixture.customerB);
-    expect(JSON.stringify(otherWorkspace.body)).not.toContain(fixture.employeeA);
-    const crossCustomerDecision = await api(otherPage, `/api/employee/work-items/${fixture.work.viewer}/decision`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ decision: 'approve', instructions: '', idempotencyKey: crypto.randomUUID() }),
-    });
-    expect(crossCustomerDecision.status).toBe(403);
-    await otherContext.close();
   });
 
   test('an operator provisions and closes one retained pilot lifecycle through authenticated APIs', async ({ browser }) => {
@@ -259,7 +264,7 @@ test.describe('real authenticated employee authorization', () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     try {
-      await login(page, fixture.users.owner);
+      await login(page, fixture.users.owner, 'Authenticated Growth Employee', fixture.customerA);
       const provision = await api(page, `/api/projects/${projectId}/pilot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

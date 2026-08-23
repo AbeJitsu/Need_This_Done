@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { NextResponse } from 'next/server';
 
-const { createSupabaseServerClient } = vi.hoisted(() => ({
+const { createSupabaseServerClient, verifyAdmin } = vi.hoisted(() => ({
   createSupabaseServerClient: vi.fn(),
+  verifyAdmin: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase-server', () => ({ createSupabaseServerClient }));
+vi.mock('@/lib/api-auth', () => ({ verifyAdmin }));
 
 import { POST } from '@/app/api/employee/work-items/[id]/decision/route';
 
@@ -21,10 +24,16 @@ function request(body: unknown) {
 }
 
 describe('employee decision API', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    verifyAdmin.mockResolvedValue({ user: { id: userId } });
+  });
 
-  it('requires an authenticated customer member', async () => {
+  it('requires an authenticated operator', async () => {
     const rpc = vi.fn();
+    verifyAdmin.mockResolvedValue({
+      error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+    });
     createSupabaseServerClient.mockResolvedValue({
       auth: { getUser: vi.fn().mockResolvedValue({ data: { user: null } }) },
       rpc,

@@ -2,10 +2,10 @@
 
 This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service. The canonical numbered control record is the [production launch checklist](launch/LAUNCH_CHECKLIST.md); this file is its evidence ledger.
 
-## Current release-control and hosted-stage ledger — 2026-08-22
+## Current release-control and hosted-stage ledger — 2026-08-23
 
-> Reviewed pre-key baseline: `b00fcaade7df55c08c0e9b067e526065b99de082`.
-> It is local-only at migration `104`; reviewed hosted migration evidence ends
+> Reviewed pre-key documentation baseline: `f0d78216`.
+> The current local candidate includes migration `105`; reviewed hosted migration evidence ends
 > at `095`. The production dependency audit is clean. No hosted migration,
 > deployment, credential change, provider request, Mac activation, or external
 > action occurred. Technical launch is **NOT GO**.
@@ -40,6 +40,30 @@ Chromium was denied the macOS Mach-port registration (`Permission denied`).
 Owner: frontend QA / local-environment owner. Remove by rerunning the exact
 assembly on an approved interactive Mac environment before promotion. This is
 not evidence of a product-browser regression and it does not change **NOT GO**.
+
+### Local migration-105 operator-only proof — 2026-08-23
+
+Forward migration `105_operator_only_private_surfaces.sql` preserves existing
+users, project links, customer memberships, files, comments, handoffs, and
+delivery history while making those historical relationships incapable of
+granting non-admin access. Private APIs and the dashboard/employee pages are
+admin/operator-only; anonymous requests receive `401`, ordinary authenticated
+requests receive `403` without private data, and the historical client project
+list and access-management routes are retired. Public project intake no longer
+creates a user link. GitHub handoffs are operator-only drafts and cannot notify
+until the durable transactional path is implemented.
+
+The machine-readable capability manifest covers all 83 route files, exact
+methods, exposure classes, capabilities, and evidence references. Its scanner
+fails on missing/stale routes, method drift, missing evidence, invalid signed or
+retired boundaries, or operator routes that use ordinary authentication.
+Disposable local Supabase reset cleanly through `105`; the complete database
+gate passed (9 schema, 14 security, 10 AI-employee RLS, 3 agent-operations, 2
+planner, 2 prospecting, and 1 consultation checks). The staged verifier passed
+33 mappings/17 gates, 240/240 unit tests passed, lint and TypeScript passed, and
+the real-session browser contract passed 4/4. No credential, provider, hosted
+write, deployment, payment, external action, or worker activation occurred.
+Technical launch remains **NOT GO**.
 
 ### Historical local migration-103 proof — 2026-08-19
 
@@ -364,14 +388,14 @@ Latest current-slice verification (2026-08-08): `npm run verify:assembly` passed
 
 | Product claim | Required proof | Current evidence | Release status |
 | --- | --- | --- | --- |
-| Customers cannot read or change another customer's AI employee data. | Fresh local Supabase reset plus authenticated owner, manager, viewer, anonymous, and cross-customer database/browser tests. | Local schema and real-session browser proof passed; the final hosted parity verifier also passed tenant isolation, anonymous denial, viewer read-only behavior, and cross-customer boundaries. | Proven locally and at the hosted parity boundary; production deployment remains separate. |
+| Private AI employee data is operator-only. | Fresh local Supabase reset plus anonymous, historical-member, ordinary-authenticated, and operator database/browser tests. | Migration `105` preserves historical membership rows but makes them non-authorizing. Local RLS and real-session browser proof passes anonymous denial, non-admin `403` with no private payload, and operator access. Historical hosted owner/manager/viewer parity evidence predates `105` and is not evidence that the new boundary is deployed. | Proven locally; hosted promotion remains separate. |
 | An operator can turn a project into a supervised pilot without duplicate customer or employee records. | Real admin session, atomic database function, exact retry, project/customer linkage, operator membership, brief, and three schedules. | Database lifecycle test passes, and the authenticated browser contract provisions the pilot through the application API before any employee records are inserted by the test. | Proven locally. |
 | Decisions are capped, immutable, idempotent, and safe under concurrency. | Real database tests for five queue slots, exact/conflicting retries, concurrent decisions, history, successors, and cleanup. | Focused local suite passed after a fresh reset. | Proven locally. |
-| Only owners and managers decide; viewers are read-only. | Real role-based database tests and authenticated browser/API tests using real Supabase sessions. | Local role tests passed; the browser contract uses real fixture users, and hosted parity passed viewer read-only behavior and tenant isolation with disposable `.invalid` identities. The application has no client or server authorization bypass. | Proven locally and at the hosted parity boundary; production deployment remains separate. |
-| Approved manual work can be completed and measured exactly once. | Real member session, idempotent completion and outcome RPCs, immutable direct-write denial, actor/timestamp evidence, historical reload, and timezone-bound daily calculation. | Database tests prove exact retries and write denial. The browser lifecycle authors, approves, completes, records an outcome, reloads Activity/Outcomes, and renders the completion evidence. | Proven locally. |
+| Only an admin/operator may decide private work. | Real database tests and authenticated browser/API tests using historical owner/manager/viewer memberships plus an explicit admin role. | Historical membership rows remain present, but every non-admin session receives `403`; the operator can decide only through the protected route/RPC path. | Proven locally; hosted promotion remains separate. |
+| Approved manual work can be completed and measured exactly once. | Real operator session, idempotent completion and outcome RPCs, immutable direct-write denial, actor/timestamp evidence, historical reload, and timezone-bound daily calculation. | Database tests prove exact retries and write denial. The operator browser lifecycle authors, approves, completes, records an outcome, reloads Activity/Outcomes, and renders the completion evidence. | Proven locally. |
 | A consultation request is stored and visible to an operator. | Request parsing plus real database/API integration and browser workflow from contact form to project detail. | Parser, calendar-slot, and real local API/database/operator-route tests pass. | Proven through the local API/database boundary; browser proof remains. |
 | Confirmed consultations create one calendar invite and use Google for reminders. | Deterministic adapter contract tests, idempotent retry test, and one controlled pre-release Google Calendar check. | Google sign-in and Calendar OAuth/REST adapter code exist; local encrypted-token storage passes. Signed, expiring, session-bound OAuth state now rejects forged, missing-cookie, and cross-user callbacks before token exchange. Hosted secret provisioning, a consultation caller, event idempotency, live API behavior, reminders, and cleanup are not yet proven. | Not yet claimable. |
-| Clients see only explicitly linked projects, files, comments, and handoffs. | Real Supabase isolation tests plus authenticated client/operator browser workflows. | Route behavior is mainly mock-tested. Reports remain capability-link records rather than project-owned client records. | Database/browser proof missing; not part of the Abe/Andrea-only pilot gate. |
+| Historical client-linked records remain durable but grant no private access. | Forward migration, schema/RLS tests, route authorization tests, and real authenticated browser denial. | Migration `105` keeps the rows, retires client list/access management, and proves non-admin denial with no private payload. | Proven locally; hosted promotion remains separate. |
 | Hosted payment handoff works. | Test-mode Stripe contract and checkout smoke test for every enabled offering. | Stripe is installed as a future boundary, but the catalog has proposal-based prices, no Payment Links, no active payment-reference/webhook path, and the guarded route falls back to `/contact`. | Claim only the project-request fallback. |
 | Transactional email succeeds or exposes a retryable failure. | Provider contract tests, durable failure records/replay tests, and one controlled pre-release delivery check. | Immediate provider retry exists, but durable failure replay was removed because its table and faithful message replay did not exist. | Live delivery and durable recovery are not yet claimable. |
 | Retained public, workspace, and prospecting routes work on desktop and mobile. | Playwright smoke tests with no console errors, overflow, accessibility violations, or unexplained skips. | Five intentional Playwright specs are retained: 18 public desktop/mobile checks, 4 real-session authorization/lifecycle checks, 1 real prospecting lifecycle check, and 2 employee-workspace UI checks. The lifecycle runs without an authorization bypass. | Prospecting proof passed locally; full assembly and hosted behavior remain separate. |

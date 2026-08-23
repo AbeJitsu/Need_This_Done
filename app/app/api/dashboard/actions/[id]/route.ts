@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 const actionSchema = z.object({
@@ -17,7 +17,7 @@ const actionSchema = z.object({
 });
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await verifyAuth();
+  const auth = await verifyAdmin();
   if (auth.error) return auth.error;
   if (!z.string().uuid().safeParse((await params).id).success) return NextResponse.json({ error: 'Invalid cockpit action.' }, { status: 400 });
 

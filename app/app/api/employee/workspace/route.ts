@@ -1,41 +1,39 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { dateInTimeZone, isValidTimeZone } from '@/lib/timezone';
+import { verifyAdmin } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const auth = await verifyAdmin();
+  if (auth.error) return auth.error;
 
-  const { data: memberships, error: membershipError } = await supabase
-    .from('customer_memberships')
-    .select('customer_id, role, created_at')
-    .eq('user_id', user.id)
+  const supabase = await createSupabaseServerClient();
+  const { data: availableCustomerRows, error: customerListError } = await supabase
+    .from('customer_accounts')
+    .select('id, name, created_at')
     .order('created_at', { ascending: true });
 
-  if (membershipError) {
+  if (customerListError) {
     return NextResponse.json({ error: 'Employee workspace is not configured yet.' }, { status: 503 });
   }
-  if (!memberships?.length) {
-    return NextResponse.json({ workspace: null, reason: 'no_membership' });
+  if (!availableCustomerRows?.length) {
+    return NextResponse.json({ workspace: null, reason: 'no_customer' });
   }
 
   const requestedCustomerId = new URL(request.url).searchParams.get('customerId');
-  const membership = requestedCustomerId
-    ? memberships.find((candidate) => candidate.customer_id === requestedCustomerId)
-    : memberships[0];
-  if (!membership) {
-    return NextResponse.json({ error: 'You do not have access to that customer workspace.' }, { status: 403 });
+  const selectedCustomer = requestedCustomerId
+    ? availableCustomerRows.find((candidate) => candidate.id === requestedCustomerId)
+    : availableCustomerRows[0];
+  if (!selectedCustomer) {
+    return NextResponse.json({ error: 'Customer workspace not found.' }, { status: 404 });
   }
 
-  const customerIds = memberships.map((candidate) => candidate.customer_id);
-  const [{ data: customer, error: customerError }, { data: availableCustomerRows }, { data: employees, error: employeeError }] = await Promise.all([
-    supabase.from('customer_accounts').select('id, name').eq('id', membership.customer_id).single(),
-    supabase.from('customer_accounts').select('id, name').in('id', customerIds).order('created_at', { ascending: true }),
+  const [{ data: customer, error: customerError }, { data: employees, error: employeeError }] = await Promise.all([
+    supabase.from('customer_accounts').select('id, name').eq('id', selectedCustomer.id).single(),
     supabase.from('ai_employees').select('id, name, role_name, status, created_at')
-      .eq('customer_id', membership.customer_id).order('created_at', { ascending: true }).limit(2),
+      .eq('customer_id', selectedCustomer.id).order('created_at', { ascending: true }).limit(2),
   ]);
 
   if (customerError || employeeError) {
@@ -110,17 +108,17 @@ export async function GET(request: Request) {
     if (outcome.kind === 'time_saved') operatorMinutes += Number(outcome.value);
   }
 
-  const customerById = new Map((availableCustomerRows || []).map((candidate) => [candidate.id, candidate]));
-  const availableCustomers = memberships.flatMap((candidate) => {
-    const account = customerById.get(candidate.customer_id);
-    return account ? [{ ...account, role: candidate.role }] : [];
-  });
+  const availableCustomers = availableCustomerRows.map((candidate) => ({
+    id: candidate.id,
+    name: candidate.name,
+    role: 'operator' as const,
+  }));
 
   return NextResponse.json({
     workspace: {
       customer,
       availableCustomers,
-      membershipRole: membership.role,
+      membershipRole: 'operator',
       scheduledDate,
       timezone,
       employee,
