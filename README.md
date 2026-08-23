@@ -89,7 +89,11 @@ npm run verify:assembly
 
 ## Hosted and provider release boundary
 
-Cloud promotion is now the active critical path. The reviewed `dev` branch is the replacement for the old production application; hosted migrations `073`–`092` are required before that new application is live. The old production commit `8b8d429` remains the immediate application rollback reference only.
+The current phase is a provider-free pre-key local candidate. Local migrations
+reach `104`; reviewed hosted migration evidence ends at `095`. Passing the local
+gate does not authorize or prove a hosted migration, deployment, provider call,
+or customer outcome. The old production commit `8b8d429` remains the historical
+application rollback reference.
 
 Hosted changes are separately approved work. Follow the numbered [production launch checklist](docs/launch/LAUNCH_CHECKLIST.md): backup, migration, deployment, secret provisioning, and live provider actions remain separate approvals. Before any hosted migration or deployment: rehearse the backup and pending migrations, inspect the dry run, verify parity, and record the result in [release evidence](docs/RELEASE_EVIDENCE.md). Before any provider is activated: approve the exact sender/model/payment configuration and prove its bounded behavior. Technical launch is items 1–22; the paid Website Improvement and Managed AI Operator proof gates remain separate items 23 and 24.
 

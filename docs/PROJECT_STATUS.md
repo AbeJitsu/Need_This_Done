@@ -10,18 +10,31 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-22
 
-> Current local candidate: `203c4bc71fbae42004b791923d98cbb9e0c2e268`.
-> It is local-only and unreviewed. Historical passing
-> evidence remains attached to `e363a5f` and hosted schema `095`; it does not
-> cover migration `104`. Technical launch is **NOT GO**. No hosted migration,
-> credential provisioning, provider request, Mac activation, or external action
-> is authorized by this local work.
+> Reviewed pre-key baseline: `b00fcaade7df55c08c0e9b067e526065b99de082`.
+> It is local-only at migration `104`; hosted migration evidence ends at `095`.
+> The production dependency audit is clean. Technical launch is **NOT GO**.
+> No hosted migration, credential provisioning, provider request, deployment,
+> Mac activation, or external action is authorized by this local work.
 
 **Current model claim:** no worker model is selected. The sole future
-activation candidate is exact `google/gemma-4-26b-a4b-it:free`; historic
-dynamic-router and 4-31 catalog notes below are retained only as evidence.
+activation candidate is exact `google/gemma-4-26b-a4b-it:free`. Earlier model
+and catalog records below are historical evidence, not active configuration or
+an activation claim.
 
-**Local migration-104 update (2026-08-22):** Disposable local Supabase reset
+**Release-control definitions:**
+
+- **Pre-key local gate** proves the checked-out code, disposable local database,
+  deterministic provider fakes, and offline bridge without credentials or
+  external actions. It does not prove a hosted environment or a provider.
+- **Hosted promotion** is the separately approved backup, dry run, forward-only
+  migration, deployment, and hosted verification sequence.
+- **Technical launch** additionally requires secret provisioning, bounded live
+  provider canaries, reliability evidence, rollback ownership, and a recorded
+  go/no-go decision. A local pass cannot satisfy this gate.
+
+**Reviewed pre-key baseline (2026-08-22):** Candidate `b00fcaad` includes the
+production dependency-audit repair and the local migration-104 evidence.
+Disposable local Supabase reset
 cleanly through `104`. Schema lint, the entire `verify:database` suite, the
 generalized 32-mapping/16-gate stage verifier, `verify:code` (222 unit tests,
 50 accessibility tests, lint, TypeScript, and production build), and bridge
@@ -206,8 +219,8 @@ Item 9 is `PASSED`; item 8 remains an `EXCEPTION` due for review/removal on
 
 ```text
 production/origin/production `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> corrected deployed application; `8b8d429` remains the application rollback reference
-local dev                     `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> fresh local assembly, contact repair, and browser-boundary candidate
-origin/dev                    `e363a5f74ff8ad731272089f8714bd81edb97d3d` -> published and deployed candidate
+local dev                     `b00fcaade7df55c08c0e9b067e526065b99de082` -> reviewed pre-key baseline through migration 104
+origin/dev                    `b00fcaade7df55c08c0e9b067e526065b99de082` -> published baseline; no new push is authorized by this phase
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 095; no higher migration
@@ -216,7 +229,7 @@ approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> latest protected recovery point is 90/094 before the 095 repair
 
 local Supabase
-  -> migrations applied through 095; focused Storage/schema/security proof passed
+  -> disposable migrations applied through 104; schema/security/provider-recovery proof passed
   -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, auth, plan approval, and provenance proof passed
 ```
 
@@ -228,7 +241,11 @@ The local proof uses a fake completion client, a fake Gateway, real local Supaba
 
 Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
-Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`095`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Items 1–7, 7.1, and 9 are now passed; item 8 is an owner-approved time-boxed retention exception renewed for item 9 and due for review 2026-09-15; items 10–22 remain blocked. `8b8d429` remains the application rollback reference.
+This section records the historical 2026-08-10 cutover sequence. The current
+phase is the provider-free pre-key gate described at the top of this ledger.
+Any later hosted work still follows [launch checklist](launch/LAUNCH_CHECKLIST.md)
+items 1–22 with backup, dry run, forward migration, deployment, credentials,
+provider canaries, reliability, and rollback treated as separate approvals.
 
 Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
 
@@ -256,7 +273,12 @@ Technical launch and paid business proof are separate. Checklist items 23 and 24
 
 **Rollback:** Revert the focused implementation commits. For any database that receives `079`–`083`, revert callers first and use a separately reviewed forward migration; preserve prospect, suppression, outreach, sender-event, pilot, outcome, priority, action, and reflection history rather than deleting it as a rollback shortcut.
 
-**Blockers:** There is no known repository-code blocker to the local cockpit or approved-send proofs. The deterministic local worker now has an approval-gated primary pin path, a comparison-only benchmark path, and database-authoritative model execution; selecting/configuring one approved outbound sender and registering its signed delivery/reply webhook remain provider-gated work. Production promotion is still paused: hosted migrations `073`–`092`, hosted role/isolation proof, the controlled Google sign-in check, Mac launchd/OpenClaw proof, sender approval, webhook verification, dependency remediation, and deployment review remain external release work. Stripe and Calendar are required only before making their respective public claims. The production dependency audit reports 11 findings; major-framework remediation or a narrow owner-approved exposure exception is required before production promotion. Authenticated client collaboration has route/unit coverage but still needs its own real database/browser release proof before that broader customer-facing claim is promoted.
+**Historical blockers at the time of this slice:** This paragraph is retained to
+explain the 2026-08 execution record; it is not the current release state.
+Provider selection, hosted verification, Mac setup, and deployment were still
+pending. The dependency findings recorded then were subsequently repaired; the
+2026-08-22 production dependency audit is clean. Current blockers and evidence
+are maintained at the top of this ledger.
 
 **Provider decision:** An explicit provider-neutral sender action is implemented with deterministic fake mode and a separately keyed Resend adapter. No real outbound provider is approved or configured, and the transactional Resend key cannot activate prospecting. The internal proof remains manual: no subscription, Customer Portal, payment catalog, automatic Calendar action, agent daemon, or real outbound message is required. Existing guarded fallbacks remain truthful until separately tested provider paths are approved.
 

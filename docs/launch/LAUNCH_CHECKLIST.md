@@ -8,19 +8,27 @@ to these item numbers; they do not define a second activation order.
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current reviewed `dev` candidate SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (historical)
-**Current local implementation candidate:** `203c4bc71fbae42004b791923d98cbb9e0c2e268`; unreviewed, local-only, and not deployable
+**Reviewed pre-key baseline:** `b00fcaade7df55c08c0e9b067e526065b99de082`; local-only through migration `104`
 **Deployed application SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d` (corrected contact layout and browser/server boundary)
 **Last full local assembly proof:** historical provider-free proof through `103` passed on 2026-08-19. The local migration-104 assembly reached its browser phase but is environment-limited by sandbox Chromium Mach-port denial; it is not claimable.
 **Final pre-apply release-control SHA:** `e363a5f74ff8ad731272089f8714bd81edb97d3d`
 **Latest hosted-stage control SHA:** `9d82a627d6d589b09f46d9cdb20d0b5dcf49a6ce`
 **Post-write evidence:** [Hosted security repairs and parity closeout](step-5-hosted-security-repairs-2026-08-15.md)
 **Hosted Supabase history:** through `095`
-**Local verification history:** historical proof through `095`; fresh provider-free local proof through `103` passed on 2026-08-19. Local migration-104 database/code/bridge controls passed; the browser assembly remains environment-limited.
+**Local verification history:** fresh provider-free database, code, and bridge proof through `104` passed on 2026-08-22; the browser assembly remains environment-limited.
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 **Latest hosted parity evidence:** [passing hosted parity result](hosted-parity-report-2026-08-15.json), [historical pre-repair result](hosted-parity-pre-repair-report-2026-08-15.json), and [security repair stage](step-5-hosted-security-repairs-2026-08-15.md)
 
 ## How to use this checklist
+
+The **pre-key local gate** is provider-free proof against checked-out code and a
+disposable local database. **Hosted promotion** begins only after a separate
+approval for backup and dry run, then keeps migration application and
+deployment as distinct approvals. **Technical launch** additionally requires
+secret provisioning, individually approved provider canaries, reliability and
+rollback proof, and a recorded go/no-go decision. None of these gates implies
+paid customer proof.
 
 Every item is an independent release record. Update the status only when the
 evidence, approval, and rollback fields are complete. A technical launch needs
@@ -313,7 +321,7 @@ actions.
 - **Exit proof:** One paid $500 engagement is scoped, invoiced through the $250/$250 sequence, delivered as one contained fix, and handed off; the outcome is recorded in the business record.
 - **Approval:** Required — business owner and customer approve scope and handoff.
 - **Rollback:** Preserve the engagement and invoice record; resolve scope/payment issues through the business process rather than deleting launch evidence.
-- **Evidence link:** [Roadmap](../ROADMAP.md) and [project status](../PROJECT_STATUS.md).
+- **Evidence link:** [Roadmap](../../ROADMAP.md) and [project status](../PROJECT_STATUS.md).
 
 #### 24. Paid Managed AI Operator gate — `NOT_STARTED`
 
@@ -322,7 +330,7 @@ actions.
 - **Exit proof:** One paid 30-day pilot completes with four human-led weekly briefs, delivery acknowledgements, outcomes, and any scope changes recorded in the business record.
 - **Approval:** Required — business owner and customer approve the pilot scope and final outcome.
 - **Rollback:** Preserve the pilot and payment record; stop future work through the agreed business process and do not represent an incomplete pilot as launch proof.
-- **Evidence link:** [Roadmap](../ROADMAP.md) and [project status](../PROJECT_STATUS.md).
+- **Evidence link:** [Roadmap](../../ROADMAP.md) and [project status](../PROJECT_STATUS.md).
 
 ## Current evidence index
 

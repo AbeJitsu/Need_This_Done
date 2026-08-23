@@ -4,19 +4,28 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-22
 
-> Current local candidate: `203c4bc71fbae42004b791923d98cbb9e0c2e268`.
-> It is local-only and unreviewed; the reviewed hosted history
-> remains `095`; no hosted migration, deployment, credential change, provider
-> request, or external action occurred. Technical launch is **NOT GO**.
+> Reviewed pre-key baseline: `b00fcaade7df55c08c0e9b067e526065b99de082`.
+> It is local-only at migration `104`; reviewed hosted migration evidence ends
+> at `095`. The production dependency audit is clean. No hosted migration,
+> deployment, credential change, provider request, Mac activation, or external
+> action occurred. Technical launch is **NOT GO**.
 
 The current provider-free release boundary has no selected OpenRouter worker
-model. `google/gemma-4-26b-a4b-it:free` is the only activation candidate;
-historical dynamic-router and catalog-discovery notes below remain evidence,
+model. `google/gemma-4-26b-a4b-it:free` is the only future activation
+candidate. Earlier model and catalog records below are historical evidence,
 not active configuration or release claims.
+
+The **pre-key local gate** covers checked-out code, a disposable local database,
+deterministic provider fakes, and the offline bridge. **Hosted promotion** is a
+separately approved backup, dry run, forward-only migration, deployment, and
+hosted verification sequence. **Technical launch** additionally requires
+credentials, bounded live provider canaries, reliability and rollback proof,
+and an explicit go/no-go decision. Passing the local gate cannot be represented
+as either hosted promotion or technical launch.
 
 ### Local migration-104 proof — 2026-08-22
 
-The local candidate is `203c4bc71fbae42004b791923d98cbb9e0c2e268`.
+The reviewed baseline is `b00fcaade7df55c08c0e9b067e526065b99de082`.
 Disposable local Supabase reset cleanly
 through migration `104`; schema lint and the complete `verify:database` gate
 passed. The generalized staged verifier passed 32 mappings and 16 gates.
