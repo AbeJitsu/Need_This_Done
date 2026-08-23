@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { PUBLIC_OFFERS } from '@/lib/public-offers';
 
 const comparison = [
@@ -22,7 +22,7 @@ const comparison = [
       ['You get', 'A human-run 30-day pilot and a short weekly brief.'],
       ['Price', 'Priced by proposal'],
     ],
-    cta: 'Discuss Managed Automation',
+    cta: 'Discuss automation',
     href: PUBLIC_OFFERS['ai-operator'].contactHref,
   },
 ] as const;
@@ -96,12 +96,11 @@ export function HumanControlFlow() {
     <section aria-labelledby="human-control-heading" className="rounded-[2rem] bg-[#18372e] p-7 text-white sm:p-9">
       <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Human control</p>
       <h2 id="human-control-heading" className="mt-4 font-playfair text-4xl font-black">Your say stays in the work.</h2>
-      <ol className="mt-8 grid gap-3 md:grid-cols-3" aria-label="Prepared, reviewed, approved">
+      <ol className="mt-8 grid gap-3 sm:grid-cols-2" aria-label="Prepared, reviewed, approved">
         {controlSteps.map(([title, description], index) => (
-          <li key={title} className="flex gap-3 rounded-2xl border border-white/15 bg-white/[.06] p-4">
+          <li key={title} className={`flex gap-3 rounded-2xl border border-white/15 bg-white/[.06] p-4${index === controlSteps.length - 1 ? ' sm:col-span-2' : ''}`}>
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-300 font-black text-[#18372e]">{index === controlSteps.length - 1 ? <Check className="h-4 w-4" aria-hidden="true" /> : index + 1}</span>
-            <div><h3 className="font-black">{title}</h3><p className="mt-1 text-sm leading-6 text-emerald-50/70">{description}</p></div>
-            {index < controlSteps.length - 1 && <ChevronRight className="ml-auto hidden h-5 w-5 text-emerald-300 md:block" aria-hidden="true" />}
+            <div className="min-w-0"><h3 className="font-black">{title}</h3><p className="mt-1 text-sm leading-6 text-emerald-50/70">{description}</p></div>
           </li>
         ))}
       </ol>

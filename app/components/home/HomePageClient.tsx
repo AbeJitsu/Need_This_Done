@@ -24,10 +24,10 @@ export default function HomePageClient() {
 
           <div className="overflow-hidden rounded-[2rem] border border-[#183229]/10 bg-[#efe8d8] shadow-xl shadow-emerald-950/10" aria-hidden="true">
             <Image
-              src="/needthisdone-work-to-outcome.webp"
+              src="/needthisdone-work-to-outcome-v2.png"
               alt=""
-              width={1536}
-              height={1024}
+              width={1600}
+              height={1000}
               preload
               unoptimized
               sizes="(max-width: 1023px) 100vw, 56vw"
