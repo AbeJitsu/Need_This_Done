@@ -94,4 +94,29 @@ describe('OpenRouter catalog resolution', () => {
       maxTokens: 20,
     })).resolves.toMatchObject({ model: 'google/gemma-4-26b-a4b-it:free', content: 'ok' });
   });
+
+  it('merges a server-owned provider privacy policy with required structured/tool parameters', async () => {
+    const requests: Array<Record<string, unknown>> = [];
+    const client = new OpenRouterClient('test-key', async (_input, init) => {
+      requests.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+      return new Response(JSON.stringify({
+        choices: [{ message: { content: '{"ok":true}' } }],
+        usage: { cost: 0 },
+      }), { status: 200 });
+    });
+    await client.chatCompletion({
+      model: 'provider/quality-priced',
+      messages: [{ role: 'user', content: 'Return a bounded result.' }],
+      maxTokens: 20,
+      responseSchema: { type: 'object', properties: { ok: { type: 'boolean' } }, required: ['ok'], additionalProperties: false },
+      webSearch: { maxResults: 2 },
+      providerPolicy: { data_collection: 'deny', zdr: true, allow_fallbacks: false },
+    });
+    expect(requests[0].provider).toEqual({
+      require_parameters: true,
+      data_collection: 'deny',
+      zdr: true,
+      allow_fallbacks: false,
+    });
+  });
 });

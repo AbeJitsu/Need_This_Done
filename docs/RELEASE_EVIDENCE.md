@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Public Website Fix and Managed Automation pages | Existing scope | Not revalidated by this repository cleanup. |
 | System-map documentation and script-owned migration configuration | Focused checks passed | `git diff --check` and the staged-migration verifier passed on 2026-08-24; this remains a documentation/configuration change only. |
-| OpenRouter provider routing policy | Pending checkpoint | No provider request or model activation is implied. |
+| OpenRouter provider routing policy | Focused test passed | The server-owned privacy/routing policy merges into request payloads and structured/tool requests force `require_parameters`; no provider request or model activation occurred. |
 | Daily Desk work | Experimental checkpoint pending | It is not a product-direction, hosted, provider, or customer claim. |
 | Hosted migrations | Not claimable | No hosted write is part of this work. |
 | Deployment, secrets, Mac activation, provider activation | Not claimable | Each needs separate owner approval. |

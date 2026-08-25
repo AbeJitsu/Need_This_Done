@@ -19,6 +19,9 @@
 - Documentation and migration-stage configuration: `git diff --check` and
   `node scripts/verify-hosted-migration-stages.mjs` passed on 2026-08-24; the
   script-owned map covers staged migrations `073`–`108`.
+- OpenRouter provider policy: focused `openrouter-core` tests passed on
+  2026-08-24. Structured and tool-bearing requests force provider parameter
+  support while server code owns the privacy/routing constraints.
 - Daily Desk checkpoint and later orchestration extraction: unverified until
   their focused tests and local gates are recorded.
 

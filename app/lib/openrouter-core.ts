@@ -46,6 +46,18 @@ export type OpenRouterCompletion = {
 export type OpenRouterMessage = { role: 'system' | 'user'; content: string };
 export type OpenRouterTool = Record<string, unknown>;
 
+/**
+ * A deliberately narrow subset of OpenRouter's provider-routing controls.
+ * Callers may only opt into the privacy and routing constraints the server
+ * owns; structured responses always force parameter support below.
+ */
+export type OpenRouterProviderPolicy = {
+  data_collection?: 'allow' | 'deny';
+  zdr?: boolean;
+  allow_fallbacks?: boolean;
+  require_parameters?: boolean;
+};
+
 export type OpenRouterCompletionRequest = {
   model: string;
   messages: OpenRouterMessage[];
@@ -54,6 +66,7 @@ export type OpenRouterCompletionRequest = {
   tools?: OpenRouterTool[];
   toolChoice?: string | Record<string, unknown>;
   webSearch?: { maxResults: number };
+  providerPolicy?: OpenRouterProviderPolicy;
 };
 
 const modelResponseSchema = z.object({
@@ -290,9 +303,13 @@ export class OpenRouterClient {
     }
     if (tools.length) payload.tools = tools;
     if (request.toolChoice !== undefined) payload.tool_choice = request.toolChoice;
+    const providerPolicy = { ...(request.providerPolicy || {}) };
+    // Structured/tool requests must never silently route to a provider that
+    // lacks the requested capability, even if a caller supplied false.
     if (request.responseSchema || tools.length || request.toolChoice !== undefined) {
-      payload.provider = { require_parameters: true };
+      providerPolicy.require_parameters = true;
     }
+    if (Object.keys(providerPolicy).length) payload.provider = providerPolicy;
     const json = await this.request('/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
