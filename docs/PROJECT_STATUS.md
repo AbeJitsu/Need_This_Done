@@ -24,6 +24,9 @@
   material, and the stale Supabase error export. The three résumé source files
   were copied to the protected external backup and checksum-verified before
   removal.
+- The unused site configuration and local design/review tooling were retired
+  on 2026-08-25. Active application routes, package scripts, favicon generation,
+  and private-worker tooling remain unchanged.
 - No hosted migration, deployment, secret provisioning, provider activation,
   Mac activation, publication, message, or customer action is authorized by
   this repository cleanup.
@@ -53,6 +56,9 @@
   at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-25-pre-doc-cleanup/`
   verifies all three copied files; type-check, lint, five focused public/content
   tests, production build, `git diff --check`, and final reference scans passed.
+- Retired-local-tooling checks passed on 2026-08-25: type-check, the focused
+  absence test, tracked-source scan, and `git diff --check` passed. This is a
+  local repository cleanup only.
 
 ## Rollback
 
