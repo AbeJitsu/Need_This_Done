@@ -8,22 +8,25 @@
 - The public Website Fix and Managed Automation paths remain in the application.
 - Vercel is the owner-gated control plane and Supabase is the durable data
   boundary; the Mac worker remains outbound-only and private.
-- The prior Daily Desk implementation is being retained as an experimental
-  checkpoint. It is not a current product or release claim.
+- Daily Desk code, routes, and pending migration entries were retired from the
+  active branch on 2026-08-24. Its prior checkpoints remain recoverable in
+  Git history; the existing generic bridge and planner remain active.
 - No hosted migration, deployment, secret provisioning, provider activation,
   Mac activation, publication, message, or customer action is authorized by
   this repository cleanup.
 
 ## Active validation
 
-- Documentation and migration-stage configuration: `git diff --check` and
-  `node scripts/verify-hosted-migration-stages.mjs` passed on 2026-08-24; the
-  script-owned map covers staged migrations `073`–`108`.
+- Repository vision, documentation, and migration-stage configuration:
+  `git diff --check`, `node scripts/verify-hosted-migration-stages.mjs`,
+  type-check, lint, and the focused public-journey, private-boundary, and
+  capability-manifest tests passed on 2026-08-24. The script-owned pending map
+  ends at `106`.
 - OpenRouter provider policy: focused `openrouter-core` tests passed on
   2026-08-24. Structured and tool-bearing requests force provider parameter
   support while server code owns the privacy/routing constraints.
-- Daily Desk checkpoint and later orchestration extraction: unverified until
-  their focused tests and local gates are recorded.
+- The retained bridge/planner behavior was not revalidated by this retirement
+  change; no claim beyond the focused removal checks is made here.
 
 ## Rollback
 

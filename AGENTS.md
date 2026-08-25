@@ -6,14 +6,21 @@ results in the living documents below.
 
 ## Read the right source
 
-- `README.md` — current product boundary, architecture, and local workflow.
-- `ROADMAP.md` — current vision, work sequence, and paid-proof finish line.
+- `README.md` — the canonical public promise and internal operating vision,
+  plus product boundary, architecture, and local workflow.
+- `ROADMAP.md` — the current outcome sequence and proof criteria; it must
+  follow the README vision rather than restate or expand it.
 - `docs/PROJECT_STATUS.md` — execution state, validation, blockers, and rollback.
 - `docs/RELEASE_EVIDENCE.md` — what is verified, pending, or not claimable.
 - `docs/launch/LAUNCH_CHECKLIST.md` — numbered hosted-promotion controls.
 
 Read the relevant source before changing a subsystem. Do not copy changing
 status, command inventories, or product prose into this file.
+
+Before proposing a new product surface, workflow, provider, or internal tool,
+apply the README's internal operating rule. Work that is not necessary for the
+approved end-to-end rehearsal, active delivery, or removal of proven duplication
+does not enter active scope.
 
 ## Product boundary
 

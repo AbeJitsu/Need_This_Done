@@ -189,4 +189,18 @@ describe('simplified public journey', () => {
     expect(rootDocs).not.toContain('Website Improvement');
     expect(rootDocs).not.toContain('Managed AI Operator');
   });
+
+  it('keeps one canonical public promise and internal decision rule for future work', () => {
+    const readme = readFileSync(resolve(repositoryRoot, 'README.md'), 'utf8');
+    const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
+    const agentInstructions = readFileSync(resolve(repositoryRoot, 'AGENTS.md'), 'utf8');
+
+    expect(readme).toContain('## The vision — start here');
+    expect(readme).toContain('### Public promise');
+    expect(readme).toContain('### Internal operating vision');
+    expect(readme).toContain('private delivery infrastructure, not a product');
+    expect(roadmap).toContain('This is an execution list, not a second vision document.');
+    expect(roadmap).toContain('A real, controlled Vercel → Supabase → Mac mini rehearsal');
+    expect(agentInstructions).toContain('canonical public promise and internal operating vision');
+  });
 });
