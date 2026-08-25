@@ -12,6 +12,8 @@ const retiredPaths = [
   'scripts/prototype-site-review.ts',
   'scripts/review-output.txt',
   'scripts/test-dark-mode.ts',
+  'color-contrast-viewer.html',
+  'component-route-map.json',
 ];
 
 const retiredDependencies = [

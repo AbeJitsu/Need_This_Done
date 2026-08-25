@@ -27,6 +27,9 @@
 - The unused site configuration and local design/review tooling were retired
   on 2026-08-25. Active application routes, package scripts, favicon generation,
   and private-worker tooling remain unchanged.
+- The unreferenced local color-contrast viewer and component route map were
+  retired on 2026-08-25. The existing route-map ignore remains intentional;
+  active routes and private-worker tooling remain unchanged.
 - No hosted migration, deployment, secret provisioning, provider activation,
   Mac activation, publication, message, or customer action is authorized by
   this repository cleanup.
@@ -64,12 +67,22 @@
   configuration, and package-script scan found no callers. Type-check, lint,
   the focused retirement test, production build, and `git diff --check` passed.
   Active routes and private-worker tooling were not changed.
+- Local artifact retirement checks passed on 2026-08-25: the focused absence
+  test now guards the removed color-contrast viewer and component route map.
+  The tracked-source scan preserves only the deliberate route-map ignore;
+  type-check, lint, production build, and `git diff --check` passed. This is a
+  local repository cleanup only; active routes and private-worker tooling were
+  not changed.
 
 ## Rollback
 
 Repository changes are reversible by reviewed Git revert. Database changes stay
 additive and any hosted correction must be a separately reviewed forward
 migration; never reset hosted Supabase.
+
+The removed color-contrast viewer and component route map can be restored only
+by a reviewed Git revert of this local-cleanup commit; no hosted rollback is
+involved.
 
 The removed résumé source files can also be restored from the protected
 2026-08-25 pre-doc-cleanup backup after verifying its `SHA256SUMS.txt` manifest.
