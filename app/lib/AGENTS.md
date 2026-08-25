@@ -1,29 +1,22 @@
 # Application-library guidance
 
-Read the root `AGENTS.md` first. This file contains only boundaries specific to
-reusable code under `app/lib`; current product claims and release status live in
-`README.md`, `ROADMAP.md`, and `docs/`.
+Read the root `AGENTS.md` and `README.md` first. The README defines product
+scope and operating boundaries; this file keeps only reusable-library rules.
 
-## Boundaries
+## Stable boundaries
 
-- Supabase is durable truth for projects, reports, private work, approvals,
-  outcomes, prospecting, evaluation, audit, and private-storage records.
-- Redis is transient for cache, rate limits, and deduplication; do not add a
+- Supabase is durable truth and Redis is transient only. Do not add a
   replacement database or vector store.
 - Use the existing authenticated session and server-side authorization boundary;
   do not add a second auth system or a client-side authorization shortcut.
-- Keep the planner draft-only and preserve human approval before any external
-  message, publication, system change, or spend. Never expose provider secrets
-  or worker credentials to browser code.
-- The site analyzer and all other external fetches must be SSRF-safe, bounded,
-  timeout-protected, and explicit about failures.
-- Website Fix payments remain a manual, separately approved boundary;
-  do not restore carts, catalogs, Medusa/Railway, custom checkout, or automatic
-  recurring purchase behavior.
+- Never expose provider secrets or worker credentials to browser code. Preserve
+  human approval before an external message, publication, system change, or spend.
+- Keep external fetches SSRF-safe, bounded, timeout-protected, and explicit
+  about failures.
+- Preserve project ownership and tenant boundaries in every route and query.
 
-## Implementation habits
+## Change discipline
 
 - Reuse shared validation, timeout, retry, authorization, and API-error helpers.
-- Preserve project ownership and tenant boundaries in every route and query.
-- Keep external adapters provider-neutral where the current roadmap requires it.
+- Keep external adapters provider-neutral where the roadmap requires it.
 - Add focused tests for changed behavior and update the relevant evidence ledger.

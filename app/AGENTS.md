@@ -1,3 +1,8 @@
+# Application guidance
+
+Read the root `AGENTS.md` and `README.md` before changing this application.
+The README, not this file, defines the product and private-system boundary.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

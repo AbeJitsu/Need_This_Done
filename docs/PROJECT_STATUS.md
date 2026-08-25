@@ -15,6 +15,10 @@
   compatibility files, and the unused loop-state helper were retired on
   2026-08-25. The neutral lifecycle hooks now live under `.codex/hooks/`;
   ignored local Claude runtime state was not removed.
+- The current operating record was consolidated on 2026-08-25. README remains
+  the single product and system vision; ROADMAP remains the execution sequence;
+  11 tracked Markdown files now hold the current instructions, status, evidence,
+  launch controls, and package boundaries.
 - No hosted migration, deployment, secret provisioning, provider activation,
   Mac activation, publication, message, or customer action is authorized by
   this repository cleanup.
@@ -37,6 +41,9 @@
   pre-existing local runtime-state database and legacy-rollout scan issue.
   Owner: the local Codex runtime owner; scope: user-machine state outside this
   repository; follow up by 2026-09-01.
+- Documentation hygiene passed on 2026-08-25: the focused repository test
+  verifies the exact current Markdown record, README's canonical role, and the
+  ROADMAP link back to it. Historical documentation remains recoverable in Git.
 
 ## Rollback
 
