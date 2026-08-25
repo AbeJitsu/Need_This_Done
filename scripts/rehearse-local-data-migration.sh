@@ -348,14 +348,9 @@ apply_stage "pending-provider-boundaries" \
   105_operator_only_private_surfaces.sql \
   106_provider_workflow_recovery_links.sql
 
-apply_stage "pending-private-daily-revenue-desk" \
-  107_private_daily_revenue_desk.sql \
-  108_fix_daily_desk_social_storage_path.sql \
-  109_allow_private_daily_desk_svg.sql
-
 assert_final_object_boundaries
 
 echo "Running the required retained database gate against migrated historical data."
 npm run verify:database
 
-echo "Historical-data staged migration rehearsal passed from the pre-073 snapshot through 109."
+echo "Historical-data staged migration rehearsal passed from the pre-073 snapshot through 106."

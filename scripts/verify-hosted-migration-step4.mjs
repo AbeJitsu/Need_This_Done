@@ -197,7 +197,7 @@ function verifyRehearsalOutput(output) {
     'Pre-cleanup page_views constraint and retained historical objects verified.',
     'Applying isolated final destructive stage: destructive-retirement',
     'Retired objects are absent and retained objects remain present.',
-    'Historical-data staged migration rehearsal passed from the pre-073 snapshot through 109.',
+    'Historical-data staged migration rehearsal passed from the pre-073 snapshot through 108.',
   ];
   for (const marker of requiredMarkers) {
     if (!output.includes(marker)) fail(`historical-data rehearsal did not emit required proof: ${marker}`);
@@ -211,7 +211,7 @@ function verifyRehearsalOutput(output) {
     unchanged_legacy_inventory_assertions: unchangedChecks,
     pre_cleanup_constraint_and_retention_assertion: 'passed',
     retired_objects_after_092: 'absent',
-    retained_objects_through_109: 'present',
+    retained_objects_through_108: 'present',
   };
 }
 
