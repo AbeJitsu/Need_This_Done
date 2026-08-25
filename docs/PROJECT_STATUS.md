@@ -1,7 +1,7 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-08-24
+**Last updated:** 2026-08-25
 
 ## Current facts
 
@@ -11,6 +11,10 @@
 - Daily Desk code, routes, and pending migration entries were retired from the
   active branch on 2026-08-24. Its prior checkpoints remain recoverable in
   Git history; the existing generic bridge and planner remain active.
+- Claude-specific project instructions, hooks, automation workflows,
+  compatibility files, and the unused loop-state helper were retired on
+  2026-08-25. The neutral lifecycle hooks now live under `.codex/hooks/`;
+  ignored local Claude runtime state was not removed.
 - No hosted migration, deployment, secret provisioning, provider activation,
   Mac activation, publication, message, or customer action is authorized by
   this repository cleanup.
@@ -27,6 +31,12 @@
   support while server code owns the privacy/routing constraints.
 - The retained bridge/planner behavior was not revalidated by this retirement
   change; no claim beyond the focused removal checks is made here.
+- Codex-integration retirement checks passed on 2026-08-25: shell syntax,
+  hook JSON/path validation, tracked-source scans, `git diff --check`, and
+  type-check. `codex doctor` loaded the project configuration but reported a
+  pre-existing local runtime-state database and legacy-rollout scan issue.
+  Owner: the local Codex runtime owner; scope: user-machine state outside this
+  repository; follow up by 2026-09-01.
 
 ## Rollback
 

@@ -1,7 +1,5 @@
 #!/bin/bash
-# SessionStart Hook: Show git status
-# What: Runs when session starts, resumes, or after compacting
-# Why: Quick context on current branch and changes
+# Session-start hook: show the branch and whether work is uncommitted.
 
 _GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
 if [[ -z "$_GIT_ROOT" ]]; then

@@ -3,7 +3,7 @@
 // ============================================================================
 // Brief, enticing content that sparks curiosity and drives users to the
 // services page for full details. Progressive disclosure: tease → explore.
-// Follows CLAUDE.md guidelines: inviting, focused, considerate, supportive.
+// Keep service detail copy inviting, focused, considerate, and supportive.
 
 export interface ServiceModalContent {
   title: string;

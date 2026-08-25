@@ -31,10 +31,13 @@ pnpm-debug.log*
 *.swp
 *.swo
 *~
+
+# Finder and AppleDouble metadata
 .DS_Store
+._*
 .prettierignore
 
-# OS generated files
+# Other OS generated files
 Thumbs.db
 .env.prod
 .env.prod.local
@@ -69,10 +72,6 @@ supabase/.temp
 app/playwright-report/
 .env.production
 env.md.do
-
-# Claude Code hook state (ephemeral, session-specific)
-.claude/state/
-.claude/frontend-changes.txt
 
 # Generated mapping files (rebuild on demand)
 app/affected-routes.json

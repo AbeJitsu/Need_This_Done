@@ -1,8 +1,8 @@
 #!/bin/bash
-# Pre-Compact Hook - Save work state before context compression
-# Saves git state so it can be restored after compaction.
+# Pre-compact hook: save a small local work-state snapshot before Codex
+# compacts the conversation.
 
-WORK_STATE_FILE="/tmp/claude_work_state.json"
+WORK_STATE_FILE="/tmp/needthisdone-codex-work-state.json"
 
 # Get current git status
 GIT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
