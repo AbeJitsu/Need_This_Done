@@ -4,7 +4,7 @@
   "source_hosted_latest": "072",
   "expected_hosted_latest": "095",
   "historical_hosted_range": {"first":"073","last":"095"},
-  "pending_range": {"first":"096","last":"108"},
+  "pending_range": {"first":"096","last":"109"},
   "stages": [
     {
       "id": "calendar-token-security",
@@ -87,7 +87,7 @@
     {"id":"provider-recovery-atomicity","state":"pending","gate":"separate","destructive":false,"rationale":"Make provider replays immutable, webhook persistence retryable, and acceptance/reference persistence atomic.","migrations":["104"]},
     {"id":"operator-only-private-surfaces","state":"pending","gate":"separate","destructive":false,"rationale":"Retire client access grants while preserving historical identities, memberships, projects, comments, files, and handoffs.","migrations":["105"]},
     {"id":"provider-workflow-recovery-links","state":"pending","gate":"separate","destructive":false,"rationale":"Link handoffs and outreach to one durable provider operation and add service-only atomic acceptance, unknown-acceptance reconciliation, and webhook retry handling.","migrations":["106"]},
-    {"id":"private-daily-revenue-desk","state":"pending","gate":"separate","destructive":false,"rationale":"Add owner-scoped Daily Revenue Desk records, signed public-web research, manual-only review flows, private deterministic social versions, and a bounded model-cost ledger without provider activation.","migrations":["107","108"]}
+    {"id":"private-daily-revenue-desk","state":"pending","gate":"separate","destructive":false,"rationale":"Add owner-scoped Daily Revenue Desk records, signed public-web research, manual-only review flows, private deterministic social versions, and a bounded model-cost ledger without provider activation.","migrations":["107","108","109"]}
   ],
   "migrations": [
     {"new_version":"073","new_filename":"073_secure_google_calendar_tokens.sql","original_version":"073","original_filename":"073_secure_google_calendar_tokens.sql","original_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","new_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","stage":"calendar-token-security"},
@@ -124,7 +124,8 @@
     {"new_version":"104","new_filename":"104_provider_recovery_atomicity.sql","original_version":"104","original_filename":"104_provider_recovery_atomicity.sql","original_sha256":"9bf600d6bc571f2c5ca85f11c94a2238edbeb111070d66c1fb775ab15f8ebb5a","new_sha256":"9bf600d6bc571f2c5ca85f11c94a2238edbeb111070d66c1fb775ab15f8ebb5a","stage":"provider-recovery-atomicity","new_only":true},
     {"new_version":"105","new_filename":"105_operator_only_private_surfaces.sql","original_version":"105","original_filename":"105_operator_only_private_surfaces.sql","original_sha256":"cb441ef181025fa3d49fcce0e5918417a0ccdf4f9d47bf81d890f933d91c639b","new_sha256":"cb441ef181025fa3d49fcce0e5918417a0ccdf4f9d47bf81d890f933d91c639b","stage":"operator-only-private-surfaces","new_only":true},
     {"new_version":"106","new_filename":"106_provider_workflow_recovery_links.sql","original_version":"106","original_filename":"106_provider_workflow_recovery_links.sql","original_sha256":"d6ca51d0734034e42ddbbd00b341e1f9bdb9c8e6e0029e3bed969ad682fd803e","new_sha256":"d6ca51d0734034e42ddbbd00b341e1f9bdb9c8e6e0029e3bed969ad682fd803e","stage":"provider-workflow-recovery-links","new_only":true},
-    {"new_version":"107","new_filename":"107_private_daily_revenue_desk.sql","original_version":"107","original_filename":"107_private_daily_revenue_desk.sql","original_sha256":"55024a84ca719e2d7d160d6c157ca361c3831f9dc777b93b9f0c08c8e975564f","new_sha256":"55024a84ca719e2d7d160d6c157ca361c3831f9dc777b93b9f0c08c8e975564f","stage":"private-daily-revenue-desk","new_only":true},
-    {"new_version":"108","new_filename":"108_fix_daily_desk_social_storage_path.sql","original_version":"108","original_filename":"108_fix_daily_desk_social_storage_path.sql","original_sha256":"ac0c4cc83306a93f0d6dbb2be1d29ab515bf24c785251d1cf16dd5f525fb3439","new_sha256":"ac0c4cc83306a93f0d6dbb2be1d29ab515bf24c785251d1cf16dd5f525fb3439","stage":"private-daily-revenue-desk","new_only":true}
+    {"new_version":"107","new_filename":"107_private_daily_revenue_desk.sql","original_version":"107","original_filename":"107_private_daily_revenue_desk.sql","original_sha256":"d50421773f576985930de77278c132a92a11f7ceaf5831c2403fbda759609a0b","new_sha256":"d50421773f576985930de77278c132a92a11f7ceaf5831c2403fbda759609a0b","stage":"private-daily-revenue-desk","new_only":true},
+    {"new_version":"108","new_filename":"108_fix_daily_desk_social_storage_path.sql","original_version":"108","original_filename":"108_fix_daily_desk_social_storage_path.sql","original_sha256":"ac0c4cc83306a93f0d6dbb2be1d29ab515bf24c785251d1cf16dd5f525fb3439","new_sha256":"ac0c4cc83306a93f0d6dbb2be1d29ab515bf24c785251d1cf16dd5f525fb3439","stage":"private-daily-revenue-desk","new_only":true},
+    {"new_version":"109","new_filename":"109_allow_private_daily_desk_svg.sql","original_version":"109","original_filename":"109_allow_private_daily_desk_svg.sql","original_sha256":"03d4491de59461b02eb0ef2ada1fee75188e79ff1a782930fb1cc0b025cea23f","new_sha256":"03d4491de59461b02eb0ef2ada1fee75188e79ff1a782930fb1cc0b025cea23f","stage":"private-daily-revenue-desk","new_only":true}
   ]
 }

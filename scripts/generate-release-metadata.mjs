@@ -36,8 +36,8 @@ const metadata = {
   deploymentIdentity: null,
 };
 
-if (metadata.localMigrationHead !== '106') {
-  throw new Error(`Pre-key release metadata requires local migration head 106; found ${metadata.localMigrationHead || 'none'}.`);
+if (metadata.localMigrationHead !== '109') {
+  throw new Error(`Pre-key release metadata requires local migration head 109; found ${metadata.localMigrationHead || 'none'}.`);
 }
 
 const output = resolve(root, process.env.RELEASE_METADATA_PATH || 'test-results/release-metadata.json');
