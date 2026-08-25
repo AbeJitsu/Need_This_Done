@@ -16,7 +16,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const manifestPath = resolve(repositoryRoot, 'docs/launch/hosted-migration-stages.json');
+const manifestPath = resolve(repositoryRoot, 'scripts/hosted-migration-stages.json');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 const defaultBackupRoot = '/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry';
 const backupRoot = resolve(process.env.NEEDTHISDONE_STEP4_BACKUP_DIR || defaultBackupRoot);
@@ -197,7 +197,7 @@ function verifyRehearsalOutput(output) {
     'Pre-cleanup page_views constraint and retained historical objects verified.',
     'Applying isolated final destructive stage: destructive-retirement',
     'Retired objects are absent and retained objects remain present.',
-    'Historical-data staged migration rehearsal passed from the pre-073 snapshot through 106.',
+    'Historical-data staged migration rehearsal passed from the pre-073 snapshot through 108.',
   ];
   for (const marker of requiredMarkers) {
     if (!output.includes(marker)) fail(`historical-data rehearsal did not emit required proof: ${marker}`);
@@ -211,7 +211,7 @@ function verifyRehearsalOutput(output) {
     unchanged_legacy_inventory_assertions: unchangedChecks,
     pre_cleanup_constraint_and_retention_assertion: 'passed',
     retired_objects_after_092: 'absent',
-    retained_objects_through_106: 'present',
+    retained_objects_through_108: 'present',
   };
 }
 

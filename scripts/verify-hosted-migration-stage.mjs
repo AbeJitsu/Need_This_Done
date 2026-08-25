@@ -21,7 +21,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const manifest = JSON.parse(readFileSync(resolve(repositoryRoot, 'docs/launch/hosted-migration-stages.json'), 'utf8'));
+const manifest = JSON.parse(readFileSync(resolve(repositoryRoot, 'scripts/hosted-migration-stages.json'), 'utf8'));
 const backupRoot = process.env.NEEDTHISDONE_STAGED_BACKUP_DIR || '/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry';
 const cloudProfilePath = resolve(repositoryRoot, '.env.cloud.profile');
 

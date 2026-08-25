@@ -24,7 +24,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const manifestPath = resolve(repositoryRoot, 'docs/launch/hosted-migration-stages.json');
+const manifestPath = resolve(repositoryRoot, 'scripts/hosted-migration-stages.json');
 const cloudProfilePath = resolve(repositoryRoot, '.env.cloud.profile');
 const expectedBranch = 'dev';
 const expectedProjectRef = 'oxhjtmozsdstbokwtnwa';

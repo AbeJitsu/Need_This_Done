@@ -7,7 +7,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const manifestPath = resolve(repositoryRoot, 'docs/launch/hosted-migration-stages.json');
+const manifestPath = resolve(repositoryRoot, 'scripts/hosted-migration-stages.json');
 const migrationRoot = resolve(repositoryRoot, 'supabase/migrations');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 
@@ -60,8 +60,8 @@ const pendingVersions = versionRange(
 if (hostedVersions[0] !== '073' || hostedVersions.at(-1) !== manifest.expected_hosted_latest) {
   fail('historical hosted stages must cover exactly 073–095');
 }
-if (pendingVersions[0] !== '096' || pendingVersions.at(-1) !== '106') {
-  fail('pending stages must cover exactly 096–106');
+if (pendingVersions[0] !== '096' || pendingVersions.at(-1) !== '108') {
+  fail('pending stages must cover exactly 096–108');
 }
 if (Number(pendingVersions[0]) !== Number(hostedVersions.at(-1)) + 1) {
   fail('hosted and pending migration ranges must be contiguous');
@@ -160,7 +160,7 @@ for (const migration of migrations) {
 
 for (const [label, seen] of [['new', seenNewVersions], ['original', seenOriginalVersions]]) {
   if (seen.size !== expectedVersions.length || expectedVersions.some((version) => !seen.has(version))) {
-    fail(`${label} migration versions are not an exact one-to-one map for 073–106`);
+    fail(`${label} migration versions are not an exact one-to-one map for 073–108`);
   }
 }
 
@@ -184,13 +184,13 @@ for (const stage of stages) {
   stagedVersions.push(...stage.migrations);
 }
 if (stagedVersions.length !== expectedVersions.length || expectedVersions.some((version) => !stagedVersions.includes(version))) {
-  fail('stage coverage is not an exact one-to-one map for 073–106');
+  fail('stage coverage is not an exact one-to-one map for 073–108');
 }
 
 const hostedStageVersions = stages.filter((stage) => stage.state === 'hosted').flatMap((stage) => stage.migrations);
 const pendingStageVersions = stages.filter((stage) => stage.state === 'pending').flatMap((stage) => stage.migrations);
 if (JSON.stringify(hostedStageVersions) !== JSON.stringify(hostedVersions)) fail('hosted stages are not contiguous 073–095');
-if (JSON.stringify(pendingStageVersions) !== JSON.stringify(pendingVersions)) fail('pending stages are not contiguous 096–106');
+if (JSON.stringify(pendingStageVersions) !== JSON.stringify(pendingVersions)) fail('pending stages are not contiguous 096–108');
 
 console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates; hosted through ${manifest.expected_hosted_latest}; pending ${pendingVersions[0]}–${pendingVersions.at(-1)}. SQL hashes preserved.`);
 for (const stage of stages) {
