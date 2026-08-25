@@ -70,7 +70,7 @@ describe('HTTP capability manifest', () => {
         expect(source).toMatch(/status:\s*410/);
       }
       if (entry.exposure === 'signed_worker') {
-        expect(source).toMatch(/verifySigned(?:AgentBridge|Worker)Request\s*\(/);
+        expect(source).toMatch(/verifySigned(?:AgentBridge|Worker|DailyDeskWorker)Request\s*\(/);
       }
       if (entry.exposure === 'signed_webhook') {
         expect(source).toMatch(/signature|verifyResendWebhook|Webhook\(/i);
