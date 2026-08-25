@@ -14,11 +14,16 @@
 - Claude-specific project instructions, hooks, automation workflows,
   compatibility files, and the unused loop-state helper were retired on
   2026-08-25. The neutral lifecycle hooks now live under `.codex/hooks/`;
-  ignored local Claude runtime state was not removed.
+  pre-existing local Claude runtime state and settings were not removed.
 - The current operating record was consolidated on 2026-08-25. README remains
   the single product and system vision; ROADMAP remains the execution sequence;
   11 tracked Markdown files now hold the current instructions, status, evidence,
   launch controls, and package boundaries.
+- Unreferenced repository artifacts were retired on 2026-08-25, including old
+  logo archives, unused work images, root content and prompt data, job-search
+  material, and the stale Supabase error export. The three résumé source files
+  were copied to the protected external backup and checksum-verified before
+  removal.
 - No hosted migration, deployment, secret provisioning, provider activation,
   Mac activation, publication, message, or customer action is authorized by
   this repository cleanup.
@@ -44,9 +49,16 @@
 - Documentation hygiene passed on 2026-08-25: the focused repository test
   verifies the exact current Markdown record, README's canonical role, and the
   ROADMAP link back to it. Historical documentation remains recoverable in Git.
+- Artifact retirement checks passed on 2026-08-25: the external resume manifest
+  at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-25-pre-doc-cleanup/`
+  verifies all three copied files; type-check, lint, five focused public/content
+  tests, production build, `git diff --check`, and final reference scans passed.
 
 ## Rollback
 
 Repository changes are reversible by reviewed Git revert. Database changes stay
 additive and any hosted correction must be a separately reviewed forward
 migration; never reset hosted Supabase.
+
+The removed résumé source files can also be restored from the protected
+2026-08-25 pre-doc-cleanup backup after verifying its `SHA256SUMS.txt` manifest.
