@@ -15,24 +15,16 @@ export type SignedWorkerRequest = {
  * it. Nonces are consumed separately so callers can validate their schema
  * before a malformed request burns a retry.
  */
-async function verifySignedRequest(request: Request, purpose: string, secret: string | undefined, label: string): Promise<SignedWorkerRequest | NextResponse> {
+export async function verifySignedWorkerRequest(request: Request, purpose: string): Promise<SignedWorkerRequest | NextResponse> {
   const body = await request.text();
   const timestamp = request.headers.get('x-worker-timestamp') || '';
   const nonce = request.headers.get('x-worker-nonce') || '';
   const signature = request.headers.get('x-worker-signature') || '';
+  const secret = process.env.PROSPECTING_WORKER_SECRET;
   if (!secret || !verifyWorkerSignature({ body, timestamp, nonce, signature, secret, purpose })) {
-    return NextResponse.json({ error: `Invalid ${label} signature.` }, { status: 401 });
+    return NextResponse.json({ error: 'Invalid private worker signature.' }, { status: 401 });
   }
   return { body, nonce };
-}
-
-export async function verifySignedWorkerRequest(request: Request, purpose: string): Promise<SignedWorkerRequest | NextResponse> {
-  return verifySignedRequest(request, purpose, process.env.PROSPECTING_WORKER_SECRET, 'private worker');
-}
-
-/** A separate secret prevents the Daily Desk research worker from invoking the legacy prospecting worker boundary. */
-export async function verifySignedDailyDeskWorkerRequest(request: Request, purpose: string): Promise<SignedWorkerRequest | NextResponse> {
-  return verifySignedRequest(request, purpose, process.env.DAILY_DESK_WORKER_SECRET, 'Daily Desk worker');
 }
 
 export function isSignedWorkerFailure(value: SignedWorkerRequest | NextResponse): value is NextResponse {

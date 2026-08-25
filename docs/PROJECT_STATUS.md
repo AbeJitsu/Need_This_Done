@@ -25,13 +25,7 @@
 - Daily Desk durable experimental checkpoint: the disposable local database
   reset through `109`; its core unit tests (4), RLS tests (5), and retained
   schema-manifest tests (9) passed on 2026-08-24. Worker and UI behavior are
-  recorded separately.
-- Daily Desk signed-worker checkpoint: focused worker, unsigned-route, and
-  capability-manifest tests (6) passed on 2026-08-24. The worker has a
-  separate secret and bounded public-web/cost boundary, but is not installed,
-  activated, or connected to a live provider.
-- Daily Desk owner UI and manual-review APIs remain unverified until their
-  focused tests are recorded.
+  recorded separately and remain unverified here.
 
 ## Rollback
 
