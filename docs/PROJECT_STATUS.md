@@ -59,6 +59,11 @@
 - Retired-local-tooling checks passed on 2026-08-25: type-check, the focused
   absence test, tracked-source scan, and `git diff --check` passed. This is a
   local repository cleanup only.
+- Retired-dependency checks passed on 2026-08-25: the unused DnD, resizable,
+  and ID-generation packages were removed after a tracked-source, test,
+  configuration, and package-script scan found no callers. Type-check, lint,
+  the focused retirement test, production build, and `git diff --check` passed.
+  Active routes and private-worker tooling were not changed.
 
 ## Rollback
 
