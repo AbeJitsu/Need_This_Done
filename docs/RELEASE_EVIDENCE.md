@@ -1,12 +1,13 @@
 # NeedThisDone — Release Evidence
 
-**Last updated:** 2026-08-25
+**Last updated:** 2026-08-30
 
 | Claim | Status | Evidence / boundary |
 | --- | --- | --- |
 | Public Website Fix and Managed Automation pages | Existing scope | Not revalidated by this repository cleanup. |
 | Vision, system-map documentation, and script-owned migration configuration | Focused checks passed | `git diff --check`, staged-migration verification, type-check, lint, and focused public-journey, private-boundary, and capability-manifest tests passed on 2026-08-24. This remains a local repository change only. |
 | OpenRouter provider routing policy | Focused test passed | The server-owned privacy/routing policy merges into request payloads and structured/tool requests force `require_parameters`; no provider request or model activation occurred. |
+| Private bridge planned-failure completion contract | Focused local checks passed | `bridge` `npm test` passed all 9 tests after adding `providerInvoked` propagation for pre-provider and provider-invoked planned failures; application unit tests passed 62 files/325 tests, and type-check, lint, production build, pre-key CI verification, hosted-stage verification, and `git diff --check` passed on 2026-08-30. Deterministic local evidence only; no hosted Supabase, Vercel deployment, real OpenClaw Gateway, Mac mini, provider usage, paid delivery, or customer outcome is claimed. |
 | Daily Desk work | Retired from active source | Its code, routes, and pending migration entries were removed through reviewed Git reverts. Prior checkpoint commits remain recoverable in Git history; no hosted rollback was performed. |
 | Codex project integration | Focused local checks passed | The relocated lifecycle hooks pass shell and JSON/path checks; tracked Claude configuration and workflows are absent; type-check and `git diff --check` passed on 2026-08-25. `codex doctor` loaded this project configuration but reported an unrelated local-runtime state warning, which is not a product or release claim. |
 | Current operating documentation | Focused test passed | `repository-documentation.test.ts` verifies the exact 11-file Markdown record, README as the canonical product and system vision, and ROADMAP's link back to it. Historical documentation is recoverable in Git; no hosted action occurred. |
@@ -15,6 +16,7 @@
 | Retired UI dependencies | Focused local checks passed | Unreferenced DnD, resizable, and ID-generation packages were removed from the application manifest and lockfile. Type-check, lint, `retired-local-tooling.test.ts`, production build, `git diff --check`, and final reference scans passed on 2026-08-25; active routes and private-worker tooling were not changed. |
 | Retired local artifacts | Focused local checks passed | The unreferenced color-contrast viewer and component route map are absent and guarded by `retired-local-tooling.test.ts`. The final tracked-source scan retains only the deliberate route-map ignore; type-check, lint, production build, and `git diff --check` passed on 2026-08-25. This is reversible by reviewed Git revert only; no hosted action occurred. |
 | Hosted migrations | Not claimable | No hosted write is part of this work. |
+| Root Playwright E2E suite | Blocked locally | The canonical `npm run test` could not start its fresh `next dev` server because `app/globals.css` failed to parse the Tailwind `@` directive at line 14; Playwright timed out waiting 120 seconds for port 3000. A retry with `env NODE_ENV=development` reached all 58 scheduled tests: 46 passed, 7 failed, 2 skipped, and 3 did not run; failures were local Supabase fixture `fetch failed` errors and a seeded report response failure. No local Supabase start or reset was performed; production build passed. Owner: NeedThisDone application test owner; follow up by 2026-09-06. |
 | Deployment, secrets, Mac activation, provider activation | Not claimable | Each needs separate owner approval. |
 | External messages, publication, spend, customer outcome | Not claimable | No external action is part of this work. |
 

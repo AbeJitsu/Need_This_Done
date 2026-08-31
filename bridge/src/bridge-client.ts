@@ -232,6 +232,7 @@ export class BridgeApiClient {
     modelReservationKey?: string;
     modelActualCost?: number;
     actualModelId?: string;
+    providerInvoked?: boolean;
     prospecting?: ProspectingPayload;
     provider?: string;
     providerUsage?: JsonObject;

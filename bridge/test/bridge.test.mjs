@@ -46,6 +46,9 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
   assert.equal(request.url, 'http://127.0.0.1:3000/api/agent-bridge/heartbeat');
   assert.equal(request.init.headers['x-bridge-signature'], expected);
 
+  await client.complete({ taskId, status: 'failed', providerInvoked: false, error: 'pre-provider validation failure' });
+  assert.equal(JSON.parse(request.init.body).providerInvoked, false);
+
   assert.throws(() => new BridgeApiClient({
     baseUrl: 'http://example.com',
     secret: 'secret',
@@ -291,7 +294,42 @@ test('AgentBridgeRunner fails closed when an approved task omits or changes Gate
     const result = await runner.runOnce();
     assert.equal(result.status, 'failed');
     assert.match(completions[0].error, /exact approved model ID/);
+    assert.equal(completions[0].providerInvoked, true);
   }
+});
+
+test('AgentBridgeRunner declares a pre-provider planned failure without invoking the Gateway', async () => {
+  const completions = [];
+  let gatewayCalls = 0;
+  const api = {
+    heartbeat: async () => {},
+    schedule: async () => ({ tasks: [], queued: 1 }),
+    claim: async () => task({
+      plan_id: '00000000-0000-4000-8000-000000000004',
+      agent_provider: 'openclaw',
+      task_type: 'send_email',
+    }),
+    event: async () => {},
+    complete: async (value) => completions.push(value),
+  };
+  const runner = new AgentBridgeRunner({
+    api,
+    gateway: {
+      runTask: async () => {
+        gatewayCalls += 1;
+        return { text: 'should not run' };
+      },
+      close() {},
+    },
+    artifactRoot: await mkdtemp(join(tmpdir(), 'needthisdone-bridge-pre-provider-')),
+    capabilities: [],
+  });
+
+  const result = await runner.runOnce();
+
+  assert.equal(result.status, 'failed');
+  assert.equal(completions[0].providerInvoked, false);
+  assert.equal(gatewayCalls, 0);
 });
 
 test('AgentBridgeRunner refuses symlinked artifact files outside its root', async () => {

@@ -327,6 +327,7 @@ export class AgentBridgeRunner {
           error: errorText,
           ...(reservationKey ? { reservationKey, actualCost: actualCost as number } : {}),
           ...(modelReservationKey ? { modelReservationKey, modelActualCost: modelActualCost as number } : {}),
+          providerInvoked: providerStarted,
           provider: task.agent_provider,
           providerUsage: usageFromResult(gatewayResult),
         });

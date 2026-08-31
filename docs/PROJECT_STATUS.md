@@ -1,7 +1,7 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-08-25
+**Last updated:** 2026-08-30
 
 ## Current facts
 
@@ -44,8 +44,24 @@
 - OpenRouter provider policy: focused `openrouter-core` tests passed on
   2026-08-24. Structured and tool-bearing requests force provider parameter
   support while server code owns the privacy/routing constraints.
-- The retained bridge/planner behavior was not revalidated by this retirement
-  change; no claim beyond the focused removal checks is made here.
+- The 2026-08-30 readiness audit found and repaired a local bridge/control-plane
+  contract gap: planned-task failure callbacks now propagate `providerInvoked`,
+  which the completion route requires to distinguish pre-provider aborts from
+  provider-invoked reconciliation. The focused RED/GREEN bridge regression and
+  the complete bridge suite passed: `bridge` `npm test` reported 9 tests passed;
+  application unit tests reported 62 files and 325 tests passed; type-check,
+  lint, production build, `git diff --check`, pre-key CI verification, and
+  hosted-stage verification passed on 2026-08-30. This is deterministic local
+  evidence only; no hosted, provider, or Mac rehearsal is claimed.
+- The root `npm run test` Playwright gate remains blocked in this worktree. The
+  canonical command's fresh `next dev` server fails to parse `app/globals.css`
+  at the Tailwind directive (`Unexpected character '@'` at line 14) and times
+  out waiting for port 3000. A retry with `env NODE_ENV=development` reached
+  all 58 scheduled tests: 46 passed, 7 failed, 2 skipped, and 3 did not run;
+  the failures were local Supabase fixture `fetch failed` errors and a seeded
+  report response failure. No local Supabase start or reset was performed. The
+  production build passes, and these failures are outside the bridge diff.
+  Owner: NeedThisDone application test owner; follow up by 2026-09-06.
 - Codex-integration retirement checks passed on 2026-08-25: shell syntax,
   hook JSON/path validation, tracked-source scans, `git diff --check`, and
   type-check. `codex doctor` loaded the project configuration but reported a
