@@ -36,18 +36,20 @@ describe('current repository documentation', () => {
     expect(trackedMarkdown()).toEqual(retainedMarkdown);
   });
 
-  it('keeps the README as the single product and system vision', () => {
-    expect(source('README.md')).toContain('This is the canonical vision for NeedThisDone.');
-    expect(source('ROADMAP.md')).toContain(
-      '[canonical public promise and internal operating rule](README.md#the-vision--start-here)',
+  it('keeps the README as the single assistant and operating vision', () => {
+    expect(source('README.md')).toContain(
+      'This is the canonical assistant and operating vision for NeedThisDone.',
     );
-    expect(source('ROADMAP.md')).not.toContain('## The vision');
+    expect(source('ROADMAP.md')).toContain(
+      '[canonical assistant and operating vision](README.md#the-assistant-vision--start-here)',
+    );
+    expect(source('ROADMAP.md')).not.toContain('## The assistant vision');
   });
 
   it('keeps agent instructions focused on canonical sources and stable boundaries', () => {
     const instructions = source('AGENTS.md');
 
-    expect(instructions).toContain('canonical public promise and internal operating vision');
+    expect(instructions).toContain('canonical assistant and operating vision');
     expect(instructions).not.toContain('Website Fix: a $500');
     expect(instructions).not.toContain('Managed Automation: a proposal-based 30-day pilot');
   });
