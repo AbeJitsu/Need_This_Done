@@ -1,0 +1,104 @@
+# OpenClaw Luna/max independent proof
+
+This directory prepares and verifies an isolated OpenClaw proof. It does not
+connect OpenClaw to the NeedThisDone bridge, enable a launchd job, deploy the
+application, or change the roadmap's approved provider route.
+
+## Fixed proof contract
+
+- OpenClaw `2026.8.1` and named profile `needthisdone`.
+- Exact model `openai/gpt-5.6-luna`, default thinking `max`, Fast/Pro mode off.
+- One explicitly ordered `openai` OAuth profile and no model fallback.
+- Gateway on `127.0.0.1:18789` only, with a runtime-only token SecretRef.
+- No Control UI, HTTP inference endpoint, channel, schedule, hook, memory,
+  browser, desktop, elevated execution, shell, filesystem, messaging, account,
+  publication, or sub-agent tool authority.
+- Agent tools are limited to `web_search` and `web_fetch` in a per-session
+  sandbox with no workspace access.
+- The live loopback tool-invoke surface is probed for denied shell,
+  filesystem, messaging, publication, scheduling, gateway, node, and browser
+  actions; all must fail closed.
+- Public search is pinned to the official `@openclaw/duckduckgo-plugin@2026.8.1`
+  provider. It is key-free and prevents API-backed search auto-detection.
+- Plugin loading is allowlisted to OpenAI, DuckDuckGo, and readability only;
+  mDNS/Bonjour discovery is off.
+
+The model catalog and live probes remain account-scoped. A host does not pass
+until its OAuth-authenticated catalog exposes Luna and every live check passes.
+
+## One-time host setup
+
+Run these steps separately on the MacBook and Mac mini. The browser OAuth grant
+is a human approval and must not be copied between hosts.
+
+```bash
+openclaw --version
+openclaw --profile needthisdone update --tag 2026.8.1 --no-restart --yes
+openclaw --profile needthisdone plugins install \
+  @openclaw/duckduckgo-plugin@2026.8.1 --accept-capabilities --pin
+docker build --tag openclaw-sandbox:bookworm-slim - <<'DOCKERFILE'
+FROM debian:bookworm-slim
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends bash ca-certificates curl git jq python3 ripgrep \
+  && useradd --create-home --shell /bin/bash sandbox \
+  && rm -rf /var/lib/apt/lists/*
+USER sandbox
+WORKDIR /workspace
+DOCKERFILE
+openclaw --profile needthisdone config patch \
+  --file /ABSOLUTE/PATH/TO/bridge/openclaw-proof/openclaw-luna-max.patch.json \
+  --dry-run --json
+openclaw --profile needthisdone config patch \
+  --file /ABSOLUTE/PATH/TO/bridge/openclaw-proof/openclaw-luna-max.patch.json
+openclaw --profile needthisdone config validate
+openclaw --profile needthisdone models auth login \
+  --provider openai --profile-id openai:needthisdone-oauth
+openclaw --profile needthisdone models auth order set \
+  --agent main --provider openai openai:needthisdone-oauth
+openclaw --profile needthisdone models fallbacks clear
+```
+
+Do not use `--set-default`, paste an API key, copy another host's token store,
+or enable a fallback model. Confirm the browser says ChatGPT/Codex before
+approving the OAuth grant.
+
+## Run and retain evidence
+
+Create a fresh random gateway token in the current shell without printing it.
+Keep evidence outside the repository. The proof runner strips `OPENAI_API_KEY`,
+`OPENROUTER_API_KEY`, and `CODEX_API_KEY` from every provider-backed process.
+
+```bash
+read -r -s OPENCLAW_GATEWAY_TOKEN
+export OPENCLAW_GATEWAY_TOKEN
+bridge/openclaw-proof/run-proof.sh \
+  "/ABSOLUTE/PRIVATE/EVIDENCE/PATH/$(hostname)-$(date +%Y%m%dT%H%M%S)"
+unset OPENCLAW_GATEWAY_TOKEN
+```
+
+`summary.json` is the host proof record. A failed command leaves the raw local
+evidence in the mode-700 directory for diagnosis; review and redact it before
+sharing. On success the runner deletes raw provider/auth JSON and gateway logs,
+retaining only redacted summaries. The retained `model-status.json` contains
+only the exact resolved model, OAuth-vs-key profile counts, probe status, and
+quota-window percentages; account identifiers and raw status output are
+removed. Neither host passes the two-host acceptance criterion until both
+independent host records pass.
+
+The deep audit must have zero critical findings. On this ephemeral token-only
+Gateway, OpenClaw 2026.8.1 may also report the non-critical
+`gateway.probe_failed` warning (`missing scope: operator.read`) from its
+separate audit probe; the proof independently requires an authenticated
+loopback status check and live forbidden-tool probes to pass.
+
+## Acceptance and rollback
+
+Both hosts must independently produce a passing `summary.json`. One host is not
+evidence for the other. Local configuration or deterministic tests are not live
+provider proof.
+
+To stop, terminate the foreground gateway. To remove the isolated setup, first
+revoke the OpenClaw OAuth grant in the OpenAI account if required, then archive
+or remove only `~/.openclaw-needthisdone` after confirming that exact path. To
+roll back the CLI, reinstall the recorded prior package version. Never remove
+the default `~/.openclaw` profile as part of this rollback.

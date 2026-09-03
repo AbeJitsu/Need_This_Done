@@ -42,3 +42,10 @@ npm start
 `launchd/` contains review templates only. `install-templates.sh` renders
 private review copies; it does not create secrets, call `launchctl`, or activate
 a worker.
+
+## Independent OpenClaw proof
+
+[`openclaw-proof/RUNBOOK.txt`](openclaw-proof/RUNBOOK.txt) defines the isolated,
+OAuth-only Luna/max host proof. Passing it does not connect OpenClaw to this
+bridge or activate the worker; both hosts must pass independently before the
+proof's two-host acceptance criterion is met.

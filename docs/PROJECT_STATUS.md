@@ -1,7 +1,7 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-08-31
+**Last updated:** 2026-09-02
 
 ## Current facts
 
@@ -38,9 +38,15 @@
 - The unreferenced local color-contrast viewer and component route map were
   retired on 2026-08-25. The existing route-map ignore remains intentional;
   active routes and private-worker tooling remain unchanged.
-- This documentation reset authorizes no hosted migration, deployment, secret
+- The 2026-08-31 documentation reset itself authorized no hosted migration, deployment, secret
   provisioning, provider activation, Mac activation, publication, message, or
   customer action.
+- An independent OpenClaw proof profile was activated on the MacBook on
+  2026-09-01. OpenClaw `2026.8.1` used account-scoped ChatGPT/Codex OAuth with
+  exact model `openai/gpt-5.6-luna`, thinking `max`, no model or API-key
+  fallback, and a token-authenticated loopback Gateway. This profile is not
+  connected to the NeedThisDone bridge. The Mac mini has not been configured
+  or proved, so the two-host acceptance criterion is not met.
 
 ## Active validation
 
@@ -56,7 +62,8 @@
   contract gap: planned-task failure callbacks now propagate `providerInvoked`,
   which the completion route requires to distinguish pre-provider aborts from
   provider-invoked reconciliation. The focused RED/GREEN bridge regression and
-  the complete bridge suite passed: `bridge` `npm test` reported 9 tests passed;
+  the complete bridge suite passed: `bridge` `npm test` reported 11 tests passed
+  on 2026-09-02;
   application unit tests reported 62 files and 325 tests passed; type-check,
   lint, production build, `git diff --check`, pre-key CI verification, and
   hosted-stage verification passed on 2026-08-30. This is deterministic local
@@ -80,6 +87,20 @@
   service vision with the assistant-first browser, Supabase, and private-Mac
   operating model. `repository-documentation.test.ts` passed (3 tests) after
   the reset; historical documentation remains recoverable in Git.
+- The MacBook's independent OpenClaw proof passed on 2026-09-02. The redacted
+  bundle at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-09-01-openclaw-luna-max/macbook-8/summary.json`
+  records the exact resolved model, OAuth-vs-key profile counts, redacted quota
+  windows, account-scoped catalog, exact direct and loopback Gateway Luna/max
+  responses, bounded public-web research with HTTPS citations, the effective
+  Docker/session policy, zero critical security-audit findings, and explicit
+  denials for shell, filesystem, messaging, publication, scheduling, browser,
+  node, and account-changing capabilities. Search is pinned to the official
+  key-free DuckDuckGo `2026.8.1` plugin; mDNS is off. The Mac mini proof and
+  bridge integration remain pending. The deep audit also reported one
+  non-critical `gateway.probe_failed` warning (`missing scope: operator.read`)
+  from its separate audit probe; the authenticated Gateway status check and all
+  11 live forbidden-tool probes passed. Owner: private Mac runtime owner; run
+  the same isolated proof on the Mac mini by 2026-09-03.
 - Artifact retirement checks passed on 2026-08-25: the external resume manifest
   at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-25-pre-doc-cleanup/`
   verifies all three copied files; type-check, lint, five focused public/content
@@ -107,6 +128,12 @@ migration; never reset hosted Supabase.
 
 This vision reset can be reverted as one reviewed Git change. It does not alter
 the legacy application pages, a database, a provider, or the Mac runtime.
+
+The independent OpenClaw profile can be stopped without touching the default
+profile. Revoke its OpenAI OAuth grant if required, archive only
+`~/.openclaw-needthisdone`, and reinstall the recorded prior OpenClaw version
+`2026.7.1-2` only if a CLI rollback is approved. The repository proof files are
+reversible by reviewed Git revert; no hosted rollback is involved.
 
 The removed color-contrast viewer and component route map can be restored only
 by a reviewed Git revert of this local-cleanup commit; no hosted rollback is
