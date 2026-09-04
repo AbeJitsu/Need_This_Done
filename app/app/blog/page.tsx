@@ -19,17 +19,17 @@ export const dynamic = 'force-static';
 export const metadata = {
   title: 'Insights | NeedThisDone',
   description:
-    'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.',
+    'Insights for owners and founders turning a vision for something better into a clear next move.',
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Insights | NeedThisDone',
-    description: 'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.',
+    description: 'Insights for owners and founders turning a vision for something better into a clear next move.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'Insights | NeedThisDone',
-    description: 'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.',
+    description: 'Insights for owners and founders turning a vision for something better into a clear next move.',
   },
 };
 

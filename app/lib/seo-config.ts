@@ -11,7 +11,7 @@ export const seoConfig = {
   // Site identity
   siteName: 'Need This Done',
   description:
-    'Fix one website problem for $500, or discuss a focused way to improve one repeated problem at work.',
+    'Your vision, brought to life. NeedThisDone helps owners and founders turn an idea for something better into a clear, focused result.',
 
   // Business information for structured data
   business: {
@@ -33,6 +33,10 @@ export const seoConfig = {
 
   // SEO keywords
   keywords: [
+    'your vision brought to life',
+    'outcome partner for founders',
+    'bring a business vision to life',
+    'focused business improvement',
     'website fix',
     'website accessibility fix',
     'website performance fix',

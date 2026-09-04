@@ -12,5 +12,5 @@ export default function PublicChrome({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const isPrivate = privatePrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
   if (isPrivate) return <><Navigation />{children}<Footer /></>;
-  return <><PublicHeader />{children}<PublicFooter /></>;
+  return <div className="public-shell"><PublicHeader />{children}<PublicFooter /></div>;
 }

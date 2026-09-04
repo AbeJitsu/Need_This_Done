@@ -4,22 +4,22 @@ import WorkPageClient from '@/components/work/WorkPageClient';
 // ============================================================================
 // Work Page - /work
 // ============================================================================
-// Honest process examples. Paid outcomes are added only after delivery proof.
+// Honest representative examples. Paid outcomes are added only after delivery proof.
 
 export const metadata: Metadata = {
   title: 'Work | NeedThisDone',
   description:
-    'Process examples for a contained Website Fix and an outcome-focused Managed Automation engagement.',
+    'Hypothetical before-and-after examples of clearer websites and better ways of working—not client results.',
   alternates: { canonical: '/work' },
   openGraph: {
     title: 'Work | NeedThisDone',
-    description: 'Process examples that show clear scope, a defined better state, and a useful handoff.',
+    description: 'Representative examples of what better can look like—not client results.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Work | NeedThisDone',
-    description: 'Process examples that show clear scope, a defined better state, and a useful handoff.',
+    description: 'Representative examples of what better can look like—not client results.',
   },
 };
 

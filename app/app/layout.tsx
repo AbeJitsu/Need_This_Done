@@ -69,7 +69,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   // Basic metadata
   title: {
-    default: `${seoConfig.siteName} - Website Fix & Managed Automation`,
+    default: `Your Vision, Brought to Life | ${seoConfig.siteName}`,
     template: `%s | ${seoConfig.siteName}`,
   },
   description: seoConfig.description,
@@ -106,14 +106,14 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: seoConfig.baseUrl,
     siteName: seoConfig.siteName,
-    title: `${seoConfig.siteName} - Website Fix & Managed Automation`,
+    title: `Your Vision, Brought to Life | ${seoConfig.siteName}`,
     description: seoConfig.description,
     images: [
       {
         url: `${seoConfig.baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: `${seoConfig.siteName} - Website Fix & Managed Automation`,
+        alt: `${seoConfig.siteName} — Your vision, brought to life`,
       },
     ],
   },
@@ -121,8 +121,8 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: 'summary_large_image',
-    title: `${seoConfig.siteName} - Website Fix & Managed Automation`,
-    description: 'A $500 Website Fix or a proposal-based way to improve one repeated problem at work.',
+    title: `Your Vision, Brought to Life | ${seoConfig.siteName}`,
+    description: 'Outcome-led help for owners and founders, with Website Fix and Managed Automation as focused starting points.',
     images: [`${seoConfig.baseUrl}/og-image.png`],
   },
 

@@ -52,8 +52,8 @@ It is complete only when all of these are true:
 
 ## Explicitly not active
 
-- Expanding the legacy Website Fix or Managed Automation pages into the product
-  direction.
+- Treating the separately approved public outcome-partner front door, Website
+  Fix, or Managed Automation as a change to the assistant product direction.
 - A public worker endpoint, public Mac backend, autonomous agent, or a second
   owner-control surface.
 - Automatic external messages, publication, spend, or system changes.

@@ -8,22 +8,22 @@ import ServicesPageClient from '@/components/services/ServicesPageClient';
 // Keeps metadata server-rendered for SEO. All JSX + animations in client component.
 
 export const metadata: Metadata = {
-  title: 'Website Fix & Managed Automation | NeedThisDone',
+  title: 'What We Do | NeedThisDone',
   description:
-    'Choose a $500 Website Fix or a proposal-based way to improve one repeated problem at work.',
+    'Bring the outcome you can see. NeedThisDone shapes a focused next step, with Website Fix and Managed Automation as concrete starting points.',
   alternates: { canonical: '/services' },
   openGraph: {
-    title: 'Website Fix & Managed Automation | NeedThisDone',
+    title: 'What We Do | NeedThisDone',
     description:
-      'Two focused paths with clear scope and a useful handoff.',
+      'Better websites and better ways of working, shaped around the result you want.',
     url: `${seoConfig.baseUrl}/services`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Website Fix & Managed Automation | NeedThisDone',
+    title: 'What We Do | NeedThisDone',
     description:
-      'Two focused paths with clear scope and a useful handoff.',
+      'Better websites and better ways of working, shaped around the result you want.',
   },
 };
 

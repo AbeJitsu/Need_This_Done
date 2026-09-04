@@ -15,18 +15,18 @@ import HomePageClient from '@/components/home/HomePageClient';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'Need This Done | Website Fix & Managed Automation',
-  description: 'Fix one website problem for $500, or discuss a focused way to improve one repeated problem at work.',
+  title: 'Your Vision, Brought to Life | Need This Done',
+  description: 'NeedThisDone helps owners and founders turn a vision for something better into a clear, focused result.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Need This Done | Website Fix & Managed Automation',
-    description: 'Two focused paths: one contained website fix or one better result from a repeated problem at work.',
+    title: 'Your Vision, Brought to Life | Need This Done',
+    description: 'Turn your vision for something better into a clear, focused result.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'Need This Done | Website Fix & Managed Automation',
-    description: 'Two focused paths: one contained website fix or one better result from a repeated problem at work.',
+    title: 'Your Vision, Brought to Life | Need This Done',
+    description: 'Turn your vision for something better into a clear, focused result.',
   },
 };
 

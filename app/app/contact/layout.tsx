@@ -1,18 +1,18 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Contact | NeedThisDone',
-  description: 'Tell us what is stuck. We confirm one outcome and the scope before work starts.',
+  title: 'Share Your Vision | NeedThisDone',
+  description: 'Tell NeedThisDone what you want to bring to life and the outcome you want—no technical brief required.',
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Contact | NeedThisDone',
-    description: 'Tell us what is stuck. We confirm one outcome and the scope before work starts.',
+    title: 'Share Your Vision | NeedThisDone',
+    description: 'Tell us what you want to bring to life and the outcome you want.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact | NeedThisDone',
-    description: 'Tell us what is stuck. We confirm one outcome and the scope before work starts.',
+    title: 'Share Your Vision | NeedThisDone',
+    description: 'Tell us what you want to bring to life and the outcome you want.',
   },
 };
 

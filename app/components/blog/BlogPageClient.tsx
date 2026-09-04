@@ -54,7 +54,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                   Insights
                 </p>
                 <h1 className="mt-6 max-w-3xl font-playfair text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">
-                  Make the next step <span className="text-emerald-300">clearer.</span>
+                  Ideas for bringing <span className="text-emerald-300">better to life.</span>
                 </h1>
                 <p className="mt-7 max-w-2xl text-lg leading-8 text-emerald-50/75 md:text-xl">
                   {initialContent.header.description}
@@ -198,7 +198,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                   <p className="mt-4 text-lg leading-8 text-emerald-50/75">Share the context and the result you want. We will help define the first useful move.</p>
                 </div>
                 <Link href="/contact" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[#18372e] transition hover:bg-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e]">
-                  Contact <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  Share your vision <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
             </section>

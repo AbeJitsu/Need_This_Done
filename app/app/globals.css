@@ -343,6 +343,23 @@ body {
   line-height: 1.6;
 }
 
+/* Public marketing pages use an editorial palette without changing private UI. */
+.public-shell {
+  --public-cream: #f7f4ed;
+  --public-ink: #183229;
+  --public-green: #126b4e;
+  --public-gold: #d0a94f;
+  min-width: 0;
+  overflow-x: clip;
+  background: var(--public-cream);
+  color: var(--public-ink);
+}
+
+.public-shell :is(a, button, input, textarea):focus-visible {
+  outline-color: var(--public-gold);
+  outline-offset: 3px;
+}
+
 /* Premium focus states for accessibility */
 *:focus-visible {
   outline: 2px solid var(--color-primary);

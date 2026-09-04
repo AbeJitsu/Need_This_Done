@@ -1,38 +1,10 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#10b981"/>
-      <stop offset="50%" style="stop-color:#3b82f6"/>
-      <stop offset="100%" style="stop-color:#8b5cf6"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Background gradient -->
-  <rect width="1200" height="630" fill="url(#bgGradient)"/>
-
-  <!-- Subtle overlay for depth -->
-  <rect width="1200" height="630" fill="rgba(0,0,0,0.1)"/>
-
-  <!-- Brand name -->
-  <text x="600" y="280"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="96"
-        font-weight="700"
-        fill="white"
-        text-anchor="middle">
-    Need This Done
-  </text>
-
-  <!-- Tagline -->
-  <text x="600" y="380"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="42"
-        font-weight="400"
-        fill="rgba(255,255,255,0.9)"
-        text-anchor="middle">
-    Get Your Projects Done Right
-  </text>
-
-  <!-- Subtle bottom accent line -->
-  <rect x="450" y="420" width="300" height="4" rx="2" fill="rgba(255,255,255,0.5)"/>
+  <rect width="1200" height="630" fill="#f7f4ed"/>
+  <circle cx="1090" cy="-30" r="330" fill="#d0a94f" opacity="0.14"/>
+  <rect x="72" y="68" width="1056" height="494" rx="8" fill="none" stroke="#183229" stroke-opacity="0.16"/>
+  <text x="112" y="155" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="4" fill="#126b4e">FOR OWNERS AND FOUNDERS</text>
+  <text x="112" y="290" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" fill="#183229">Your vision,</text>
+  <text x="112" y="385" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" fill="#183229">brought to life.</text>
+  <rect x="112" y="448" width="86" height="5" rx="2.5" fill="#d0a94f"/>
+  <text x="112" y="510" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="700" fill="#183229">Need This Done</text>
 </svg>

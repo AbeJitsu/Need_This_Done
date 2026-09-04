@@ -9,8 +9,8 @@ export default function UnifiedPricingPage() {
       <section className="border-b border-[#183229]/10">
         <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Pricing</p>
-          <h1 className="mt-5 font-playfair text-5xl font-black leading-tight md:text-7xl">Know the commitment before you start.</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#50675e]">Website Fix is $500. Managed Automation is priced by proposal for one repeated problem at work.</p>
+          <h1 className="mt-5 font-playfair text-5xl font-black leading-tight md:text-7xl">Clarity before commitment.</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#50675e]">Bring the outcome first. Website Fix is $500; Managed Automation is priced by proposal for one repeated problem at work.</p>
         </div>
       </section>
 

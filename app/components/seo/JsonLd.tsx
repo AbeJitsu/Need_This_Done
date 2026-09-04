@@ -71,7 +71,7 @@ const schemas = {
     },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Professional Services',
+      name: 'Focused outcome services',
       itemListElement: seoConfig.services.map((service) => ({
         '@type': 'Offer',
         itemOffered: {
@@ -94,7 +94,7 @@ const schemas = {
   Service: {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: 'Need This Done Services',
+    name: 'Need This Done outcome partnership',
     provider: {
       '@type': 'LocalBusiness',
       name: businessInfo.name,
@@ -237,7 +237,7 @@ export function AllServicesJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Professional Services',
-    description: 'A $500 Website Fix or a proposal-based way to improve one repeated problem at work.',
+    description: 'Focused ways to bring a better website or way of working to life.',
     itemListElement: seoConfig.services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,

@@ -103,7 +103,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
             <p className="text-sm font-bold text-[#183229]">Still unsure?</p>
             <p className="mt-2 text-sm leading-6 text-[#50675e]">Share the context you have and we can clarify the right starting point.</p>
             <Link href="/contact" className="mt-5 inline-flex items-center gap-2 font-bold text-[#126b4e]">
-              Contact <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Share your vision <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
