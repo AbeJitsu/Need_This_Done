@@ -190,17 +190,19 @@ describe('simplified public journey', () => {
     expect(rootDocs).not.toContain('Managed AI Operator');
   });
 
-  it('keeps one canonical public promise and internal decision rule for future work', () => {
+  it('keeps one canonical assistant vision and approval boundary for future work', () => {
     const readme = readFileSync(resolve(repositoryRoot, 'README.md'), 'utf8');
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
     const agentInstructions = readFileSync(resolve(repositoryRoot, 'AGENTS.md'), 'utf8');
 
-    expect(readme).toContain('## The vision — start here');
-    expect(readme).toContain('### Public promise');
-    expect(readme).toContain('### Internal operating vision');
-    expect(readme).toContain('private delivery infrastructure, not a product');
+    expect(readme).toContain('## The assistant vision — start here');
+    expect(readme).toContain('NeedThisDone is a private, authenticated assistant');
+    expect(readme).toContain('Vercel is the internet-facing browser control plane, not a permanent worker.');
+    expect(readme).toContain('An expired, altered, unapproved, or stopped task');
+    expect(readme).toContain('must fail closed.');
     expect(roadmap).toContain('This is an execution list, not a second vision document.');
-    expect(roadmap).toContain('A real, controlled Vercel → Supabase → Mac mini rehearsal');
-    expect(agentInstructions).toContain('canonical public promise and internal operating vision');
+    expect(roadmap).toContain('one real, controlled browser → Supabase → Mac');
+    expect(roadmap).toContain('mini assistant workflow');
+    expect(agentInstructions).toContain('canonical assistant and operating vision');
   });
 });

@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyAdmin } from '@/lib/api-auth';
 import {
-  buildOpenClawInstruction,
+  buildHermesOpenClawInstruction,
   REQUIRED_FORBIDDEN_ACTIONS,
-  type PlannerStep,
-} from '@/lib/agent-planner';
+  type HermesStep,
+} from '@/lib/hermes';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 export const dynamic = 'force-dynamic';
@@ -30,7 +30,7 @@ function migrationUnavailable(error: { code?: string } | null) {
 }
 
 function routeError(error: { code?: string; message?: string } | null, fallback: string) {
-  if (migrationUnavailable(error)) return { error: 'Agent planner is not configured yet.', status: 503 };
+  if (migrationUnavailable(error)) return { error: 'Hermes plans are not configured yet.', status: 503 };
   if (error?.code === 'P0002') return { error: 'Agent plan not found.', status: 404 };
   if (error?.code === '22023') return { error: 'The agent plan action was rejected by the approval boundary.', status: 409 };
   if (error?.code === '23505') return { error: 'The agent plan action conflicts with an existing request.', status: 409 };
@@ -95,12 +95,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   const rewrittenInstruction = parsed.data.rewrittenInstruction || current.rewritten_instruction;
-  const steps = (parsed.data.steps || current.steps) as PlannerStep[];
+  const steps = (parsed.data.steps || current.steps) as HermesStep[];
   const allowedCapabilities = parsed.data.allowedCapabilities || current.allowed_capabilities;
   const forbiddenActions = [...new Set([...(parsed.data.forbiddenActions || current.forbidden_actions), ...REQUIRED_FORBIDDEN_ACTIONS])];
   const expectedArtifacts = parsed.data.expectedArtifacts || current.expected_artifacts;
   const workflowType = current.workflow_type === 'daily_content' ? 'daily_content' : 'research_outreach';
-  const openclawInstruction = buildOpenClawInstruction({
+  const openclawInstruction = buildHermesOpenClawInstruction({
     workflowType,
     growthProfileId: current.growth_profile_id,
     rewrittenInstruction,

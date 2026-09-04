@@ -1,0 +1,71 @@
+NeedThisDone approved private-Mac bridge rehearsal preparation
+
+Purpose
+
+Prepare a later, separately approved private-Mac rehearsal of this exact seam:
+
+  Hermes frozen plan -> signed outbound bridge -> loopback OpenClaw Gateway
+
+This runbook is preparation only. It never authorizes a hosted migration,
+deployment, secret provisioning, provider activation, launchd load, worker
+start, Gateway start, browser approval, or external action.
+
+Prerequisites for the later rehearsal
+
+1. The owner separately approves a read-only task and a private reviewable
+   asset, including the exact browser plan and free model route.
+2. The rehearsal host independently passes the isolated OpenClaw proof in
+   ../openclaw-proof/RUNBOOK.txt. A host proof is never transferable.
+3. The browser control plane, the private bridge secret, and the rehearsal
+   runtime are each approved as separate steps. Do not copy credentials from
+   a different host or commit them to this repository.
+
+Configuration-only validation
+
+On the approved private Mac, install the reviewed bridge package and build it. Do not use
+`npm start` and do not use launchctl in this preparation step.
+
+  cd /ABSOLUTE/PATH/TO/Need_This_Done/bridge
+  npm ci
+  npm run build
+  BRIDGE_ENV_FILE=/ABSOLUTE/PRIVATE/PATH/bridge.env \
+    bridge/launchd/validate-runtime-config.sh
+
+The private file must have mode 600. Its required keys are BRIDGE_API_URL,
+OPENCLAW_BRIDGE_SECRET, BRIDGE_OWNER_ID, BRIDGE_WORKER_ID,
+OPENCLAW_GATEWAY_TOKEN, and BRIDGE_ARTIFACT_ROOT. OPENCLAW_GATEWAY_URL may
+remain its loopback default. OPENCLAW_EXECUTOR_MODEL_ID must be exactly
+openai/gpt-5.6-luna. The validator accepts only an external HTTPS
+bridge URL, a loopback Gateway URL, an absolute artifact root, valid owner
+identifier, and a 32-character-or-longer Gateway token. It constructs no
+network connection and prints no secret.
+
+Review-only launchd preparation
+
+The existing template renderer may produce plist files for human inspection:
+
+  bridge/launchd/install-templates.sh \
+    /ABSOLUTE/PRIVATE/RUNTIME/DIRECTORY \
+    /ABSOLUTE/PRIVATE/REVIEW/OUTPUT
+
+It does not load either job. Inspect the resulting Gateway host (127.0.0.1),
+environment-file permissions, Node/OpenClaw paths, and log locations before
+asking for the distinct activation approval.
+
+MacBook Pro foreground rehearsal acceptance (not run by this preparation)
+
+The MacBook Pro temporary worker ID is `macbook-pro-hermes-rehearsal`; run it
+only in foreground processes and stop the Gateway and bridge afterward. The
+Mac mini remains the separately required always-on target. The approved
+rehearsal must demonstrate one browser-approved, free-route, read-only Hermes
+plan with a reviewable private asset. It must separately
+show that unapproved, altered, stopped, expired, and paid-route tasks never
+reach Gateway invocation. Record only the exact checks run. Do not claim a
+provider, hosted, always-on Mac mini, or Codex proof from configuration validation.
+
+Rollback
+
+No worker or Gateway is started by this runbook. Delete only the rendered
+review copies and private configuration material under the exact paths chosen
+by the owner, following the owner’s retention policy. Repository changes are
+reversible with a reviewed Git revert; hosted corrections remain forward-only.

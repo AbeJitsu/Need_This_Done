@@ -17,3 +17,11 @@ item authorizes a later item.
 
 Never reset hosted Supabase, expose the Mac mini publicly, or treat local tests
 as hosted, provider, or customer proof.
+
+Current promotion record (2026-09-04): the disposable-local `106 → 110 → 111`
+rehearsal and database gate passed, with `107`–`109` absent. Hosted has not
+changed. For each of `110_harden_hermes_frozen_plan_claims.sql` and
+`111_split_hermes_planner_and_openclaw_executor_models.sql`, record a distinct
+fresh protected backup, exact reviewed-commit dry run, named hosted-write
+approval, one-time application, migration-history and narrow contract check,
+and forward-only rollback owner before proceeding to the next migration.

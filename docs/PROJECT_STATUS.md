@@ -1,7 +1,7 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-09-02
+**Last updated:** 2026-09-04
 
 ## Current facts
 
@@ -13,6 +13,24 @@
   executor. An allowed OpenRouter free route is preferred; paid routing needs a
   separate browser approval. This is the target operating contract, not proof
   that a live provider or Mac runtime has been activated.
+- Hermes is now the code-facing application role layered on the retained
+  `agent_plans` lifecycle; it does not add a service, API, queue, or table. It
+  creates a server-authored Hermes/OpenClaw instruction only for the reviewed
+  `selected-free` route. Existing durable approval, dispatch, task, and bridge
+  contract surfaces remain the source of truth.
+- The browser harness uses an isolated `.next-playwright` output and its own
+  TypeScript entry point, so browser checks do not delete or type-contaminate a
+  developer's `.next` build. Its Watchpack polling configuration is local test
+  infrastructure only; it does not start a provider, a bridge worker, or an
+  OpenClaw Gateway.
+- Migrations `110_harden_hermes_frozen_plan_claims.sql` and
+  `111_split_hermes_planner_and_openclaw_executor_models.sql` are staged for a
+  separately approved hosted promotion and applied to the disposable local
+  instance only.
+  Hermes keeps the reviewed OpenRouter planner identity in `selected_model_id`;
+  the frozen approval snapshot separately records `plannerModelId` and the
+  exact allowlisted OpenClaw executor `openai/gpt-5.6-luna`. No hosted
+  migration, provider activation, or bridge activation was run.
 - The public Website Fix and Managed Automation paths remain in the application
   as legacy web scope. They are not the active product roadmap.
 - Earlier documentation said Daily Desk code, routes, and pending migration
@@ -50,33 +68,41 @@
 
 ## Active validation
 
-- Repository vision, documentation, and migration-stage configuration:
-  `git diff --check`, `node scripts/verify-hosted-migration-stages.mjs`,
-  type-check, lint, and the focused public-journey, private-boundary, and
-  capability-manifest tests passed on 2026-08-24. The script-owned pending map
-  ends at `106`.
+- On 2026-09-03, the Hermes plan/approval/bridge slice passed application
+  `npm run test:unit` (62 files, 325 tests), lint, type-check, and production
+  build; focused Hermes and capability checks (2 files, 6 tests); and
+  `npm run test:hermes-lifecycle-rls` (2 local-Supabase tests). The latter ran
+  against the current local schema, not migration 107.
+- On 2026-09-04, the migration manifest/checksum gate passed with 36 mappings
+  and 20 gates. Its current hosted-promotion baseline is explicitly `106`;
+  versions `107`–`109` are the only retired local-only gaps, and `110` then
+  `111` are separate staged promotions. The disposable local database was
+  reset from the working migration files (not repaired or pulled), and the
+  `106 → 110 → 111` rehearsal passed: it rejected any other head, proved
+  `107`–`109` absent, and passed the full local schema/RLS/database gate. The
+  final local history contains `110` and `111` only from that range. Hosted
+  remains untouched and requires a fresh protected backup, exact dry run,
+  named approval, one-time apply, and read-only contract check for each stage.
 - OpenRouter provider policy: focused `openrouter-core` tests passed on
   2026-08-24. Structured and tool-bearing requests force provider parameter
   support while server code owns the privacy/routing constraints.
 - The 2026-08-30 readiness audit found and repaired a local bridge/control-plane
   contract gap: planned-task failure callbacks now propagate `providerInvoked`,
   which the completion route requires to distinguish pre-provider aborts from
-  provider-invoked reconciliation. The focused RED/GREEN bridge regression and
-  the complete bridge suite passed: `bridge` `npm test` reported 11 tests passed
-  on 2026-09-02;
-  application unit tests reported 62 files and 325 tests passed; type-check,
-  lint, production build, `git diff --check`, pre-key CI verification, and
-  hosted-stage verification passed on 2026-08-30. This is deterministic local
-  evidence only; no hosted, provider, or Mac rehearsal is claimed.
-- The root `npm run test` Playwright gate remains blocked in this worktree. The
-  canonical command's fresh `next dev` server fails to parse `app/globals.css`
-  at the Tailwind directive (`Unexpected character '@'` at line 14) and times
-  out waiting for port 3000. A retry with `env NODE_ENV=development` reached
-  all 58 scheduled tests: 46 passed, 7 failed, 2 skipped, and 3 did not run;
-  the failures were local Supabase fixture `fetch failed` errors and a seeded
-  report response failure. No local Supabase start or reset was performed. The
-  production build passes, and these failures are outside the bridge diff.
-  Owner: NeedThisDone application test owner; follow up by 2026-09-06.
+  provider-invoked reconciliation. On 2026-09-03, the complete `bridge` `npm
+  test` suite passed 16 tests, including the exact Hermes frozen snapshot and
+  model acceptance path plus changed, expired, paid, unapproved, and stopped
+  cases that never invoke Gateway. This is deterministic local evidence only;
+  no hosted, provider, or Mac rehearsal is claimed.
+- The browser prerequisite is repaired for focused contracts. On 2026-09-03,
+  `npm run test:browser-harness` passed one public route-boot test and
+  `npm run test:hermes-browser` passed one authenticated local-Supabase UI
+  contract: route and cost are visible, browser approval freezes the plan, and
+  approval does not dispatch work. Internal application endpoints were mocked
+  for the UI assertion; no provider, bridge, or Mac worker ran. The broad root
+  `npm run test` suite was not rerun in this slice. Its earlier local fixture
+  failures need a separate, scoped assessment. Owner: NeedThisDone application
+  test owner; follow up by 2026-09-06.
 - Codex-integration retirement checks passed on 2026-08-25: shell syntax,
   hook JSON/path validation, tracked-source scans, `git diff --check`, and
   type-check. `codex doctor` loaded the project configuration but reported a
@@ -100,7 +126,10 @@
   non-critical `gateway.probe_failed` warning (`missing scope: operator.read`)
   from its separate audit probe; the authenticated Gateway status check and all
   11 live forbidden-tool probes passed. Owner: private Mac runtime owner; run
-  the same isolated proof on the Mac mini by 2026-09-03.
+  the same isolated proof on the Mac mini. The prepared bridge runbook is now
+  host-neutral and permits only the foreground `macbook-pro-hermes-rehearsal`
+  worker for a separately approved MacBook rehearsal; it does not authorize
+  launchd, persistence, a Gateway start, or any live bridge action.
 - Artifact retirement checks passed on 2026-08-25: the external resume manifest
   at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-25-pre-doc-cleanup/`
   verifies all three copied files; type-check, lint, five focused public/content

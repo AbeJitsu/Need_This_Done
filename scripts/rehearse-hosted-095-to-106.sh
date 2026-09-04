@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-# Rebuild the disposable local database through the verified hosted head 095,
-# then apply only the contiguous pending 096–106 range. The default mode is a
+# Rebuild the disposable local database through the verified hosted head 106,
+# then apply the reviewed 110 and 111 stages. Versions 107–109 are deliberately
+# absent retired local-only history, so this rehearsal proves both the intended
+# omission and the exact 106 → 110 → 111 boundary. The default mode is a
 # read-only preflight; execution requires an exact local-reset acknowledgement.
 
 set -euo pipefail
@@ -22,7 +24,7 @@ cd "$PROJECT_ROOT"
 node scripts/verify-hosted-migration-stages.mjs
 
 if [ "$mode" = "preflight" ]; then
-  echo "Hosted-like rehearsal preflight passed: manifest head 095 and pending range 096–106 are valid."
+  echo "Hosted-like rehearsal preflight passed: manifest permits hosted head 106, omits only 107–109, and stages 110 then 111."
   echo "No database was reset or migrated."
   exit 0
 fi
@@ -58,14 +60,14 @@ if ! "$DOCKER_BIN" inspect "$LOCAL_DB_CONTAINER" >/dev/null 2>&1; then
   exit 1
 fi
 
-rehearsal_root="$(mktemp -d /tmp/needthisdone-hosted-095.XXXXXX)"
+rehearsal_root="$(mktemp -d /tmp/needthisdone-hosted-106.XXXXXX)"
 cleanup_required=false
 restore_local_state() {
   if $cleanup_required; then
-    echo "Restoring the normal sanitized local Supabase state through migration 106."
+    echo "Restoring the normal disposable local Supabase state through migration 111."
     supabase db reset --local
   fi
-  if [[ "$rehearsal_root" == /tmp/needthisdone-hosted-095.* ]]; then
+  if [[ "$rehearsal_root" == /tmp/needthisdone-hosted-106.* ]]; then
     rm -rf -- "$rehearsal_root"
   fi
 }
@@ -80,12 +82,12 @@ done
 for migration in supabase/migrations/*.sql; do
   filename="$(basename "$migration")"
   version="${filename%%_*}"
-  if [ "$version" -le 95 ]; then
+  if [ "$version" -le 106 ]; then
     cp "$migration" "$rehearsal_root/supabase/migrations/$filename"
   fi
 done
 
-echo "Resetting disposable local Supabase to the hosted-like migration head 095."
+echo "Resetting disposable local Supabase to the hosted-like migration head 106."
 cleanup_required=true
 supabase db reset --local --workdir "$rehearsal_root" --no-seed
 
@@ -95,30 +97,35 @@ run_local_sql() {
 }
 
 baseline_head="$(run_local_sql "select max(version) from supabase_migrations.schema_migrations")"
-if [ "$baseline_head" != "095" ]; then
-  echo "Hosted-like baseline did not stop at 095; found ${baseline_head:-none}." >&2
+if [ "$baseline_head" != "106" ]; then
+  echo "Hosted-like baseline did not stop at 106; found ${baseline_head:-none}." >&2
   exit 1
 fi
 
-for migration in supabase/migrations/*.sql; do
-  filename="$(basename "$migration")"
-  version="${filename%%_*}"
-  if [ "$version" -ge 96 ] && [ "$version" -le 106 ]; then
-    cp "$migration" "$rehearsal_root/supabase/migrations/$filename"
+for version in 110 111; do
+  migration="$(find supabase/migrations -maxdepth 1 -type f -name "${version}_*.sql" -print -quit)"
+  if [ -z "$migration" ] || [ -L "$migration" ]; then
+    echo "Reviewed migration ${version} is missing or symlinked." >&2
+    exit 1
+  fi
+  cp "$migration" "$rehearsal_root/supabase/migrations/"
+  echo "Applying reviewed migration ${version} from the hosted-like 106 baseline."
+  supabase migration up --local --workdir "$rehearsal_root"
+  actual_head="$(run_local_sql "select max(version) from supabase_migrations.schema_migrations")"
+  if [ "$actual_head" != "$version" ]; then
+    echo "Migration ${version} did not become the local head; found ${actual_head:-none}." >&2
+    exit 1
   fi
 done
 
-echo "Applying the contiguous pending migration range 096–106."
-supabase migration up --local --workdir "$rehearsal_root"
-
-final_head="$(run_local_sql "select max(version) from supabase_migrations.schema_migrations")"
-pending_count="$(run_local_sql "select count(*) from supabase_migrations.schema_migrations where version between '096' and '106'")"
-if [ "$final_head" != "106" ] || [ "$pending_count" != "11" ]; then
-  echo "Pending migration proof failed: head=${final_head:-none}, range_count=${pending_count:-0}." >&2
+retired_count="$(run_local_sql "select count(*) from supabase_migrations.schema_migrations where version in ('107', '108', '109')")"
+applied_versions="$(run_local_sql "select string_agg(version, ',' order by version) from supabase_migrations.schema_migrations where version in ('110', '111')")"
+if [ "$retired_count" != "0" ] || [ "$applied_versions" != "110,111" ]; then
+  echo "Migration-history proof failed: retired_count=${retired_count:-0}, reviewed_versions=${applied_versions:-none}." >&2
   exit 1
 fi
 
-echo "Running the real schema, RLS, grant, and provider-workflow database gate at 106."
+echo "Running the real schema, RLS, grant, and provider-workflow database gate at 111."
 npm run verify:database
 
-echo "Hosted-like disposable-local migration rehearsal passed: 095 → 106."
+echo "Hosted-like disposable-local migration rehearsal passed: 106 → 110 → 111 (107–109 absent)."

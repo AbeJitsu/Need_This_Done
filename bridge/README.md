@@ -32,6 +32,17 @@ The runtime requires private host configuration for `BRIDGE_API_URL`,
 `OPENCLAW_GATEWAY_TOKEN`. Optional settings are documented in `src/index.ts`.
 Keep all values outside this repository and keep the Gateway bound to loopback.
 
+Before any later approved private-Mac rehearsal, run the configuration-only validator. It
+does not start the worker, call the bridge API, or connect to OpenClaw:
+
+```sh
+BRIDGE_ENV_FILE=/ABSOLUTE/PRIVATE/PATH/bridge.env \
+  bridge/launchd/validate-runtime-config.sh
+```
+
+[`rehearsal/RUNBOOK.txt`](rehearsal/RUNBOOK.txt) records the exact preparation
+and the separate approval boundary for the future read-only rehearsal.
+
 Start the worker only after the server-side contract and the Mac runtime have
 each received their own approval:
 

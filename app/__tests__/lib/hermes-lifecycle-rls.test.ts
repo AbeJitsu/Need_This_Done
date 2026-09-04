@@ -4,7 +4,7 @@ import { closePool, getPool } from '../../../supabase/tests/helpers';
 const localDescribe = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true' ? describe : describe.skip;
 const operator = '00000000-0000-4860-8000-0000000000d1';
 const member = '00000000-0000-4860-8000-0000000000d2';
-const workerId = 'openclaw-planner-proof';
+const workerId = 'openclaw-hermes-proof';
 const profileId = '00000000-0000-4860-8000-0000000000d3';
 
 type DatabaseRole = 'anon' | 'authenticated' | 'service_role';
@@ -55,7 +55,8 @@ const forbiddenActions = [
 ];
 
 const instruction = {
-  version: 1,
+  version: 2,
+  planner: 'hermes',
   executor: 'openclaw',
   approvalRequired: true,
   // These flags are persisted with every server-authored instruction so a
@@ -81,7 +82,7 @@ const dossier = {
   suggestedOutreach: { subject: 'A booking-path idea', body: 'A human-reviewed draft only.' },
 };
 
-localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
+localDescribe.sequential('Hermes and OpenClaw frozen-plan dispatch boundary', () => {
   beforeAll(async () => {
     const pool = getPool();
     await pool.query('begin');
@@ -107,8 +108,8 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
         id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
         created_at, updated_at, confirmation_token, raw_app_meta_data, raw_user_meta_data
       ) values
-        ($1, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'planner-operator@example.test', '', now(), now(), now(), '', '{}', '{}'),
-        ($2, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'planner-member@example.test', '', now(), now(), now(), '', '{}', '{}')
+        ($1, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'hermes-operator@example.test', '', now(), now(), now(), '', '{}', '{}'),
+        ($2, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'hermes-member@example.test', '', now(), now(), now(), '', '{}', '{}')
     `, [operator, member]);
     await pool.query(`insert into public.user_roles (user_id, role) values ($1, 'admin') on conflict (user_id) do update set role = excluded.role`, [operator]);
     await pool.query(`delete from public.growth_profiles where id = $1`, [profileId]);
@@ -116,7 +117,7 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
       insert into public.growth_profiles (
         id, owner_id, target_market, geography, offer, sender_name, sender_email,
         model_route, selected_model_id, selected_model_rationale
-      ) values ($1, $2, 'local service operators', 'New York', 'a focused growth review', 'Operator', 'operator@example.test', 'selected-primary', 'provider/pinned-model', 'local planner proof')
+      ) values ($1, $2, 'local service operators', 'New York', 'a focused growth review', 'Operator', 'operator@example.test', 'selected-free', 'provider/pinned-model', 'local Hermes proof')
     `, [profileId, operator]);
   });
 
@@ -145,17 +146,17 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
   });
 
   it('requires approval, freezes the plan, dispatches OpenClaw tasks, and links citation-backed provenance', async () => {
-    await expect(asRole('authenticated', member, `select public.create_agent_plan($1,$2,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb,$7::uuid,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,$16::jsonb,$17::uuid)`, [
-      'not allowed', 'not allowed', JSON.stringify([step]), JSON.stringify(['research_public_web']), JSON.stringify(forbiddenActions), JSON.stringify(['research dossier']), profileId, 'research_outreach', 'provider/pinned-model', 'selected-primary', 100, 200, 0, 0.02, '{}', JSON.stringify(instruction), '40000000-0000-4000-8000-0000000000d1',
+    await expect(asRole('authenticated', member, `select public.create_agent_plan_with_executor($1,$2,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb,$7::uuid,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb,$17::jsonb,$18::uuid)`, [
+      'not allowed', 'not allowed', JSON.stringify([step]), JSON.stringify(['research_public_web']), JSON.stringify(forbiddenActions), JSON.stringify(['research dossier']), profileId, 'research_outreach', 'provider/pinned-model', 'openai/gpt-5.6-luna', 'selected-free', 100, 200, 0, 0.02, '{}', JSON.stringify(instruction), '40000000-0000-4000-8000-0000000000d1',
     ])).rejects.toThrow();
 
     const planKey = '40000000-0000-4000-8000-0000000000d1';
-    const created = await asAdmin<{ result: { plan: { id: string; status: string }; duplicate: boolean } }>(`select public.create_agent_plan($1,$2,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb,$7::uuid,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,$16::jsonb,$17::uuid) as result`, [
-      'Find one public business.', 'Research one public business and prepare a draft for review.', JSON.stringify([step]), JSON.stringify(['research_public_web']), JSON.stringify(forbiddenActions), JSON.stringify(['research dossier']), profileId, 'research_outreach', 'provider/pinned-model', 'selected-primary', 100, 200, 0, 0.02, '{}', JSON.stringify(instruction), planKey,
+    const created = await asAdmin<{ result: { plan: { id: string; status: string }; duplicate: boolean } }>(`select public.create_agent_plan_with_executor($1,$2,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb,$7::uuid,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb,$17::jsonb,$18::uuid) as result`, [
+      'Find one public business.', 'Research one public business and prepare a draft for review.', JSON.stringify([step]), JSON.stringify(['research_public_web']), JSON.stringify(forbiddenActions), JSON.stringify(['research dossier']), profileId, 'research_outreach', 'provider/pinned-model', 'openai/gpt-5.6-luna', 'selected-free', 100, 200, 0, 0.02, '{}', JSON.stringify(instruction), planKey,
     ]);
     expect(created[0].result).toMatchObject({ plan: { status: 'draft' }, duplicate: false });
-    const replay = await asAdmin<{ result: { plan: { id: string }; duplicate: boolean } }>(`select public.create_agent_plan($1,$2,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb,$7::uuid,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,$16::jsonb,$17::uuid) as result`, [
-      'Find one public business.', 'Research one public business and prepare a draft for review.', JSON.stringify([step]), JSON.stringify(['research_public_web']), JSON.stringify(forbiddenActions), JSON.stringify(['research dossier']), profileId, 'research_outreach', 'provider/pinned-model', 'selected-primary', 100, 200, 0, 0.02, '{}', JSON.stringify(instruction), planKey,
+    const replay = await asAdmin<{ result: { plan: { id: string }; duplicate: boolean } }>(`select public.create_agent_plan_with_executor($1,$2,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb,$7::uuid,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb,$17::jsonb,$18::uuid) as result`, [
+      'Find one public business.', 'Research one public business and prepare a draft for review.', JSON.stringify([step]), JSON.stringify(['research_public_web']), JSON.stringify(forbiddenActions), JSON.stringify(['research dossier']), profileId, 'research_outreach', 'provider/pinned-model', 'openai/gpt-5.6-luna', 'selected-free', 100, 200, 0, 0.02, '{}', JSON.stringify(instruction), planKey,
     ]);
     expect(replay[0].result.duplicate).toBe(true);
 
@@ -169,7 +170,7 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
     const dispatched = await asAdmin<{ result: { run: { id: string; plan_id: string }; tasks: Array<{ id: string; plan_id: string; agent_provider: string; model_id: string; approved_plan_snapshot: Record<string, unknown> }>; duplicate: boolean } }>(`select public.dispatch_agent_plan($1::uuid,$2::uuid) as result`, [planId, '40000000-0000-4000-8000-0000000000d4']);
     expect(dispatched[0].result).toMatchObject({ run: { plan_id: planId }, duplicate: false });
     expect(dispatched[0].result.tasks).toHaveLength(1);
-    expect(dispatched[0].result.tasks[0]).toMatchObject({ plan_id: planId, agent_provider: 'openclaw', model_id: 'provider/pinned-model', approved_plan_snapshot: { planId } });
+    expect(dispatched[0].result.tasks[0]).toMatchObject({ plan_id: planId, agent_provider: 'openclaw', model_id: 'openai/gpt-5.6-luna', approved_plan_snapshot: { planId, plannerModelId: 'provider/pinned-model', executorModelId: 'openai/gpt-5.6-luna' } });
 
     const taskId = dispatched[0].result.tasks[0].id;
     const claimed = await asWorker<{ task: { id: string; status: string } }>(`select public.claim_openclaw_agent_orchestration_task($1::uuid,$2,300) as task`, [operator, workerId]);
@@ -182,22 +183,22 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
       .rejects.toThrow('planned_task_requires_atomic_completion');
     await expect(asWorker(`select public.complete_openclaw_orchestration_task($1::uuid,$2,'failed',null,'legacy path','[]'::jsonb,null,null)`, [taskId, workerId]))
       .rejects.toThrow('planned_task_requires_atomic_completion');
-    await expect(asWorker(`select public.record_openclaw_task_provenance($1::uuid,$2,'provider/pinned-model',$3::jsonb)`, [taskId, workerId, JSON.stringify(usage)]))
+    await expect(asWorker(`select public.record_openclaw_task_provenance($1::uuid,$2,'openai/gpt-5.6-luna',$3::jsonb)`, [taskId, workerId, JSON.stringify(usage)]))
       .rejects.toThrow('planned_task_requires_atomic_completion');
     await expect(asWorker(`select public.reconcile_openclaw_model_usage($1::uuid,0.01,$2::jsonb)`, [reservationKey, JSON.stringify(usage)]))
       .rejects.toThrow('planned_task_requires_atomic_completion');
-    const completed = await asWorker(`select public.complete_openclaw_task_with_provenance($1::uuid,$2,'succeeded','{"source":"fake-gateway"}'::jsonb,null,$3::jsonb,$4::uuid,0.01,'provider/pinned-model',$5::jsonb,$6::jsonb)`, [taskId, workerId, JSON.stringify([{ artifactType: 'research_dossier', title: 'Citation-backed dossier', contentText: JSON.stringify(dossier) }]), reservationKey, JSON.stringify(usage), JSON.stringify({ dossiers: [dossier] })]);
+    const completed = await asWorker(`select public.complete_openclaw_task_with_provenance($1::uuid,$2,'succeeded','{"source":"fake-gateway"}'::jsonb,null,$3::jsonb,$4::uuid,0.01,'openai/gpt-5.6-luna',$5::jsonb,$6::jsonb)`, [taskId, workerId, JSON.stringify([{ artifactType: 'research_dossier', title: 'Citation-backed dossier', contentText: JSON.stringify(dossier) }]), reservationKey, JSON.stringify(usage), JSON.stringify({ dossiers: [dossier] })]);
     expect(completed).toHaveLength(1);
 
     const provenance = await asAdmin<{ validation_status: string; model_id: string; worker_id: string; orchestration_task_id: string }>(`select validation_status, model_id, worker_id, orchestration_task_id from public.prospecting_artifact_provenance where plan_id = $1`, [planId]);
-    expect(provenance).toMatchObject([{ validation_status: 'validated', model_id: 'provider/pinned-model', worker_id: workerId, orchestration_task_id: taskId }]);
+    expect(provenance).toMatchObject([{ validation_status: 'validated', model_id: 'openai/gpt-5.6-luna', worker_id: workerId, orchestration_task_id: taskId }]);
     const dossiers = await asAdmin<{ orchestration_task_id: string; agent_artifact_id: string; model_usage_reservation_id: string; review_status: string }>(`select orchestration_task_id, agent_artifact_id, model_usage_reservation_id, review_status from public.prospect_dossiers where orchestration_task_id = $1`, [taskId]);
     expect(dossiers).toMatchObject([{ orchestration_task_id: taskId, model_usage_reservation_id: expect.any(String), review_status: 'pending_review' }]);
     const completedTask = await asAdmin<{ actual_model_id: string; provider_usage: Record<string, unknown> }>(`select actual_model_id, provider_usage from public.agent_orchestration_tasks where id = $1`, [taskId]);
-    expect(completedTask).toEqual([{ actual_model_id: 'provider/pinned-model', provider_usage: { prompt_tokens: 100, completion_tokens: 50, cost: 0.01 } }]);
+    expect(completedTask).toEqual([{ actual_model_id: 'openai/gpt-5.6-luna', provider_usage: { prompt_tokens: 100, completion_tokens: 50, cost: 0.01 } }]);
   });
 
   it('does not allow an authenticated browser to write plan rows directly', async () => {
-    await expect(asAdmin(`insert into public.agent_plans (owner_id, growth_profile_id, workflow_type, original_request, rewritten_instruction, steps, allowed_capabilities, forbidden_actions, expected_artifacts, selected_model_id, model_route, estimated_prompt_tokens, estimated_completion_tokens, estimated_cost_usd, idempotency_key, request_hash, openclaw_instruction) values ($1,$2,'research_outreach','x','x','[]','[]','[]','[]','provider/pinned-model','selected-primary',1,1,0,$3,'x',$4::jsonb)`, [operator, profileId, '40000000-0000-4000-8000-0000000000d6', JSON.stringify(instruction)])).rejects.toThrow();
+    await expect(asAdmin(`insert into public.agent_plans (owner_id, growth_profile_id, workflow_type, original_request, rewritten_instruction, steps, allowed_capabilities, forbidden_actions, expected_artifacts, selected_model_id, model_route, estimated_prompt_tokens, estimated_completion_tokens, estimated_cost_usd, idempotency_key, request_hash, openclaw_instruction) values ($1,$2,'research_outreach','x','x','[]','[]','[]','[]','provider/pinned-model','selected-free',1,1,0,$3,'x',$4::jsonb)`, [operator, profileId, '40000000-0000-4000-8000-0000000000d6', JSON.stringify(instruction)])).rejects.toThrow();
   });
 });

@@ -58,6 +58,9 @@ export function createBridgeRuntime(environment: RuntimeEnvironment = process.en
   if (!isUuid(ownerId)) throw new Error('BRIDGE_OWNER_ID must be a UUID.');
   const version = environment.BRIDGE_VERSION?.trim() || DEFAULT_VERSION;
   const workerId = required(environment, 'BRIDGE_WORKER_ID');
+  if (required(environment, 'OPENCLAW_EXECUTOR_MODEL_ID') !== 'openai/gpt-5.6-luna') {
+    throw new Error('OPENCLAW_EXECUTOR_MODEL_ID must be exactly openai/gpt-5.6-luna.');
+  }
   const api = new BridgeApiClient({
     baseUrl: required(environment, 'BRIDGE_API_URL'),
     secret: required(environment, 'OPENCLAW_BRIDGE_SECRET'),

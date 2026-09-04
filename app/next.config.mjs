@@ -3,6 +3,17 @@
 // Think of it as the "settings" for your kitchen
 
 const nextConfig = {
+  // Browser contracts use an isolated build directory so the Playwright
+  // development server never deletes or races a developer's local `.next`.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
+
+  // Next updates the selected TypeScript config with generated route types.
+  // Browser contracts select their own config so those types cannot leak into
+  // the normal build's `.next` type program.
+  ...(process.env.NEXT_TSCONFIG
+    ? { typescript: { tsconfigPath: process.env.NEXT_TSCONFIG } }
+    : {}),
+
   // ========================================================================
   // Skip Pages Router Compatibility Layer
   // ========================================================================

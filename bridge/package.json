@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test test/*.test.mjs",
+    "validate:config": "npm run build && node dist/validate-config.js",
     "start": "node dist/index.js"
   },
   "engines": {

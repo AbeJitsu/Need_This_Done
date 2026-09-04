@@ -12,6 +12,8 @@ import { OpenClawGatewayClient } from './openclaw-gateway.js';
 
 const DAILY_MEDIA_CEILING_USD = 0.99;
 const MAX_ARTIFACT_BYTES = 50 * 1024 * 1024;
+const FREE_MODEL_ROUTE = 'selected-free';
+const ALLOWED_EXECUTOR_MODEL_ID = 'openai/gpt-5.6-luna';
 const ALLOWED_TASK_TYPES = new Set([
   'coordinate',
   'research_public_web',
@@ -160,6 +162,56 @@ function safeError(error: unknown) {
   return message.replace(/\s+/g, ' ').slice(0, 4_000);
 }
 
+function sameJson(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true;
+  if (typeof left !== 'object' || left === null || typeof right !== 'object' || right === null) return false;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left) && Array.isArray(right)
+      && left.length === right.length
+      && left.every((item, index) => sameJson(item, right[index]));
+  }
+  const leftRecord = asRecord(left);
+  const rightRecord = asRecord(right);
+  const leftKeys = Object.keys(leftRecord).sort();
+  const rightKeys = Object.keys(rightRecord).sort();
+  return leftKeys.length === rightKeys.length
+    && leftKeys.every((key, index) => key === rightKeys[index] && sameJson(leftRecord[key], rightRecord[key]));
+}
+
+function validateFrozenHermesTask(task: ClaimedTask) {
+  if (!task.plan_id) return;
+  if (task.agent_provider !== 'openclaw') throw new Error('Frozen Hermes work must use the OpenClaw provider lane.');
+  if (task.model_id !== ALLOWED_EXECUTOR_MODEL_ID) throw new Error('Frozen Hermes work is missing its exact allowlisted executor model.');
+  if (!task.lease_expires_at || new Date(task.lease_expires_at).getTime() <= Date.now()) {
+    throw new Error('Frozen Hermes task lease expired before Gateway invocation.');
+  }
+
+  const snapshot = asRecord(task.approved_plan_snapshot);
+  const inputPlan = asRecord(task.input).approvedPlan;
+  const instruction = asRecord(snapshot.openclawInstruction);
+  const delivery = asRecord(instruction.delivery);
+  if (snapshot.planId !== task.plan_id
+    || snapshot.executorModelId !== task.model_id
+    || typeof snapshot.plannerModelId !== 'string'
+    || !sameJson(snapshot, inputPlan)) {
+    throw new Error('Frozen Hermes snapshot does not match the bridge task.');
+  }
+  if (snapshot.modelRoute !== FREE_MODEL_ROUTE) {
+    throw new Error('Paid Hermes model routes require a separate browser approval before Gateway invocation.');
+  }
+  if (instruction.planner !== 'hermes'
+    || instruction.executor !== 'openclaw'
+    || instruction.approvalRequired !== true
+    || delivery.deliver !== false
+    || delivery.bestEffortDeliver !== false
+    || delivery.externalMessages !== false
+    || delivery.publishing !== false
+    || delivery.spending !== false
+    || delivery.accountChanges !== false) {
+    throw new Error('Frozen Hermes task is missing its delivery-disabled approval contract.');
+  }
+}
+
 function metadataForArtifact(raw: RawArtifact, task: ClaimedTask): JsonObject {
   return {
     ...asRecord(raw.metadata),
@@ -235,6 +287,7 @@ export class AgentBridgeRunner {
     await this.safeHeartbeat('online', null, task.id);
     try {
       if (!ALLOWED_TASK_TYPES.has(task.task_type)) throw new Error(`Task type is not allowed on the bridge: ${task.task_type}.`);
+      validateFrozenHermesTask(task);
       await this.api.event(task.id, 'progress', { message: 'Task claimed by the Mac bridge.', taskKey: task.task_key }, 5);
 
       if (task.task_type === 'produce_daily_content') {

@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Provider identity does not match the leased task.' }, { status: 409 });
   }
   if (task.plan_id && task.agent_provider !== 'openclaw') {
-    return NextResponse.json({ error: 'Approved planner tasks must execute through OpenClaw.' }, { status: 409 });
+    return NextResponse.json({ error: 'Approved Hermes tasks must execute through OpenClaw.' }, { status: 409 });
   }
   if (['succeeded', 'failed'].includes(task.status)
     && task.leased_by === parsed.data.workerId

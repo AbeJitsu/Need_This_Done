@@ -19,7 +19,9 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 // How: Run `npm run test:e2e` (starts dev server automatically)
 
 // Base URL for E2E tests
-const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+const playwrightPort = Number(process.env.PLAYWRIGHT_PORT || '3100');
+const baseURL = process.env.BASE_URL || `http://127.0.0.1:${playwrightPort}`;
+const playwrightDistDir = process.env.PLAYWRIGHT_NEXT_DIST_DIR || '.next-playwright';
 
 export default defineConfig({
   // ============================================================================
@@ -61,7 +63,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /(retained-core-smoke|ai-employee-product)\.spec\.ts/,
+      testMatch: /(retained-core-smoke|ai-employee-product|browser-harness)\.spec\.ts/,
     },
 
     {
@@ -80,7 +82,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /(authenticated-employee-workspace|ai-employee-workspace|prospecting-workspace|daily-cockpit)\.spec\.ts/,
+      testMatch: /(authenticated-employee-workspace|ai-employee-workspace|prospecting-workspace|daily-cockpit|hermes-plan-preview)\.spec\.ts/,
     },
   ],
 
@@ -94,10 +96,11 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          // SKIP_CACHE=true disables Redis caching during E2E tests
-          // This prevents stale cache issues when tests create/modify data
-          command: 'SKIP_CACHE=true SKIP_EMAILS=true npm run dev:clean',
-          url: 'http://localhost:3000',
+          // Use a dedicated dist directory instead of deleting .next. This
+          // lets browser checks run beside a local developer server. Polling
+          // avoids macOS file-watch exhaustion in large worktrees.
+          command: `NODE_ENV=development NEXT_DIST_DIR=${playwrightDistDir} NEXT_TSCONFIG=tsconfig.playwright.json WATCHPACK_POLLING=true SKIP_CACHE=true SKIP_EMAILS=true npx next dev --webpack --hostname 127.0.0.1 --port ${playwrightPort}`,
+          url: baseURL,
           reuseExistingServer: false, // Always start fresh server with SKIP_CACHE
           timeout: 120 * 1000,
         },

@@ -25,6 +25,8 @@ type Plan = {
   forbidden_actions: string[];
   expected_artifacts: string[];
   selected_model_id: string;
+  executor_model_id: string;
+  model_route: 'selected-free' | 'selected-primary' | string;
   estimated_prompt_tokens: number;
   estimated_completion_tokens: number;
   estimated_cost_usd: number | string;
@@ -70,7 +72,9 @@ function samplePlan(): Plan {
     allowed_capabilities: ['read_public_web', 'research_public_web', 'draft_outreach', 'review_artifacts'],
     forbidden_actions: ['send_external_messages', 'publish_content', 'spend_money', 'change_connected_accounts', 'deliver_external_content'],
     expected_artifacts: ['research dossier', 'public citations', 'email draft', 'review report'],
-    selected_model_id: 'configured model (server pinned)',
+    selected_model_id: 'configured planner model (server pinned)',
+    executor_model_id: 'OpenClaw executor model (server pinned)',
+    model_route: 'selected-free',
     estimated_prompt_tokens: 900,
     estimated_completion_tokens: 1200,
     estimated_cost_usd: 0.018,
@@ -80,7 +84,7 @@ function samplePlan(): Plan {
   };
 }
 
-export default function AgentPlannerPanel({ previewMode = false }: { previewMode?: boolean }) {
+export default function HermesPlanPanel({ previewMode = false }: { previewMode?: boolean }) {
   const [plans, setPlans] = useState<Plan[]>(previewMode ? [samplePlan()] : []);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [request, setRequest] = useState('');
@@ -98,13 +102,13 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
     try {
       const response = await fetch('/api/agent-plans', { cache: 'no-store' });
       const payload = await response.json() as { plans?: Plan[]; growthProfiles?: Profile[]; error?: string };
-      if (!response.ok) throw new Error(payload.error || 'Agent plans could not be loaded.');
+      if (!response.ok) throw new Error(payload.error || 'Hermes plans could not be loaded.');
       setPlans(payload.plans || []);
       setProfiles(payload.growthProfiles || []);
       setProfileId((current) => current || payload.growthProfiles?.find((profile) => !profile.emergency_stop)?.id || '');
       setError(null);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Agent plans could not be loaded.');
+      setError(loadError instanceof Error ? loadError.message : 'Hermes plans could not be loaded.');
     } finally {
       setLoading(false);
     }
@@ -115,7 +119,7 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
   const selectedProfile = useMemo(() => profiles.find((profile) => profile.id === profileId) || null, [profiles, profileId]);
 
   async function createPlan() {
-    if (previewMode) { setNotice('Local preview is read-only. No planner request was sent.'); return; }
+    if (previewMode) { setNotice('Local preview is read-only. No Hermes request was sent.'); return; }
     if (!request.trim() || !profileId) { setError('Choose a growth profile and enter the operator request.'); return; }
     setBusy('create'); setError(null);
     try {
@@ -124,12 +128,12 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
         body: JSON.stringify({ originalRequest: request, workflowType, growthProfileId: profileId, idempotencyKey: key() }),
       });
       const payload = await response.json() as { error?: string; plan?: Plan; duplicate?: boolean };
-      if (!response.ok) throw new Error(payload.error || 'The planner could not create a draft.');
-      setNotice(payload.duplicate ? 'The planner request was already saved.' : 'Draft plan created. Review it before approval.');
+      if (!response.ok) throw new Error(payload.error || 'Hermes could not create a draft.');
+      setNotice(payload.duplicate ? 'The Hermes request was already saved.' : 'Hermes draft created. Review it before approval.');
       setRequest('');
       await load();
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : 'The planner could not create a draft.');
+      setError(createError instanceof Error ? createError.message : 'Hermes could not create a draft.');
     } finally { setBusy(null); }
   }
 
@@ -142,7 +146,11 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
       });
       const payload = await response.json() as { error?: string };
       if (!response.ok) throw new Error(payload.error || `Plan ${actionName} failed.`);
-      setNotice(actionName === 'dispatch' ? 'Approved plan dispatched to the signed Mac bridge queue.' : `Plan ${actionName} recorded.`);
+      setNotice(actionName === 'dispatch'
+        ? 'Frozen Hermes plan dispatched to the signed Mac bridge queue.'
+        : actionName === 'approve'
+          ? 'Hermes plan approved and frozen.'
+          : 'Hermes plan rejection recorded.');
       await load();
     } catch (actionError) {
       setError(actionError instanceof Error ? actionError.message : `Plan ${actionName} failed.`);
@@ -170,9 +178,9 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
   }
 
   return (
-    <section className="mt-8" aria-labelledby="agent-planner-heading">
+    <section className="mt-8" aria-labelledby="hermes-plan-heading">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">App-side LLM · draft only</p><h2 id="agent-planner-heading" className="mt-2 text-3xl font-black">Plan before OpenClaw runs</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[#50675e]">The app rewrites and decomposes the request. A human approves the frozen plan; only then does Vercel create a run for the Mac-mini OpenClaw bridge.</p></div>
+        <div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Hermes · bounded plan only</p><h2 id="hermes-plan-heading" className="mt-2 text-3xl font-black">Review a Hermes plan before OpenClaw runs</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[#50675e]">Hermes rewrites and decomposes the request. A human freezes the reviewed plan; only then can the browser dispatch it to the signed Mac bridge. The first route is free-only.</p></div>
         <span className="rounded-full bg-[#e5f2eb] px-3 py-2 text-xs font-bold text-[#126b4e]">No automatic dispatch</span>
       </div>
 
@@ -185,12 +193,12 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
           <label className="block text-sm font-bold">Operator request<textarea value={request} onChange={(event) => setRequest(event.target.value)} placeholder="Describe the outcome you want prepared for review…" className="mt-2 min-h-24 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] p-3 text-sm font-normal" disabled={previewMode} /></label>
           <label className="block text-sm font-bold">Workflow<select value={workflowType} onChange={(event) => setWorkflowType(event.target.value as typeof workflowType)} className="mt-2 min-h-10 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] px-3 text-sm" disabled={previewMode}><option value="research_outreach">Research + drafts</option><option value="daily_content">Daily content</option></select></label>
           <label className="block text-sm font-bold">Growth profile<select value={profileId} onChange={(event) => setProfileId(event.target.value)} className="mt-2 min-h-10 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] px-3 text-sm" disabled={previewMode || !profiles.length}><option value="">Select profile</option>{profiles.map((profile) => <option value={profile.id} key={profile.id} disabled={profile.emergency_stop}>{profile.name}{profile.selected_model_id ? '' : ' · pin model first'}</option>)}</select></label>
-          <button className={buttonClass + ' bg-[#126b4e] text-white disabled:opacity-50'} disabled={previewMode || busy === 'create' || !selectedProfile} onClick={() => void createPlan()}>{busy === 'create' ? 'Planning…' : 'Create draft'}</button>
+          <button className={buttonClass + ' bg-[#126b4e] text-white disabled:opacity-50'} disabled={previewMode || busy === 'create' || !selectedProfile} onClick={() => void createPlan()}>{busy === 'create' ? 'Planning…' : 'Create Hermes plan'}</button>
         </div>
       </article>
 
       <div className="mt-5 space-y-4">
-        {plans.length === 0 && !loading && <p className={panelClass + ' text-sm text-[#50675e]'}>No planner drafts yet.</p>}
+        {plans.length === 0 && !loading && <p className={panelClass + ' text-sm text-[#50675e]'}>No Hermes drafts yet.</p>}
         {plans.slice(0, 8).map((plan) => <PlanCard key={plan.id} plan={plan} editing={editing[plan.id] ?? plan.rewritten_instruction} setEditing={(value) => setEditing((current) => ({ ...current, [plan.id]: value }))} busy={busy} previewMode={previewMode} onSave={() => void saveEdit(plan)} onAction={(name) => void action(plan, name)} />)}
       </div>
     </section>
@@ -200,10 +208,10 @@ export default function AgentPlannerPanel({ previewMode = false }: { previewMode
 function PlanCard({ plan, editing, setEditing, busy, previewMode, onSave, onAction }: { plan: Plan; editing: string; setEditing: (value: string) => void; busy: string | null; previewMode: boolean; onSave: () => void; onAction: (action: 'approve' | 'reject' | 'dispatch') => void }) {
   return <article className={panelClass}>
     <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">{plan.workflow_type.replace('_', ' ')} · {plan.status}</p><h3 className="mt-2 text-xl font-black">{plan.rewritten_instruction}</h3><p className="mt-1 text-xs text-[#50675e]">Original request: {plan.original_request}</p></div><span className="rounded-full bg-[#f7f4ed] px-3 py-2 text-xs font-bold">{formatUsd(plan.estimated_cost_usd)} estimated</span></div>
-    <div className="mt-4 grid gap-4 lg:grid-cols-2"><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Rewritten instruction</p><textarea value={editing} onChange={(event) => setEditing(event.target.value)} className="mt-2 min-h-24 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] p-3 text-sm" disabled={previewMode || plan.status === 'dispatched'} aria-label={`Edit ${plan.original_request}`} /></div><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Model + estimate</p><p className="mt-2 text-sm font-bold">{plan.selected_model_id}</p><p className="mt-1 text-sm text-[#50675e]">Up to {plan.estimated_prompt_tokens.toLocaleString()} prompt + {plan.estimated_completion_tokens.toLocaleString()} completion tokens. Model comparison is not used for dispatch.</p></div></div>
+    <div className="mt-4 grid gap-4 lg:grid-cols-2"><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Rewritten instruction</p><textarea value={editing} onChange={(event) => setEditing(event.target.value)} className="mt-2 min-h-24 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] p-3 text-sm" disabled={previewMode || plan.status === 'dispatched'} aria-label={`Edit ${plan.original_request}`} /></div><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Models + estimate</p><p className="mt-2 text-sm font-bold">Planner: {plan.selected_model_id}</p><p className="mt-1 text-sm font-bold">Executor: {plan.executor_model_id}</p><p className="mt-1 text-sm text-[#50675e]">Route: {plan.model_route}. Up to {plan.estimated_prompt_tokens.toLocaleString()} prompt + {plan.estimated_completion_tokens.toLocaleString()} completion tokens. Paid routes stay blocked pending a separate browser approval.</p></div></div>
     <div className="mt-4 grid gap-4 md:grid-cols-3"><TagList label="Allowed capabilities" values={plan.allowed_capabilities} /><TagList label="Forbidden actions" values={plan.forbidden_actions} tone="danger" /><TagList label="Expected artifacts" values={plan.expected_artifacts} /></div>
     <div className="mt-4"><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Ordered steps</p><ol className="mt-2 grid gap-2 md:grid-cols-2">{plan.steps.map((step, index) => <li className="rounded-xl bg-[#f7f4ed] p-3 text-sm" key={step.key}><span className="font-black">{index + 1}. {step.title}</span><span className="ml-2 text-xs text-[#50675e]">{step.taskType} · {formatUsd(step.estimatedCostUsd)}</span><p className="mt-1 text-xs leading-5 text-[#50675e]">{step.instruction}</p></li>)}</ol></div>
-    <div className="mt-5 flex flex-wrap gap-2">{['draft', 'rejected'].includes(plan.status) && <button className={buttonClass + ' border border-[#183229]/20'} disabled={previewMode || busy === plan.id + 'edit'} onClick={onSave}><FilePenLine className="h-4 w-4" />Save edit</button>}{plan.status === 'draft' && <><button className={buttonClass + ' bg-[#126b4e] text-white'} disabled={previewMode || busy === plan.id + 'approve'} onClick={() => onAction('approve')}><Check className="h-4 w-4" />Approve</button><button className={buttonClass + ' border border-red-900/20 text-red-800'} disabled={previewMode || busy === plan.id + 'reject'} onClick={() => onAction('reject')}><ShieldX className="h-4 w-4" />Reject</button></>}{plan.status === 'rejected' && <span className="rounded-full bg-amber-100 px-3 py-2 text-xs font-bold text-amber-900">Rejected · edit to reopen</span>}{plan.status === 'approved' && <button className={buttonClass + ' bg-[#18372e] text-white'} disabled={previewMode || busy === plan.id + 'dispatch'} onClick={() => onAction('dispatch')}><Play className="h-4 w-4" />Dispatch approved plan</button>}{plan.status === 'dispatched' && <span className="rounded-full bg-emerald-100 px-3 py-2 text-xs font-bold text-emerald-900">Dispatched to bridge{plan.run_id ? ` · run ${plan.run_id.slice(0, 8)}` : ''}</span>}{plan.status === 'rejected' && <RotateCcw className="mt-2 h-4 w-4 text-[#50675e]" aria-label="Edit required before approval" />}</div>
+    <div className="mt-5 flex flex-wrap gap-2">{['draft', 'rejected'].includes(plan.status) && <button className={buttonClass + ' border border-[#183229]/20'} disabled={previewMode || busy === plan.id + 'edit'} onClick={onSave}><FilePenLine className="h-4 w-4" />Save edit</button>}{plan.status === 'draft' && <><button className={buttonClass + ' bg-[#126b4e] text-white'} disabled={previewMode || busy === plan.id + 'approve'} onClick={() => onAction('approve')}><Check className="h-4 w-4" />Approve and freeze</button><button className={buttonClass + ' border border-red-900/20 text-red-800'} disabled={previewMode || busy === plan.id + 'reject'} onClick={() => onAction('reject')}><ShieldX className="h-4 w-4" />Reject</button></>}{plan.status === 'rejected' && <span className="rounded-full bg-amber-100 px-3 py-2 text-xs font-bold text-amber-900">Rejected · edit to reopen</span>}{plan.status === 'approved' && <button className={buttonClass + ' bg-[#18372e] text-white'} disabled={previewMode || busy === plan.id + 'dispatch'} onClick={() => onAction('dispatch')}><Play className="h-4 w-4" />Dispatch frozen plan</button>}{plan.status === 'dispatched' && <span className="rounded-full bg-emerald-100 px-3 py-2 text-xs font-bold text-emerald-900">Dispatched to bridge{plan.run_id ? ` · run ${plan.run_id.slice(0, 8)}` : ''}</span>}{plan.status === 'rejected' && <RotateCcw className="mt-2 h-4 w-4 text-[#50675e]" aria-label="Edit required before approval" />}</div>
   </article>;
 }
 

@@ -1,4 +1,5 @@
 .vercel
+.next-playwright/
 
 # Playwright auth state (contains session tokens)
 .auth/

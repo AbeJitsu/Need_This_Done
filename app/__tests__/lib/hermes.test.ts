@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildOpenClawInstruction, estimatePlannerRequest, parsePlannerOutput, planWithOpenRouter } from '@/lib/agent-planner';
+import { buildHermesOpenClawInstruction, estimateHermesRequest, parseHermesOutput, planWithHermes } from '@/lib/hermes';
 import type { OpenRouterModel } from '@/lib/openrouter-core';
 
 const step = {
@@ -30,40 +30,40 @@ function model(): OpenRouterModel {
   };
 }
 
-describe('app-side agent planner', () => {
+describe('Hermes bounded planning role', () => {
   it('normalizes mandatory forbidden actions and creates a delivery-disabled OpenClaw instruction', () => {
-    const plan = parsePlannerOutput(raw, 'research_outreach');
+    const plan = parseHermesOutput(raw, 'research_outreach');
     expect(plan.forbiddenActions).toEqual(expect.arrayContaining([
       'send_external_messages', 'publish_content', 'spend_money',
       'change_connected_accounts', 'deliver_external_content',
     ]));
-    expect(plan.openclawInstruction).toMatchObject({ executor: 'openclaw', approvalRequired: true, delivery: { deliver: false, bestEffortDeliver: false } });
+    expect(plan.openclawInstruction).toMatchObject({ planner: 'hermes', executor: 'openclaw', approvalRequired: true, delivery: { deliver: false, bestEffortDeliver: false } });
   });
 
   it('rejects a task whose role does not match its safe task type', () => {
     const invalid = raw.replace('public_web_researcher', 'outreach_writer');
-    expect(() => parsePlannerOutput(invalid, 'research_outreach')).toThrow('does not match task type');
+    expect(() => parseHermesOutput(invalid, 'research_outreach')).toThrow('does not match task type');
   });
 
   it('fails closed when pinned pricing cannot produce an estimate', () => {
-    const plan = parsePlannerOutput(raw, 'research_outreach');
-    expect(() => estimatePlannerRequest({ ...model(), pricing: { prompt: null, completion: null, request: null, webSearch: null } }, 'bounded prompt', {
+    const plan = parseHermesOutput(raw, 'research_outreach');
+    expect(() => estimateHermesRequest({ ...model(), pricing: { prompt: null, completion: null, request: null, webSearch: null } }, 'bounded prompt', {
       ...plan,
       estimatedUsage: { ...plan.estimatedUsage, completionTokens: 200 },
     })).toThrow('pricing metadata');
   });
 
   it('keeps the instruction server-authored when a plan is persisted', () => {
-    const instruction = buildOpenClawInstruction({
+    const instruction = buildHermesOpenClawInstruction({
       workflowType: 'research_outreach', growthProfileId: '00000000-0000-4000-8000-000000000001',
       rewrittenInstruction: 'Do bounded work.', steps: [step], allowedCapabilities: ['research_public_web'],
       forbiddenActions: ['send_external_messages'], expectedArtifacts: ['dossier'],
     });
-    expect(instruction).toMatchObject({ growthProfileId: '00000000-0000-4000-8000-000000000001', delivery: { deliver: false, bestEffortDeliver: false } });
+    expect(instruction).toMatchObject({ planner: 'hermes', growthProfileId: '00000000-0000-4000-8000-000000000001', delivery: { deliver: false, bestEffortDeliver: false } });
   });
 
   it('runs against a fake completion client without dispatching work', async () => {
-    const result = await planWithOpenRouter({
+    const result = await planWithHermes({
       model: model(),
       prompt: 'bounded fake planning request',
       workflowType: 'research_outreach',
@@ -82,7 +82,7 @@ describe('app-side agent planner', () => {
         },
       },
     });
-    expect(result.plan.openclawInstruction).toMatchObject({ executor: 'openclaw', approvalRequired: true });
+    expect(result.plan.openclawInstruction).toMatchObject({ planner: 'hermes', executor: 'openclaw', approvalRequired: true });
     expect(result.usage).toMatchObject({ promptTokens: 12, completionTokens: 34, costUsd: 0.001 });
   });
 });
