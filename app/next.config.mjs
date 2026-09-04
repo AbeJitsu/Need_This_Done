@@ -104,11 +104,6 @@ const nextConfig = {
     return [
       // Consolidated proof and support pages
       {
-        source: '/about',
-        destination: '/#why-us',
-        permanent: true,
-      },
-      {
         source: '/resume',
         destination: '/work',
         permanent: true,

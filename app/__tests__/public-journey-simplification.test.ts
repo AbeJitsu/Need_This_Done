@@ -23,12 +23,12 @@ describe('vision-first public journey', () => {
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
     const header = source('components/public/PublicHeader.tsx');
-    for (const [href, label] of [['/services', 'What We Do'], ['/#why-us', 'Why Us'], ['/work', 'Examples'], ['/blog', 'Insights']]) {
+    for (const [href, label] of [['/services', 'What We Do'], ['/about', 'Why Us'], ['/work', 'Examples'], ['/blog', 'Insights']]) {
       expect(header).toContain(`{ href: '${href}', label: '${label}' }`);
     }
     expect(header).toContain('Share Your Vision');
     const footer = source('components/public/PublicFooter.tsx');
-    for (const route of ['/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(footer).toContain(`href="${route}"`);
+    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(footer).toContain(`href="${route}"`);
   });
 
   it('keeps both offers bounded, priced, and compatible', () => {
@@ -75,7 +75,8 @@ describe('vision-first public journey', () => {
     expect(source('components/public/PublicChrome.tsx')).toContain('className="public-shell"');
     expect(source('app/globals.css')).toContain('.public-shell');
     expect(source('components/public/PublicChrome.tsx')).toContain('if (isPrivate)');
-    expect(source('lib/page-config.ts')).toContain("{ href: '/services#website-fix', label: 'Website Fix' }");
+    expect(source('lib/page-config.ts')).toContain("{ href: '/website-fix', label: 'Website Fix' }");
+    expect(source('lib/page-config.ts')).toContain("{ href: '/managed-automation', label: 'Managed Automation' }");
   });
 
   it('keeps the editorial palette readable and honors reduced motion', () => {

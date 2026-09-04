@@ -56,7 +56,6 @@ test.describe('Retained core smoke checks', () => {
 
   test('consolidated public paths redirect to their maintained destinations', async ({ page }) => {
     for (const [route, destination] of [
-      ['/about', '/#why-us'],
       ['/resume', '/work'],
       ['/guide', '/faq'],
       ['/build', '/contact?offer=website-fix'],

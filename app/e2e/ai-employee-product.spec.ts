@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const publicRoutes = ['/', '/services', '/website-fix', '/managed-automation', '/how-it-works', '/pricing', '/work', '/blog', '/contact', '/faq'];
+const publicRoutes = ['/', '/services', '/about', '/website-fix', '/managed-automation', '/how-it-works', '/pricing', '/work', '/blog', '/contact', '/faq'];
 
 for (const route of publicRoutes) {
   test(`${route} renders with a heading and no overflow`, async ({ page }) => {
@@ -92,7 +92,9 @@ test('desktop public navigation follows the approved public journey', async ({ p
   for (const label of ['What We Do', 'Why Us', 'Examples', 'Insights']) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
+  await expect(navigation.getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/about');
   await expect(page.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/about');
   await expect(navigation.getByRole('link', { name: /how it works/i })).toHaveCount(0);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });

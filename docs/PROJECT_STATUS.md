@@ -35,8 +35,11 @@
   for owners and founders: “Your vision, brought to life.” Website Fix remains
   $500 and Managed Automation remains proposal-based. The vision-first intake
   keeps service selection optional and uses the unchanged projects API/schema.
-  This public positioning does not expand the private-assistant roadmap or its
-  authority, and it has not been deployed or published by this repository work.
+  Public navigation now gives “Why Us” its own `/about` page, links each
+  offering to its dedicated page, and keeps page-boundary links out of the
+  shared public and authenticated navigation/footer configuration. This public
+  positioning does not expand the private-assistant roadmap or its authority,
+  and it has not been deployed or published by this repository work.
 - Earlier documentation said Daily Desk code, routes, and pending migration
   entries had been retired. That claim is not reliable: the active branch still
   contains Daily Cockpit and employee-workspace sources and tests. No removal
@@ -79,14 +82,21 @@
   375/768/1280 width matrix, headings and overflow, first-viewport copy,
   hypothetical-example boundaries, optional and preselected service intake,
   success/error states, keyboard menu behavior, focus, and reduced motion. Four
-  focused retained checks for contact aliases and `/about` compatibility also
-  passed. `git diff --check` passed.
+  focused retained checks for contact aliases and legacy redirects also passed.
+  `git diff --check` passed.
 - The full `npm run test:retained-smoke` was run on 2026-09-04 and reached two
   unrelated retained-environment failures: the seeded report ID returned 404,
   and the unauthenticated dashboard remained in its loading state. The public
   refresh checks in that run passed, and both affected areas are outside this
   change. Owner: NeedThisDone application test owner; restore the retained
   local seed/auth fixture and rerun by 2026-09-06.
+- On 2026-09-04, the navigation/page-boundary follow-up passed lint,
+  type-check, the focused route-hygiene and public-journey tests (2 files, 12
+  tests), the production build, and `git diff --check`. The public “Why Us”
+  link now resolves to the standalone `/about` page, the page is in the
+  sitemap, and Website Fix plus Managed Automation links resolve directly to
+  their own pages. No browser acceptance suite, hosted deployment, or
+  publication was run for this follow-up.
 - On 2026-09-03, the Hermes plan/approval/bridge slice passed application
   `npm run test:unit` (62 files, 325 tests), lint, type-check, and production
   build; focused Hermes and capability checks (2 files, 6 tests); and
@@ -182,6 +192,11 @@ The public outcome-partner refresh can be reverted as one reviewed Git change.
 It changes public copy, layout, navigation, intake composition, tests, and
 metadata only; the projects API and database schema were not changed. No hosted
 rollback is involved because deployment and publication were not performed.
+
+The navigation/page-boundary follow-up can be reverted as one reviewed Git
+change. It changes the public Why Us route, shared navigation destinations,
+sitemap, and focused route tests only; no API, database, provider, hosted, or
+publication state changed.
 
 The independent OpenClaw profile can be stopped without touching the default
 profile. Revoke its OpenAI OAuth grant if required, archive only
