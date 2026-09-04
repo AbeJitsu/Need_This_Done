@@ -29,7 +29,7 @@ export default function HomePageClient() {
         <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28 lg:py-36">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">For owners and founders</p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.96] tracking-tight sm:text-6xl md:text-8xl">Your vision, brought to life.</h1>
-          <p className="mt-8 max-w-2xl text-lg leading-8 text-[#50675e] md:text-xl">NeedThisDone turns your vision for something better into a clear, focused result. You do not need to arrive with a technical brief—only a sense of what you want to change.</p>
+          <p className="mt-8 max-w-2xl text-lg leading-8 text-[#50675e] md:text-xl">NeedThisDone turns your vision for something better into a clear, focused result. You do not need to arrive with a technical brief. Only a sense of what you want to change.</p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e]">Share your vision <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
             <Link href="#what-we-do" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#183229]/25 px-7 py-3 font-bold transition hover:border-[#126b4e] hover:text-[#126b4e]">See what we do</Link>
@@ -59,7 +59,7 @@ export default function HomePageClient() {
 
       <section aria-labelledby="examples-heading">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">Representative examples—not client results</p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">Representative examples, not client results</p>
           <h2 id="examples-heading" className="mt-5 max-w-3xl font-playfair text-4xl font-black leading-tight md:text-5xl">What better can look like.</h2>
           <div className="mt-12 divide-y divide-[#183229]/15 border-y border-[#183229]/15">{examples.map((example) => <article key={example.title} className="grid gap-6 py-9 md:grid-cols-[.7fr_1fr] md:gap-14"><h3 className="font-playfair text-3xl font-black">{example.title}</h3><dl className="grid gap-6 sm:grid-cols-2"><div><dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">Before</dt><dd className="mt-3 leading-7 text-[#50675e]">{example.before}</dd></div><div><dt className="text-xs font-bold uppercase tracking-[.16em] text-[#126b4e]">A better state</dt><dd className="mt-3 leading-7 text-[#50675e]">{example.after}</dd></div></dl></article>)}</div>
           <Link href="/work" className="mt-7 inline-flex items-center gap-2 font-bold text-[#126b4e]">See more examples <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
