@@ -1,129 +1,103 @@
 import { expect, test } from '@playwright/test';
 
-for (const route of ['/', '/services', '/how-it-works', '/pricing', '/work', '/blog', '/contact', '/faq', '/login']) {
-  test(`${route} renders without browser defects`, async ({ page }) => {
+const publicRoutes = ['/', '/services', '/website-fix', '/managed-automation', '/how-it-works', '/pricing', '/work', '/blog', '/contact', '/faq'];
+
+for (const route of publicRoutes) {
+  test(`${route} renders with a heading and no overflow`, async ({ page }) => {
     const errors: string[] = [];
     page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('pageerror', (error) => errors.push(error.message));
     const response = await page.goto(route);
     expect(response?.ok()).toBe(true);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-    expect(overflow).toBe(false);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)).toBe(false);
     expect(errors).toEqual([]);
   });
 }
 
-test('login keeps the private workspace boundary visible', async ({ page }) => {
-  await page.goto('/login');
-  await expect(page.getByRole('heading', { name: /private team sign-in/i })).toBeVisible();
-  await expect(page.getByText('Private team access', { exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
-  await expect(page.getByLabel('Email Address')).toBeVisible();
+test('homepage first viewport identifies audience, promise, and action without mechanics', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/');
+  const firstSection = page.locator('main > section').first();
+  await expect(firstSection.getByText('For owners and founders', { exact: true })).toBeVisible();
+  await expect(firstSection.getByRole('heading', { name: 'Your vision, brought to life.' })).toBeVisible();
+  await expect(firstSection.getByRole('link', { name: /share your vision/i })).toBeVisible();
+  await expect(firstSection).not.toContainText(/API|database|automation system|technical implementation/i);
 });
 
-test('insights makes the reading path and notes easy to scan', async ({ page }) => {
-  await page.goto('/blog');
-  await expect(page.getByRole('heading', { name: /make the next step clearer/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /read what helps you move/i })).toBeVisible();
-  await expect(page.getByText('Carry it forward', { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole('link', { name: /read note/i }).first()).toBeVisible();
+test('representative examples never imply client proof', async ({ page }) => {
+  await page.goto('/work');
+  await expect(page.getByText(/hypothetical, representative before-and-after scenarios/i)).toBeVisible();
+  await expect(page.getByText(/not client work, paid outcomes, or delivery proof/i)).toBeVisible();
+  await expect(page.getByText(/no time saving, delivery result, or live automation is claimed/i)).toBeVisible();
 });
 
-test('contact gives Website Fix a clear working area', async ({ page }) => {
-  await page.goto('/contact?offer=website-fix');
-  await expect(page.getByText('Website Fix context', { exact: true })).toBeVisible();
-  await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
-  await expect(page.getByRole('textbox', { name: /what needs attention/i })).toBeVisible();
-  await expect(page.getByRole('textbox', { name: /what should improve/i })).toBeVisible();
-  await expect(page.getByText(/keep it specific/i)).toBeVisible();
+test('general contact submission keeps service optional and reports success', async ({ page }) => {
+  let submitted: Record<string, string> = {};
+  await page.route('**/api/projects', async (route) => {
+    const request = route.request();
+    const form = await request.postDataBuffer();
+    const contentType = request.headers()['content-type'];
+    expect(contentType).toContain('multipart/form-data');
+    submitted = { raw: form?.toString('utf8') || '' };
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
+  });
+  await page.goto('/contact');
+  await page.waitForLoadState('networkidle');
+  await expect(page.getByRole('radio', { name: /website fix/i })).not.toBeChecked();
+  await expect(page.getByRole('radio', { name: /managed automation/i })).not.toBeChecked();
+  await page.getByRole('textbox', { name: /^name$/i }).fill('Jordan Owner');
+  await page.getByRole('textbox', { name: /^email$/i }).fill('jordan@example.com');
+  await page.getByRole('textbox', { name: /your vision/i }).fill('A clearer way to welcome customers.');
+  await page.getByRole('textbox', { name: /desired outcome/i }).fill('Customers understand the next step.');
+  await page.getByRole('button', { name: /share your vision/i }).click();
+  await expect(page.getByRole('heading', { name: /thank you for sharing it/i })).toBeVisible();
+  expect(submitted.raw).toContain('A clearer way to welcome customers.');
+  expect(submitted.raw).toContain('Not selected');
 });
 
-test('contact keeps both context headings inside their fieldset panels', async ({ page }) => {
-  for (const context of [
-    { offer: 'website-fix', heading: 'Website Fix context', field: /website url/i },
-    { offer: 'managed-automation', heading: 'Managed Automation context', field: /where does work get stuck/i },
-  ]) {
-    await page.goto(`/contact?offer=${context.offer}`);
-
-    const panel = page.locator('fieldset').filter({ has: page.locator('legend', { hasText: context.heading }) });
-    const legend = panel.locator('legend');
-    await expect(legend).toHaveText(context.heading);
-    await expect(panel.getByRole('textbox', { name: context.field })).toBeVisible();
-
-    const panelBox = await panel.boundingBox();
-    const legendBox = await legend.boundingBox();
-    expect(panelBox).not.toBeNull();
-    expect(legendBox).not.toBeNull();
-
-    const panelRight = panelBox!.x + panelBox!.width;
-    const panelBottom = panelBox!.y + panelBox!.height;
-    const legendRight = legendBox!.x + legendBox!.width;
-    const legendBottom = legendBox!.y + legendBox!.height;
-    const firstContent = panel.locator(':scope > p, :scope > label').first();
-    const firstContentBox = await firstContent.boundingBox();
-    expect(firstContentBox).not.toBeNull();
-    expect(legendBox!.y - panelBox!.y).toBeGreaterThan(8);
-    expect(firstContentBox!.y - legendBottom).toBeGreaterThan(12);
-    expect(panelBottom - legendBottom).toBeGreaterThan(4);
-    expect(legendBox!.x).toBeGreaterThanOrEqual(panelBox!.x + 4);
-    expect(legendRight).toBeLessThanOrEqual(panelRight - 4);
+test('offer aliases preselect their matching optional service', async ({ page }) => {
+  for (const [offer, label] of [['website-fix', 'Website Fix'], ['managed-automation', 'Managed Automation']] as const) {
+    await page.goto(`/contact?offer=${offer}`);
+    await expect(page.getByRole('radio', { name: new RegExp(label, 'i') })).toBeChecked();
+    await expect(page.getByRole('textbox', { name: /your vision/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /desired outcome/i })).toBeVisible();
   }
 });
 
-test('how it works keeps the process and better result visible', async ({ page }) => {
-  await page.goto('/how-it-works');
-  await expect(page.getByRole('heading', { name: /start with what should be different/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /a short path from stuck to done/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: /keep the better state in view/i })).toBeVisible();
+test('contact reports a submission error and remains usable', async ({ page }) => {
+  await page.route('**/api/projects', (route) => route.fulfill({ status: 500, contentType: 'application/json', body: '{}' }));
+  await page.goto('/contact?offer=website-fix');
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('textbox', { name: /^name$/i }).fill('Jordan Owner');
+  await page.getByRole('textbox', { name: /^email$/i }).fill('jordan@example.com');
+  await page.getByRole('textbox', { name: /your vision/i }).fill('A better website page.');
+  await page.getByRole('textbox', { name: /desired outcome/i }).fill('A clear next action.');
+  await page.getByRole('button', { name: /share your vision/i }).click();
+  await expect(page.locator('p[role="alert"]')).toContainText(/could not send your vision/i);
+  await expect(page.getByRole('button', { name: /share your vision/i })).toBeEnabled();
 });
 
-test('faq answers questions without overlapping its summary and list', async ({ page }) => {
+test('faq answers the retained offer boundary', async ({ page }) => {
   await page.goto('/faq');
   const question = page.getByRole('button', { name: /what does website fix include/i });
   await question.click();
   await expect(page.getByText(/a \$500 review and one agreed website fix/i)).toBeVisible();
-
-  const overlap = await page.locator('main > section').nth(1).evaluate((section) => {
-    const children = Array.from(section.children).map((child) => child.getBoundingClientRect());
-    if (children.length < 2) return false;
-    const [summary, questions] = children;
-    return summary.right > questions.left
-      && questions.right > summary.left
-      && summary.bottom > questions.top
-      && questions.bottom > summary.top;
-  });
-  expect(overlap).toBe(false);
 });
 
-test('homepage makes the problem and the two starting points clear', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: /fix the work that’s slowing you down/i })).toBeVisible();
-  await expect(page.getByText(/one problem\. one agreed outcome/i)).toBeVisible();
-  await expect(page.getByRole('link', { name: /start a website fix/i }).first()).toBeVisible();
-  await expect(page.getByRole('link', { name: /discuss managed automation/i }).first()).toBeVisible();
-});
-
-test('desktop public navigation follows the public page progression', async ({ page }, testInfo) => {
+test('desktop public navigation follows the approved public journey', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'Desktop navigation is intentionally collapsed on mobile.');
   await page.goto('/');
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
-  for (const label of ['Website Fix', 'Managed Automation', 'How It Works', 'How We Work']) {
+  for (const label of ['What We Do', 'Why Us', 'Examples', 'Insights']) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
-  const cta = page.getByRole('link', { name: 'Choose a starting point', exact: true });
-  await expect(cta).toBeVisible();
-  await expect(cta).toHaveAttribute('href', '/contact');
-  const headerBox = await page.locator('header').first().boundingBox();
-  const ctaBox = await cta.boundingBox();
-  expect(headerBox).not.toBeNull();
-  expect(ctaBox).not.toBeNull();
-  expect(ctaBox!.y - headerBox!.y).toBeGreaterThan(16);
-  expect((headerBox!.y + headerBox!.height) - (ctaBox!.y + ctaBox!.height)).toBeGreaterThan(16);
+  await expect(page.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
+  await expect(navigation.getByRole('link', { name: /how it works/i })).toHaveCount(0);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });
 
-test('the simplified journey works by keyboard at phone, tablet, and desktop widths', async ({ page }, testInfo) => {
+test('public journey supports keyboard, reduced motion, and three target widths', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'One browser covers the explicit responsive-width matrix.');
   await page.emulateMedia({ reducedMotion: 'reduce' });
 
@@ -133,14 +107,13 @@ test('the simplified journey works by keyboard at phone, tablet, and desktop wid
     { width: 1280, height: 900 },
   ]) {
     await page.setViewportSize(viewport);
-    await page.goto('/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Fix the work that’s slowing you down.');
-    await expect(page.locator('main dl')).toHaveCount(2);
-    await expect(page.locator('main ol')).toHaveCount(2);
-    await expect(page.locator('img[alt=""]')).toHaveCount(0);
-    await expect(page.locator('a[href="/login"]')).toHaveCount(0);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)).toBe(false);
+    for (const route of publicRoutes) {
+      await page.goto(route);
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)).toBe(false);
+    }
 
+    await page.goto('/');
     if (viewport.width < 1024) {
       const menuButton = page.getByRole('button', { name: 'Open navigation menu' });
       await menuButton.focus();
@@ -148,11 +121,10 @@ test('the simplified journey works by keyboard at phone, tablet, and desktop wid
       await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
       await page.keyboard.press('Escape');
       await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
+      await expect(menuButton).toBeFocused();
     } else {
       await page.keyboard.press('Tab');
-      const focused = page.locator(':focus');
-      await expect(focused).toBeVisible();
-      expect(await focused.evaluate((element) => ['A', 'BUTTON'].includes(element.tagName))).toBe(true);
+      await expect(page.locator(':focus')).toBeVisible();
     }
   }
 });

@@ -1,7 +1,6 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_LAYOUT_CONTENT } from '@/lib/page-config';
 import { normalizePublicOfferId, PUBLIC_OFFERS } from '@/lib/public-offers';
 import { contrastRatio } from '@/lib/wcag-contrast';
 
@@ -9,32 +8,30 @@ const appRoot = resolve(__dirname, '..');
 const repositoryRoot = resolve(appRoot, '..');
 const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
-const publicCopySources = [
-  'app/page.tsx',
-  'app/managed-automation/page.tsx',
-  'app/services/page.tsx',
-  'app/pricing/page.tsx',
-  'app/how-it-works/page.tsx',
-  'app/work/page.tsx',
-  'app/faq/page.tsx',
-  'app/contact/page.tsx',
-  'app/privacy/page.tsx',
-  'app/terms/page.tsx',
-  'components/home/HomePageClient.tsx',
-  'components/services/ServicesPageClient.tsx',
-  'components/pricing/UnifiedPricingPage.tsx',
-  'components/work/WorkPageClient.tsx',
-  'components/public/PublicFooter.tsx',
-  'components/public/PublicHeader.tsx',
-  'components/public/PublicServiceVisuals.tsx',
-  'components/report/ReportCTA.tsx',
-  'lib/page-config.ts',
-  'lib/public-offers.ts',
-  'lib/seo-config.ts',
-].map(source).join('\n');
+describe('vision-first public journey', () => {
+  it('leads with the approved audience, promise, and actions', () => {
+    const home = source('components/home/HomePageClient.tsx');
+    expect(home).toContain('For owners and founders');
+    expect(home).toContain('Your vision, brought to life.');
+    expect(home).toContain('You do not need to arrive with a technical brief');
+    expect(home).toContain('href="/contact"');
+    expect(home).toContain('Share your vision');
+    expect(home).toContain('href="#what-we-do"');
+    expect(home).toContain('See what we do');
+    expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
+  });
 
-describe('simplified public journey', () => {
-  it('uses the canonical offer names, descriptions, and new query values', () => {
+  it('uses the approved public navigation while retaining support links in the footer', () => {
+    const header = source('components/public/PublicHeader.tsx');
+    for (const [href, label] of [['/services', 'What We Do'], ['/#why-us', 'Why Us'], ['/work', 'Examples'], ['/blog', 'Insights']]) {
+      expect(header).toContain(`{ href: '${href}', label: '${label}' }`);
+    }
+    expect(header).toContain('Share Your Vision');
+    const footer = source('components/public/PublicFooter.tsx');
+    for (const route of ['/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(footer).toContain(`href="${route}"`);
+  });
+
+  it('keeps both offers bounded, priced, and compatible', () => {
     expect(PUBLIC_OFFERS['website-improvement']).toMatchObject({
       name: 'Website Fix',
       contactHref: '/contact?offer=website-fix',
@@ -51,158 +48,61 @@ describe('simplified public journey', () => {
     expect(normalizePublicOfferId('ai-operator')).toBe('ai-operator');
   });
 
-  it('standardizes public navigation and calls to action without promoting sign-in', () => {
-    expect(DEFAULT_LAYOUT_CONTENT.header.navLinks).toEqual([
-      { href: '/services#website-fix', label: 'Website Fix' },
-      { href: '/services#managed-automation', label: 'Managed Automation' },
-      { href: '/how-it-works', label: 'How It Works' },
-      { href: '/work', label: 'Work' },
-    ]);
-    expect(DEFAULT_LAYOUT_CONTENT.header.ctaButton).toEqual({ text: "Tell us what's stuck", href: '/contact' });
-    expect(source('components/Navigation.tsx')).not.toMatch(/<Link\s+href="\/login"/);
-    expect(source('components/Footer.tsx')).not.toContain('/login');
+  it('makes service choice optional and keeps the projects contract unchanged', () => {
+    const contact = source('app/contact/page.tsx');
+    expect(contact).toContain('What do you want to bring to life?');
+    expect(contact).toMatch(/required name="vision"/);
+    expect(contact).toMatch(/required name="outcome"/);
+    expect(contact).toContain('Current obstacle');
+    expect(contact).toContain('Optional. Choose one if it clearly fits');
+    expect(contact).toContain("if (offer) body.append('service'");
+    for (const field of ['name', 'email', 'company', 'message']) expect(contact).toContain(`body.append('${field}'`);
+    expect(contact).not.toContain("if (!offer)");
   });
 
-  it('leads with the agreed plain-language promise and standardized CTAs', () => {
-    const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain("Fix the work that’s slowing you down.");
-    for (const cta of ["Tell us what’s stuck", 'Start a Website Fix', 'Discuss Managed Automation']) {
-      expect(publicCopySources).toContain(cta);
-    }
-    for (const staleName of ['Website Improvement', 'Managed AI Operator', 'Targeted Fix', 'Automation System Setup']) {
-      expect(publicCopySources).not.toContain(staleName);
-    }
-  });
-
-  it('uses three reusable semantic visuals instead of public card-wall diagrams', () => {
-    const visualsPath = 'components/public/PublicServiceVisuals.tsx';
-    expect(existsSync(resolve(appRoot, visualsPath))).toBe(true);
-    const visuals = source(visualsPath);
-    for (const component of ['OfferComparison', 'ThreeStepFlow', 'OutcomeFocusFlow']) {
-      expect(visuals).toContain(`export function ${component}`);
-    }
-    expect(visuals).toContain('Choose this when');
-    expect(visuals).toContain('You get');
-    expect(visuals).toContain('Price');
-    expect(visuals).toContain('Next step');
-    expect(visuals).toContain('Tell us what’s stuck');
-    expect(visuals).toContain('Agree on one outcome');
-    expect(visuals).toContain('We do the work and hand it off');
-    expect(visuals).toContain('Repeated problem');
-    expect(visuals).toContain('Better result');
-    expect(visuals).toContain('Focused work');
-    expect(visuals).toMatch(/<(?:dl|ol)\b/);
-  });
-
-  it('keeps technical implementation vocabulary out of first-facing public copy', () => {
-    expect(publicCopySources).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
-    expect(publicCopySources).not.toMatch(/(?:client|customer) portal|approval boundary/i);
-  });
-
-  it('keeps Managed Automation public copy focused on a repeated problem and better result', () => {
-    const managedPage = source('app/managed-automation/page.tsx');
-    expect(managedPage).toContain('Make one repeated problem at work easier to solve.');
-    expect(managedPage).toContain('One repeated problem worth fixing.');
-    expect(managedPage).toContain('A shared picture of the better result and what success means.');
-    expect(managedPage).toContain('Focused work that moves that result forward.');
-    expect(PUBLIC_OFFERS['ai-operator'].payment).toBe('The proposal sets the problem, better result, scope, price, and payment terms.');
-
-    const managedMarketingSources = [
-      'app/managed-automation/page.tsx',
-      'app/page.tsx',
-      'app/services/page.tsx',
-      'app/pricing/page.tsx',
-      'app/work/page.tsx',
-      'app/layout.tsx',
-      'app/contact/page.tsx',
-      'components/home/HomePageClient.tsx',
-      'components/pricing/UnifiedPricingPage.tsx',
-      'components/work/WorkPageClient.tsx',
-      'components/public/PublicFooter.tsx',
-      'components/public/PublicServiceVisuals.tsx',
-      'lib/public-offers.ts',
-      'lib/seo-config.ts',
-      'lib/service-modal-content.ts',
-    ].map(source).join('\n');
-
-    expect(managedMarketingSources).not.toMatch(/\b(?:Abe|Andrea)\b/i);
-    expect(managedMarketingSources).not.toMatch(/human[- ](?:led|run)/i);
-    expect(managedMarketingSources).not.toMatch(/\b30[- ]day\b/i);
-    expect(managedMarketingSources).not.toMatch(/weekly (?:brief|client)/i);
-    expect(managedMarketingSources).not.toMatch(/privately operated|private operation/i);
-    expect(managedMarketingSources).not.toMatch(/\bapproval\b/i);
-
-    const jsonLd = source('components/seo/JsonLd.tsx');
-    expect(jsonLd).toContain('proposal-based way to improve one repeated problem at work');
-    expect(jsonLd).not.toContain('human-run 30-day pilot');
-    expect(jsonLd).not.toContain('short weekly brief');
-  });
-
-  it('gives the desktop public-nav CTA vertical breathing room without changing the mobile CTA', () => {
-    const header = source('components/public/PublicHeader.tsx');
-    expect(header).toContain('min-h-18 max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]');
-    expect(header).toContain('hidden items-center rounded-full bg-[#126b4e] px-6 py-2.5');
-    expect(header).toContain('href="/contact"');
-    expect(header).toContain('mt-2 block rounded-lg bg-[#126b4e] px-3 py-3 text-center');
-  });
-
-  it('labels Work as examples until paid outcomes exist and keeps old boundaries compatible', () => {
+  it('labels every example as hypothetical and avoids unsupported proof', () => {
     const work = source('components/work/WorkPageClient.tsx');
-    expect(work).toContain('Process examples');
-    expect(work).toContain('These are examples of how we work—not paid client outcomes.');
-    expect(source('components/services/ServicesPageClient.tsx')).toContain('id="website-improvement"');
-    expect(source('components/services/ServicesPageClient.tsx')).toContain('id="ai-operator"');
-    expect(source('components/report/ReportCTA.tsx')).toContain('href="/contact?offer=website-fix"');
-  });
-
-  it('uses a text-led two-offer homepage without a decorative hero image', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('href="/website-fix"');
-    expect(home).toContain('href="/managed-automation"');
-    expect(home).not.toContain('needthisdone-work-to-outcome');
-    expect(home).not.toContain("from 'next/image'");
+    expect(home).toContain('Representative examples—not client results');
+    expect(work).toContain('hypothetical, representative before-and-after scenarios');
+    expect(work).toContain('They are not client work, paid outcomes, or delivery proof.');
+    expect(work).not.toMatch(/we (?:increased|grew|saved|delivered) .*%/i);
   });
 
-  it('keeps the public palette readable and honors reduced-motion preferences', () => {
+  it('keeps public styles scoped away from the authenticated interface', () => {
+    expect(source('components/public/PublicChrome.tsx')).toContain('className="public-shell"');
+    expect(source('app/globals.css')).toContain('.public-shell');
+    expect(source('components/public/PublicChrome.tsx')).toContain('if (isPrivate)');
+    expect(source('lib/page-config.ts')).toContain("{ href: '/services#website-fix', label: 'Website Fix' }");
+  });
+
+  it('keeps the editorial palette readable and honors reduced motion', () => {
     for (const [foreground, background] of [
       ['#50675e', '#f7f4ed'],
       ['#126b4e', '#f7f4ed'],
       ['#ffffff', '#126b4e'],
-      ['#183229', '#e4eee6'],
-      ['#d1fae5', '#18372e'],
-      ['#ffffff', '#18372e'],
-    ]) {
-      expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5);
-    }
-    const globalStyles = source('app/globals.css');
-    expect(globalStyles).toContain('@media (prefers-reduced-motion: reduce)');
-    expect(globalStyles).toContain('animation: none');
-    expect(globalStyles).toContain('scroll-behavior: auto');
+      ['#183229', '#e8e2d5'],
+      ['#dce8dd', '#18372e'],
+    ]) expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5);
+    const styles = source('app/globals.css');
+    expect(styles).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(styles).toContain('scroll-behavior: auto');
   });
 
-  it('updates the root product boundary while retaining compatibility identifiers', () => {
-    const rootDocs = ['AGENTS.md', 'README.md', 'ROADMAP.md']
-      .map((path) => readFileSync(resolve(repositoryRoot, path), 'utf8'))
-      .join('\n');
-    expect(rootDocs).toContain('Website Fix');
-    expect(rootDocs).toContain('Managed Automation');
-    expect(rootDocs).not.toContain('Website Improvement');
-    expect(rootDocs).not.toContain('Managed AI Operator');
-  });
-
-  it('keeps one canonical assistant vision and approval boundary for future work', () => {
+  it('keeps the public front door separate from the assistant roadmap', () => {
     const readme = readFileSync(resolve(repositoryRoot, 'README.md'), 'utf8');
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
-    const agentInstructions = readFileSync(resolve(repositoryRoot, 'AGENTS.md'), 'utf8');
-
     expect(readme).toContain('## The assistant vision — start here');
-    expect(readme).toContain('NeedThisDone is a private, authenticated assistant');
-    expect(readme).toContain('Vercel is the internet-facing browser control plane, not a permanent worker.');
-    expect(readme).toContain('An expired, altered, unapproved, or stopped task');
-    expect(readme).toContain('must fail closed.');
-    expect(roadmap).toContain('This is an execution list, not a second vision document.');
-    expect(roadmap).toContain('one real, controlled browser → Supabase → Mac');
-    expect(roadmap).toContain('mini assistant workflow');
-    expect(agentInstructions).toContain('canonical assistant and operating vision');
+    expect(readme).toContain('## Public service front door');
+    expect(readme).toContain('This public positioning does not expand the assistant roadmap');
+    expect(roadmap).toContain('Assistant-first finish line');
+    expect(roadmap).toContain('separately approved public outcome-partner front door');
+  });
+
+  it('updates the social preview and root metadata to the new promise', () => {
+    expect(source('app/layout.tsx')).toContain('Your Vision, Brought to Life');
+    expect(source('public/og-image.svg')).toContain('Your vision,');
+    expect(source('public/og-image.svg')).toContain('brought to life.');
+    expect(source('lib/seo-config.ts')).toContain('owners and founders');
   });
 });

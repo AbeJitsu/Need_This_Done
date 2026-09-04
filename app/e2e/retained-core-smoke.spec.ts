@@ -11,17 +11,18 @@ test.describe('Retained core smoke checks', () => {
     );
   });
 
-  test('contact intake adapts to the selected offer', async ({ page }) => {
+  test('contact intake keeps offer aliases while using shared vision questions', async ({ page }) => {
     const response = await page.goto('/contact?offer=website-fix');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByText(/what are you contacting us about/i, { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /share your vision/i })).toBeVisible();
     await expect(page.getByRole('radio', { name: /website fix/i })).toBeChecked();
-    await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /your vision/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /desired outcome/i })).toBeVisible();
     const managedAutomation = page.getByRole('radio', { name: /managed automation/i });
     await page.locator('label').filter({ has: managedAutomation }).click();
-    await expect(page.getByRole('textbox', { name: /where does work get stuck/i })).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /website url/i })).toHaveCount(0);
+    await expect(managedAutomation).toBeChecked();
+    await expect(page.getByRole('textbox', { name: /your vision/i })).toBeVisible();
   });
 
   test('site analyzer page renders the audit form', async ({ page }) => {
@@ -55,7 +56,7 @@ test.describe('Retained core smoke checks', () => {
 
   test('consolidated public paths redirect to their maintained destinations', async ({ page }) => {
     for (const [route, destination] of [
-      ['/about', '/work'],
+      ['/about', '/#why-us'],
       ['/resume', '/work'],
       ['/guide', '/faq'],
       ['/build', '/contact?offer=website-fix'],

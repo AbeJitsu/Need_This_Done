@@ -3,20 +3,18 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sitemap from '@/app/sitemap';
 import robots from '@/app/robots';
-import { DEFAULT_LAYOUT_CONTENT } from '@/lib/page-config';
 
 const appRoot = resolve(__dirname, '..');
 const repositoryRoot = resolve(appRoot, '..');
 
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
-    expect(DEFAULT_LAYOUT_CONTENT.header.navLinks).toEqual([
-      { href: '/services#website-fix', label: 'Website Fix' },
-      { href: '/services#managed-automation', label: 'Managed Automation' },
-      { href: '/how-it-works', label: 'How It Works' },
-      { href: '/work', label: 'Work' },
-    ]);
-    expect(DEFAULT_LAYOUT_CONTENT.header.ctaButton).toEqual({ text: "Tell us what's stuck", href: '/contact' });
+    const header = readFileSync(resolve(appRoot, 'components/public/PublicHeader.tsx'), 'utf8');
+    expect(header).toContain("{ href: '/services', label: 'What We Do' }");
+    expect(header).toContain("{ href: '/#why-us', label: 'Why Us' }");
+    expect(header).toContain("{ href: '/work', label: 'Examples' }");
+    expect(header).toContain("{ href: '/blog', label: 'Insights' }");
+    expect(header).toContain('Share Your Vision');
   });
 
   it('does not publish retired route entries in the sitemap and keeps private surfaces out of indexing', async () => {
@@ -31,7 +29,7 @@ describe('public route hygiene', () => {
   it('keeps permanent redirects and the audit-to-intake handoff aligned', () => {
     const config = readFileSync(resolve(appRoot, 'next.config.mjs'), 'utf8');
     expect(config).toContain("source: '/about'");
-    expect(config).toContain("destination: '/work'");
+    expect(config).toContain("destination: '/#why-us'");
     expect(config).toContain("source: '/resume'");
     expect(config).toContain("source: '/guide'");
     expect(config).toContain("destination: '/faq'");
