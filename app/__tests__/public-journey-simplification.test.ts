@@ -60,12 +60,14 @@ describe('vision-first public journey', () => {
     expect(contact).not.toContain("if (!offer)");
   });
 
-  it('labels every example as hypothetical and avoids unsupported proof', () => {
+  it('explains the problem, prior attempts, and next action for every example', () => {
     const work = source('components/work/WorkPageClient.tsx');
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('Representative examples—not client results');
-    expect(work).toContain('hypothetical, representative before-and-after scenarios');
-    expect(work).toContain('They are not client work, paid outcomes, or delivery proof.');
+    expect(home).toContain('How we move a stuck problem forward');
+    expect(home).toContain('What you have tried');
+    expect(work).toContain('What is happening');
+    expect(work).toContain('What you have tried');
+    expect(work).toContain('What we will do');
     expect(work).not.toMatch(/we (?:increased|grew|saved|delivered) .*%/i);
   });
 

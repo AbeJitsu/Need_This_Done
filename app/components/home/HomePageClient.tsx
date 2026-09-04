@@ -11,13 +11,15 @@ const principles = [
 const examples = [
   {
     title: 'A website that earns the next click',
-    before: 'An important page feels unclear, slow, inaccessible, or difficult to use.',
-    after: 'One agreed page or component is made meaningfully better and handed back with a clear record.',
+    happening: 'An important page feels unclear, slow, inaccessible, or difficult to use.',
+    tried: 'You have adjusted the copy, layout, or calls to action, but the page still is not doing its job.',
+    after: 'We find the friction, make the agreed fix, and hand back a clearer page with a record of what changed.',
   },
   {
     title: 'A better way through repeated work',
-    before: 'A recurring task keeps crossing inboxes, documents, and tools without a dependable path.',
-    after: 'The desired result is made clear and a focused proposal defines how to move it forward.',
+    happening: 'A recurring task keeps crossing inboxes, documents, and tools without a dependable path.',
+    tried: 'You have added reminders, documents, or another tool, but the work still depends on manual follow-up.',
+    after: 'We identify the bottleneck, clarify the result, and define a focused proposal to move it forward.',
   },
 ] as const;
 
@@ -59,9 +61,9 @@ export default function HomePageClient() {
 
       <section aria-labelledby="examples-heading">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">Representative examples, not client results</p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">How we move a stuck problem forward</p>
           <h2 id="examples-heading" className="mt-5 max-w-3xl font-playfair text-4xl font-black leading-tight md:text-5xl">What better can look like.</h2>
-          <div className="mt-12 divide-y divide-[#183229]/15 border-y border-[#183229]/15">{examples.map((example) => <article key={example.title} className="grid gap-6 py-9 md:grid-cols-[.7fr_1fr] md:gap-14"><h3 className="font-playfair text-3xl font-black">{example.title}</h3><dl className="grid gap-6 sm:grid-cols-2"><div><dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">Before</dt><dd className="mt-3 leading-7 text-[#50675e]">{example.before}</dd></div><div><dt className="text-xs font-bold uppercase tracking-[.16em] text-[#126b4e]">A better state</dt><dd className="mt-3 leading-7 text-[#50675e]">{example.after}</dd></div></dl></article>)}</div>
+          <div className="mt-12 divide-y divide-[#183229]/15 border-y border-[#183229]/15">{examples.map((example) => <article key={example.title} className="grid gap-6 py-9 md:grid-cols-[.7fr_1fr] md:gap-14"><h3 className="font-playfair text-3xl font-black">{example.title}</h3><dl className="grid gap-6 sm:grid-cols-2"><div><dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">What is happening</dt><dd className="mt-3 leading-7 text-[#50675e]">{example.happening}</dd></div><div><dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">What you have tried</dt><dd className="mt-3 leading-7 text-[#50675e]">{example.tried}</dd></div></dl><p className="leading-7 text-[#50675e] md:col-start-2"><span className="font-bold text-[#126b4e]">What we will do: </span>{example.after}</p></article>)}</div>
           <Link href="/work" className="mt-7 inline-flex items-center gap-2 font-bold text-[#126b4e]">See more examples <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
         </div>
       </section>

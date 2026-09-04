@@ -4,24 +4,24 @@ import { ArrowRight } from 'lucide-react';
 const examples = [
   {
     title: 'Make an important page easier to act on',
-    area: 'Website Fix example',
-    before: 'A visitor reaches an important page but the hierarchy and next action are difficult to understand.',
-    better: 'One agreed page or component presents the message and next step more clearly.',
-    boundary: 'Representative scenario only. It is not a client result or a promise of conversion improvement.',
+    area: 'Website Fix',
+    happening: 'An important page is not guiding visitors to the next step. The message, layout, or call to action is getting in the way.',
+    tried: 'You have adjusted the copy, rearranged sections, or added calls to action, but the page still feels harder to use than it should.',
+    better: 'We identify the specific friction, make the agreed correction, and hand back a clearer page with a record of what changed.',
   },
   {
     title: 'Give repeated requests a clearer path',
-    area: 'Managed Automation example',
-    before: 'A recurring request moves between messages, notes, and tools with no dependable view of what happens next.',
-    better: 'The desired outcome, decisions, and focused path forward are defined in a written proposal.',
-    boundary: 'Representative scenario only. No time saving, delivery result, or live automation is claimed.',
+    area: 'Managed Automation',
+    happening: 'A recurring request keeps moving between messages, notes, and tools. Nobody has a dependable view of the next action or owner.',
+    tried: 'You have added reminders, documents, or another tool, but the work still depends on memory and manual follow-up.',
+    better: 'We map the real bottleneck, define the desired result, and give you a focused proposal for how to resolve it.',
   },
   {
     title: 'Turn a broad idea into one useful move',
-    area: 'Vision-first example',
-    before: 'An owner can see a better experience but does not yet have a technical brief or a named service.',
-    better: 'The vision becomes a clear outcome and a bounded starting point the owner can evaluate.',
-    boundary: 'Representative scenario only. Scope and commitment would still be confirmed separately.',
+    area: 'Vision-first starting point',
+    happening: 'You can see the better experience you want, but the problem is still broad and the first move is unclear.',
+    tried: 'You have carried the idea, discussed it, or started looking for someone to build it, but the work has not yet become a clear plan.',
+    better: 'We listen for the outcome, turn the problem into a workable brief, and define the first focused piece we can complete together.',
   },
 ] as const;
 
@@ -32,18 +32,18 @@ export default function WorkPageClient() {
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Examples</p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">What better can look like.</h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-[#dce8dd]">These are hypothetical, representative before-and-after scenarios. They are not client work, paid outcomes, or delivery proof.</p>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-[#dce8dd]">Here is what it looks like when a stuck problem becomes a clear next step and a finished piece of work.</p>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24" aria-labelledby="example-list-heading">
-        <h2 id="example-list-heading" className="sr-only">Representative examples</h2>
+        <h2 id="example-list-heading" className="sr-only">Problems we can help resolve</h2>
         <div className="divide-y divide-[#183229]/15 border-y border-[#183229]/15">
           {examples.map((example, index) => (
             <article key={example.title} className="grid gap-7 py-10 lg:grid-cols-[4rem_.8fr_1.2fr] lg:gap-10">
               <span className="text-sm font-bold text-[#775d22]">{String(index + 1).padStart(2, '0')}</span>
               <div><p className="text-xs font-bold uppercase tracking-[.18em] text-[#126b4e]">{example.area}</p><h3 className="mt-4 font-playfair text-3xl font-black">{example.title}</h3></div>
-              <div><dl className="grid gap-6 sm:grid-cols-2"><div><dt className="font-bold">Before</dt><dd className="mt-2 leading-7 text-[#50675e]">{example.before}</dd></div><div><dt className="font-bold">A better state</dt><dd className="mt-2 leading-7 text-[#50675e]">{example.better}</dd></div></dl><p className="mt-6 border-l-2 border-[#d0a94f] pl-4 text-sm leading-6 text-[#50675e]">{example.boundary}</p></div>
+              <div><dl className="grid gap-6 sm:grid-cols-2"><div><dt className="font-bold">What is happening</dt><dd className="mt-2 leading-7 text-[#50675e]">{example.happening}</dd></div><div><dt className="font-bold">What you have tried</dt><dd className="mt-2 leading-7 text-[#50675e]">{example.tried}</dd></div></dl><p className="mt-6 border-l-2 border-[#d0a94f] pl-4 text-sm leading-6 text-[#50675e]"><span className="font-bold text-[#183229]">What we will do: </span>{example.better}</p></div>
             </article>
           ))}
         </div>
