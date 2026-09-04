@@ -64,8 +64,8 @@ rehearsal_root="$(mktemp -d /tmp/needthisdone-hosted-106.XXXXXX)"
 cleanup_required=false
 restore_local_state() {
   if $cleanup_required; then
-    echo "Restoring the normal disposable local Supabase state through migration 111."
-    supabase db reset --local
+    echo "Restoring the fixture-free disposable local Supabase state through migration 111."
+    supabase db reset --local --no-seed
   fi
   if [[ "$rehearsal_root" == /tmp/needthisdone-hosted-106.* ]]; then
     rm -rf -- "$rehearsal_root"

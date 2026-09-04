@@ -80,9 +80,10 @@
   reset from the working migration files (not repaired or pulled), and the
   `106 → 110 → 111` rehearsal passed: it rejected any other head, proved
   `107`–`109` absent, and passed the full local schema/RLS/database gate. The
-  final local history contains `110` and `111` only from that range. Hosted
-  remains untouched and requires a fresh protected backup, exact dry run,
-  named approval, one-time apply, and read-only contract check for each stage.
+  final local history contains `110` and `111` only from that range. The final
+  local rebuild is fixture-free. Hosted remains untouched and requires a fresh
+  protected backup, exact dry run, named approval, one-time apply, and
+  read-only contract check for each stage.
 - OpenRouter provider policy: focused `openrouter-core` tests passed on
   2026-08-24. Structured and tool-bearing requests force provider parameter
   support while server code owns the privacy/routing constraints.
