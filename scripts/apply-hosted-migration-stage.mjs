@@ -42,6 +42,7 @@ const writeAcknowledgements = {
   'hosted-parity-fixture-cleanup': 'I_UNDERSTAND_THIS_APPLIES_ONLY_095_FIXTURE_CLEANUP_BOUNDARY',
   'hermes-frozen-plan-boundary': 'I_UNDERSTAND_THIS_APPLIES_ONLY_110_HERMES_FROZEN_PLAN_BOUNDARY',
   'hermes-planner-executor-split': 'I_UNDERSTAND_THIS_APPLIES_ONLY_111_HERMES_PLANNER_EXECUTOR_SPLIT',
+  'match-crib-public-journey': 'I_UNDERSTAND_THIS_APPLIES_ONLY_112_MATCH_CRIB_PUBLIC_JOURNEY',
 };
 const destructiveApproval = 'I_UNDERSTAND_THIS_DELETES_RETIRED_HOSTED_DATA_090_092';
 const expectedBackupArtifacts = [

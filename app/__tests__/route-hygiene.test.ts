@@ -10,10 +10,12 @@ const repositoryRoot = resolve(appRoot, '..');
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
     const header = readFileSync(resolve(appRoot, 'components/public/PublicHeader.tsx'), 'utf8');
-    expect(header).toContain("{ href: '/services', label: 'What We Do' }");
-    expect(header).toContain("{ href: '/about', label: 'Why Us' }");
-    expect(header).toContain("{ href: '/work', label: 'Examples' }");
-    expect(header).toContain("{ href: '/blog', label: 'Insights' }");
+    const journey = readFileSync(resolve(appRoot, 'lib/public-journey.ts'), 'utf8');
+    expect(header).toContain('PUBLIC_NAVIGATION');
+    for (const [href, label] of [['/services', 'What We Do'], ['/how-it-works', 'How We Work'], ['/work', 'Examples'], ['/about', 'Why Us']]) {
+      expect(journey).toMatch(new RegExp(`href:\\s*['\"]${href}['\"],\\s*label:\\s*['\"]${label}['\"]`));
+    }
+    expect(journey).not.toMatch(/href:\s*['\"]\/blog['\"],\s*label:\s*['\"]Insights['\"]/);
     expect(header).toContain('Share Your Vision');
     expect(header).not.toContain('/#why-us');
   });
@@ -40,7 +42,7 @@ describe('public route hygiene', () => {
       expect(readFileSync(resolve(appRoot, `app/${page}/page.tsx`), 'utf8')).toContain('permanentRedirect');
     }
     const about = readFileSync(resolve(appRoot, 'app/about/page.tsx'), 'utf8');
-    expect(about).toContain("title: 'Why Us | NeedThisDone'");
+    expect(about).toMatch(/title:\s*['\"]Why Us \| NeedThisDone['\"]/);
     expect(about).not.toContain('permanentRedirect');
     expect(readFileSync(resolve(appRoot, 'components/report/ReportCTA.tsx'), 'utf8')).toContain('href="/contact?offer=website-fix"');
     const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');

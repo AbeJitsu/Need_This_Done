@@ -5,6 +5,22 @@
 
 ## Current facts
 
+- On 2026-09-04, the MATCH/CRIB-informed public-journey redesign was implemented
+  without exposing framework jargon in customer copy. The header follows What
+  We Do → How We Work → Examples → Why Us; the grouped footer carries Insights
+  and supporting routes. Every named vision-intake step is directly previewable
+  without completing earlier fields. The four-step form retains answers in
+  memory, uses an editable visitor-confirmed purpose, and keeps feelings and
+  service optional. `VisionIntakeV1` is validated server-side while legacy
+  `message` submissions remain valid.
+- Additive migration `112_match_crib_public_journey.sql` is applied to the
+  disposable local database and has passed the local schema/RLS/database gate.
+  It adds nullable `projects.intake_context` and an RLS-protected daily
+  aggregate counter with a service-role-only increment. Hosted remains at 106;
+  110, 111, and now 112 are separately mapped, approval-gated hosted stages.
+  Hosted migration, analytics activation, deployment, and publication remain
+  separate approvals.
+
 - NeedThisDone's canonical direction is now a private authenticated assistant:
   the browser is the control plane, Supabase is durable truth, and the Mac mini
   is an outbound-only private runtime. The canonical source is `README.md`.
@@ -74,6 +90,15 @@
   or proved, so the two-host acceptance criterion is not met.
 
 ## Active validation
+
+- On 2026-09-04, the public-journey redesign passed lint, type-check, the full
+  unit suite (63 files, 325 tests), the accessibility suite (4 files, 51
+  tests), the production build, and `git diff --check`. The disposable local
+  Supabase instance was rebuilt through migration 112; `npm run
+  verify:database` then passed schema lint plus schema-manifest, security, RLS,
+  provider-workflow, and consultation checks. Fresh rendered browser visual QA
+  is still pending because no browser session was available; no hosted claim is
+  made.
 
 - On 2026-09-04, the public outcome-partner refresh passed `npm run
   verify:code`: lint, type-check, 62 unit-test files (322 tests), four
@@ -180,6 +205,11 @@
   not changed.
 
 ## Rollback
+
+The public-journey redesign is reversible by reviewed Git revert. Migration 112
+is applied only to the disposable local database; if it is later hosted,
+rollback must be a reviewed forward migration after callers are disabled and
+retained aggregates are reviewed.
 
 Repository changes are reversible by reviewed Git revert. Database changes stay
 additive and any hosted correction must be a separately reviewed forward

@@ -64,8 +64,8 @@ const retiredLocalOnlyVersions = manifest.retired_local_only_versions;
 if (manifest.current_hosted_promotion_baseline !== '106') {
   fail('the current hosted promotion baseline must be exactly 106');
 }
-if (pendingVersions[0] !== '096' || pendingVersions.at(-1) !== '111') {
-  fail('pending stages must span 096–111');
+if (pendingVersions[0] !== '096' || pendingVersions.at(-1) !== '112') {
+  fail('pending stages must span 096–112');
 }
 if (JSON.stringify(retiredLocalOnlyVersions) !== JSON.stringify(['107', '108', '109'])) {
   fail('only intentionally retired local-only versions 107–109 may be omitted');
@@ -195,9 +195,9 @@ if (stagedVersions.length !== expectedVersions.length || expectedVersions.some((
 const hostedStageVersions = stages.filter((stage) => stage.state === 'hosted').flatMap((stage) => stage.migrations);
 const pendingStageVersions = stages.filter((stage) => stage.state === 'pending').flatMap((stage) => stage.migrations);
 if (JSON.stringify(hostedStageVersions) !== JSON.stringify(hostedVersions)) fail('hosted stages are not contiguous 073–095');
-if (JSON.stringify(pendingStageVersions) !== JSON.stringify(pendingVersions.filter((version) => !retiredLocalOnlyVersions.includes(version)))) fail('pending stages do not cover exactly 096–106, 110, and 111');
+if (JSON.stringify(pendingStageVersions) !== JSON.stringify(pendingVersions.filter((version) => !retiredLocalOnlyVersions.includes(version)))) fail('pending stages do not cover exactly 096–106 and 110–112');
 
-console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates; historical map through ${manifest.expected_hosted_latest}; current promotion baseline ${manifest.current_hosted_promotion_baseline}; pending 096–106, 110, and 111 (107–109 intentionally retired local-only). SQL hashes preserved.`);
+console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates; historical map through ${manifest.expected_hosted_latest}; current promotion baseline ${manifest.current_hosted_promotion_baseline}; pending 096–106 and 110–112 (107–109 intentionally retired local-only). SQL hashes preserved.`);
 for (const stage of stages) {
   console.log(`${stage.state}: ${stage.id}: ${stage.migrations.join(', ')}${stage.destructive ? ' [destructive, final separate gate]' : ''}`);
 }

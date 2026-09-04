@@ -13,22 +13,25 @@ describe('vision-first public journey', () => {
     const home = source('components/home/HomePageClient.tsx');
     expect(home).toContain('For owners and founders');
     expect(home).toContain('Your vision, brought to life.');
-    expect(home).toContain('You do not need to arrive with a technical brief');
+    expect(home).toContain('help you resolve it');
     expect(home).toContain('href="/contact"');
-    expect(home).toContain('Share your vision');
-    expect(home).toContain('href="#what-we-do"');
+    expect(home).toContain('Share Your Vision');
+    expect(home).toContain('href="/services"');
     expect(home).toContain('See what we do');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
   });
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
     const header = source('components/public/PublicHeader.tsx');
-    for (const [href, label] of [['/services', 'What We Do'], ['/about', 'Why Us'], ['/work', 'Examples'], ['/blog', 'Insights']]) {
-      expect(header).toContain(`{ href: '${href}', label: '${label}' }`);
+    expect(header).toContain('PUBLIC_NAVIGATION');
+    const journey = source('lib/public-journey.ts');
+    for (const [href, label] of [['/services', 'What We Do'], ['/how-it-works', 'How We Work'], ['/work', 'Examples'], ['/about', 'Why Us']]) {
+      expect(journey).toMatch(new RegExp(`href:\\s*['\"]${href}['\"],\\s*label:\\s*['\"]${label}['\"]`));
     }
+    expect(journey).not.toMatch(/href:\s*['\"]\/blog['\"],\s*label:\s*['\"]Insights['\"]/);
     expect(header).toContain('Share Your Vision');
     const footer = source('components/public/PublicFooter.tsx');
-    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(footer).toContain(`href="${route}"`);
+    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(footer).toContain(`['${route}',`);
   });
 
   it('keeps both offers bounded, priced, and compatible', () => {
@@ -48,16 +51,13 @@ describe('vision-first public journey', () => {
     expect(normalizePublicOfferId('ai-operator')).toBe('ai-operator');
   });
 
-  it('makes service choice optional and keeps the projects contract unchanged', () => {
+  it('makes service choice optional and extends the projects contract compatibly', () => {
     const contact = source('app/contact/page.tsx');
-    expect(contact).toContain('What do you want to bring to life?');
-    expect(contact).toMatch(/required name="vision"/);
-    expect(contact).toMatch(/required name="outcome"/);
-    expect(contact).toContain('Current obstacle');
-    expect(contact).toContain('Optional. Choose one if it clearly fits');
-    expect(contact).toContain("if (offer) body.append('service'");
-    for (const field of ['name', 'email', 'company', 'message']) expect(contact).toContain(`body.append('${field}'`);
-    expect(contact).not.toContain("if (!offer)");
+    expect(contact).toContain('Step {step} of 4');
+    expect(contact).toContain('Do either of these sound like the place to start?');
+    expect(contact).toMatch(/body\.append\(["']intakeContext["']/);
+    for (const field of ['name', 'email', 'company']) expect(contact).toMatch(new RegExp(`body\\.append\\(["']${field}["']`));
+    expect(source('app/api/projects/route.ts')).toContain("formData.get('message')");
   });
 
   it('explains the problem, prior attempts, and next action for every example', () => {
@@ -67,7 +67,7 @@ describe('vision-first public journey', () => {
     expect(home).toContain('What you have tried');
     expect(work).toContain('What is happening');
     expect(work).toContain('What you have tried');
-    expect(work).toContain('What we will do');
+    expect(work).toContain('How we help resolve it');
     expect(work).not.toMatch(/we (?:increased|grew|saved|delivered) .*%/i);
   });
 

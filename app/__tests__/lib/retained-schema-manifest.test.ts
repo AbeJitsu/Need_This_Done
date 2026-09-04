@@ -49,6 +49,7 @@ const retainedTables = [
   'prospects',
   'provider_operations',
   'provider_webhook_receipts',
+  'public_engagement_daily_metrics',
   'resend_transactional_events',
   'resend_transactional_messages',
   'sender_events',

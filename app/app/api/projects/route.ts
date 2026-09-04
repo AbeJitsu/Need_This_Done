@@ -21,6 +21,7 @@ import {
 } from '@/lib/request-dedup';
 import { withTimeout } from '@/lib/api-timeout';
 import { parseConsultationRequestDetails } from '@/lib/consultation-request';
+import { parseVisionIntake, visionIntakeMessage, type VisionIntakeV1 } from '@/lib/vision-intake';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +52,8 @@ export async function POST(request: Request) {
     const email = formData.get('email') as string;
     const company = formData.get('company') as string;
     const service = formData.get('service') as string;
-    const message = formData.get('message') as string;
+    const messageValue = formData.get('message');
+    const intakeContextValue = formData.get('intakeContext');
     const files = formData.getAll('files') as File[];
     const consultationTypeValue = formData.get('consultationType');
     const preferredTimeValue = formData.get('preferredTime');
@@ -80,6 +82,15 @@ export async function POST(request: Request) {
     } catch (err) {
       return badRequest(err instanceof Error ? err.message : 'Invalid email format');
     }
+
+    let intakeContext: VisionIntakeV1 | null = null;
+    if (typeof intakeContextValue === 'string' && intakeContextValue.trim()) {
+      try { intakeContext = parseVisionIntake(intakeContextValue); }
+      catch (err) { return badRequest(err instanceof Error ? err.message : 'Invalid intake context'); }
+    }
+    const message = intakeContext
+      ? visionIntakeMessage(intakeContext)
+      : typeof messageValue === 'string' ? messageValue : '';
 
     if (!trimField(message)) {
       return badRequest('Project details are required');
@@ -204,6 +215,7 @@ export async function POST(request: Request) {
             consultation_type: consultationDetails.consultationType,
             preferred_consultation_at: consultationDetails.preferredConsultationAt,
             alternate_consultation_at: consultationDetails.alternateConsultationAt,
+            intake_context: intakeContext,
           })
           .select()
           .single();

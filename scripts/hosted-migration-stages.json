@@ -5,7 +5,7 @@
   "expected_hosted_latest": "095",
   "current_hosted_promotion_baseline": "106",
   "historical_hosted_range": {"first":"073","last":"095"},
-  "pending_range": {"first":"096","last":"111"},
+  "pending_range": {"first":"096","last":"112"},
   "retired_local_only_versions": ["107", "108", "109"],
   "stages": [
     {
@@ -90,7 +90,8 @@
     {"id":"operator-only-private-surfaces","state":"pending","gate":"separate","destructive":false,"rationale":"Retire client access grants while preserving historical identities, memberships, projects, comments, files, and handoffs.","migrations":["105"]},
     {"id":"provider-workflow-recovery-links","state":"pending","gate":"separate","destructive":false,"rationale":"Link handoffs and outreach to one durable provider operation and add service-only atomic acceptance, unknown-acceptance reconciliation, and webhook retry handling.","migrations":["106"]},
     {"id":"hermes-frozen-plan-boundary","state":"pending","gate":"separate","destructive":false,"rationale":"Require an exact Hermes frozen snapshot, reviewed free route, active run, and active lease before bridge claim or Gateway-adjacent model reservation.","migrations":["110"]},
-    {"id":"hermes-planner-executor-split","state":"pending","gate":"final-separate","destructive":false,"rationale":"Freeze the reviewed OpenRouter planner and exact allowlisted OpenClaw executor as distinct approval identities.","migrations":["111"]}
+    {"id":"hermes-planner-executor-split","state":"pending","gate":"final-separate","destructive":false,"rationale":"Freeze the reviewed OpenRouter planner and exact allowlisted OpenClaw executor as distinct approval identities.","migrations":["111"]},
+    {"id":"match-crib-public-journey","state":"pending","gate":"final-separate","destructive":false,"rationale":"Add optional public-intake context and service-role-only aggregate public engagement counters; no raw event data.","migrations":["112"]}
   ],
   "migrations": [
     {"new_version":"073","new_filename":"073_secure_google_calendar_tokens.sql","original_version":"073","original_filename":"073_secure_google_calendar_tokens.sql","original_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","new_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","stage":"calendar-token-security"},
@@ -128,6 +129,7 @@
     {"new_version":"105","new_filename":"105_operator_only_private_surfaces.sql","original_version":"105","original_filename":"105_operator_only_private_surfaces.sql","original_sha256":"cb441ef181025fa3d49fcce0e5918417a0ccdf4f9d47bf81d890f933d91c639b","new_sha256":"cb441ef181025fa3d49fcce0e5918417a0ccdf4f9d47bf81d890f933d91c639b","stage":"operator-only-private-surfaces","new_only":true},
     {"new_version":"106","new_filename":"106_provider_workflow_recovery_links.sql","original_version":"106","original_filename":"106_provider_workflow_recovery_links.sql","original_sha256":"d6ca51d0734034e42ddbbd00b341e1f9bdb9c8e6e0029e3bed969ad682fd803e","new_sha256":"d6ca51d0734034e42ddbbd00b341e1f9bdb9c8e6e0029e3bed969ad682fd803e","stage":"provider-workflow-recovery-links","new_only":true},
     {"new_version":"110","new_filename":"110_harden_hermes_frozen_plan_claims.sql","original_version":"110","original_filename":"110_harden_hermes_frozen_plan_claims.sql","original_sha256":"7d01630b28a6811c50da4cf649fa94e650147ab675b9dea8afa8ad93184e2114","new_sha256":"7d01630b28a6811c50da4cf649fa94e650147ab675b9dea8afa8ad93184e2114","stage":"hermes-frozen-plan-boundary","new_only":true},
-    {"new_version":"111","new_filename":"111_split_hermes_planner_and_openclaw_executor_models.sql","original_version":"111","original_filename":"111_split_hermes_planner_and_openclaw_executor_models.sql","original_sha256":"4a14417fddf828ea46a5896258cde885605b63d05bf327ce4fae5f5c7779e036","new_sha256":"4a14417fddf828ea46a5896258cde885605b63d05bf327ce4fae5f5c7779e036","stage":"hermes-planner-executor-split","new_only":true}
+    {"new_version":"111","new_filename":"111_split_hermes_planner_and_openclaw_executor_models.sql","original_version":"111","original_filename":"111_split_hermes_planner_and_openclaw_executor_models.sql","original_sha256":"4a14417fddf828ea46a5896258cde885605b63d05bf327ce4fae5f5c7779e036","new_sha256":"4a14417fddf828ea46a5896258cde885605b63d05bf327ce4fae5f5c7779e036","stage":"hermes-planner-executor-split","new_only":true},
+    {"new_version":"112","new_filename":"112_match_crib_public_journey.sql","original_version":"112","original_filename":"112_match_crib_public_journey.sql","original_sha256":"091b837b184cf942e0f690b2d49c163c82dd70a0e58d6b985e6609041edb1dcc","new_sha256":"091b837b184cf942e0f690b2d49c163c82dd70a0e58d6b985e6609041edb1dcc","stage":"match-crib-public-journey","new_only":true}
   ]
 }

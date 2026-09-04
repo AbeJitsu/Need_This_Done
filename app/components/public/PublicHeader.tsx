@@ -4,13 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { PUBLIC_NAVIGATION } from '@/lib/public-journey';
 
-const links = [
-  { href: '/services', label: 'What We Do' },
-  { href: '/about', label: 'Why Us' },
-  { href: '/work', label: 'Examples' },
-  { href: '/blog', label: 'Insights' },
-];
+const links = PUBLIC_NAVIGATION;
 
 export default function PublicHeader() {
   const pathname = usePathname();
