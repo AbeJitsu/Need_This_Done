@@ -15,21 +15,20 @@ test.describe('Retained core smoke checks', () => {
     const response = await page.goto('/contact?offer=website-fix');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /share your vision/i })).toBeVisible();
-    await expect(page.getByRole('radio', { name: /website fix/i })).toBeChecked();
-    await expect(page.getByRole('textbox', { name: /your vision/i })).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /desired outcome/i })).toBeVisible();
-    const managedAutomation = page.getByRole('radio', { name: /managed automation/i });
-    await page.locator('label').filter({ has: managedAutomation }).click();
-    await expect(managedAutomation).toBeChecked();
-    await expect(page.getByRole('textbox', { name: /your vision/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /listen before suggesting/i })).toBeVisible();
+    await page.getByRole('button', { name: /^Step 4:/ }).click();
+    await expect(page.getByRole('radio', { name: 'Website Fix', exact: true })).toBeChecked();
+    await page.getByRole('radio', { name: 'Managed Automation', exact: true }).check();
+    await expect(page.getByRole('radio', { name: 'Managed Automation', exact: true })).toBeChecked();
+    await page.getByRole('button', { name: /^Step 1:/ }).click();
+    await expect(page.getByRole('textbox', { name: /idea or situation/i })).toBeVisible();
   });
 
   test('site analyzer page renders the audit form', async ({ page }) => {
     const response = await page.goto('/site-analyzer');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /get a limited website snapshot/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /see where your website could work better/i })).toBeVisible();
     await expect(page.getByRole('textbox', { name: /website url|your website/i })).toBeVisible();
   });
 
@@ -70,7 +69,7 @@ test.describe('Retained core smoke checks', () => {
 
     expect(response?.ok()).toBe(true);
     await expect(page.getByRole('heading').first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /start a website fix/i })).toHaveAttribute('href', '/contact?offer=website-fix');
+    await expect(page.getByRole('link', { name: /see website fix details/i })).toHaveAttribute('href', '/website-fix');
   });
 
   test('privacy and terms keep their legal boundaries readable at public widths', async ({ page }) => {
@@ -118,7 +117,7 @@ test.describe('Retained core smoke checks', () => {
           await expect(legalPage.getByRole('heading', { level: 1, name: route.heading, exact: true })).toBeVisible();
           await expect(legalPage.getByText('At a glance', { exact: true })).toBeVisible();
           await expect(legalPage.getByText(route.boundary)).toBeVisible();
-          await expect(legalPage.getByRole('link', { name: 'Contact us', exact: true })).toHaveAttribute('href', '/contact');
+          await expect(legalPage.getByRole('link', { name: 'Email us', exact: true })).toHaveAttribute('href', 'mailto:hello@needthisdone.com');
 
           const sectionLinks = legalPage.locator('nav[aria-labelledby="on-this-page-heading"] a');
           await expect(sectionLinks).toHaveCount(route.sectionCount);
@@ -153,4 +152,34 @@ test.describe('Retained core smoke checks', () => {
       }
     }
   });
+});
+
+test('report and missing-page recovery remain readable at all public widths', async ({ page }) => {
+  test.setTimeout(120_000);
+  for (const width of [375, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const [route, name] of [[`/report/${reportId}`, 'report'], ['/missing-public-review-page', 'not-found']]) {
+      await page.goto(route);
+      await expect(page.getByRole('main')).toHaveCount(1);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false);
+      await page.screenshot({ path: `/tmp/public-review-${width}-${name}.png`, fullPage: true });
+      if (name === 'not-found') {
+        await page.getByRole('main').getByRole('link', { name: 'Return Home' }).click();
+        await expect(page).toHaveURL(/\/$/);
+      }
+    }
+  }
+});
+
+test('FAQ closing action stays readable without wrapping at public widths', async ({ page }) => {
+  for (const width of [375, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/faq');
+    const action = page.getByRole('main').getByRole('link', { name: 'Share Your Vision', exact: true }).last();
+    await action.scrollIntoViewIfNeeded();
+    await expect(action).toBeVisible();
+    expect(await action.evaluate(element => getComputedStyle(element).whiteSpace)).toBe('nowrap');
+    await page.screenshot({ path: `/tmp/public-review-${width}-_faq.png`, fullPage: true });
+  }
 });

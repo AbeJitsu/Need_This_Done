@@ -117,7 +117,7 @@ export default function BlogPostCard({ post, featured = false }: BlogPostCardPro
         )}
         <div className="flex flex-1 flex-col p-6 sm:p-7">
           {categoryLabel && <span className={`w-fit rounded-full px-3 py-1 text-xs font-bold ${colors.badge}`}>{categoryLabel}</span>}
-          <h3 className={`mt-5 font-playfair text-2xl font-black leading-tight text-[#183229] transition-colors ${colors.hoverText}`}>{post.title}</h3>
+          <h2 className={`mt-5 font-playfair text-2xl font-black leading-tight text-[#183229] transition-colors ${colors.hoverText}`}>{post.title}</h2>
           {post.excerpt && <p className="mt-4 line-clamp-3 text-sm leading-7 text-[#50675e]">{post.excerpt}</p>}
           <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-7">
             <Meta post={post} />

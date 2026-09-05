@@ -79,7 +79,7 @@ export default function AccessibilityCallout({ accessibility }: { accessibility:
     if (accessibility.altTextIssues.emptyAlt > 0) {
       issues.push({
         issue: `${accessibility.altTextIssues.emptyAlt} content image(s) with empty alt text`,
-        impact: 'Screen readers skip these images entirely — users miss context',
+        impact: 'Screen readers skip these images entirely; users miss context',
       });
     }
     if (accessibility.altTextIssues.longAlt > 0) {
@@ -94,7 +94,7 @@ export default function AccessibilityCallout({ accessibility }: { accessibility:
 
   return (
     <section>
-      <h2 className="text-2xl font-bold text-slate-900 mb-4">Accessibility & ADA Compliance</h2>
+      <h2 className="text-2xl font-bold text-slate-900 mb-4">Accessibility findings</h2>
 
       <div className={`rounded-xl border p-6 ${
         hasIssues
@@ -129,9 +129,9 @@ export default function AccessibilityCallout({ accessibility }: { accessibility:
           <div className="flex items-center gap-3">
             <span className="text-emerald-500 text-xl" aria-hidden="true">&#10003;</span>
             <div>
-              <p className="font-semibold text-emerald-800">No accessibility issues detected</p>
+              <p className="font-semibold text-emerald-800">No issues flagged by these checks</p>
               <p className="text-sm text-emerald-700 mt-1">
-                Your site passes all 10 of our static HTML accessibility checks. Great work!
+                Manual review may reveal other barriers. These findings cover only the selected checks.
               </p>
             </div>
           </div>

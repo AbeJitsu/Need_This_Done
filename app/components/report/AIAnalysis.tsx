@@ -136,7 +136,7 @@ function renderInlineMarkdown(text: string): React.ReactNode {
       return <strong key={i}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith('"') && part.endsWith('"')) {
-      return <span key={i} className="text-blue-700 font-medium">{part}</span>;
+      return <span key={i} className="text-[var(--public-green)] font-medium">{part}</span>;
     }
     return part;
   });
@@ -168,7 +168,7 @@ export default function AIAnalysis({ aiAnalysis }: { aiAnalysis: string }) {
 
   return (
     <section>
-      <h2 className="text-2xl font-bold text-slate-900 mb-6">AI-Powered Analysis</h2>
+      <h2 className="text-2xl font-bold text-slate-900 mb-6">Findings to review</h2>
 
       <div className="space-y-3">
         {sections.map((section, i) => (

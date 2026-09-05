@@ -5,6 +5,38 @@
 
 ## Current facts
 
+- On 2026-09-05, the approved welcoming public-site review centralized rendered
+  header/footer navigation, current-route treatment, offer destinations and
+  displayed facts, and reusable closing-section styles. Mobile Escape restores
+  trigger focus and route changes close the menu. Pages now connect examples,
+  offers, pricing, articles, FAQ, and the optional four-step intake.
+- Snapshot feedback now reflects one pending request rather than timed claims.
+  Visible labels, announced validation and failure messages, preserved inputs,
+  duplicate-submit protection, retry, and report navigation have isolated tests.
+  Report actions use public styles and the Website Fix details destination;
+  generated-report instructions no longer ask for legal-risk prioritization.
+- Legal terms and billing were preserved. Direct email links and sticky-header
+  offsets were added. Retained articles have one H1/main, noninteractive tags,
+  relevant offer links, keyboard-scrollable code, and immediately visible closing
+  actions. The three-post listing has no category controls. Existing aliases,
+  redirects, VisionIntakeV1, legacy submissions, and analytics boundaries remain.
+- The README and journey plan link the internal communication reference. The
+  original framework definitions/examples were missing from the handoff and
+  remain explicitly pending from the project owner by 2026-09-06. Only unused
+  named default-content exports were removed after caller inspection; maintained
+  content structures and private layout defaults remain.
+- Final validation: `npm run verify:code` passed lint, type-check, 326 unit
+  tests, 60 accessibility tests, and production build; `git diff --check` passed.
+  Validation and the route-by-route 375/768/1280 review are recorded in
+  RELEASE_EVIDENCE. Initial browser failures exposed duplicate article H1s,
+  nested legal landmarks, and unfocusable code regions; those were fixed and
+  the responsive main-content axe matrix passed. Stale navigation assertions
+  and hydration-sensitive browser selectors were corrected.
+- Rollback: use Git revert on the public-site review commit on dev. No schema,
+  API contract, hosted rollback, deployment, or external-action change is needed.
+  Remaining root-error rendered proof and local dev-server warnings have the
+  repository maintainer as owner and a 2026-09-06 follow-up date.
+
 - On 2026-09-05, services and pricing were refined around problem, useful
   change, included work, then price. Both use the existing public palette and
   numbered reassurance strip. PUBLIC_OFFERS owns price-free summaries and

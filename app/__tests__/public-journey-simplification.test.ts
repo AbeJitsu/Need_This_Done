@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { normalizePublicOfferId, PUBLIC_OFFERS } from '@/lib/public-offers';
+import { PUBLIC_NAVIGATION, PUBLIC_FOOTER_GROUPS, PUBLIC_PRIMARY_ACTION } from '@/lib/public-journey';
 import { contrastRatio } from '@/lib/wcag-contrast';
 
 const appRoot = resolve(__dirname, '..');
@@ -13,7 +14,7 @@ describe('vision-first public journey', () => {
     const home = source('components/home/HomePageClient.tsx');
     expect(home).toContain('For owners and founders');
     expect(home).toContain('Your vision, brought to life.');
-    expect(home).toContain('help you resolve it');
+    expect(home).toContain('help you find a useful place to start');
     expect(home).toContain('href="/contact"');
     expect(home).toContain('Share Your Vision');
     expect(home).toContain('href="/services"');
@@ -22,16 +23,11 @@ describe('vision-first public journey', () => {
   });
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
-    const header = source('components/public/PublicHeader.tsx');
-    expect(header).toContain('PUBLIC_NAVIGATION');
-    const journey = source('lib/public-journey.ts');
-    for (const [href, label] of [['/services', 'What We Do'], ['/how-it-works', 'How We Work'], ['/work', 'Examples'], ['/about', 'Why Us']]) {
-      expect(journey).toMatch(new RegExp(`href:\\s*['\"]${href}['\"],\\s*label:\\s*['\"]${label}['\"]`));
-    }
-    expect(journey).not.toMatch(/href:\s*['\"]\/blog['\"],\s*label:\s*['\"]Insights['\"]/);
-    expect(header).toContain('Share Your Vision');
-    const footer = source('components/public/PublicFooter.tsx');
-    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(footer).toContain(`['${route}',`);
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'Examples', 'Why Us']);
+    expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
+    const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
+    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
+
   });
 
   it('keeps both offers bounded, priced, and compatible', () => {
@@ -65,9 +61,9 @@ describe('vision-first public journey', () => {
     const work = source('components/work/WorkPageClient.tsx');
     const home = source('components/home/HomePageClient.tsx');
     expect(home).toContain('How we move a stuck problem forward');
-    expect(home).toContain('What you have tried');
+    expect(home).toContain('What might be tried');
     expect(work).toContain('What is happening');
-    expect(work).toContain('What you have tried');
+    expect(work).toContain('What might be tried');
     expect(work).toContain('How we help resolve it');
     expect(work).not.toMatch(/we (?:increased|grew|saved|delivered) .*%/i);
   });

@@ -7,19 +7,19 @@ import WorkPageClient from '@/components/work/WorkPageClient';
 // Outcome-led examples that show the problems we take on and how we move them forward.
 
 export const metadata: Metadata = {
-  title: 'Work | NeedThisDone',
+  title: 'Examples | NeedThisDone',
   description:
-    'See how NeedThisDone turns stuck website, workflow, and business ideas into clear next steps and finished work.',
+    'Explore illustrative website, workflow, and early idea scenarios and the focused changes they could lead to.',
   alternates: { canonical: '/work' },
   openGraph: {
-    title: 'Work | NeedThisDone',
-    description: 'See how NeedThisDone moves a stuck problem toward a clear next step and finished work.',
+    title: 'Examples | NeedThisDone',
+    description: 'Explore what a useful website or workflow change could look like.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Work | NeedThisDone',
-    description: 'See how NeedThisDone moves a stuck problem toward a clear next step and finished work.',
+    title: 'Examples | NeedThisDone',
+    description: 'Explore what a useful website or workflow change could look like.',
   },
 };
 

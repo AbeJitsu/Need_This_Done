@@ -13,12 +13,7 @@ export { getDefaultContent };
 
 // Re-export individual default content objects for backwards compatibility
 // These are extracted from PAGE_CONFIGS for code that imports them directly
-export const defaultPricingContent = PAGE_CONFIGS.pricing.defaults;
 export const defaultFAQContent = PAGE_CONFIGS.faq.defaults;
-export const defaultServicesContent = PAGE_CONFIGS.services.defaults;
-export const defaultHowItWorksContent = PAGE_CONFIGS['how-it-works'].defaults;
-export const defaultHomeContent = PAGE_CONFIGS.home.defaults;
-export const defaultContactContent = PAGE_CONFIGS.contact.defaults;
 export const defaultBlogContent = PAGE_CONFIGS.blog.defaults;
 export const defaultGuideContent = PAGE_CONFIGS.guide.defaults;
 export const defaultPrivacyContent = PAGE_CONFIGS.privacy.defaults;

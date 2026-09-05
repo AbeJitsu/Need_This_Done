@@ -92,6 +92,9 @@ authority. A public request starts a conversation only. It does not create an
 automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
+Internal public-service writing guidance lives in
+[Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).
+
 ## Current records
 
 - [Roadmap](ROADMAP.md) — the next proof and its acceptance criteria.

@@ -28,7 +28,7 @@ export default function Error({ error, reset }: ErrorProps) {
           We could not open this page right now.
         </h1>
         <p className="mt-5 leading-7 text-[#50675e]">
-          Your problem does not have to wait here.{" "}
+
           {canRetry
             ? "Try this page again."
             : "You can return to the beginning and keep exploring."}

@@ -889,3 +889,22 @@ Blog Markdown Content — Reading Experience
   color: #7c3aed; /* purple-700 */
   font-weight: 700;
 }
+
+/* Shared public rhythm and controls. Private application styles stay separate. */
+.public-shell {
+  --public-muted: #50675e;
+  --public-sand: #e8e2d5;
+  --public-soft: #e4eee6;
+  --public-dark: #18372e;
+}
+.public-shell .public-section { max-width: 72rem; margin-inline: auto; padding: 4rem 1.25rem; }
+.public-shell .public-reading { max-width: 60ch; }
+.public-shell .public-action { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; padding: .75rem 1.75rem; border-radius: 999px; background: var(--public-green); color: white; font-weight: 700; }
+.public-shell .public-action:hover { background: #0c563e; }
+.public-shell .public-action:active { background: var(--public-ink); }
+.public-shell .public-action:disabled { opacity: .65; cursor: not-allowed; }
+.public-shell .public-explore { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--public-green); font-weight: 700; text-decoration: underline; text-underline-offset: .25rem; }
+.public-shell .public-explore:hover { color: var(--public-ink); }
+.public-shell :is(a, button, input, textarea, select):focus-visible { outline: 3px solid var(--public-gold); outline-offset: 3px; }
+.public-shell :is(section, article, h2, h3)[id] { scroll-margin-top: 7rem; }
+@media (min-width: 768px) { .public-shell .public-section { padding: 6rem 2rem; } }

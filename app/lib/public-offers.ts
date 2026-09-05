@@ -7,6 +7,7 @@ export interface PublicOffer {
   name: string;
   serviceName: string;
   contactHref: '/contact?offer=website-fix' | '/contact?offer=managed-automation';
+  detailHref: string;
   summary: string;
   price: string;
 }
@@ -18,6 +19,7 @@ export interface PublicOffer {
 export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
   'website-improvement': {
     id: 'website-improvement',
+    detailHref: '/website-fix',
     name: 'Website Fix',
     serviceName: 'Website Fix',
     contactHref: '/contact?offer=website-fix',
@@ -26,6 +28,7 @@ export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
   },
   'ai-operator': {
     id: 'ai-operator',
+    detailHref: '/managed-automation',
     name: 'Managed Automation',
     serviceName: 'Managed Automation',
     contactHref: '/contact?offer=managed-automation',

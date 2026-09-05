@@ -29,3 +29,75 @@
 
 Local tests, disposable local Supabase, and provider doubles are not hosted or
 customer proof. Record a claim here only after its exact validation is run.
+
+## Welcoming public-site review, 2026-09-05
+
+Copy, destinations, metadata, heading order, and reading layout were reviewed
+for each route below. “Pass” means the local Chromium layout and main-content
+axe check passed at that width, followed by screenshot inspection. It is not
+hosted, provider, customer, or conversion evidence. Screenshots are temporary
+local artifacts at `/tmp/public-review-<width>-<route>.png`.
+
+| Route | Copy, links, metadata | 375 | 768 | 1280 |
+| --- | --- | --- | --- | --- |
+| `/` | Possibility-led introduction; linked example previews | Pass | Pass | Pass |
+| `/services` | Distinct problems, shared offer facts, specific detail links | Pass | Pass | Pass |
+| `/pricing` | Included work precedes centralized prices | Pass | Pass | Pass |
+| `/website-fix` | Included work before price; example and snapshot links | Pass | Pass | Pass |
+| `/managed-automation` | Included work before proposal price; example and process links | Pass | Pass | Pass |
+| `/how-it-works` | Context, clarification, scope, decision, review | Pass | Pass | Pass |
+| `/work` | Three illustrative anchored scenarios; relevant next links | Pass | Pass | Pass |
+| `/about` | Concrete listening, agreement, and review practices | Pass | Pass | Pass |
+| `/faq` | Fit, prior attempts, effort, price, next steps; working answer links | Pass | Pass | Pass |
+| `/blog` | Three direct article cards; legacy filters show all posts | Pass | Pass | Pass |
+| `/blog/ai-context-budget-tips` | One H1/main; Managed Automation handoff | Pass | Pass | Pass |
+| `/blog/loading-tricks-feel-instant` | One H1/main; focusable code; Website Fix handoff | Pass | Pass | Pass |
+| `/blog/rewriting-copy-plain-language` | One H1/main; Website Fix handoff | Pass | Pass | Pass |
+| `/site-analyzer` | Visible labels; useful findings before concise limits | Pass | Pass | Pass |
+| `/ada-compliance` | Practical selected checks and next links | Pass | Pass | Pass |
+| `/privacy` | Terms preserved; email links; legal anchor offsets | Pass | Pass | Pass |
+| `/terms` | Billing preserved; email links; legal anchor offsets | Pass | Pass | Pass |
+| `/contact` | Four browsable steps; conversational group context | Pass | Pass | Pass |
+
+The final code gate passed lint, type-check, 63 unit files / 326 tests,
+6 accessibility files / 60 tests, and the production build. `git diff --check`
+passed. Final gate log: `/tmp/public-final-verified.log`. The successful
+responsive matrix and connected-path rerun is `/tmp/public-matrix-final.log`;
+alias/FAQ reruns are in `/tmp/public-matrix.log`, and report/404/FAQ wrapping
+checks are in `/tmp/public-recovery.log`. Earlier failed runs were retained
+for diagnosis and are not described as passes.
+
+The seeded report and 404 recovery passed one-main/one-H1, no-overflow,
+recovery-link, and screenshot checks at all three widths. Their screenshots
+were reviewed separately; no full-report axe claim is made. FAQ closing-action
+wrapping was corrected and rechecked at all three widths.
+
+The retained-core browser suite passed its seeded report, redirect, legal,
+and authenticated-boundary checks. The public journey checks passed optional
+aliases, intake failure/retry, FAQ interaction, example → offer → intake,
+pricing → offer, old blog filters, all three article handoffs, browser Back,
+and isolated snapshot validation/rate-limit/error/success responses. The
+main-content matrix also checked reduced motion, mobile Escape/focus return,
+and keyboard access. Component tests retain the populated five-P review,
+mixed hopes/worries, exact answers, edits, confirmation synchronization,
+optional selection, legacy contract, and generated-message limits.
+
+Remaining proof and maintenance items (owner: repository maintainer unless
+specified):
+
+- Original MATCH/CRIB definitions and examples were absent from the handoff.
+  Owner: project owner, supply source text by 2026-09-06. The internal reference
+  records only the supplied application guidance and does not invent expansions.
+- Rendered fault injection for `error.tsx` and `global-error.tsx` remains pending
+  by 2026-09-06. Their source was reviewed; the root fallback is self-contained.
+- Browser dev-server runs emitted Next.js Fast Refresh and listener-count
+  warnings during route compilation; production code gates passed. Investigate
+  the local harness warnings by 2026-09-06. Reduced-motion informational output
+  is expected when explicitly testing that preference.
+- The in-app browser was unavailable. Its troubleshooting tool was rejected by
+  automatic approval review because of an account usage limit. Separately
+  approved local Playwright tests and their screenshot artifacts supplied the
+  rendered evidence above; no in-app-browser verification is claimed.
+
+No database/API contract, deployment, hosted migration, provider activation,
+external message, or customer result is included in this review.

@@ -178,10 +178,10 @@ function computeReadingLevel(text: string): string {
   const grade = 0.39 * avgWordsPerSentence + 11.8 * avgSyllablesPerWord - 15.59;
   const clampedGrade = Math.max(1, Math.min(18, Math.round(grade)));
 
-  if (clampedGrade <= 6) return `Grade ${clampedGrade} (Easy — great for general audience)`;
-  if (clampedGrade <= 8) return `Grade ${clampedGrade} (Conversational — good for most websites)`;
-  if (clampedGrade <= 12) return `Grade ${clampedGrade} (Moderate — may lose some readers)`;
-  return `Grade ${clampedGrade} (Complex — consider simplifying)`;
+  if (clampedGrade <= 6) return `Grade ${clampedGrade} (Easy; useful for general audience)`;
+  if (clampedGrade <= 8) return `Grade ${clampedGrade} (Conversational; good for most websites)`;
+  if (clampedGrade <= 12) return `Grade ${clampedGrade} (Moderate; may lose some readers)`;
+  return `Grade ${clampedGrade} (Complex; consider simplifying)`;
 }
 
 // ============================================
@@ -569,20 +569,22 @@ export function buildEvaluationPrompt(allMetrics: TechnicalMetrics[], score: Sco
   const allCtas = Array.from(new Set(allMetrics.flatMap((m) => m.ctas)));
   const technicalFindings = buildTechnicalFindings(allMetrics, score);
 
-  return `You are a senior website consultant who reviews small business websites. You give specific, actionable feedback — never generic advice.
+  return `You are a senior website consultant who reviews small business websites. You give specific, actionable feedback grounded in the observed pages.
 
 RULES:
 - Reference specific text, headlines, and CTAs from the page content. Quote them.
 - Every recommendation must reference something concrete on a specific page. Include the page path.
 - Do NOT say things like "add more keywords" or "improve your SEO." Those are useless.
 - Write as if speaking to a non-technical small business owner.
+- Use short sentences and everyday words. Do not use em dashes or internal communication-framework names or instructional terminology.
+- Do not invent results, visitor feelings, or previous attempts. Promise only work that has been agreed.
 - Be direct but encouraging. Start with what's working before what needs fixing.
 - Reference technical findings where relevant (e.g., missing OG tags, heading gaps).
 - Do NOT repeat the same recommendation across sections. Each insight should appear only once.
 
 SITE OVERVIEW:
 - Pages crawled: ${totalPages}
-- HTTPS: ${homepage.https ? 'Yes' : 'NO — security risk'}
+- HTTPS: ${homepage.https ? 'Yes' : 'NO. security risk'}
 - Homepage title: ${homepage.title ? `"${homepage.title}"` : 'MISSING'}
 - Homepage meta description: ${homepage.metaDescription ? `"${homepage.metaDescription.slice(0, 120)}"` : 'MISSING'}
 
@@ -601,7 +603,7 @@ ANALYZE THESE 6 AREAS:
 Is it immediately clear what this business does and who it's for? Quote the homepage headline. Do pages tell a cohesive story, or does each feel disconnected? Reference specific messaging from at least 2 pages.
 
 ## 2. Service & Offer Clarity
-Are services and pricing explained clearly? Can a visitor understand what they'd get and what it costs? Quote specific descriptions — flag any that are vague, jargon-heavy, or missing key details.
+Are services and pricing explained clearly? Can a visitor understand what they'd get and what it costs? Quote specific descriptions; flag any that are vague, jargon-heavy, or missing key details.
 
 ## 3. Trust Signals
 What trust elements exist (testimonials, case studies, credentials, guarantees, social proof)? What's missing? Be specific about where trust signals should appear and what form they should take.
@@ -609,11 +611,11 @@ What trust elements exist (testimonials, case studies, credentials, guarantees, 
 ## 4. Technical Health
 Reference the technical findings above. Explain in plain language what the OG tag gaps, heading issues, readability scores, or other technical problems mean for the business. Focus on business impact, not developer jargon.
 
-## 5. Accessibility & ADA Compliance
-Based on the technical findings, what accessibility barriers exist? Explain each issue in plain language — what does it mean for someone using a screen reader, keyboard navigation, or assistive technology? Reference specific pages and elements. Prioritize fixes by legal risk (ADA lawsuits target missing alt text, missing form labels, and keyboard navigation issues most often).
+## 5. Accessibility findings
+Based on the technical findings, what accessibility barriers exist? Explain each issue in plain language: what does it mean for someone using a screen reader, keyboard navigation, or assistive technology? Reference specific pages and elements. Prioritize observed barriers to using the page. Do not infer legal risk, certify compliance, or claim selected checks cover every interaction.
 
 ## 6. Top 5 Action Items
-The 5 highest-impact changes this business owner could make this week, in priority order. Be specific — "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-5. These should be NEW, additional improvements.
+The 5 highest-impact changes this business owner could make this week, in priority order. Be specific. "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-5. These should be NEW, additional improvements.
 
 FORMAT: Use markdown with ## headers for each section. Keep each section to 3-5 sentences. End with Action Items as a numbered list.`;
 }
@@ -672,7 +674,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
   const categories: ScoreBreakdown['categories'] = [];
 
   const httpsScore = allMetrics[0].https ? 5 : 0;
-  categories.push({ name: 'HTTPS', earned: httpsScore, possible: 5, note: httpsScore === 5 ? 'Secure' : 'Not secure — visitors see a warning' });
+  categories.push({ name: 'HTTPS', earned: httpsScore, possible: 5, note: httpsScore === 5 ? 'Secure' : 'Not secure; visitors see a warning' });
 
   const pagesWithMeta = allMetrics.filter((m) => m.metaCompleteness.title && m.metaCompleteness.description).length;
   const metaScore = Math.round((pagesWithMeta / total) * 10);
@@ -680,7 +682,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
 
   const pagesWithOg = allMetrics.filter((m) => m.metaCompleteness.ogTitle && m.metaCompleteness.ogImage).length;
   const ogScore = Math.round((pagesWithOg / total) * 10);
-  categories.push({ name: 'OG Tags', earned: ogScore, possible: 10, note: `${pagesWithOg}/${total} pages — social shares ${pagesWithOg === 0 ? 'look broken' : pagesWithOg < total ? 'partially covered' : 'look great'}` });
+  categories.push({ name: 'OG Tags', earned: ogScore, possible: 10, note: `${pagesWithOg}/${total} pages; social shares ${pagesWithOg === 0 ? 'look broken' : pagesWithOg < total ? 'partially covered' : 'look great'}` });
 
   const pagesWithGaps = allMetrics.filter((m) => m.headingHierarchyGaps.length > 0).length;
   const headingScore = Math.max(0, 10 - (2 * pagesWithGaps));

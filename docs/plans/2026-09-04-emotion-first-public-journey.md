@@ -13,7 +13,7 @@ we understand, and help you resolve it.**
 ## Decisions
 
 - Keep **Share Your Vision** as the global conversion action.
-- Use a strong resolution promise, while explaining what is included before
+- Promise delivery within agreed work, while explaining what is included before
   work starts and stating plainly when a request needs a different specialist
   or a larger engagement.
 - Keep Website Fix and Managed Automation as the approved offer names. Explain
@@ -27,9 +27,9 @@ we understand, and help you resolve it.**
 
 ## Journey and page roles
 
-Every page follows recognition → reassurance → relevant explanation → honest
-limits → one action. Header progression remains Home → What We Do → How We
-Work → Examples → Why Us → Share Your Vision. Repeated filled actions may only
+Each page answers a distinct visitor question with recognition, possibilities,
+relevant explanation, concise limits, and a useful next click. The brand links home. Header progression remains What We Do → How We
+Work → Examples → Why Us, with Share Your Vision as the action. Repeated filled actions may only
 repeat the same conversion; all exploration links remain visually secondary.
 
 - **Home:** recognize the stuck problem and make the listening-and-resolution
@@ -41,7 +41,7 @@ repeat the same conversion; all exploration links remain visually secondary.
   the first piece we can resolve; You decide, then we do the agreed work and
   show what changed. Lead with “You don’t have to keep carrying the problem
   alone.”
-- **Examples and Why Us:** use hypothetical scenarios with a clear notice,
+- **Examples and Why Us:** use illustrative scenarios without a separate disclaimer,
   explain what was tried and why it mattered, and establish trust without
   invented founder biography or client-result claims.
 - **Offer and pricing pages:** make Website Fix and Managed Automation
@@ -84,3 +84,20 @@ repeat the same conversion; all exploration links remain visually secondary.
 - Run lint, type-check, unit tests, accessibility tests, production build, and
   `git diff --check`, then update the factual status and release-evidence
   ledgers with exact results and remaining hosted boundaries.
+
+## Welcoming and connected review
+
+Review all 15 public pages, three retained articles, reports, redirects, and
+recovery states. Preserve the cream and green palette, Playfair headings, and
+Share Your Vision action. Do not restore the removed example disclaimer or
+imply that illustrative scenarios describe completed client work.
+
+Use the single [internal communication reference](../COMMUNICATION_FRAMEWORKS.md)
+for framework guidance. Keep navigation, offer facts, and contextual actions
+centralized while giving each page its own explanation. Preserve the four
+browsable intake steps, exact-answer review, editable confirmation, optional
+feelings and service, aliases, submission contract, and analytics boundaries.
+
+Verify copy, links, metadata, accessibility, and rendered layouts at 375, 768,
+and 1280 pixels. Record actual results and any unavailable proof in the factual
+ledgers. Deployment is separate.

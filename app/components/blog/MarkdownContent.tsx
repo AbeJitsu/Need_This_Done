@@ -102,14 +102,13 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           // ============================================
           // Code Blocks and Inline Code
           // ============================================
-          code: ({ className: codeClassName, children, ...props }) => {
+          code: ({ className: codeClassName, children }) => {
             const isInline = !codeClassName;
 
             if (isInline) {
               return (
                 <code
                   className="rounded bg-[#e4eee6] px-1.5 py-0.5 font-mono text-sm text-[#126b4e]"
-                  {...props}
                 >
                   {children}
                 </code>
@@ -117,7 +116,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
             }
 
             return (
-              <code className={codeClassName} {...props}>
+              <code className={codeClassName} tabIndex={0}>
                 {children}
               </code>
             );
@@ -132,7 +131,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           // Tables
           // ============================================
           table: ({ children }) => (
-            <div className="overflow-x-auto mb-5">
+            <div className="overflow-x-auto mb-5" tabIndex={0} role="region" aria-label="Article table">
               <table className="min-w-full border-collapse border border-gray-400">
                 {children}
               </table>

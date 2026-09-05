@@ -1,3 +1,5 @@
+import { PUBLIC_OFFERS } from './public-offers';
+
 export const PUBLIC_VARIANT = "match-crib-v1" as const;
 
 export const PUBLIC_NAVIGATION = [
@@ -151,3 +153,21 @@ export const ENGAGEMENT_ROUTES = [
   "not_found",
   "error",
 ] as const;
+
+
+export const PUBLIC_FOOTER_GROUPS = [
+  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/blog', label: 'Insights' }] },
+  { title: 'Starting points', links: [
+    ...Object.values(PUBLIC_OFFERS).map(offer => ({ href: offer.detailHref, label: offer.name })),
+    { href: '/pricing', label: 'Pricing' }, { href: '/site-analyzer', label: 'Website Snapshot' },
+  ] },
+  { title: 'Support', links: [
+    { href: '/faq', label: 'FAQ' }, { href: '/ada-compliance', label: 'Accessibility' },
+    { href: '/privacy', label: 'Privacy' }, { href: '/terms', label: 'Terms' },
+  ] },
+  { title: 'Contact', links: [PUBLIC_PRIMARY_ACTION] },
+];
+
+export function isPublicRouteCurrent(pathname: string, href: string) {
+  return pathname === href || (href !== '/' && pathname.startsWith(`${href}/`));
+}

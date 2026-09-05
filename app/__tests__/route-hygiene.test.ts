@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { PUBLIC_NAVIGATION, PUBLIC_PRIMARY_ACTION } from '@/lib/public-journey';
+import { PUBLIC_OFFERS } from '@/lib/public-offers';
 import sitemap from '@/app/sitemap';
 import robots from '@/app/robots';
 
@@ -9,15 +11,8 @@ const repositoryRoot = resolve(appRoot, '..');
 
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
-    const header = readFileSync(resolve(appRoot, 'components/public/PublicHeader.tsx'), 'utf8');
-    const journey = readFileSync(resolve(appRoot, 'lib/public-journey.ts'), 'utf8');
-    expect(header).toContain('PUBLIC_NAVIGATION');
-    for (const [href, label] of [['/services', 'What We Do'], ['/how-it-works', 'How We Work'], ['/work', 'Examples'], ['/about', 'Why Us']]) {
-      expect(journey).toMatch(new RegExp(`href:\\s*['\"]${href}['\"],\\s*label:\\s*['\"]${label}['\"]`));
-    }
-    expect(journey).not.toMatch(/href:\s*['\"]\/blog['\"],\s*label:\s*['\"]Insights['\"]/);
-    expect(header).toContain('Share Your Vision');
-    expect(header).not.toContain('/#why-us');
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/how-it-works', '/work', '/about']);
+    expect(PUBLIC_PRIMARY_ACTION.label).toBe('Share Your Vision');
   });
 
   it('does not publish retired route entries in the sitemap and keeps private surfaces out of indexing', async () => {
@@ -44,7 +39,7 @@ describe('public route hygiene', () => {
     const about = readFileSync(resolve(appRoot, 'app/about/page.tsx'), 'utf8');
     expect(about).toMatch(/title:\s*['\"]Why Us \| NeedThisDone['\"]/);
     expect(about).not.toContain('permanentRedirect');
-    expect(readFileSync(resolve(appRoot, 'components/report/ReportCTA.tsx'), 'utf8')).toContain('href="/contact?offer=website-fix"');
+    expect(PUBLIC_OFFERS['website-improvement'].detailHref).toBe('/website-fix');
     const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');
     expect(modelEvaluationMigration).toContain('model_evaluation_records');
     expect(modelEvaluationMigration).not.toContain('daily_model_cap');

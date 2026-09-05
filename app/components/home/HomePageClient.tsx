@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PUBLIC_OFFERS } from "@/lib/public-offers";
 import { ArrowRight } from "lucide-react";
 
 const principles = [
@@ -22,20 +23,22 @@ const principles = [
 
 const examples = [
   {
+    href: "/work#website-fix",
     title: "A website that earns the next click",
     happening:
       "An important page feels unclear, slow, inaccessible, or difficult to use.",
     tried:
-      "You have adjusted the copy, layout, or calls to action, but the page still is not doing its job.",
+      "A team might adjust the copy, layout, or calls to action, but the page still is not doing its job.",
     after:
       "We find the friction, make the agreed fix, and hand back a clearer page with a record of what changed.",
   },
   {
+    href: "/work#managed-automation",
     title: "A better way through repeated work",
     happening:
       "A recurring task keeps crossing inboxes, documents, and tools without a dependable path.",
     tried:
-      "You have added reminders, documents, or another tool, but the work still depends on manual follow-up.",
+      "A team might add reminders, documents, or another tool, but the work still depends on manual follow-up.",
     after:
       "We identify the bottleneck, clarify the result, and define a focused proposal to move it forward.",
   },
@@ -45,36 +48,36 @@ export default function HomePageClient() {
   return (
     <main
       id="main-content"
-      className="overflow-hidden bg-[#f7f4ed] text-[#183229]"
+      className="overflow-hidden bg-[var(--public-cream)] text-[var(--public-ink)]"
     >
-      <section className="relative border-b border-[#183229]/10">
+      <section className="relative border-b border-[var(--public-ink)]/10">
         <div
           className="pointer-events-none absolute right-[-12rem] top-[-15rem] h-[34rem] w-[34rem] rounded-full bg-[#d0a94f]/10 blur-3xl"
           aria-hidden="true"
         />
         <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24 lg:py-28">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
             For owners and founders
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] tracking-tight sm:text-6xl md:text-7xl">
             Your vision, brought to life.
           </h1>
-          <p className="mt-8 max-w-2xl text-lg leading-8 text-[#50675e] md:text-xl">
-            When something keeps getting in the way, you should not have to keep
-            guessing alone. Tell us what is happening. We will listen, make sure
-            we understand, and help you resolve it.
+          <p className="mt-8 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)] md:text-xl">
+            A clearer website. A smoother working day. More room for the idea you
+            want to bring to life. Tell us what you have in mind, and we will
+            help you find a useful place to start.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e]"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e]"
             >
               Share Your Vision{" "}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link
               href="/services"
-              className="inline-flex min-h-12 items-center justify-center px-3 py-3 font-bold text-[#126b4e] underline underline-offset-4"
+              className="inline-flex min-h-12 items-center justify-center px-3 py-3 font-bold text-[var(--public-green)] underline underline-offset-4"
             >
               See what we do
             </Link>
@@ -89,7 +92,7 @@ export default function HomePageClient() {
       >
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.75fr_1.25fr] lg:gap-16">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
               What we do
             </p>
             <h2
@@ -99,17 +102,15 @@ export default function HomePageClient() {
               A website problem. Repeated work. One place to start.
             </h2>
           </div>
-          <div className="divide-y divide-[#183229]/15 border-y border-[#183229]/15">
+          <div className="divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
             <article className="py-7">
-              <h3 className="font-playfair text-3xl font-black">Website Fix</h3>
-              <p className="mt-3 max-w-2xl leading-7 text-[#50675e]">
-                For one page or part of your website that is making it harder
-                for people to take the next step. We review it, agree on one
-                fix, and complete it for $500.
+              <h3 className="font-playfair text-3xl font-black">{PUBLIC_OFFERS["website-improvement"].name}</h3>
+              <p className="mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">
+                {PUBLIC_OFFERS["website-improvement"].summary}
               </p>
               <Link
-                href="/website-fix"
-                className="mt-5 inline-flex items-center gap-2 font-bold text-[#126b4e]"
+                href={PUBLIC_OFFERS["website-improvement"].detailHref}
+                className="mt-5 inline-flex items-center gap-2 font-bold text-[var(--public-green)]"
               >
                 See how Website Fix works{" "}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -117,16 +118,14 @@ export default function HomePageClient() {
             </article>
             <article className="py-7">
               <h3 className="font-playfair text-3xl font-black">
-                Managed Automation
+                {PUBLIC_OFFERS["ai-operator"].name}
               </h3>
-              <p className="mt-3 max-w-2xl leading-7 text-[#50675e]">
-                For one repeated task that keeps relying on reminders, messages,
-                or your memory. We write down the problem, the plan, and the
-                price before work begins.
+              <p className="mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">
+                {PUBLIC_OFFERS["ai-operator"].summary}
               </p>
               <Link
-                href="/managed-automation"
-                className="mt-5 inline-flex items-center gap-2 font-bold text-[#126b4e]"
+                href={PUBLIC_OFFERS["ai-operator"].detailHref}
+                className="mt-5 inline-flex items-center gap-2 font-bold text-[var(--public-green)]"
               >
                 See how repeated work can change{" "}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -139,7 +138,7 @@ export default function HomePageClient() {
       <section
         id="why-us"
         aria-labelledby="why-us-heading"
-        className="scroll-mt-24 border-y border-[#183229]/10 bg-[#18372e] text-white"
+        className="scroll-mt-24 border-y border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white"
       >
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <div className="max-w-3xl">
@@ -171,7 +170,7 @@ export default function HomePageClient() {
 
       <section aria-labelledby="examples-heading">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
             How we move a stuck problem forward
           </p>
           <h2
@@ -180,7 +179,7 @@ export default function HomePageClient() {
           >
             What better can look like.
           </h2>
-          <div className="mt-12 divide-y divide-[#183229]/15 border-y border-[#183229]/15">
+          <div className="mt-12 divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
             {examples.map((example) => (
               <article
                 key={example.title}
@@ -194,31 +193,32 @@ export default function HomePageClient() {
                     <dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">
                       What is happening
                     </dt>
-                    <dd className="mt-3 leading-7 text-[#50675e]">
+                    <dd className="mt-3 leading-7 text-[var(--public-muted)]">
                       {example.happening}
                     </dd>
                   </div>
                   <div>
                     <dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">
-                      What you have tried
+                      What might be tried
                     </dt>
-                    <dd className="mt-3 leading-7 text-[#50675e]">
+                    <dd className="mt-3 leading-7 text-[var(--public-muted)]">
                       {example.tried}
                     </dd>
                   </div>
                 </dl>
-                <p className="leading-7 text-[#50675e] md:col-start-2">
-                  <span className="font-bold text-[#126b4e]">
+                <p className="leading-7 text-[var(--public-muted)] md:col-start-2">
+                  <span className="font-bold text-[var(--public-green)]">
                     How we help resolve it:{" "}
                   </span>
                   {example.after}
                 </p>
+                <Link href={example.href} className="public-explore md:col-start-2">Explore this example: {example.title}</Link>
               </article>
             ))}
           </div>
           <Link
             href="/work"
-            className="mt-7 inline-flex items-center gap-2 font-bold text-[#126b4e]"
+            className="mt-7 inline-flex items-center gap-2 font-bold text-[var(--public-green)]"
           >
             See more examples{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -226,21 +226,21 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      <section className="border-t border-[#183229]/10 bg-[#e8e2d5]">
+      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
         <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
             The next move
           </p>
           <h2 className="mt-5 font-playfair text-4xl font-black md:text-6xl">
             You do not have to have it all figured out.
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-[#50675e]">
+          <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-[var(--public-muted)]">
             Share what is getting in the way. We will hear you out and help you
             resolve the right piece first.
           </p>
           <Link
             href="/contact"
-            className="mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white"
+            className="mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
           >
             Share Your Vision{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

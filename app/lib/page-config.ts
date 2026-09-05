@@ -11,6 +11,7 @@
 // 3. (Optional) Create the page component if it doesn't exist
 // That's it! Routes, types, and mappings are auto-generated.
 
+import { PUBLIC_OFFERS } from './public-offers';
 import type { AccentColor, AccentVariant } from './colors';
 
 // ============================================================================
@@ -711,18 +712,20 @@ export const PAGE_CONFIGS = {
         description: 'Short answers about scope, cost, and what happens next.',
       },
       items: [
-        { question: 'What does Website Fix include?', answer: 'We review one website problem and agree on one correction. You receive the fix and a clear record of what changed. $500 total. Other work needs a separate scope.', links: [{ text: 'See the exact scope', href: '/website-fix' }] },
-        { question: 'When do we agree on the price?', answer: 'We agree on the work and price before you commit.', links: [{ text: 'Review pricing', href: '/pricing' }] },
-        { question: 'What does Managed Automation start with?', answer: 'One repeated problem at work and a shared picture of the better result you want.', links: [{ text: 'See the process', href: '/how-it-works' }] },
-        { question: 'How do I get started?', answer: 'Share what you want to bring to life and the better result you want. Choosing a service is optional; we will help shape the next useful step.' },
-        { question: 'What if the request grows?', answer: 'The agreed boundary stays visible. Work outside it is paused and separately scoped before anyone commits to it.' },
-        { question: 'Do I need a technical brief?', answer: 'No. Describe the vision and desired result in plain language. Add the current obstacle if it helps.' },
-        { question: 'Is a site audit a compliance certification?', answer: 'No. It is a technical review, not legal advice or an accessibility certification.', links: [{ text: 'Read the accessibility notes', href: '/ada-compliance' }] },
+        { question: 'Do I need to know which service fits?', answer: 'No. Start with what you want to change. We can clarify a useful next step together. Explore the two starting points.', links: [{ text: 'Explore the two starting points.', href: '/services' }] },
+        { question: 'What if I have tried to solve this before?', answer: 'You want the next attempt to be worthwhile. Tell us what you tried, what it was meant to do, and what you learned. We will use that context when discussing the work.' },
+        { question: 'How much time or preparation do I need?', answer: 'A few sentences are enough to begin. You can browse all four intake steps before answering. We discuss any access, review time, and delivery timing before you decide.' },
+        { question: 'What does Website Fix include?', answer: `${PUBLIC_OFFERS['website-improvement'].summary} ${PUBLIC_OFFERS['website-improvement'].price}. See Website Fix details.`, links: [{ text: 'See Website Fix details.', href: PUBLIC_OFFERS['website-improvement'].detailHref }] },
+        { question: 'What does Managed Automation start with?', answer: `${PUBLIC_OFFERS['ai-operator'].summary} Explore Managed Automation.`, links: [{ text: 'Explore Managed Automation.', href: PUBLIC_OFFERS['ai-operator'].detailHref }] },
+        { question: 'When do we agree on the price?', answer: 'You should know the commitment before deciding. We agree on the work and price first. Review pricing.', links: [{ text: 'Review pricing.', href: '/pricing' }] },
+        { question: 'What if the request grows?', answer: 'The original agreement remains the reference. We discuss any extra work and its price separately so you can decide whether to continue.' },
+        { question: 'Is a website snapshot a compliance certification?', answer: 'It can highlight selected issues worth reviewing. It cannot certify accessibility or provide legal advice. Read what the checks cover.', links: [{ text: 'Read what the checks cover.', href: '/ada-compliance' }] },
+        { question: 'How do I get started?', answer: 'Share the change you want in your own words. Choosing a service is optional. Share Your Vision.', links: [{ text: 'Share Your Vision.', href: '/contact' }] },
       ],
       cta: {
         title: 'Still have a question?',
         description: 'Share the vision and context you have. We can clarify the next useful step.',
-        buttons: [{ text: 'Share your vision', variant: 'purple', href: '/contact' }],
+        buttons: [{ text: 'Share Your Vision', variant: 'purple', href: '/contact' }],
         hoverColor: 'purple',
       },
     } as FAQPageContent,

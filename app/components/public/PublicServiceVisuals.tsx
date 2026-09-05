@@ -4,7 +4,7 @@ import { PUBLIC_OFFERS } from "@/lib/public-offers";
 
 const comparison = [
   {
-    name: "Website Fix",
+    name: PUBLIC_OFFERS["website-improvement"].name,
     rows: [
       ["Choose this when", "One website problem is slowing people down."],
       ["Useful change", PUBLIC_OFFERS["website-improvement"].summary],
@@ -12,10 +12,10 @@ const comparison = [
       ["Price", PUBLIC_OFFERS["website-improvement"].price],
     ],
     cta: "See Website Fix details",
-    href: "/website-fix",
+    href: PUBLIC_OFFERS["website-improvement"].detailHref,
   },
   {
-    name: "Managed Automation",
+    name: PUBLIC_OFFERS["ai-operator"].name,
     rows: [
       [
         "Choose this when",
@@ -26,7 +26,7 @@ const comparison = [
       ["Price", PUBLIC_OFFERS["ai-operator"].price],
     ],
     cta: "See Managed Automation details",
-    href: "/managed-automation",
+    href: PUBLIC_OFFERS["ai-operator"].detailHref,
   },
 ] as const;
 
@@ -57,7 +57,7 @@ export function OfferComparison({
               {offer.rows.map(([term, description]) => (
                 <div key={term} className="grid gap-2 py-4 lg:grid-cols-[8rem_1fr]">
                   <dt className="text-xs font-bold uppercase tracking-wider text-[var(--public-green)]">{term}</dt>
-                  <dd className={term === "Price" ? "text-xl font-bold" : "max-w-[60ch] leading-7 text-[#50675e]"}>{description}</dd>
+                  <dd className={term === "Price" ? "text-xl font-bold" : "max-w-[60ch] leading-7 text-[var(--public-muted)]"}>{description}</dd>
                 </div>
               ))}
             </dl>
@@ -101,7 +101,7 @@ export function ThreeStepFlow() {
             </span>
             <div>
               <h3 className="font-black">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[#50675e]">
+              <p className="mt-2 text-sm leading-6 text-[var(--public-muted)]">
                 {description}
               </p>
             </div>
@@ -122,7 +122,7 @@ export function OutcomeFocusFlow() {
   return (
     <section
       aria-labelledby="human-control-heading"
-      className="rounded-[2rem] bg-[#18372e] p-7 text-white sm:p-9"
+      className="rounded-[2rem] bg-[var(--public-dark)] p-7 text-white sm:p-9"
     >
       <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
         Outcome focus
@@ -142,7 +142,7 @@ export function OutcomeFocusFlow() {
             key={title}
             className={`flex gap-3 rounded-2xl border border-white/15 bg-white/[.06] p-4${index === outcomeSteps.length - 1 ? " sm:col-span-2" : ""}`}
           >
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-300 font-black text-[#18372e]">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-300 font-black text-[var(--public-dark)]">
               {index === outcomeSteps.length - 1 ? (
                 <Check className="h-4 w-4" aria-hidden="true" />
               ) : (

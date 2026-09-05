@@ -52,8 +52,8 @@ const commonChecks = [
 
 export default function AdaCompliancePage() {
   return (
-    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
-      <section className="relative overflow-hidden bg-[#18372e] text-white">
+    <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
+      <section className="relative overflow-hidden bg-[var(--public-dark)] text-white">
         <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
         <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8 md:py-28">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
@@ -71,7 +71,7 @@ export default function AdaCompliancePage() {
           <div className="mt-9">
             <Link
               href="/site-analyzer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[#18372e]"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)]"
             >
               Get a Website Snapshot{" "}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -91,20 +91,20 @@ export default function AdaCompliancePage() {
       <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24">
         <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <FileSearch className="h-8 w-8 text-[#126b4e]" aria-hidden="true" />
+            <FileSearch className="h-8 w-8 text-[var(--public-green)]" aria-hidden="true" />
             <h2 className="mt-5 font-playfair text-4xl font-black">
               What a quick check can help you notice
             </h2>
           </div>
           <div>
-            <p className="text-lg leading-8 text-[#50675e]">
+            <p className="text-lg leading-8 text-[var(--public-muted)]">
               Automatic checks can spot things worth looking at, such as missing
               labels, unclear page structure, or controls that may be hard to
               use. They cannot judge every interaction, every person’s
               experience, or every legal requirement.
             </p>
-            <p className="mt-5 rounded-2xl border border-[#183229]/10 bg-white p-5 text-sm leading-6 text-[#40564e]">
-              <strong className="text-[#183229]">
+            <p className="mt-5 rounded-2xl border border-[var(--public-ink)]/10 bg-white p-5 text-sm leading-6 text-[#40564e]">
+              <strong className="text-[var(--public-ink)]">
                 Use this as a starting point for a real conversation.
               </strong>{" "}
               If you need legal advice or a full review, work with a qualified
@@ -114,9 +114,9 @@ export default function AdaCompliancePage() {
         </div>
       </section>
 
-      <section className="border-y border-[#183229]/10 bg-white">
+      <section className="border-y border-[var(--public-ink)]/10 bg-white">
         <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">
             Useful checks
           </p>
           <h2 className="mt-4 font-playfair text-4xl font-black">
@@ -126,11 +126,11 @@ export default function AdaCompliancePage() {
             {commonChecks.map(([title, description]) => (
               <article
                 key={title}
-                className="rounded-2xl border border-[#183229]/10 bg-[#f7f4ed] p-5"
+                className="rounded-2xl border border-[var(--public-ink)]/10 bg-[var(--public-cream)] p-5"
               >
-                <Check className="h-5 w-5 text-[#126b4e]" aria-hidden="true" />
+                <Check className="h-5 w-5 text-[var(--public-green)]" aria-hidden="true" />
                 <h3 className="mt-4 text-xl font-black">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#50675e]">
+                <p className="mt-2 text-sm leading-6 text-[var(--public-muted)]">
                   {description}
                 </p>
               </article>
@@ -140,21 +140,21 @@ export default function AdaCompliancePage() {
       </section>
 
       <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24">
-        <div className="rounded-3xl bg-[#e4eee6] p-8 text-center">
+        <div className="rounded-3xl bg-[var(--public-soft)] p-8 text-center">
           <ShieldCheck
-            className="mx-auto h-7 w-7 text-[#126b4e]"
+            className="mx-auto h-7 w-7 text-[var(--public-green)]"
             aria-hidden="true"
           />
           <h2 className="mt-4 text-3xl font-black">
             Start with one problem you can see.
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl leading-7 text-[#50675e]">
+          <p className="mx-auto mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">
             A Website Fix can address one agreed issue. Bigger website changes
             and legal reviews need their own plan.
           </p>
           <Link
             href="/website-fix"
-            className="mt-7 inline-flex items-center gap-2 font-bold text-[#126b4e] underline"
+            className="mt-7 inline-flex items-center gap-2 font-bold text-[var(--public-green)] underline"
           >
             See Website Fix details{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

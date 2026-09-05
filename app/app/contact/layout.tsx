@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Share Your Vision | NeedThisDone',
-  description: 'Tell NeedThisDone what you want to bring to life and the outcome you want—no technical brief required.',
+  description: 'Tell NeedThisDone what you want to bring to life and the outcome you want. No technical brief required.',
   alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Share Your Vision | NeedThisDone',

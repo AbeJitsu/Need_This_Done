@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, Check } from "lucide-react";
@@ -192,9 +193,9 @@ function ContactIntake() {
           </h1>
           <p className="mt-4 leading-7 text-[#50675e]">
             A person will read what you shared and follow up about a possible
-            next step. No work, purchase, publication, or authority began
-            automatically.
+            next step.
           </p>
+          <Link href="/work" className="public-explore mt-6">Keep exploring examples</Link>
         </section>
       </main>
     );
@@ -273,6 +274,7 @@ function ContactIntake() {
           >
             {titles[step - 1]}
           </h2>
+          <p className="mt-4 leading-7 text-[var(--public-muted)]">{["Start with the part you can describe. A few sentences are enough.", "Any earlier attempts can help us understand your priorities. Skip what does not apply.", "Describe the change you hope for. There is room for both possibilities and concerns.", "These are your words. Edit any answer, then confirm the change you want us to discuss."][step - 1]}</p>
           {step === 1 && (
             <div className="mt-8 grid gap-6">
               <p className="rounded-xl bg-[#e4eee6] p-4">

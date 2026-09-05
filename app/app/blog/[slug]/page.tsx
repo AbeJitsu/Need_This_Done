@@ -121,7 +121,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <>
       <BlogPostingJsonLd post={post} />
-      <div className="bg-[#f7f4ed]">
+      <main id="main-content" className="bg-[#f7f4ed]">
         {/* ================================================================
             Reading Hero
             ================================================================ */}
@@ -136,7 +136,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               className="mb-8 inline-flex items-center gap-2 text-sm text-emerald-50/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e]"
             >
               <ArrowLeft size={16} />
-              Back to Blog
+              Back to Insights
             </Link>
 
             {/* Editorial bar + category */}
@@ -216,13 +216,12 @@ export default async function BlogPostPage({ params }: PageProps) {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
-                  <Link
+                  <span
                     key={tag}
-                    href={`/blog?tag=${tag}`}
                     className="rounded-full bg-white px-3 py-1 text-sm text-[#50675e] ring-1 ring-[#183229]/10 transition-colors hover:bg-[#e4eee6] hover:text-[#126b4e]"
                   >
                     #{tag}
-                  </Link>
+                  </span>
                 ))}
               </div>
             </div>
@@ -258,9 +257,9 @@ export default async function BlogPostPage({ params }: PageProps) {
           />
 
           {/* CTA */}
-          <BlogPostCTA />
+          <BlogPostCTA offerId={slug === "ai-context-budget-tips" ? "ai-operator" : "website-improvement"} />
         </article>
-      </div>
+      </main>
     </>
   );
 }

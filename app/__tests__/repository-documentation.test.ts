@@ -13,6 +13,7 @@ const retainedMarkdown = [
   'app/AGENTS.md',
   'app/lib/AGENTS.md',
   'bridge/README.md',
+  'docs/COMMUNICATION_FRAMEWORKS.md',
   'docs/PROJECT_STATUS.md',
   'docs/RELEASE_EVIDENCE.md',
   'docs/launch/LAUNCH_CHECKLIST.md',
