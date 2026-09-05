@@ -14,6 +14,33 @@
   removed to keep the page focused. The operating and release ledgers retain
   the factual boundary that examples do not establish customer or hosted
   proof.
+- The four browsable intake steps now distinguish preferences from optional
+  800-character pet peeves. The review displays every populated discovery
+  answer with an edit link. The desired-change confirmation follows the
+  visitor's desired outcome until explicitly edited. Client and server retain
+  the same 5,000-character generated-message limit; validation and submission
+  errors preserve answers. Version 1, legacy messages, and offer aliases remain
+  supported through the existing projects endpoint and JSON context. No
+  migration is needed.
+- Validation on 2026-09-05: the full `npm run verify:code` gate passed
+  (63 unit files / 326 tests; 4 accessibility files / 54 tests; lint,
+  type-check, production build). Focused journey and intake checks passed.
+  Local Chromium checked services, pricing, and contact at 375, 768, and 1280
+  pixels: no horizontal overflow or axe violations in main content; screenshots
+  reviewed, including the populated mobile review. Additional browser checks
+  passed direct step navigation, optional offer selection, reduced motion,
+  keyboard focus, and mocked submission failure with answer recovery.
+  `git diff --check` passed. Temporary screenshots and logs are in
+  `/tmp/warm-*`. These are local presentation and simulated delivery checks,
+  not hosted persistence or customer proof.
+- The code gate initially found a stale pricing-copy assertion and an existing
+  documentation inventory mismatch for the already-tracked approved plan.
+  Both test expectations were corrected without removing the plan.
+  The pre-existing `app/next-env.d.ts` change is preserved.
+- Rollback: revert this presentation and intake UI change on dev if needed.
+  Keep optional petPeeves parsing and generated-message support when reverting
+  the UI so any new version-1 contexts remain readable. No database rollback,
+  billing change, deployment, publication, or provider activation occurred.
 
 - On 2026-09-04, the MATCH/CRIB-informed public-journey redesign was implemented
   without exposing framework jargon in customer copy. The header follows What

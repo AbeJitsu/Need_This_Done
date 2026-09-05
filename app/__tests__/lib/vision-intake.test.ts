@@ -7,7 +7,14 @@ describe('VisionIntakeV1', () => {
   it('accepts a bounded intake with optional feelings and service', () => {
     const parsed = parseVisionIntake(JSON.stringify({ ...valid, currentFeeling: 'stuck', desiredFeeling: 'in-control', offer: 'website-fix' }));
     expect(parsed.offer).toBe('website-fix');
-    expect(visionIntakeMessage(parsed)).toContain('Visitor-confirmed shared purpose');
+    expect(visionIntakeMessage(parsed)).toContain('Visitor-confirmed desired change');
+  });
+  it('retains optional pet peeves and mixed possibilities without interpreting them', () => {
+    const parsed = parseVisionIntake(JSON.stringify({ ...valid, petPeeves: 'No more alerts.', possibility: 'We might grow, or the change might confuse people.' }));
+    expect(visionIntakeMessage(parsed)).toContain('Pet peeves:\nNo more alerts.');
+    expect(visionIntakeMessage(parsed)).toContain('Possibilities, hopes, and worries:\n' + parsed.possibility);
+    expect(parseVisionIntake(JSON.stringify(valid)).petPeeves).toBe('');
+    expect(() => parseVisionIntake(JSON.stringify({ ...valid, petPeeves: 'x'.repeat(801) }))).toThrow();
   });
   it('rejects unknown fields, invalid feelings, and oversized text', () => {
     expect(() => parseVisionIntake(JSON.stringify({ ...valid, secret: true }))).toThrow();

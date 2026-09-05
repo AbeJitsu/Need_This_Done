@@ -5,7 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { ArrowRight, Check } from "lucide-react";
 import { normalizePublicOfferId } from "@/lib/public-offers";
 import { recordEngagement } from "@/lib/engagement";
-import type { VisionIntakeV1 } from "@/lib/vision-intake";
+import { visionIntakeV1Schema, visionIntakeMessage, type VisionIntakeV1 } from "@/lib/vision-intake";
+
+import { PROJECT_MESSAGE_MAX_LENGTH } from "@/lib/validation";
 
 type State = Omit<VisionIntakeV1, "version"> & {
   name: string;
@@ -19,6 +21,7 @@ const initial: State = {
   priorStrategies: "",
   strategyPurpose: "",
   preferences: "",
+  petPeeves: "",
   currentFeelingOther: "",
   desiredOutcome: "",
   possibility: "",
@@ -47,6 +50,23 @@ const desiredFeelings = [
   "proud",
 ] as const;
 
+const reviewFields: [keyof State, string, number][] = [
+  ["situation", "Happening now", 1],
+  ["repeatedPattern", "What keeps happening", 1],
+  ["pastContext", "Past context", 1],
+  ["priorStrategies", "What you tried and how it went", 2],
+  ["strategyPurpose", "What those attempts were meant to accomplish", 2],
+  ["preferences", "How you would like this to work", 2],
+  ["petPeeves", "Frustrations and things to avoid", 2],
+  ["currentFeeling", "Current feeling", 2],
+  ["currentFeelingOther", "Current feeling in your words", 2],
+  ["desiredOutcome", "The change you want", 3],
+  ["possibility", "Possibilities, hopes, and worries", 3],
+  ["pream", "The future you picture", 3],
+  ["desiredFeeling", "Desired feeling", 3],
+  ["desiredFeelingOther", "Desired feeling in your words", 3],
+];
+
 function ContactIntake() {
   const params = useSearchParams();
   const [step, setStep] = useState(1);
@@ -54,6 +74,8 @@ function ContactIntake() {
   const [status, setStatus] = useState<
     "idle" | "sending" | "error" | "success"
   >("idle");
+  const purposeEdited = useRef(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const heading = useRef<HTMLHeadingElement>(null);
   const error = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
@@ -83,7 +105,11 @@ function ContactIntake() {
     if (status === "error") error.current?.focus();
   }, [status]);
   const set = (key: keyof State, value: string | null) => {
-    setData((v) => ({ ...v, [key]: value }));
+    if (key === "sharedPurpose") purposeEdited.current = true;
+    setData((v) => ({
+      ...v, [key]: value,
+      ...(key === "desiredOutcome" && !purposeEdited.current ? { sharedPurpose: value || "" } : {}),
+    }));
     if (status === "error") setStatus("idle");
   };
   const advance = (event: FormEvent) => {
@@ -94,24 +120,23 @@ function ContactIntake() {
       element: `step_${step}`,
       variant: "match-crib-v1",
     });
-    if (step === 3 && !data.sharedPurpose)
-      setData((v) => ({
-        ...v,
-        sharedPurpose: `Create ${v.desiredOutcome.trim()} by addressing ${v.repeatedPattern.trim()}.`,
-      }));
     setStep((v) => Math.min(4, v + 1));
   };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (
-      data.situation.trim().length < 10 ||
-      data.repeatedPattern.trim().length < 5
-    ) {
-      setStep(1);
+    const { name, email, company, ...context } = data;
+    const parsed = visionIntakeV1Schema.safeParse({ version: 1, ...context });
+    if (!parsed.success) {
+      const field = String(parsed.error.issues[0].path[0]);
+      const target = reviewFields.find(([key]) => key === field)?.[2] || 4;
+      setStep(target);
+      setErrorMessage("Please check your answers. Required answers need a little more detail; keep each answer within its character limit.");
+      setStatus("error");
       return;
     }
-    if (data.desiredOutcome.trim().length < 10) {
-      setStep(3);
+    if (visionIntakeMessage(parsed.data).trim().length > PROJECT_MESSAGE_MAX_LENGTH) {
+      setErrorMessage("Your answers together are too long to send. Please shorten a few answers using the edit links. Your answers are still here.");
+      setStatus("error");
       return;
     }
     setStatus("sending");
@@ -121,7 +146,6 @@ function ContactIntake() {
       element: "guided_intake",
       variant: "match-crib-v1",
     });
-    const { name, email, company, ...context } = data;
     const body = new FormData();
     body.append("name", name);
     body.append("email", email);
@@ -143,6 +167,7 @@ function ContactIntake() {
         variant: "match-crib-v1",
       });
     } catch {
+      setErrorMessage("We could not send your vision. Your answers are still here. Please try again.");
       setStatus("error");
       recordEngagement({
         event: "intake_error",
@@ -153,15 +178,15 @@ function ContactIntake() {
     }
   };
   const input =
-    "mt-2 min-h-12 w-full rounded-xl border border-[#183229]/20 bg-white px-4 py-3 outline-none focus:border-[#126b4e] focus:ring-2 focus:ring-[#126b4e]/20";
+    "mt-2 min-h-12 w-full rounded-xl border border-[var(--public-ink)]/20 bg-white px-4 py-3 outline-none focus:border-[var(--public-green)] focus:ring-2 focus:ring-[var(--public-green)]/20";
   if (status === "success")
     return (
       <main
         id="main-content"
-        className="grid min-h-[72vh] place-items-center bg-[#f7f4ed] px-5 text-[#183229]"
+        className="grid min-h-[72vh] place-items-center bg-[var(--public-cream)] px-5 text-[var(--public-ink)]"
       >
         <section className="max-w-xl text-center">
-          <Check className="mx-auto h-12 w-12 text-[#126b4e]" />
+          <Check className="mx-auto h-12 w-12 text-[var(--public-green)]" />
           <h1 className="mt-6 font-playfair text-4xl font-black">
             Thank you for sharing it.
           </h1>
@@ -180,9 +205,9 @@ function ContactIntake() {
     "Does this sound right?",
   ];
   return (
-    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
+    <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="bg-[#18372e] text-white">
-        <div className="mx-auto max-w-4xl px-5 py-14 sm:px-8">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
             Share your vision
           </p>
@@ -195,7 +220,7 @@ function ContactIntake() {
           </p>
         </div>
       </section>
-      <section className="mx-auto max-w-4xl px-5 py-12 sm:px-8">
+      <section className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
         <div
           role="progressbar"
           aria-label="Vision intake progress"
@@ -208,7 +233,7 @@ function ContactIntake() {
             {[1, 2, 3, 4].map((number) => (
               <span
                 key={number}
-                className={`h-1 rounded-full ${number <= step ? "bg-[#126b4e]" : "bg-[#183229]/15"}`}
+                className={`h-1 rounded-full ${number <= step ? "bg-[var(--public-green)]" : "bg-[var(--public-ink)]/15"}`}
               />
             ))}
           </div>
@@ -225,11 +250,11 @@ function ContactIntake() {
                     aria-label={`Step ${number}: ${title}`}
                     aria-current={step === number ? "step" : undefined}
                     onClick={() => setStep(number)}
-                    className={`block min-h-11 w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-lg px-1 py-2 text-left text-xs leading-5 sm:text-sm ${step === number ? "font-bold text-[#183229]" : "text-[#50675e] hover:text-[#126b4e]"}`}
+                    className={`block min-h-11 w-full whitespace-normal rounded-lg px-1 py-2 text-left text-xs leading-5 sm:text-sm ${step === number ? "font-bold text-[var(--public-ink)]" : "text-[#50675e] hover:text-[var(--public-green)]"}`}
                   >
                     <span
                       aria-hidden="true"
-                      className="mr-1 font-bold text-[#126b4e]"
+                      className="mr-1 font-bold text-[var(--public-green)]"
                     >
                       {number}.
                     </span>
@@ -259,16 +284,18 @@ function ContactIntake() {
                   required
                   minLength={10}
                   className={input}
+                  maxLength={1200}
                   value={data.situation}
                   onChange={(e) => set("situation", e.target.value)}
                 />
               </label>
               <label className="font-semibold">
-                The pattern that keeps happening
+                What keeps happening?
                 <textarea
                   required
                   minLength={5}
                   className={input}
+                  maxLength={800}
                   value={data.repeatedPattern}
                   onChange={(e) => set("repeatedPattern", e.target.value)}
                 />
@@ -278,6 +305,7 @@ function ContactIntake() {
                 <span className="font-normal text-[#50675e]">(optional)</span>
                 <textarea
                   className={input}
+                  maxLength={800}
                   value={data.pastContext}
                   onChange={(e) => set("pastContext", e.target.value)}
                 />
@@ -287,29 +315,36 @@ function ContactIntake() {
           {step === 2 && (
             <div className="mt-8 grid gap-6">
               <label className="font-semibold">
-                What have you already tried?
+                What have you tried? How did it go? (optional)
                 <textarea
                   className={input}
+                  maxLength={1000}
                   value={data.priorStrategies}
                   onChange={(e) => set("priorStrategies", e.target.value)}
                 />
               </label>
               <label className="font-semibold">
-                What were you hoping those attempts would fix?
+                What were you hoping those attempts would fix? (optional)
                 <textarea
                   className={input}
+                  maxLength={800}
                   value={data.strategyPurpose}
                   onChange={(e) => set("strategyPurpose", e.target.value)}
                 />
               </label>
               <label className="font-semibold">
-                What has been especially frustrating, or what do you want to
-                avoid?
+                How would you like this to work? (optional)
                 <textarea
                   className={input}
+                  maxLength={800}
                   value={data.preferences}
                   onChange={(e) => set("preferences", e.target.value)}
                 />
+              </label>
+              <label className="font-semibold">
+                What frustrates you most? What should we avoid? (optional)
+                <textarea className={input} maxLength={800} value={data.petPeeves}
+                  onChange={(e) => set("petPeeves", e.target.value)} />
               </label>
               <fieldset>
                 <legend className="font-semibold">
@@ -334,7 +369,8 @@ function ContactIntake() {
                   Or describe it yourself
                   <input
                     className={input}
-                    value={data.currentFeelingOther}
+                    maxLength={80}
+                  value={data.currentFeelingOther}
                     onChange={(e) => set("currentFeelingOther", e.target.value)}
                   />
                 </label>
@@ -349,15 +385,17 @@ function ContactIntake() {
                   required
                   minLength={10}
                   className={input}
+                  maxLength={1200}
                   value={data.desiredOutcome}
                   onChange={(e) => set("desiredOutcome", e.target.value)}
                 />
               </label>
               <label className="font-semibold">
-                What becomes possible when this is resolved?{" "}
+                What might happen next? What do you hope for or worry about?{" "}
                 <span className="font-normal text-[#50675e]">(optional)</span>
                 <textarea
                   className={input}
+                  maxLength={800}
                   value={data.possibility}
                   onChange={(e) => set("possibility", e.target.value)}
                 />
@@ -365,11 +403,12 @@ function ContactIntake() {
               <label className="font-semibold">
                 The future you can already picture{" "}
                 <span className="block font-normal text-[#50675e]">
-                  Optional—describe the scene or experience that feels possible
+                  Optional. Describe the scene or experience that feels possible
                   even though it is not real yet.
                 </span>
                 <textarea
                   className={input}
+                  maxLength={800}
                   value={data.pream}
                   onChange={(e) => set("pream", e.target.value)}
                 />
@@ -397,7 +436,8 @@ function ContactIntake() {
                   Or describe it yourself
                   <input
                     className={input}
-                    value={data.desiredFeelingOther}
+                    maxLength={80}
+                  value={data.desiredFeelingOther}
                     onChange={(e) => set("desiredFeelingOther", e.target.value)}
                   />
                 </label>
@@ -410,27 +450,19 @@ function ContactIntake() {
                 <h3 className="font-playfair text-2xl font-black">
                   What we heard
                 </h3>
-                <dl className="mt-4 space-y-4">
-                  <div>
-                    <dt className="font-bold">Happening now</dt>
-                    <dd className="whitespace-pre-wrap text-[#50675e]">
-                      {data.situation}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="font-bold">Better looks like</dt>
-                    <dd className="whitespace-pre-wrap text-[#50675e]">
-                      {data.desiredOutcome}
-                    </dd>
-                  </div>
+                <dl className="mt-4 divide-y divide-[var(--public-ink)]/15">
+                  {reviewFields.map(([key, label, editingStep]) => data[key] ? (
+                    <div key={key} className={`py-4 ${key === "desiredOutcome" ? "rounded-xl bg-[#e4eee6] px-4" : ""}`}>
+                      <dt className="flex items-start justify-between gap-4 font-bold">
+                        {label}
+                        <button type="button" onClick={() => setStep(editingStep)}
+                          className="min-h-11 shrink-0 px-2 text-sm text-[var(--public-green)] underline"
+                          aria-label={`Edit ${label}`}>Edit</button>
+                      </dt>
+                      <dd className="whitespace-pre-wrap break-words text-[#50675e]">{data[key]}</dd>
+                    </div>
+                  ) : null)}
                 </dl>
-                <button
-                  type="button"
-                  className="mt-4 text-sm font-bold text-[#126b4e] underline"
-                  onClick={() => setStep(1)}
-                >
-                  Edit answers
-                </button>
               </section>
               <section>
                 <h3 className="font-playfair text-2xl font-black">
@@ -444,11 +476,13 @@ function ContactIntake() {
                 </ul>
               </section>
               <label className="font-semibold">
-                The change we agree to work toward
+                The change you want us to work toward
+                <span className="mt-2 block font-normal text-[#50675e]">A person will confirm the scope with you before work begins.</span>
                 <textarea
                   required
                   minLength={10}
                   className={input}
+                  maxLength={1200}
                   value={data.sharedPurpose}
                   onChange={(e) => set("sharedPurpose", e.target.value)}
                 />
@@ -519,15 +553,14 @@ function ContactIntake() {
               role="alert"
               className="mt-8 rounded-xl bg-red-50 p-4 text-red-800"
             >
-              We could not send your vision. Your answers are still here. Please
-              try again.
+              {errorMessage}
             </p>
           )}
           <div className="mt-10 flex items-center justify-between border-t pt-7">
             {step > 1 ? (
               <button
                 type="button"
-                className="min-h-12 px-2 font-bold text-[#126b4e] underline"
+                className="min-h-12 px-2 font-bold text-[var(--public-green)] underline"
                 onClick={() => setStep((v) => v - 1)}
               >
                 Back
@@ -537,7 +570,7 @@ function ContactIntake() {
             )}
             <button
               disabled={status === "sending"}
-              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white disabled:opacity-60"
+              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white disabled:opacity-60"
             >
               {step === 4
                 ? status === "sending"
@@ -559,7 +592,7 @@ export default function ContactPage() {
       fallback={
         <main
           id="main-content"
-          className="grid min-h-[60vh] place-items-center bg-[#f7f4ed]"
+          className="grid min-h-[60vh] place-items-center bg-[var(--public-cream)]"
         >
           Loading…
         </main>

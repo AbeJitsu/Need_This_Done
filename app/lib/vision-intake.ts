@@ -14,6 +14,7 @@ export const visionIntakeV1Schema = z.object({
   priorStrategies: optionalText(1000),
   strategyPurpose: optionalText(800),
   preferences: optionalText(800),
+  petPeeves: optionalText(800),
   currentFeeling: z.enum(CURRENT_FEELINGS).optional(),
   currentFeelingOther: optionalText(80),
   desiredOutcome: z.string().trim().min(10).max(1200),
@@ -40,11 +41,11 @@ export function visionIntakeMessage(context: VisionIntakeV1): string {
     ['What is happening', context.situation], ['Repeated pattern', context.repeatedPattern],
     ['Past context', context.pastContext], ['What has been tried', context.priorStrategies],
     ['What those strategies were meant to accomplish', context.strategyPurpose],
-    ['Preferences and frustrations', context.preferences],
+    ['Preferences', context.preferences], ['Pet peeves', context.petPeeves],
     ['Current feeling', context.currentFeelingOther || context.currentFeeling],
-    ['Desired outcome', context.desiredOutcome], ['Possibility unlocked', context.possibility],
+    ['Desired outcome', context.desiredOutcome], ['Possibilities, hopes, and worries', context.possibility],
     ['Future picture', context.pream], ['Desired feeling', context.desiredFeelingOther || context.desiredFeeling],
-    ['Visitor-confirmed shared purpose', context.sharedPurpose],
+    ['Visitor-confirmed desired change', context.sharedPurpose],
     ['Selected starting point', context.offer || 'Not selected'],
   ].filter(([, value]) => value);
   return lines.map(([label, value]) => `${label}:\n${value}`).join('\n\n');

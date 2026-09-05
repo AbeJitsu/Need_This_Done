@@ -1,3 +1,4 @@
+import { PROJECT_MESSAGE_MAX_LENGTH } from '@/lib/validation';
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import {
@@ -99,7 +100,7 @@ export async function POST(request: Request) {
     // Validate string lengths to prevent database overflow and DoS
     try {
       validateStringLength(name.trim(), 200, 'Name');
-      validateStringLength(message.trim(), 5000, 'Project details');
+      validateStringLength(message.trim(), PROJECT_MESSAGE_MAX_LENGTH, 'Project details');
       if (company) validateStringLength(company.trim(), 200, 'Company');
       if (service) validateStringLength(service.trim(), 100, 'Service');
     } catch (err) {
