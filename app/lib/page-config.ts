@@ -711,8 +711,8 @@ export const PAGE_CONFIGS = {
         description: 'Short answers about scope, cost, and what happens next.',
       },
       items: [
-        { question: 'What does Website Fix include?', answer: 'A $500 review and one agreed website fix. Redesigns, integrations, multi-page builds, and ongoing maintenance need a separate scope.', links: [{ text: 'See the exact scope', href: '/website-fix' }] },
-        { question: 'How does the fixed price get paid?', answer: '$250 by manual invoice to begin and $250 after the agreed fix is delivered.', links: [{ text: 'Review pricing', href: '/pricing' }] },
+        { question: 'What does Website Fix include?', answer: 'We review one website problem and agree on one correction. You receive the fix and a clear record of what changed. $500 total. Other work needs a separate scope.', links: [{ text: 'See the exact scope', href: '/website-fix' }] },
+        { question: 'When do we agree on the price?', answer: 'We agree on the work and price before you commit.', links: [{ text: 'Review pricing', href: '/pricing' }] },
         { question: 'What does Managed Automation start with?', answer: 'One repeated problem at work and a shared picture of the better result you want.', links: [{ text: 'See the process', href: '/how-it-works' }] },
         { question: 'How do I get started?', answer: 'Share what you want to bring to life and the better result you want. Choosing a service is optional; we will help shape the next useful step.' },
         { question: 'What if the request grows?', answer: 'The agreed boundary stays visible. Work outside it is paused and separately scoped before anyone commits to it.' },

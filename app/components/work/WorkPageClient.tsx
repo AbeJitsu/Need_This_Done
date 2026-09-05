@@ -59,13 +59,6 @@ export default function WorkPageClient() {
         <h2 id="example-list-heading" className="sr-only">
           Problems we can help resolve
         </h2>
-        <p className="mb-8 max-w-3xl rounded-2xl border border-[#183229]/10 bg-white p-5 text-sm leading-6 text-[#50675e]">
-          <strong className="text-[#183229]">
-            These are hypothetical, representative scenarios.
-          </strong>{" "}
-          They are not client work, paid outcomes, or delivery proof. No time
-          saving, delivery result, or live automation is claimed.
-        </p>
         <div className="divide-y divide-[#183229]/15 border-y border-[#183229]/15">
           {examples.map((example, index) => (
             <article

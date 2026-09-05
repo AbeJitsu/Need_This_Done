@@ -5,28 +5,28 @@ import { PUBLIC_OFFERS } from "@/lib/public-offers";
 const comparison = [
   {
     name: "Website Fix",
-    tone: "light",
     rows: [
       ["Choose this when", "One website problem is slowing people down."],
-      ["You get", "A focused review, one agreed fix, and a clear handoff."],
-      ["Price", "$500 total"],
+      ["Useful change", PUBLIC_OFFERS["website-improvement"].summary],
+      ["Included work", "A review, one agreed correction, and a record of the result."],
+      ["Price", PUBLIC_OFFERS["website-improvement"].price],
     ],
-    cta: "Start a Website Fix",
-    href: PUBLIC_OFFERS["website-improvement"].contactHref,
+    cta: "See Website Fix details",
+    href: "/website-fix",
   },
   {
     name: "Managed Automation",
-    tone: "dark",
     rows: [
       [
         "Choose this when",
         "One repeated problem keeps slowing important work.",
       ],
-      ["You get", "Focused work around a shared picture of a better result."],
-      ["Price", "Priced by proposal"],
+      ["Useful change", PUBLIC_OFFERS["ai-operator"].summary],
+      ["Included work", "A task review, an agreed improvement, and a written proposal."],
+      ["Price", PUBLIC_OFFERS["ai-operator"].price],
     ],
-    cta: "Discuss Managed Automation",
-    href: PUBLIC_OFFERS["ai-operator"].contactHref,
+    cta: "See Managed Automation details",
+    href: "/managed-automation",
   },
 ] as const;
 
@@ -37,7 +37,7 @@ export function OfferComparison({
 }) {
   return (
     <section aria-labelledby="offer-comparison-heading">
-      <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">
+      <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">
         Two clear offers
       </p>
       <h2
@@ -46,99 +46,42 @@ export function OfferComparison({
       >
         {heading}
       </h2>
-      <div className="mt-10 overflow-hidden rounded-[2rem] border border-[#183229]/15 bg-white md:grid md:grid-cols-2">
-        {comparison.map((offer) => {
-          const dark = offer.tone === "dark";
-          return (
-            <article
-              key={offer.name}
-              className={
-                dark
-                  ? "bg-[#18372e] p-7 text-white sm:p-9"
-                  : "p-7 text-[#183229] sm:p-9"
-              }
-            >
-              <h3 className="font-playfair text-3xl font-black">
-                {offer.name}
-              </h3>
-              <dl
-                className={
-                  dark
-                    ? "mt-7 divide-y divide-white/15 border-y border-white/15"
-                    : "mt-7 divide-y divide-[#183229]/10 border-y border-[#183229]/10"
-                }
-              >
-                {offer.rows.map(([term, description]) => (
-                  <div
-                    key={term}
-                    className="grid gap-2 py-4 sm:grid-cols-[8rem_1fr]"
-                  >
-                    <dt
-                      className={
-                        dark
-                          ? "text-xs font-bold uppercase tracking-wider text-emerald-200"
-                          : "text-xs font-bold uppercase tracking-wider text-[#126b4e]"
-                      }
-                    >
-                      {term}
-                    </dt>
-                    <dd
-                      className={
-                        dark
-                          ? "leading-6 text-emerald-50/80"
-                          : "leading-6 text-[#50675e]"
-                      }
-                    >
-                      {description}
-                    </dd>
-                  </div>
-                ))}
-                <div className="grid gap-2 py-4 sm:grid-cols-[8rem_1fr]">
-                  <dt
-                    className={
-                      dark
-                        ? "text-xs font-bold uppercase tracking-wider text-emerald-200"
-                        : "text-xs font-bold uppercase tracking-wider text-[#126b4e]"
-                    }
-                  >
-                    Next step
-                  </dt>
-                  <dd>
-                    <Link
-                      href={offer.href}
-                      className={
-                        dark
-                          ? "inline-flex min-h-11 items-center gap-2 py-2.5 font-bold text-emerald-200 underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                          : "inline-flex min-h-11 items-center gap-2 py-2.5 font-bold text-[#126b4e] underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#126b4e] focus-visible:ring-offset-2"
-                      }
-                    >
-                      {offer.cta}{" "}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-                  </dd>
+      <div className="mt-10 overflow-hidden rounded-[2rem] border border-[var(--public-ink)]/15 bg-white md:grid md:grid-cols-2">
+        {comparison.map((offer) => (
+          <article key={offer.name}
+            className="border-b border-[var(--public-ink)]/15 p-7 text-[var(--public-ink)] last:border-b-0 sm:p-9 md:border-b-0 md:first:border-r">
+            <h3 className="font-playfair text-3xl font-black md:min-h-[4.5rem]">
+              {offer.name}
+            </h3>
+            <dl className="mt-7 divide-y divide-[var(--public-ink)]/10 border-y border-[var(--public-ink)]/10">
+              {offer.rows.map(([term, description]) => (
+                <div key={term} className="grid gap-2 py-4 lg:grid-cols-[8rem_1fr]">
+                  <dt className="text-xs font-bold uppercase tracking-wider text-[var(--public-green)]">{term}</dt>
+                  <dd className={term === "Price" ? "text-xl font-bold" : "max-w-[60ch] leading-7 text-[#50675e]"}>{description}</dd>
                 </div>
-              </dl>
-            </article>
-          );
-        })}
+              ))}
+            </dl>
+            <Link href={offer.href}
+              className="mt-4 inline-flex min-h-11 items-center gap-2 py-3 font-bold text-[var(--public-green)] underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-[var(--public-green)]">
+              {offer.cta}<ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          </article>
+        ))}
       </div>
     </section>
   );
 }
 
 const deliverySteps = [
-  ["Tell us what’s stuck", "Share the problem in plain language."],
-  ["Agree on one outcome", "We confirm the boundary, price, and finish line."],
-  [
-    "We do the work and hand it off",
-    "You receive the agreed result and a clear record.",
-  ],
+  ["We listen", "Tell us what keeps happening and what you have tried."],
+  ["We agree on the change", "We confirm the work and price with you before starting."],
+  ["We show what changed", "We resolve the agreed problem and show you the result."],
 ] as const;
 
 export function ThreeStepFlow() {
   return (
     <section aria-labelledby="three-step-flow-heading">
-      <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">
+      <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">
         Three steps
       </p>
       <h2
@@ -147,13 +90,13 @@ export function ThreeStepFlow() {
       >
         A short path from stuck to done.
       </h2>
-      <ol className="mt-8 border-y border-[#183229]/15 md:grid md:grid-cols-3 md:divide-x md:divide-[#183229]/15">
+      <ol className="mt-8 border-y border-[var(--public-ink)]/15 md:grid md:grid-cols-3 md:divide-x md:divide-[var(--public-ink)]/15">
         {deliverySteps.map(([title, description], index) => (
           <li
             key={title}
-            className="flex gap-4 border-b border-[#183229]/10 py-6 last:border-b-0 md:border-b-0 md:px-6 md:first:pl-0 md:last:pr-0"
+            className="flex gap-4 border-b border-[var(--public-ink)]/10 py-6 last:border-b-0 md:border-b-0 md:px-6 md:first:pl-0 md:last:pr-0"
           >
-            <span className="text-sm font-black text-[#126b4e]">
+            <span className="text-sm font-black text-[var(--public-green)]">
               {index + 1}
             </span>
             <div>

@@ -38,13 +38,14 @@ describe('vision-first public journey', () => {
     expect(PUBLIC_OFFERS['website-improvement']).toMatchObject({
       name: 'Website Fix',
       contactHref: '/contact?offer=website-fix',
-      summary: 'We review one website problem, agree on one contained fix, and deliver it for $500.',
+      price: '$500 total',
     });
     expect(PUBLIC_OFFERS['ai-operator']).toMatchObject({
       name: 'Managed Automation',
       contactHref: '/contact?offer=managed-automation',
-      summary: 'A proposal-based way to improve one repeated problem at work.',
+      price: 'Priced by proposal',
     });
+    expect(PUBLIC_OFFERS['website-improvement'].summary).not.toContain('$');
     expect(normalizePublicOfferId('website-fix')).toBe('website-improvement');
     expect(normalizePublicOfferId('managed-automation')).toBe('ai-operator');
     expect(normalizePublicOfferId('website-improvement')).toBe('website-improvement');

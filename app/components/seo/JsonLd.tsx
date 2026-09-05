@@ -117,15 +117,15 @@ const schemas = {
         name: 'What is Website Fix?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It is a $500 evidence-backed website review plus one mutually agreed contained fix, such as a page, component, accessibility, SEO, performance, or conversion correction.',
+          text: 'We review one website problem and agree on one correction. You receive the fix and a clear record of what changed. $500 total.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How does website payment work?',
+        name: 'When do we agree on the price?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'After the contained scope is confirmed, Website Fix uses manual invoices: $250 to begin and $250 after the agreed fix is delivered.',
+          text: 'We agree on the work and price before you commit.',
         },
       },
       {
@@ -141,7 +141,7 @@ const schemas = {
         name: 'How do I start Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Share the repeated problem at work and the better result you want. The proposal then sets the scope, price, and payment terms.',
+          text: 'Share the repeated problem at work and the better result you want. We agree on the work and price before you commit.',
         },
       },
       {

@@ -8,7 +8,7 @@ export interface PublicOffer {
   serviceName: string;
   contactHref: '/contact?offer=website-fix' | '/contact?offer=managed-automation';
   summary: string;
-  payment: string;
+  price: string;
 }
 
 /**
@@ -21,16 +21,16 @@ export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
     name: 'Website Fix',
     serviceName: 'Website Fix',
     contactHref: '/contact?offer=website-fix',
-    summary: 'We review one website problem, agree on one contained fix, and deliver it for $500.',
-    payment: '50% by manual invoice to begin and 50% after the agreed fix is delivered.',
+    summary: 'We review one website problem and agree on one correction. You receive the fix and a clear record of what changed.',
+    price: '$500 total',
   },
   'ai-operator': {
     id: 'ai-operator',
     name: 'Managed Automation',
     serviceName: 'Managed Automation',
     contactHref: '/contact?offer=managed-automation',
-    summary: 'A proposal-based way to improve one repeated problem at work.',
-    payment: 'The proposal sets the problem, better result, scope, price, and payment terms.',
+    summary: 'We look at one repeated task and agree on an improvement. A written proposal explains the work and how we will review it.',
+    price: 'Priced by proposal',
   },
 };
 

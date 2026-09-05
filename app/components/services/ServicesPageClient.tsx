@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
+import { ThreeStepFlow } from "@/components/public/PublicServiceVisuals";
 import { PUBLIC_OFFERS } from "@/lib/public-offers";
 
 const paths = [
@@ -7,29 +8,29 @@ const paths = [
     id: "website-fix",
     alias: "website-improvement",
     name: "Website Fix",
-    statement: "Make one important part of your website meaningfully better.",
+    statement: "People keep getting stuck on one part of your website.",
     summary: PUBLIC_OFFERS["website-improvement"].summary,
-    price: "$500",
+    price: PUBLIC_OFFERS["website-improvement"].price,
     details: "/website-fix",
     contact: PUBLIC_OFFERS["website-improvement"].contactHref,
     goodFor: [
       "One page, path, or component",
       "A clear, contained correction",
-      "A documented handoff",
+      "A clear record of the result",
     ],
   },
   {
     id: "managed-automation",
     alias: "ai-operator",
     name: "Managed Automation",
-    statement: "Create a better way through one repeated problem at work.",
+    statement: "The same task keeps taking time away from other work.",
     summary: PUBLIC_OFFERS["ai-operator"].summary,
-    price: "Proposal-based",
+    price: PUBLIC_OFFERS["ai-operator"].price,
     details: "/managed-automation",
     contact: PUBLIC_OFFERS["ai-operator"].contactHref,
     goodFor: [
       "One repeated problem",
-      "A shared picture of a better result",
+      "An agreed improvement",
       "A focused written proposal",
     ],
   },
@@ -37,8 +38,8 @@ const paths = [
 
 export default function ServicesPageClient() {
   return (
-    <main id="main-content" className="bg-[#f7f4ed] text-[#183229]">
-      <section className="border-b border-[#183229]/10 bg-[#18372e] text-white">
+    <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
+      <section className="border-b border-[var(--public-ink)]/10 bg-[#18372e] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
             What we do
@@ -46,7 +47,7 @@ export default function ServicesPageClient() {
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
             Start with the problem that keeps following you around.
           </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-[#dce8dd] md:text-xl">
+          <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
             You do not need to know which service fits. Tell us what is not
             working. We will listen and help you resolve the right piece first.
           </p>
@@ -57,7 +58,7 @@ export default function ServicesPageClient() {
         className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24"
         aria-labelledby="starting-points-heading"
       >
-        <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">
+        <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
           Concrete starting points
         </p>
         <h2
@@ -66,7 +67,7 @@ export default function ServicesPageClient() {
         >
           Two clear places to start. No pressure to choose yet.
         </h2>
-        <div className="mt-12 divide-y divide-[#183229]/15 border-y border-[#183229]/15">
+        <div className="mt-12 divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
           {paths.map((path) => (
             <article
               id={path.id}
@@ -80,35 +81,33 @@ export default function ServicesPageClient() {
               />
               <div className="grid gap-8 lg:grid-cols-[.65fr_1.35fr] lg:gap-16">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[.18em] text-[#775d22]">
-                    {path.price}
-                  </p>
                   <h3 className="mt-3 font-playfair text-3xl font-black md:text-4xl">
                     {path.name}
                   </h3>
                 </div>
                 <div>
-                  <p className="max-w-2xl text-2xl font-semibold leading-9">
+                  <p className="max-w-[60ch] text-2xl font-semibold leading-9">
                     {path.statement}
                   </p>
-                  <p className="mt-4 max-w-2xl leading-7 text-[#50675e]">
+                  <p className="mt-4 max-w-[60ch] leading-7 text-[#50675e]">
                     {path.summary}
                   </p>
                   <ul className="mt-6 grid gap-3 text-sm text-[#40564e] sm:grid-cols-3">
                     {path.goodFor.map((item) => (
                       <li key={item} className="flex gap-2">
                         <Check
-                          className="mt-0.5 h-4 w-4 shrink-0 text-[#126b4e]"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-[var(--public-green)]"
                           aria-hidden="true"
                         />
                         {item}
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-7">
+                  <p className="mt-7 text-2xl font-bold">{path.price}</p>
+                  <div className="mt-4">
                     <Link
                       href={path.details}
-                      className="inline-flex min-h-11 items-center gap-2 px-2 py-3 font-bold text-[#126b4e] underline underline-offset-4"
+                      className="inline-flex min-h-11 items-center gap-2 px-2 py-3 font-bold text-[var(--public-green)] underline underline-offset-4"
                     >
                       See whether this fits{" "}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -121,7 +120,8 @@ export default function ServicesPageClient() {
         </div>
       </section>
 
-      <section className="border-t border-[#183229]/10 bg-[#e8e2d5]">
+      <div className="mx-auto max-w-6xl px-5 pb-16 sm:px-8"><ThreeStepFlow /></div>
+      <section className="border-t border-[var(--public-ink)]/10 bg-[#e8e2d5]">
         <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
           <h2 className="font-playfair text-4xl font-black md:text-5xl">
             Not sure which path fits?
@@ -132,7 +132,7 @@ export default function ServicesPageClient() {
           </p>
           <Link
             href="/contact"
-            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white"
+            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
           >
             Share Your Vision{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -140,7 +140,7 @@ export default function ServicesPageClient() {
           <p className="mt-5">
             <Link
               href="/how-it-works"
-              className="font-semibold text-[#126b4e] underline"
+              className="font-semibold text-[var(--public-green)] underline"
             >
               See how we help
             </Link>

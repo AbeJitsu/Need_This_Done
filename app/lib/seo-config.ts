@@ -1,3 +1,5 @@
+import { PUBLIC_OFFERS } from "./public-offers";
+
 // ============================================================================
 // Centralized SEO Configuration
 // ============================================================================
@@ -51,15 +53,15 @@ export const seoConfig = {
   services: [
     {
       name: 'Website Fix',
-      description: 'A $500 review plus one agreed contained website fix.',
+      description: PUBLIC_OFFERS["website-improvement"].summary,
       serviceType: 'Website Fix',
-      price: '$500',
+      price: PUBLIC_OFFERS["website-improvement"].price,
     },
     {
       name: 'Managed Automation',
-      description: 'A proposal-based way to improve one repeated problem at work.',
+      description: PUBLIC_OFFERS["ai-operator"].summary,
       serviceType: 'Managed Automation',
-      price: 'Proposal-based',
+      price: PUBLIC_OFFERS["ai-operator"].price,
     },
   ],
 };

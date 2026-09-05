@@ -25,13 +25,6 @@ test('homepage first viewport identifies audience, promise, and action without m
   await expect(firstSection).not.toContainText(/API|database|automation system|technical implementation/i);
 });
 
-test('representative examples never imply client proof', async ({ page }) => {
-  await page.goto('/work');
-  await expect(page.getByText(/hypothetical, representative before-and-after scenarios/i)).toBeVisible();
-  await expect(page.getByText(/not client work, paid outcomes, or delivery proof/i)).toBeVisible();
-  await expect(page.getByText(/no time saving, delivery result, or live automation is claimed/i)).toBeVisible();
-});
-
 test('general contact submission keeps service optional and reports success', async ({ page }) => {
   let submitted: Record<string, string> = {};
   await page.route('**/api/projects', async (route) => {

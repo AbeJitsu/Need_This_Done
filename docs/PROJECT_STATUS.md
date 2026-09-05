@@ -1,9 +1,19 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-09-04
+**Last updated:** 2026-09-05
 
 ## Current facts
+
+- On 2026-09-05, services and pricing were refined around problem, useful
+  change, included work, then price. Both use the existing public palette and
+  numbered reassurance strip. PUBLIC_OFFERS owns price-free summaries and
+  displayed prices. Website Fix and FAQ payment copy and SEO were aligned;
+  billing arrangements and contractual terms were not changed.
+- On 2026-09-05, the extra disclaimer above the public Examples scenarios was
+  removed to keep the page focused. The operating and release ledgers retain
+  the factual boundary that examples do not establish customer or hosted
+  proof.
 
 - On 2026-09-04, the MATCH/CRIB-informed public-journey redesign was implemented
   without exposing framework jargon in customer copy. The header follows What
