@@ -1,9 +1,21 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-09-05
+**Last updated:** 2026-09-06
 
 ## Current facts
+
+- On 2026-09-06, `/dashboard`, `/employee`, and `/prospecting` were moved
+  behind one server-rendered `requireOperator` boundary. It reads the existing
+  Supabase cookie session and the durable `user_roles` admin record, then
+  redirects anonymous and non-operator requests to `/login` before any
+  workspace component renders. The interactive workspace components remain
+  client-side. Direct local HTTP checks returned `307` with `Location: /login`
+  for all three routes without a session; focused guard and boundary tests
+  passed (24 tests).
+- Rollback: revert this focused route-guard change on `dev`; no migration,
+  hosted write, deployment, secret change, provider or Mac activation,
+  publication, message, or spend occurred.
 
 - On 2026-09-05, the approved welcoming public-site review centralized rendered
   header/footer navigation, current-route treatment, offer destinations and

@@ -51,9 +51,10 @@ describe('operator-only private boundary', () => {
   it.each([
     'app/dashboard/page.tsx',
     'app/employee/page.tsx',
-  ])('%s renders only for an operator', (path) => {
+    'app/prospecting/page.tsx',
+  ])('%s applies the server operator guard before its workspace renders', (path) => {
     const page = source(path);
-    expect(page).toContain('isAdmin');
-    expect(page).toMatch(/!isAuthenticated\s*\|\|\s*!isAdmin/);
+    expect(page).toContain("@/lib/operator-access");
+    expect(page).toMatch(/await\s+requireOperator\s*\(\s*\)/);
   });
 });
