@@ -16,6 +16,22 @@
 - Rollback: revert this focused route-guard change on `dev`; no migration,
   hosted write, deployment, secret change, provider or Mac activation,
   publication, message, or spend occurred.
+- Playwright now uses one worker by default while retaining the isolated
+  `.next-playwright` output. On 2026-09-06, the provider-free local
+  `npm run verify:assembly` gate passed: schema lint, `verify:code` (lint,
+  type-check, 64 unit files / 330 tests, 6 accessibility files / 60 tests,
+  production build), the serialized 70-test retained public/mobile smoke
+  suite, and the authenticated employee, prospecting, daily-cockpit, and
+  employee-workspace contracts. `git diff --check` passed. This is local
+  Supabase and deterministic browser evidence only; it is not hosted,
+  provider, customer, or Mac-runtime proof.
+- Remaining limitation: the local retained dev server still emits
+  `MaxListenersExceededWarning` messages while compiling many routes. The
+  serialized gate passes despite the warnings. Owner: repository maintainer;
+  investigate and either remove or document the harness cause by 2026-09-13.
+  Rollback: revert the Playwright configuration change on `dev`; no migration,
+  hosted write, deployment, secret change, provider or Mac activation,
+  publication, message, or spend occurred.
 
 - On 2026-09-05, the approved welcoming public-site review centralized rendered
   header/footer navigation, current-route treatment, offer destinations and
