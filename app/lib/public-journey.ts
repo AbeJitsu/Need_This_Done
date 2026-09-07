@@ -5,6 +5,7 @@ export const PUBLIC_VARIANT = "match-crib-v1" as const;
 export const PUBLIC_NAVIGATION = [
   { href: "/services", label: "What We Do" },
   { href: "/how-it-works", label: "How We Work" },
+  { href: "/system", label: "The System" },
   { href: "/work", label: "Examples" },
   { href: "/about", label: "Why Us" },
 ] as const;
@@ -31,6 +32,12 @@ export const PUBLIC_ROUTE_STAGES = {
     primary: PUBLIC_PRIMARY_ACTION,
     secondary: { href: "/work", label: "See Examples" },
     event: "how_it_works",
+  },
+  "/system": {
+    stage: "trust",
+    primary: PUBLIC_PRIMARY_ACTION,
+    secondary: { href: "/about", label: "Why Us" },
+    event: "system",
   },
   "/work": {
     stage: "recognize",
@@ -139,6 +146,7 @@ export const ENGAGEMENT_ROUTES = [
   "managed_automation",
   "about",
   "how_it_works",
+  "system",
   "work",
   "pricing",
   "contact",
