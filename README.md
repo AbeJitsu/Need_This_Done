@@ -45,6 +45,9 @@ Supabase is durable product truth. The Mac mini is the always-on private
 runtime: it polls outward, exposes no public listener, and may act only on a
 recorded, frozen approval.
 
+The MacBook is the first separately approved rehearsal host for this seam. The
+Mac mini remains a later always-on target after the MacBook proof is accepted.
+
 - Hermes proposes a bounded plan and records the allowed model route.
 - OpenClaw carries out an approved local, non-code tool task.
 - Codex handles an approved coding task only in its designated worktree.

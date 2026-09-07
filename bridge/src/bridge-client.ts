@@ -24,6 +24,23 @@ export type ClaimedTask = {
   approved_plan_snapshot?: JsonObject | null;
 };
 
+export type WorkerStatus = {
+  workerId: string;
+  checkedAt: string;
+  heartbeat: {
+    worker_id: string;
+    owner_id?: string;
+    status: 'online' | 'degraded' | 'offline' | 'stopped';
+    version: string;
+    capabilities: unknown;
+    last_seen_at: string;
+    last_error: string | null;
+    active_task_id: string | null;
+    updated_at: string;
+  } | null;
+  currentTask: JsonObject | null;
+};
+
 export type ProspectingPayload = {
   dossiers: unknown[];
   providerCitations: Array<{ url: string; title: string; excerpt: string }>;
@@ -74,7 +91,16 @@ export class BridgeApiError extends Error {
 }
 
 function isLoopback(hostname: string) {
-  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+  const normalized = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  const ipv4 = normalized.split('.');
+  const isIpv4Loopback = ipv4.length === 4
+    && ipv4.every((part) => /^\d+$/.test(part) && Number(part) <= 255)
+    && Number(ipv4[0]) === 127;
+  return normalized === 'localhost'
+    || normalized === '::1'
+    || normalized === '0:0:0:0:0:0:0:1'
+    || isIpv4Loopback
+    || /^::ffff:7f[0-9a-f]{2}:/.test(normalized);
 }
 
 function errorMessage(payload: unknown, fallback: string) {
@@ -96,7 +122,8 @@ export class BridgeApiClient {
 
   constructor(options: BridgeClientOptions) {
     const parsed = new URL(options.baseUrl);
-    if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && isLoopback(parsed.hostname))) {
+    if ((parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && isLoopback(parsed.hostname)))
+      || parsed.username || parsed.password) {
       throw new Error('The bridge API must use HTTPS, except for loopback development URLs.');
     }
     this.baseUrl = options.baseUrl.endsWith('/') ? options.baseUrl : options.baseUrl + '/';
@@ -159,6 +186,13 @@ export class BridgeApiClient {
       ownerId: this.ownerId,
       workerId: this.workerId,
       limit,
+    });
+  }
+
+  status() {
+    return this.post<WorkerStatus>('/api/agent-bridge/status', {
+      ownerId: this.ownerId,
+      workerId: this.workerId,
     });
   }
 

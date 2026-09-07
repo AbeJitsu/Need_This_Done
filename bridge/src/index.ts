@@ -9,6 +9,8 @@ const DEFAULT_GATEWAY_URL = 'ws://127.0.0.1:18789';
 const DEFAULT_ARTIFACT_ROOT = 'bridge-artifacts';
 const DEFAULT_POLL_INTERVAL_MS = 5_000;
 const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+const ALLOWED_EXECUTOR_MODEL_ID = 'openai/gpt-5.6-luna';
+const DEFAULT_RUNTIME_MODE = 'approved';
 const DEFAULT_CAPABILITIES = [
   'coordinate',
   'research_public_web',
@@ -20,6 +22,8 @@ const DEFAULT_CAPABILITIES = [
 
 type RuntimeEnvironment = Record<string, string | undefined>;
 
+export type BridgeRuntimeMode = 'approved' | 'disposable-local';
+
 export type BridgeRuntime = {
   runner: AgentBridgeRunner;
   pollIntervalMs: number;
@@ -29,6 +33,52 @@ function required(environment: RuntimeEnvironment, name: string) {
   const value = environment[name]?.trim();
   if (!value) throw new Error(`${name} is required.`);
   return value;
+}
+
+function loopback(hostname: string) {
+  const normalized = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  const ipv4 = normalized.split('.');
+  const isIpv4Loopback = ipv4.length === 4
+    && ipv4.every((part) => /^\d+$/.test(part) && Number(part) <= 255)
+    && Number(ipv4[0]) === 127;
+  return normalized === 'localhost'
+    || normalized === '::1'
+    || normalized === '0:0:0:0:0:0:0:1'
+    || isIpv4Loopback
+    || /^::ffff:7f[0-9a-f]{2}:/.test(normalized);
+}
+
+function unspecified(hostname: string) {
+  const normalized = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  return normalized === '0.0.0.0' || normalized === '::' || normalized === '0:0:0:0:0:0:0:0';
+}
+
+export function bridgeRuntimeMode(environment: RuntimeEnvironment) {
+  const mode = environment.BRIDGE_RUNTIME_MODE?.trim() || environment.BRIDGE_MODE?.trim() || DEFAULT_RUNTIME_MODE;
+  if (mode !== 'approved' && mode !== 'disposable-local') {
+    throw new Error('BRIDGE_MODE must be approved or disposable-local.');
+  }
+  if (environment.BRIDGE_RUNTIME_MODE?.trim()
+    && environment.BRIDGE_MODE?.trim()
+    && environment.BRIDGE_RUNTIME_MODE.trim() !== environment.BRIDGE_MODE.trim()) {
+    throw new Error('BRIDGE_MODE and BRIDGE_RUNTIME_MODE must agree.');
+  }
+  return mode as BridgeRuntimeMode;
+}
+
+export function validateBridgeApiUrl(value: string, mode: BridgeRuntimeMode) {
+  const parsed = new URL(value);
+  const isLoopback = loopback(parsed.hostname);
+  if (unspecified(parsed.hostname) || parsed.username || parsed.password) {
+    throw new Error('BRIDGE_API_URL must not use an unspecified host or URL credentials; disposable-local mode requires loopback.');
+  }
+  if (mode === 'approved' && (parsed.protocol !== 'https:' || isLoopback)) {
+    throw new Error('Approved/live mode requires an external HTTPS BRIDGE_API_URL.');
+  }
+  if (mode === 'disposable-local' && (!['http:', 'https:'].includes(parsed.protocol) || !isLoopback)) {
+    throw new Error('Disposable-local mode requires a loopback HTTP or HTTPS BRIDGE_API_URL.');
+  }
+  return parsed;
 }
 
 function parseBoundedNumber(environment: RuntimeEnvironment, name: string, fallback: number, minimum: number, maximum: number) {
@@ -58,9 +108,11 @@ export function createBridgeRuntime(environment: RuntimeEnvironment = process.en
   if (!isUuid(ownerId)) throw new Error('BRIDGE_OWNER_ID must be a UUID.');
   const version = environment.BRIDGE_VERSION?.trim() || DEFAULT_VERSION;
   const workerId = required(environment, 'BRIDGE_WORKER_ID');
-  if (required(environment, 'OPENCLAW_EXECUTOR_MODEL_ID') !== 'openai/gpt-5.6-luna') {
-    throw new Error('OPENCLAW_EXECUTOR_MODEL_ID must be exactly openai/gpt-5.6-luna.');
+  if (required(environment, 'OPENCLAW_EXECUTOR_MODEL_ID') !== ALLOWED_EXECUTOR_MODEL_ID) {
+    throw new Error(`OPENCLAW_EXECUTOR_MODEL_ID must be exactly ${ALLOWED_EXECUTOR_MODEL_ID}.`);
   }
+  const mode = bridgeRuntimeMode(environment);
+  validateBridgeApiUrl(required(environment, 'BRIDGE_API_URL'), mode);
   const api = new BridgeApiClient({
     baseUrl: required(environment, 'BRIDGE_API_URL'),
     secret: required(environment, 'OPENCLAW_BRIDGE_SECRET'),

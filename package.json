@@ -7,6 +7,7 @@
     "rehearse:local-data": "./scripts/rehearse-local-data-migration.sh",
     "rehearse:hosted-like": "./scripts/rehearse-hosted-095-to-106.sh",
     "release:metadata": "node scripts/generate-release-metadata.mjs",
+    "mac:worker": "node scripts/mac-worker.mjs",
     "verify:pre-key-ci": "node scripts/verify-pre-key-ci-contract.mjs && node scripts/verify-hosted-migration-stages.mjs",
     "verify:database": "cd app && npm run verify:database",
     "verify:code": "cd app && npm run verify:code",

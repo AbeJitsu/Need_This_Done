@@ -40,6 +40,35 @@ bridge URL, a loopback Gateway URL, an absolute artifact root, valid owner
 identifier, and a 32-character-or-longer Gateway token. It constructs no
 network connection and prints no secret.
 
+Mac worker command lifecycle
+
+The repository command is the supported host entry point. Run these in order
+after the separately approved runtime and server prerequisites are ready:
+
+  npm run mac:worker -- preflight
+  npm run mac:worker -- prepare
+  npm run mac:worker -- status
+
+`prepare` discovers absolute Node/OpenClaw paths and renders both jobs without
+calling launchctl. A live activation is a separate decision:
+
+  npm run mac:worker -- start --confirm START_NEEDTHISDONE_WORKER
+
+The command starts the loopback Gateway first, waits for an authenticated v4
+handshake, then starts the bridge and waits for its heartbeat. Stop it with:
+
+  npm run mac:worker -- stop
+
+For a disposable local control-plane rehearsal, the private environment must
+set `BRIDGE_MODE=disposable-local`, use a loopback `BRIDGE_API_URL`, and use the
+reserved worker ID `macbook-pro-hermes-rehearsal`. Then run:
+
+  npm run mac:worker -- test --local --duration 60
+
+The foreground rehearsal starts neither launchd job and removes only its exact
+temporary artifact directory in cleanup. It does not prove hosted persistence,
+customer delivery, paid execution, or the Mac mini.
+
 Review-only launchd preparation
 
 The existing template renderer may produce plist files for human inspection:

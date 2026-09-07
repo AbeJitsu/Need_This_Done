@@ -19,4 +19,9 @@ set -a
 # shellcheck source=/dev/null
 source "$BRIDGE_ENV_FILE"
 set +a
-exec "${NODE_BINARY:-/usr/local/bin/node}" "$validator"
+node_binary="${NODE_BINARY:-$(command -v node || true)}"
+if [[ -z "$node_binary" || "$node_binary" != /* || ! -x "$node_binary" ]]; then
+  echo "Node must be available through NODE_BINARY or command -v node." >&2
+  exit 67
+fi
+exec "$node_binary" "$validator"

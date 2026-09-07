@@ -1,10 +1,28 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-09-06
+**Last updated:** 2026-09-07
 
 ## Current facts
 
+- On 2026-09-07, the repository gained a subscription-first Mac worker CLI with
+  explicit `preflight`, `prepare`, `test --local`, `start`, `status`, and
+  `stop` commands. It discovers absolute Node/OpenClaw paths, keeps the
+  `needthisdone` read-only profile separate from the future
+  `needthisdone-codex-builder` profile, requires exact confirmation before
+  launchd activation, starts the loopback Gateway before the bridge, and
+  retains runtime data on stop. The signed bridge now has a read-only worker
+  status endpoint for heartbeat, current-task, model, and recent-error
+  evidence. No launchd job, provider, bridge, hosted service, secret, or
+  external action was activated by this repository change.
+- The current Mac host preflight passed Node 22, OpenClaw `2026.8.1`, the
+  isolated `needthisdone` read-only proof profile at
+  `openai/gpt-5.6-luna` / `max`, Docker Desktop, and the sandbox image. It is
+  blocked because the private bridge runtime/environment has not been
+  configured and OpenClaw `models status --check` still reports profile-cache
+  permission hardening failures (`EPERM`). The local-only `prepare` path and
+  review-only launchd renderer are covered by deterministic tests; no real
+  bridge or provider execution is claimed.
 - On 2026-09-06, `/dashboard`, `/employee`, and `/prospecting` were moved
   behind one server-rendered `requireOperator` boundary. It reads the existing
   Supabase cookie session and the durable `user_roles` admin record, then
@@ -188,6 +206,23 @@
 
 ## Active validation
 
+- On 2026-09-07, `bridge/npm test` passed all 20 tests, including the signed
+  status client, explicit disposable-local URL mode, path-discovered launchd
+  rendering, and Mac worker CLI safety checks. The focused signed status route
+  test passed 3 tests. Node and shell syntax checks, `git diff --check`, app
+  lint, app type-check, and the production build also passed. The root CLI
+  smoke checks showed that
+  `preflight --json` reports the real profile-cache blocker without secrets,
+  `status --json` reports unloaded jobs without secrets, and `start`/`test`
+  refuse missing activation confirmation or missing `--local`. These are
+  local implementation checks only; the account-backed bridge rehearsal,
+  lead→builder→reviewer proof, and hosted/customer proof remain pending.
+- The next host step is owner-controlled: repair the private OpenClaw cache
+  permissions and configure the private bridge environment on the MacBook,
+  then rerun the isolated proof and the foreground disposable-local rehearsal.
+  Owner: private Mac runtime owner; target follow-up 2026-09-14. Do not treat
+  the current profile proof or local CLI checks as evidence that the bridge has
+  consumed a ChatGPT subscription.
 - On 2026-09-04, the public-journey redesign passed lint, type-check, the full
   unit suite (63 files, 325 tests), the accessibility suite (4 files, 51
   tests), the production build, and `git diff --check`. The disposable local
@@ -324,6 +359,13 @@ The navigation/page-boundary follow-up can be reverted as one reviewed Git
 change. It changes the public Why Us route, shared navigation destinations,
 sitemap, and focused route tests only; no API, database, provider, hosted, or
 publication state changed.
+
+The subscription-first Mac worker change can be reverted by a reviewed Git
+revert on `dev`. It adds the repository CLI, signed read-only status route,
+launchd templates/wrappers, local-mode validation, tests, and documentation;
+it adds no migration. This work created no private runtime files, loaded no
+launchd job, started no Gateway or bridge, and made no hosted or external
+change. Any future Mac activation remains a separate owner-approved action.
 
 The independent OpenClaw profile can be stopped without touching the default
 profile. Revoke its OpenAI OAuth grant if required, archive only
