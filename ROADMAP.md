@@ -61,6 +61,14 @@ It is complete only when all of these are true:
 - New providers, integrations, agent roles, or tools without a need proven by
   the assistant workflow.
 
+## Public `/system` case study
+
+The public [system case study](app/app/system/page.tsx) is an explanatory page
+for the private-system boundary, not part of the assistant finish line. If its
+stage model, CTA destinations, or responsive card geometry changes, update the
+route assertions in `app/e2e/ai-employee-product.spec.ts` and record the new
+validation in [Project status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md).
+
 ## Later, only under a new approval
 
 - Hosted migration, deployment, secret provisioning, provider activation, or

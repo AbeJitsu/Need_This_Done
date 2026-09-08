@@ -48,6 +48,19 @@ describe('current repository documentation', () => {
     expect(source('ROADMAP.md')).not.toContain('## The assistant vision');
   });
 
+  it('keeps the public system case study tied to its maintenance record', () => {
+    expect(source('README.md')).toContain(
+      '[`/system` case study](app/app/system/page.tsx)',
+    );
+    expect(source('ROADMAP.md')).toContain('## Public `/system` case study');
+    expect(source('ROADMAP.md')).toContain(
+      'app/e2e/ai-employee-product.spec.ts',
+    );
+    expect(source('ROADMAP.md')).toContain(
+      '[Release evidence](docs/RELEASE_EVIDENCE.md)',
+    );
+  });
+
   it('keeps agent instructions focused on canonical sources and stable boundaries', () => {
     const instructions = source('AGENTS.md');
 

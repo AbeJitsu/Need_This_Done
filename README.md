@@ -95,6 +95,12 @@ authority. A public request starts a conversation only. It does not create an
 automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
+The public [`/system` case study](app/app/system/page.tsx) explains this
+boundary through the four-stage system map and reviewable evidence rails. It is
+an explanatory public page, not a second control plane. Keep its route contract
+and responsive presentation aligned with [Project status](docs/PROJECT_STATUS.md)
+and [Release evidence](docs/RELEASE_EVIDENCE.md) when the page changes.
+
 Internal public-service writing guidance lives in
 [Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).
 
