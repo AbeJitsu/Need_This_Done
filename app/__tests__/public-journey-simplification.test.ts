@@ -23,11 +23,26 @@ describe('vision-first public journey', () => {
   });
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'Examples', 'Why Us']);
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'The System', 'Examples', 'Why Us']);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
     for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
 
+  });
+
+  it('keeps the system case study on purposeful route exits', () => {
+    const system = source('app/system/page.tsx');
+    expect(system).toContain('A private system for follow-through');
+    expect(system).toContain('Important work, kept moving.');
+    expect(system).toContain('NeedThisDone turns a long-range goal into one approved, reviewable next move.');
+    expect(system).toContain('It remembers what matters, asks before it acts, and shows what changed.');
+    expect(system).toContain('href="/contact"');
+    expect(system).toContain('Inspect the implementation');
+    expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');
+    expect(system).not.toMatch(/href=["']#/);
+    for (const stage of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
+      expect(system).toContain(`title: "${stage}"`);
+    }
   });
 
   it('keeps both offers bounded, priced, and compatible', () => {

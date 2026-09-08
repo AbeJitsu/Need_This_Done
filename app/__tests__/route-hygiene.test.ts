@@ -11,7 +11,7 @@ const repositoryRoot = resolve(appRoot, '..');
 
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/how-it-works', '/work', '/about']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/how-it-works', '/system', '/work', '/about']);
     expect(PUBLIC_PRIMARY_ACTION.label).toBe('Share Your Vision');
   });
 
