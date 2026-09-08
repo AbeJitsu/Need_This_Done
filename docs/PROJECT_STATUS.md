@@ -58,19 +58,23 @@
   from 1024 pixels upward: hero, section, and bridge containers use
   `min(80%, 88rem)`, while the closing CTA keeps its narrower
   `min(80%, 57rem)` readability cap. The 375/768 responsive rails remain on
-  their existing mobile/tablet widths. The What We Do intro still spans its
-  full section rail, keeps the `1.25fr / 0.75fr` columns, the `34ch` lead cap,
-  and heading-aligned supporting copy; wide hero title spans render as three
-  rows. Focused homepage Chromium checks passed 4/4 tests across 375, 768,
-  1024, 1280, and 2048 pixels, including rail gutters, overflow, connector,
-  text, motion, focus, console/page-error, and main-content axe checks. The
-  refreshed screenshots are `/tmp/homepage-trailer-375.png`,
+  their existing mobile/tablet widths. At 1024 pixels and above, the What We
+  Do intro now stacks its eyebrow, headline, and supporting sentence in one
+  left-aligned column while the offer cards remain on the full section rail
+  beneath it. The 768–1023 tablet range retains the `1.25fr / 0.75fr` split,
+  heading-aligned lead, and `34ch` supporting-copy cap; mobile remains
+  unchanged. Wide hero title spans render as three rows. Focused homepage
+  Chromium checks passed 3/3 tests across 375, 768, 1024, 1280, and 2048
+  pixels, including rail gutters, stacked intro geometry, overflow,
+  connectors, text, motion, focus, console/page-error, and main-content axe
+  checks. The refreshed screenshots are `/tmp/homepage-trailer-375.png`,
   `/tmp/homepage-trailer-768.png`, `/tmp/homepage-trailer-1024.png`,
   `/tmp/homepage-trailer-1280.png`, and `/tmp/homepage-trailer-2048.png`.
   The retained public/mobile smoke suite passed 76 tests with 6 expected
   skips; the code gate passed lint, type-check, 65 unit files/335 tests, 6
   accessibility files/60 tests, and production build. `git diff --check`
-  passed. No API, schema, hosted, deployment, publication, provider, Mac,
+  passed. The restarted local development server on port 3000 returned
+  `200 OK`. No API, schema, hosted, deployment, publication, provider, Mac,
   customer, message, or spend action occurred.
 - Rollback: revert this focused homepage desktop-rail presentation, test,
   and documentation change on `dev`; no data or external state needs rollback.
@@ -436,9 +440,9 @@ it adds no migration. This work created no private runtime files, loaded no
 launchd job, started no Gateway or bridge, and made no hosted or external
 change. Any future Mac activation remains a separate owner-approved action.
 
-The 2026-09-08 homepage desktop-rail change is presentation-only and
-reversible by a reviewed Git revert on `dev`; it adds no database migration,
-hosted state, or external action.
+The 2026-09-08 homepage desktop-rail and What We Do intro composition changes
+are presentation-only and reversible by a reviewed Git revert on `dev`; they
+add no database migration, hosted state, or external action.
 
 The independent OpenClaw profile can be stopped without touching the default
 profile. Revoke its OpenAI OAuth grant if required, archive only

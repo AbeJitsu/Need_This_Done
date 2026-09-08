@@ -149,6 +149,7 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
       const whatWeDoIntroRect = whatWeDoIntro?.getBoundingClientRect();
       const whatWeDoLeadRect = whatWeDoLead?.getBoundingClientRect();
       const whatWeDoHeadingRect = whatWeDoIntro?.querySelector<HTMLElement>('.homepage-heading')?.getBoundingClientRect();
+      const whatWeDoOfferGridRect = document.querySelector<HTMLElement>('#what-we-do .homepage-offer-grid')?.getBoundingClientRect();
       const whatWeDoFirstColumnWidth = whatWeDoIntro
         ? whatWeDoIntro.children[0]?.getBoundingClientRect().width || 0
         : 0;
@@ -198,11 +199,18 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
         whatWeDoRailWidth: whatWeDoRail?.getBoundingClientRect().width || 0,
         whatWeDoColumns: whatWeDoIntroStyle?.gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length || 0,
         whatWeDoColumnGap: parseFloat(whatWeDoIntroStyle?.columnGap || '0'),
+        whatWeDoRowGap: parseFloat(whatWeDoIntroStyle?.rowGap || '0'),
         whatWeDoLeadTop: whatWeDoLeadRect?.top || 0,
+        whatWeDoLeadLeft: whatWeDoLeadRect?.left || 0,
         whatWeDoHeadingTop: whatWeDoHeadingRect?.top || 0,
+        whatWeDoHeadingLeft: whatWeDoHeadingRect?.left || 0,
+        whatWeDoHeadingBottom: whatWeDoHeadingRect?.bottom || 0,
         whatWeDoLeadWidth: whatWeDoLeadColumn?.width || 0,
         whatWeDoLeadMaxWidth: whatWeDoIntroStyle && whatWeDoLead ? parseFloat(getComputedStyle(whatWeDoLead).maxWidth) : 0,
         whatWeDoColumnWidths,
+        whatWeDoOfferGridTop: whatWeDoOfferGridRect?.top || 0,
+        whatWeDoOfferGridWidth: whatWeDoOfferGridRect?.width || 0,
+        whatWeDoIntroBottom: whatWeDoIntroRect?.bottom || 0,
         homepageRails,
         heroActionVisible: Boolean(document.querySelector('.homepage-hero__actions a[href="/contact"]')),
         teaserVisible: Boolean(document.querySelector('.homepage-teaser')),
@@ -227,7 +235,9 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
       expect(layout.heroTitleRows).toBeGreaterThanOrEqual(1);
     }
     expect(layout.whatWeDoIntroWidth).toBeCloseTo(layout.whatWeDoRailWidth, 0);
-    expect(layout.whatWeDoColumns).toBe(viewport.width >= 768 ? 2 : 1);
+    expect(layout.whatWeDoOfferGridWidth).toBeCloseTo(layout.whatWeDoRailWidth, 0);
+    expect(layout.whatWeDoOfferGridTop).toBeGreaterThan(layout.whatWeDoIntroBottom);
+    expect(layout.whatWeDoColumns).toBe(viewport.width >= 1024 ? 1 : viewport.width >= 768 ? 2 : 1);
     expect(layout.whatWeDoLeadMaxWidth).toBeGreaterThan(0);
     expect(layout.homepageRails.length).toBeGreaterThan(0);
     if (viewport.width >= 1024) {
@@ -243,7 +253,13 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
         && Math.abs(viewport.width - rail.right - expectedGutter) <= 1
       ))).toBe(true);
     }
-    if (viewport.width >= 768) {
+    if (viewport.width >= 1024) {
+      expect(layout.whatWeDoLeadTop).toBeGreaterThan(layout.whatWeDoHeadingBottom);
+      expect(Math.abs(layout.whatWeDoLeadLeft - layout.whatWeDoHeadingLeft)).toBeLessThanOrEqual(1);
+      expect(layout.whatWeDoRowGap).toBeGreaterThanOrEqual(24);
+      expect(layout.whatWeDoLeadMaxWidth).toBeLessThan(450);
+      expect(layout.whatWeDoLeadWidth).toBeLessThanOrEqual(layout.whatWeDoLeadMaxWidth + 1);
+    } else if (viewport.width >= 768) {
       expect(Math.abs(layout.whatWeDoLeadTop - layout.whatWeDoHeadingTop)).toBeLessThanOrEqual(1);
       expect(layout.whatWeDoColumnGap).toBeGreaterThanOrEqual(32);
       expect(layout.whatWeDoLeadMaxWidth).toBeLessThan(450);
@@ -550,6 +566,7 @@ test('public journey supports keyboard, reduced motion, and three target widths'
     }
 
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
     if (viewport.width < 1024) {
       const menuButton = page.getByRole('button', { name: 'Open navigation menu' });
       await menuButton.focus();

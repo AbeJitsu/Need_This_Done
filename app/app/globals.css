@@ -2935,6 +2935,15 @@ Blog Markdown Content — Reading Experience
     width: min(80%, 57rem);
   }
 
+  .homepage-section__intro--split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .homepage-section__intro--split .homepage-section__lead {
+    margin-top: 0;
+  }
+
   .homepage-bridge__inner {
     grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.9fr);
     gap: clamp(3rem, 7vw, 7rem);
