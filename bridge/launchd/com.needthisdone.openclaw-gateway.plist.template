@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
   <key>Label</key><string>com.needthisdone.openclaw-gateway</string>
-  <key>ProgramArguments</key><array><string>__OPENCLAW_BINARY__</string><string>gateway</string><string>--host</string><string>127.0.0.1</string><string>--port</string><string>18789</string></array>
-  <key>EnvironmentVariables</key><dict><key>OPENCLAW_CONFIG</key><string>__PRIVATE_CONFIG_PATH__</string></dict>
+  <key>ProgramArguments</key><array><string>/bin/bash</string><string>__GATEWAY_RUNNER_PATH__</string></array>
+  <key>EnvironmentVariables</key><dict><key>BRIDGE_ENV_FILE</key><string>__PRIVATE_ENV_PATH__</string><key>OPENCLAW_CONFIG_PATH</key><string>__PRIVATE_CONFIG_PATH__</string><key>OPENCLAW_BINARY</key><string>__OPENCLAW_BINARY__</string><key>OPENCLAW_PROFILE</key><string>__OPENCLAW_PROFILE__</string><key>OPENCLAW_GATEWAY_PORT</key><string>__OPENCLAW_GATEWAY_PORT__</string><key>OPENCLAW_GATEWAY_URL</key><string>ws://127.0.0.1:__OPENCLAW_GATEWAY_PORT__</string></dict>
   <key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
   <key>StandardOutPath</key><string>__LOG_DIR__/openclaw-gateway.log</string>
   <key>StandardErrorPath</key><string>__LOG_DIR__/openclaw-gateway.error.log</string>

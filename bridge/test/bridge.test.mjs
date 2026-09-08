@@ -47,6 +47,13 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
   assert.equal(request.url, 'http://127.0.0.1:3000/api/agent-bridge/heartbeat');
   assert.equal(request.init.headers['x-bridge-signature'], expected);
 
+  await client.status();
+  assert.equal(request.url, 'http://127.0.0.1:3000/api/agent-bridge/status');
+  assert.deepEqual(JSON.parse(request.init.body), {
+    ownerId,
+    workerId: 'test-worker',
+  });
+
   await client.complete({ taskId, status: 'failed', providerInvoked: false, error: 'pre-provider validation failure' });
   assert.equal(JSON.parse(request.init.body).providerInvoked, false);
 
@@ -85,6 +92,7 @@ test('rehearsal configuration validation is local-only and refuses a non-HTTPS b
     BRIDGE_ARTIFACT_ROOT: '/private/needthisdone/artifacts',
   };
   assert.deepEqual(validateBridgeRehearsalConfiguration(environment), {
+    mode: 'approved',
     bridgeApiOrigin: 'https://control.example.test',
     gateway: 'ws://127.0.0.1:18789',
     artifactRoot: '/private/needthisdone/artifacts',
@@ -93,6 +101,16 @@ test('rehearsal configuration validation is local-only and refuses a non-HTTPS b
     () => validateBridgeRehearsalConfiguration({ ...environment, BRIDGE_API_URL: 'http://control.example.test' }),
     /HTTPS/,
   );
+  assert.deepEqual(validateBridgeRehearsalConfiguration({
+    ...environment,
+    BRIDGE_MODE: 'disposable-local',
+    BRIDGE_API_URL: 'http://127.0.0.1:3100',
+  }), {
+    mode: 'disposable-local',
+    bridgeApiOrigin: 'http://127.0.0.1:3100',
+    gateway: 'ws://127.0.0.1:18789',
+    artifactRoot: '/private/needthisdone/artifacts',
+  });
 });
 
 test('approved private-Mac rehearsal runbook remains configuration-only', async () => {

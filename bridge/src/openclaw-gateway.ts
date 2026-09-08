@@ -81,8 +81,18 @@ function defaultWebsocketFactory(url: string) {
 }
 
 function isLoopbackGateway(url: URL) {
+  const hostname = url.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  const ipv4 = hostname.split('.');
+  const isIpv4Loopback = ipv4.length === 4
+    && ipv4.every((part) => /^\d+$/.test(part) && Number(part) <= 255)
+    && Number(ipv4[0]) === 127;
   return (url.protocol === 'ws:' || url.protocol === 'wss:')
-    && (url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '::1');
+    && !url.username && !url.password && !url.search && !url.hash
+    && (hostname === 'localhost'
+      || hostname === '::1'
+      || hostname === '0:0:0:0:0:0:0:1'
+      || isIpv4Loopback
+      || /^::ffff:7f[0-9a-f]{2}:/.test(hostname));
 }
 
 export class OpenClawGatewayClient {

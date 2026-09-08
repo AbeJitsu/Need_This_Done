@@ -29,9 +29,9 @@ It is complete only when all of these are true:
 
 1. The browser shows the requested work, plan, tool authority, expected asset,
    model route, and any cost before execution.
-2. A designated read-only task is claimed by the outbound-only Mac and returns
-   its result, cost record, and reviewable private asset without changing
-   client, production, or worktree state.
+2. A designated read-only task is claimed by the outbound-only rehearsal Mac
+   and returns its result, cost record, and reviewable private asset without
+   changing client, production, or worktree state.
 3. An unapproved, altered, expired, stopped, or paid-route task fails closed.
 4. A later, separately approved coding rehearsal changes only its designated
    worktree and returns a reviewable diff and evidence. It does not begin until
@@ -43,7 +43,8 @@ It is complete only when all of these are true:
    Supabase; remove or avoid duplicate queues, dashboards, memory stores, and
    control planes.
 2. Connect the signed private bridge to a real loopback OpenClaw gateway on the
-   Mac mini, while preserving the outbound-only boundary and frozen-plan checks.
+   MacBook first, while preserving the outbound-only boundary and frozen-plan
+   checks. The Mac mini remains a later separately approved always-on target.
 3. Use Hermes to return the bounded plan and approved model route. Prefer an
    allowed OpenRouter free route; surface a paid route for separate browser
    approval instead of silently falling back.
