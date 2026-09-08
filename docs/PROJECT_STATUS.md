@@ -5,6 +5,38 @@
 
 ## Current facts
 
+- On 2026-09-08, the public journey was split so `/services` answers what help
+  is available and `/work` answers what a useful change could look like.
+  `PUBLIC_OFFERS` now owns the two concise fit descriptions, and the typed
+  `PUBLIC_EXAMPLES` collection owns exactly three illustrative before/after
+  stories with optional related offer IDs. `/services` renders exactly two
+  data-driven offer cards with each name, fit, existing summary, existing
+  price, distinct accent/icon, and detail link; its repeated process and
+  service illustrations are gone. Each offer card now groups its header, fit,
+  summary, and action into shared desktop grid rows, so wrapped copy does not
+  move the divider, price, or detail link; mobile cards remain naturally
+  stacked. `/work` renders three full-width stories
+  with Before, After, and What changed panels, uses side-by-side comparisons
+  from 768 pixels upward, and shows a visible transition between stacked
+  panels on mobile. The first two related links derive their names and
+  destinations from `PUBLIC_OFFERS`; the third remains Share Your Vision.
+  Homepage offer previews now use centralized fit copy, and homepage example
+  cards contain only a title and one short teaser linked to `/work`.
+  Focused public services Chromium checks passed 2/2, including the desktop
+  card-row geometry assertion; the matching public-mobile services check passed
+  1/1. The retained public/mobile smoke suite passed 80 tests with 8 expected
+  skips. Screenshots reviewed are `/tmp/services-aligned.png` and
+  `/tmp/services-aligned-mobile.png`. The new `/work` responsive matrix
+  checked 375, 768, and 1280 pixels for layout, overflow, console/page
+  errors, and main-content axe violations; screenshots are
+  `/tmp/public-examples-375.png`, `/tmp/public-examples-768.png`, and
+  `/tmp/public-examples-1280.png`. The code gate passed lint, type-check,
+  66 unit files/338 tests, 6 accessibility files/60 tests, and production
+  build; `git diff --check` passed. Rollback: revert this presentation, test,
+  and ledger diff on `dev`; no data or external state needs rollback.
+  No deployment, hosted change, provider activation, Mac activation,
+  publication, external message, customer result, or spend occurred.
+
 - On 2026-09-08, the public presentation refresh simplified homepage, services,
   process, about, examples, contact labels, and system-introduction copy.
   Homepage teaser beats now read “Tell us what’s stuck”, “Choose what to
@@ -462,6 +494,10 @@ change. Any future Mac activation remains a separate owner-approved action.
 The 2026-09-08 homepage desktop-rail and What We Do intro composition changes
 are presentation-only and reversible by a reviewed Git revert on `dev`; they
 add no database migration, hosted state, or external action.
+
+The 2026-09-08 What We Do / Examples separation is presentation-only and
+reversible by a reviewed Git revert on `dev`; it adds no database migration,
+hosted state, or external action.
 
 The independent OpenClaw profile can be stopped without touching the default
 profile. Revoke its OpenAI OAuth grant if required, archive only

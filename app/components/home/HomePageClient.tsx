@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { ArrowRight, Eye, Sparkles, Target } from "lucide-react";
 import { Fragment } from "react";
-import ServiceIllustration from "@/components/public/ServiceIllustration";
-import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
+import {
+  getPublicExampleHref,
+  PUBLIC_EXAMPLES,
+  PUBLIC_EXAMPLE_IDS,
+  PUBLIC_EXAMPLE_TITLES,
+  PUBLIC_OFFERS,
+  type PublicOfferId,
+} from "@/lib/public-offers";
 
 type TeaserBeat = {
   number: string;
@@ -17,18 +23,6 @@ type OfferPreview = {
   id: PublicOfferId;
   number: string;
   icon: TeaserBeat["icon"];
-  problem: string;
-  linkLabel: string;
-};
-
-type ExampleFrame = {
-  number: string;
-  icon: TeaserBeat["icon"];
-  href: string;
-  title: string;
-  happening: string;
-  tried: string;
-  after: string;
 };
 
 const teaserBeats: readonly TeaserBeat[] = [
@@ -64,15 +58,11 @@ const offerPreviews: readonly OfferPreview[] = [
     id: "website-improvement",
     number: "01",
     icon: "target",
-    problem: "An important page feels unclear, slow, inaccessible, or difficult to use.",
-    linkLabel: "See how Website Fix works",
   },
   {
     id: "ai-operator",
     number: "02",
     icon: "sparkles",
-    problem: "A recurring task keeps crossing inboxes, notes, and tools without a dependable path.",
-    linkLabel: "See how repeated work can change",
   },
 ] as const;
 
@@ -104,33 +94,6 @@ const principles = [
     title: "Be direct about what will help",
     description:
       "If something needs a different kind of help, we say so early and plainly.",
-  },
-] as const;
-
-const examples: readonly ExampleFrame[] = [
-  {
-    number: "01",
-    icon: "eye",
-    href: "/work#website-fix",
-    title: "A website that earns the next click",
-    happening:
-      "An important page feels unclear, slow, inaccessible, or difficult to use.",
-    tried:
-      "A team might adjust the copy, layout, or calls to action, but the page still is not doing its job.",
-    after:
-      "We find the friction, make the agreed fix, and hand back a clearer page with a record of what changed.",
-  },
-  {
-    number: "02",
-    icon: "target",
-    href: "/work#managed-automation",
-    title: "A better way through repeated work",
-    happening:
-      "A recurring task keeps crossing inboxes, documents, and tools without a dependable path.",
-    tried:
-      "A team might add reminders, documents, or another tool, but the work still depends on manual follow-up.",
-    after:
-      "We identify the bottleneck, clarify the result, and define a focused proposal to move it forward.",
   },
 ] as const;
 
@@ -284,21 +247,11 @@ export default function HomePageClient() {
                     </div>
                     <p className="homepage-card-kicker">Starting point</p>
                     <h3>{offer.name}</h3>
-                    <ServiceIllustration kind={preview.id === 'website-improvement' ? 'website' : 'work'} />
                   </div>
                   <div className="homepage-card-detail homepage-offer-card__detail">
-                    <dl className="homepage-offer-card__details">
-                      <div>
-                        <dt>The problem</dt>
-                        <dd>{preview.problem}</dd>
-                      </div>
-                      <div>
-                        <dt>The useful change</dt>
-                        <dd>{offer.summary}</dd>
-                      </div>
-                    </dl>
+                    <p className="homepage-offer-card__fit">{offer.fit}</p>
                     <Link href={offer.detailHref} className="homepage-link">
-                      {preview.linkLabel}
+                      See how {offer.name} works
                       <ArrowRight aria-hidden="true" />
                     </Link>
                   </div>
@@ -367,55 +320,50 @@ export default function HomePageClient() {
       >
         <div className="homepage-section__inner">
           <div className="homepage-section__intro">
-            <p className="homepage-eyebrow">How we move a stuck problem forward</p>
+            <p className="homepage-eyebrow">Illustrative examples</p>
             <h2 id="examples-heading" className="homepage-heading homepage-heading--compact">
               What better can look like.
             </h2>
             <p className="homepage-section__lead">
-              A clearer page. Fewer loose ends. Here are two examples of where we can help.
+              Three short glimpses. Read the full stories on Examples.
             </p>
           </div>
 
           <div className="homepage-example-grid">
-            {examples.map((example) => (
-              <article key={example.title} className="homepage-example-card">
-                <div className="homepage-card-identity homepage-example-card__identity">
-                  <div className="homepage-example-card__topline">
-                    <span className="homepage-example-card__number">{example.number}</span>
-                    <span className="homepage-example-card__icon">
-                      <TeaserIcon name={example.icon} />
-                    </span>
+            {PUBLIC_EXAMPLE_IDS.map((exampleId, index) => {
+              const example = PUBLIC_EXAMPLES[exampleId];
+              const title = PUBLIC_EXAMPLE_TITLES[exampleId];
+              return (
+                <article key={exampleId} className="homepage-example-card">
+                  <div className="homepage-card-identity homepage-example-card__identity">
+                    <div className="homepage-example-card__topline">
+                      <span className="homepage-example-card__number">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="homepage-example-card__icon">
+                        <TeaserIcon
+                          name={index === 0 ? "eye" : index === 1 ? "target" : "sparkles"}
+                        />
+                      </span>
+                    </div>
+                    <p className="homepage-card-kicker">Example</p>
+                    <h3>{title}</h3>
                   </div>
-                  <p className="homepage-card-kicker">Example</p>
-                  <h3>{example.title}</h3>
-                </div>
-                <div className="homepage-card-detail homepage-example-card__detail">
-                  <dl className="homepage-example-card__details">
-                    <div>
-                      <dt>What is happening</dt>
-                      <dd>{example.happening}</dd>
-                    </div>
-                    <div>
-                      <dt>What might be tried</dt>
-                      <dd>{example.tried}</dd>
-                    </div>
-                  </dl>
-                  <p className="homepage-example-card__resolution">
-                    <span>How we help resolve it</span>
-                    {example.after}
-                  </p>
-                  <Link href={example.href} className="homepage-link">
-                    Explore this example: {example.title}
-                    <ArrowRight aria-hidden="true" />
-                  </Link>
-                </div>
-                {example !== examples[examples.length - 1] && (
-                  <span className="homepage-example-card__connector" aria-hidden="true">
-                    <ArrowRight />
-                  </span>
-                )}
-              </article>
-            ))}
+                  <div className="homepage-card-detail homepage-example-card__detail">
+                    <p className="homepage-example-card__teaser">{example.before}</p>
+                    <Link href={getPublicExampleHref(exampleId)} className="homepage-link">
+                      Explore this example: {title}
+                      <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </div>
+                  {index < PUBLIC_EXAMPLE_IDS.length - 1 && (
+                    <span className="homepage-example-card__connector" aria-hidden="true">
+                      <ArrowRight />
+                    </span>
+                  )}
+                </article>
+              );
+            })}
           </div>
           <Link href="/work" className="homepage-link homepage-link--standalone">
             See more examples

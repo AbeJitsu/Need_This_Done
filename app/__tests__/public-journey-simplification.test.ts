@@ -72,15 +72,31 @@ describe('vision-first public journey', () => {
     expect(source('app/api/projects/route.ts')).toContain("formData.get('message')");
   });
 
-  it('explains the problem, prior attempts, and next action for every example', () => {
+  it('gives services and examples separate jobs in the public journey', () => {
+    const services = source('components/services/ServicesPageClient.tsx');
     const work = source('components/work/WorkPageClient.tsx');
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('How we move a stuck problem forward');
-    expect(home).toContain('What might be tried');
-    expect(work).toContain('What is happening');
-    expect(work).toContain('What might be tried');
-    expect(work).toContain('How we help resolve it');
-    expect(work).not.toMatch(/we (?:increased|grew|saved|delivered) .*%/i);
+    expect(services).toContain('PUBLIC_OFFERS');
+    expect(services).toContain('offer.fit');
+    expect(services).toContain('offer.summary');
+    expect(services).toContain('offer.price');
+    expect(services).toContain('offer.detailHref');
+    expect(services).not.toContain('ThreeStepFlow');
+    expect(services).not.toContain('ServiceIllustration');
+    expect(services).not.toContain('Before');
+    expect(work).toContain('PUBLIC_EXAMPLES');
+    expect(work).toContain('Before');
+    expect(work).toContain('After');
+    expect(work).toContain('What changed');
+    expect(work).not.toContain('What is happening');
+    expect(work).not.toContain('What might be tried');
+    expect(work).not.toContain('How we help resolve it');
+    expect(work).not.toContain('ServiceIllustration');
+    expect(work).not.toMatch(/\$500|priced by proposal/i);
+    expect(home).toContain('PUBLIC_EXAMPLES');
+    expect(home).toContain('getPublicExampleHref');
+    expect(home).toContain('offer.fit');
+    expect(home).not.toContain('What might be tried');
   });
 
   it('keeps public styles scoped away from the authenticated interface', () => {

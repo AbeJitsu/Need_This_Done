@@ -1,42 +1,12 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import ServiceIllustration from "@/components/public/ServiceIllustration";
-
-const examples = [
-  {
-    id: "website-fix", href: "/website-fix", link: "Explore Website Fix",
-    title: "Make an important page easier to act on",
-    area: "Website Fix",
-    happening:
-      "An important page is not guiding visitors to the next step. The message, layout, or call to action is getting in the way.",
-    tried:
-      "You might rewrite the headline or move a button, but visitors still struggle to find what they need.",
-    better:
-      "We find what is confusing, make the fix you approve, and show you what changed.",
-  },
-  {
-    id: "managed-automation", href: "/managed-automation", link: "Explore Managed Automation",
-    title: "Give repeated requests a clearer path",
-    area: "Managed Automation",
-    happening:
-      "A recurring request keeps moving between messages, notes, and tools. Nobody has a dependable view of the next action or owner.",
-    tried:
-      "A team might add reminders, documents, or another tool, but the work still depends on memory and manual follow-up.",
-    better:
-      "We find where requests get stuck and propose a clearer way to handle them, with a price for the agreed work.",
-  },
-  {
-    id: "first-step", href: "/contact", link: "Share Your Vision",
-    title: "Turn a broad idea into one useful move",
-    area: "An idea you want to explore",
-    happening:
-      "You can see the better experience you want, but the problem is still broad and the first move is unclear.",
-    tried:
-      "You might have talked it through or looked for someone to build it, but still need a clear starting point.",
-    better:
-      "We listen to your idea and work out a first step we can help you complete.",
-  },
-] as const;
+import { ArrowDown, ArrowRight } from "lucide-react";
+import {
+  getPublicExampleAnchor,
+  PUBLIC_EXAMPLES,
+  PUBLIC_EXAMPLE_IDS,
+  PUBLIC_EXAMPLE_TITLES,
+  PUBLIC_OFFERS,
+} from "@/lib/public-offers";
 
 export default function WorkPageClient() {
   return (
@@ -50,8 +20,8 @@ export default function WorkPageClient() {
             Explore what a useful change could look like.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd]">
-            These examples show the kinds of problems we can help resolve, from
-            the first frustrating pattern to one clear piece of work.
+            These are illustrative before-and-after stories, not client results.
+            They show the shape a focused change can take.
           </p>
         </div>
       </section>
@@ -60,53 +30,109 @@ export default function WorkPageClient() {
         className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24"
         aria-labelledby="example-list-heading"
       >
-        <h2 id="example-list-heading" className="sr-only">
-          Problems we can help resolve
-        </h2>
-        <div className="divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
-          {examples.map((example, index) => (
-            <article
-              id={example.id}
-              key={example.title}
-              className="grid gap-7 py-10 lg:grid-cols-[4rem_.8fr_1.2fr] lg:gap-10"
-            >
-              <span className="text-sm font-bold text-[#775d22]">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
-                  {example.area}
-                </p>
-                <h3 className="mt-4 font-playfair text-3xl font-black">
-                  {example.title}
-                </h3>
-                {index < 2 && <ServiceIllustration kind={index === 0 ? 'website' : 'work'} />}
-              </div>
-              <div>
-                <dl className="grid gap-6 sm:grid-cols-2">
+        <div className="max-w-3xl">
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
+            Before and after
+          </p>
+          <h2
+            id="example-list-heading"
+            className="mt-5 font-playfair text-4xl font-black md:text-5xl"
+          >
+            Small changes can make the next move clearer.
+          </h2>
+        </div>
+
+        <div className="mt-12 divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
+          {PUBLIC_EXAMPLE_IDS.map((exampleId, index) => {
+            const example = PUBLIC_EXAMPLES[exampleId];
+            const relatedOffer = example.relatedOfferId
+              ? PUBLIC_OFFERS[example.relatedOfferId]
+              : null;
+
+            return (
+              <article
+                id={getPublicExampleAnchor(exampleId)}
+                key={exampleId}
+                data-public-example-story={exampleId}
+                className="w-full py-12 md:py-16"
+              >
+                <div className="grid gap-5 lg:grid-cols-[minmax(12rem,.65fr)_minmax(0,1.35fr)] lg:gap-16">
                   <div>
-                    <dt className="font-bold">What is happening</dt>
-                    <dd className="mt-2 leading-7 text-[var(--public-muted)]">
-                      {example.happening}
-                    </dd>
+                    <span className="text-sm font-black tracking-[.14em] text-[#775d22]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p className="mt-7 text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
+                      Illustrative example
+                    </p>
+                    <h3 className="mt-4 font-playfair text-3xl font-black leading-tight md:text-4xl">
+                      {PUBLIC_EXAMPLE_TITLES[exampleId]}
+                    </h3>
                   </div>
-                  <div>
-                    <dt className="font-bold">What might be tried</dt>
-                    <dd className="mt-2 leading-7 text-[var(--public-muted)]">
-                      {example.tried}
-                    </dd>
+
+                  <div className="min-w-0">
+                    <div className="public-example-comparison grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-stretch md:gap-4">
+                      <section className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-[#eee4cd] p-6 sm:p-8">
+                        <p className="text-xs font-bold uppercase tracking-[.18em] text-[#775d22]">
+                          Before
+                        </p>
+                        <p className="mt-5 text-xl font-semibold leading-8">
+                          {example.before}
+                        </p>
+                      </section>
+
+                      <div
+                        className="public-example-transition flex items-center justify-center gap-2 py-1 text-[var(--public-green)] md:px-1 md:py-0"
+                        aria-hidden="true"
+                      >
+                        <span className="h-5 w-px bg-[var(--public-green)]/35 md:hidden" />
+                        <ArrowDown className="h-5 w-5 md:hidden" />
+                        <ArrowRight className="hidden h-5 w-5 md:block" />
+                        <span className="h-5 w-px bg-[var(--public-green)]/35 md:hidden" />
+                      </div>
+
+                      <section className="rounded-[1.5rem] border border-[var(--public-green)]/20 bg-[#e4eee6] p-6 sm:p-8">
+                        <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
+                          After
+                        </p>
+                        <p className="mt-5 text-xl font-semibold leading-8">
+                          {example.after}
+                        </p>
+                      </section>
+                    </div>
+
+                    <section className="mt-6 rounded-[1.25rem] border-l-4 border-[var(--public-gold)] bg-white/60 p-6 sm:p-7">
+                      <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
+                        What changed
+                      </p>
+                      <p className="mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">
+                        {example.change}
+                      </p>
+                    </section>
+
+                    <div className="mt-5">
+                      {relatedOffer ? (
+                        <Link
+                          href={relatedOffer.detailHref}
+                          className="inline-flex min-h-11 items-center gap-2 py-3 font-bold text-[var(--public-green)] underline underline-offset-4"
+                        >
+                          Explore {relatedOffer.name}
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        </Link>
+                      ) : (
+                        <Link
+                          href="/contact"
+                          className="inline-flex min-h-11 items-center gap-2 py-3 font-bold text-[var(--public-green)] underline underline-offset-4"
+                        >
+                          Share Your Vision
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        </Link>
+                      )}
+                    </div>
                   </div>
-                </dl>
-                <p className="mt-6 border-l-2 border-[#d0a94f] pl-4 text-sm leading-6 text-[var(--public-muted)]">
-                  <span className="font-bold text-[var(--public-ink)]">
-                    How we help resolve it:{" "}
-                  </span>
-                  {example.better}
-                </p>
-                <Link href={example.href} className="public-explore mt-4">{example.link}</Link>
-              </div>
-            </article>
-          ))}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -117,23 +143,15 @@ export default function WorkPageClient() {
           </h2>
           <p className="mx-auto mt-5 max-w-xl leading-7 text-[var(--public-muted)]">
             You can share the unfinished version. We will listen and help you
-            resolve the right piece first.
+            find the right first move.
           </p>
           <Link
             href="/contact"
             className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
           >
-            Share Your Vision{" "}
+            Share Your Vision
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <p className="mt-5">
-            <Link
-              href="/about"
-              className="font-semibold text-[var(--public-green)] underline"
-            >
-              Why NeedThisDone
-            </Link>
-          </p>
         </div>
       </section>
     </main>
