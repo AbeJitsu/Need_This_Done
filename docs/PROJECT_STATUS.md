@@ -16,7 +16,7 @@
   cover 375, 768, 1024, and 1280 pixels, including no overflow, connector
   separation, reduced motion, console errors, and main-content axe checks. The
   final public desktop/mobile matrix passed 54 tests with 4 skips, and the
-  final code gate passed lint, type-check, 64 unit files/331 tests, 6
+  merged release-line code gate passed lint, type-check, 65 unit files/334 tests, 6
   accessibility files/60 tests, and the production build.
   Future changes to the stage model, CTA destinations, or responsive row rule
   must update the route assertions and release evidence with the page.
