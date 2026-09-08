@@ -390,6 +390,7 @@ body {
 .public-shell .offer-comparison > article { border-top: 4px solid #126b4e; background: #e4eee6; }
 .public-shell .offer-comparison > article + article { border-color: #8b6b26; background: #eee4cd; }
 .public-shell .offer-comparison__price { font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.15; }
+.public-shell .pricing-offer-card { display: flex; flex-direction: column; }
 .public-shell .public-offer-card-grid { align-items: stretch; }
 @media (min-width: 1024px) {
   .public-shell .public-offer-card-grid {
@@ -400,6 +401,12 @@ body {
     grid-row: span 4;
     grid-template-rows: subgrid;
   }
+}
+@media (min-width: 768px) {
+  .public-shell .pricing-offer-card__price { min-height: 8rem; }
+  .public-shell .pricing-offer-card__row--choose { min-height: 6rem; }
+  .public-shell .pricing-offer-card__row--useful { min-height: 9rem; }
+  .public-shell .pricing-offer-card__row--included { min-height: 7rem; }
 }
 @media (min-width: 1024px) { .public-shell .offer-hero { grid-template-columns: 1.3fr 1fr; } }
 @media (max-width: 767px) { .public-shell .offer-comparison > article + article { margin-top: 2rem; } }
@@ -1167,6 +1174,16 @@ Blog Markdown Content — Reading Experience
   background: #0c563e;
 }
 
+.system-button--outline {
+  border-color: rgba(18, 107, 78, 0.35);
+  color: var(--system-green, #126b4e);
+}
+
+.system-button--outline:hover {
+  border-color: var(--system-green, #126b4e);
+  background: var(--system-soft, #e4eee6);
+}
+
 .system-hero__stats {
   display: grid;
   max-width: 38rem;
@@ -1899,6 +1916,17 @@ Blog Markdown Content — Reading Experience
   margin-top: 2rem;
 }
 
+.system-closing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+}
+
+.system-closing__actions .system-button {
+  margin-top: 2rem;
+}
+
 @keyframes system-flow-vertical {
   0%,
   100% {
@@ -2037,6 +2065,10 @@ Blog Markdown Content — Reading Experience
   overflow-x: clip;
   background: var(--homepage-cream);
   color: var(--homepage-ink);
+}
+
+.homepage-trailer > [id] {
+  scroll-margin-top: 8.5rem;
 }
 
 .homepage-trailer :is(a, h1, h2, h3, p, li, dt, dd) {
@@ -2664,9 +2696,64 @@ Blog Markdown Content — Reading Experience
   color: var(--homepage-ink);
 }
 
+.homepage-link--light {
+  color: #c9dcca;
+}
+
+.homepage-link--light:hover {
+  color: white;
+}
+
 .homepage-link--standalone {
   margin-top: 1.75rem;
   padding-top: 0;
+}
+
+.homepage-section__actions,
+.homepage-bridge__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.homepage-bridge__actions {
+  margin-top: 2rem;
+}
+
+.homepage-section__actions > .homepage-link,
+.homepage-bridge__actions > .homepage-link {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.homepage-next-step {
+  min-height: 3rem;
+  margin-top: 1.75rem;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.homepage-section__actions > .homepage-next-step,
+.homepage-bridge__actions > .homepage-next-step {
+  padding: 0.75rem 1.1rem;
+}
+
+.homepage-next-step:hover {
+  background: var(--homepage-soft);
+  color: var(--homepage-ink);
+}
+
+.homepage-next-step.homepage-link--light {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.homepage-next-step.homepage-link--light:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
 }
 
 .homepage-principles {
@@ -3007,11 +3094,11 @@ Blog Markdown Content — Reading Experience
 
 @media (min-width: 1200px) {
   .homepage-hero__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .homepage-hero__copy {
-    max-width: 34rem;
+    max-width: 52rem;
   }
 
   .homepage-hero__title-line {
@@ -3025,8 +3112,20 @@ Blog Markdown Content — Reading Experience
     flex-direction: column;
   }
 
+  .homepage-section__actions,
+  .homepage-bridge__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .homepage-button {
     width: 100%;
+  }
+
+  .homepage-section__actions > .homepage-link,
+  .homepage-bridge__actions > .homepage-link {
+    width: 100%;
+    justify-content: center;
   }
 
   .homepage-teaser__header {

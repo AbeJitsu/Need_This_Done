@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowDown, ArrowRight } from "lucide-react";
+import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import {
   getPublicExampleAnchor,
   PUBLIC_EXAMPLES,
@@ -7,6 +8,8 @@ import {
   PUBLIC_EXAMPLE_TITLES,
   PUBLIC_OFFERS,
 } from "@/lib/public-offers";
+
+const nextStep = PUBLIC_ROUTE_STAGES["/work"].secondary;
 
 export default function WorkPageClient() {
   return (
@@ -152,6 +155,16 @@ export default function WorkPageClient() {
             Share Your Vision
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
+          {nextStep && (
+            <p className="mt-5">
+              <Link
+                href={nextStep.href}
+                className="font-semibold text-[var(--public-green)] underline"
+              >
+                {nextStep.label}
+              </Link>
+            </p>
+          )}
         </div>
       </section>
     </main>

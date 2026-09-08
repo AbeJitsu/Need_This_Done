@@ -9,10 +9,42 @@ export const PUBLIC_NAVIGATION = [
   { href: "/work", label: "Examples" },
   { href: "/about", label: "Why Us" },
 ] as const;
+
+export const PUBLIC_HOME_JOURNEY = [
+  { id: "what-we-do", href: "/services", label: "What We Do" },
+  { id: "how-it-works", href: "/how-it-works", label: "How We Work" },
+  { id: "the-system", href: "/system", label: "The System" },
+  { id: "examples", href: "/work", label: "Examples" },
+  { id: "why-us", href: "/about", label: "Why Us" },
+] as const;
+
+export function getPublicHomeHref(href: string) {
+  const section = PUBLIC_HOME_JOURNEY.find((item) => item.href === href);
+  return section ? `/#${section.id}` : href;
+}
+
 export const PUBLIC_PRIMARY_ACTION = {
   href: "/contact",
   label: "Share Your Vision",
 } as const;
+
+export const PUBLIC_HOME_CONVERSION = {
+  id: "share-your-vision",
+  label: PUBLIC_PRIMARY_ACTION.label,
+} as const;
+
+export type PublicHomeSectionId = (typeof PUBLIC_HOME_JOURNEY)[number]["id"];
+
+export function getPublicHomeNextStep(id: PublicHomeSectionId) {
+  const currentIndex = PUBLIC_HOME_JOURNEY.findIndex((section) => section.id === id);
+  const nextSection = PUBLIC_HOME_JOURNEY[currentIndex + 1] ?? (
+    id === "why-us" ? PUBLIC_HOME_CONVERSION : null
+  );
+
+  return nextSection
+    ? { href: `#${nextSection.id}`, label: `Next: ${nextSection.label}` }
+    : null;
+}
 
 export const PUBLIC_ROUTE_STAGES = {
   "/": {
@@ -24,25 +56,25 @@ export const PUBLIC_ROUTE_STAGES = {
   "/services": {
     stage: "understand",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/how-it-works", label: "See How We Help" },
+    secondary: { href: "/how-it-works", label: "Next: How We Work" },
     event: "services",
   },
   "/how-it-works": {
     stage: "reassure",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/work", label: "See Examples" },
+    secondary: { href: "/system", label: "Next: The System" },
     event: "how_it_works",
   },
   "/system": {
     stage: "trust",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/about", label: "Why Us" },
+    secondary: { href: "/work", label: "Next: Examples" },
     event: "system",
   },
   "/work": {
     stage: "recognize",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/about", label: "Why Us" },
+    secondary: { href: "/about", label: "Next: Why Us" },
     event: "work",
   },
   "/about": {

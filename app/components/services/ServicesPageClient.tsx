@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles, Target } from "lucide-react";
+import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 
 const offerIds = ["website-improvement", "ai-operator"] as const satisfies readonly PublicOfferId[];
@@ -20,6 +21,8 @@ const offerPresentation = {
   accent: string;
   iconAccent: string;
 }>;
+
+const nextStep = PUBLIC_ROUTE_STAGES["/services"].secondary;
 
 function OfferIcon({ name }: { name: "target" | "sparkles" }) {
   return name === "target" ? (
@@ -145,14 +148,16 @@ export default function ServicesPageClient() {
             Share Your Vision
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <p className="mt-5">
-            <Link
-              href="/how-it-works"
-              className="font-semibold text-[var(--public-green)] underline"
-            >
-              How We Work
-            </Link>
-          </p>
+          {nextStep && (
+            <p className="mt-5">
+              <Link
+                href={nextStep.href}
+                className="font-semibold text-[var(--public-green)] underline"
+              >
+                {nextStep.label}
+              </Link>
+            </p>
+          )}
         </div>
       </section>
     </main>

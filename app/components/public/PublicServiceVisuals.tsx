@@ -5,25 +5,22 @@ import { PUBLIC_OFFERS } from "@/lib/public-offers";
 const comparison = [
   {
     name: PUBLIC_OFFERS["website-improvement"].name,
+    price: PUBLIC_OFFERS["website-improvement"].price,
     rows: [
-      ["Choose this when", "One website problem is slowing people down."],
-      ["Useful change", PUBLIC_OFFERS["website-improvement"].summary],
-      ["Included work", "A review, one agreed correction, and a record of the result."],
-      ["Price", PUBLIC_OFFERS["website-improvement"].price],
+      { key: "choose", term: "Choose this when", description: "One website problem is slowing people down." },
+      { key: "useful", term: "Useful change", description: PUBLIC_OFFERS["website-improvement"].summary },
+      { key: "included", term: "Included work", description: "A review, one agreed correction, and a record of the result." },
     ],
     cta: "See Website Fix details",
     href: PUBLIC_OFFERS["website-improvement"].detailHref,
   },
   {
     name: PUBLIC_OFFERS["ai-operator"].name,
+    price: PUBLIC_OFFERS["ai-operator"].price,
     rows: [
-      [
-        "Choose this when",
-        "One repeated problem keeps slowing important work.",
-      ],
-      ["Useful change", PUBLIC_OFFERS["ai-operator"].summary],
-      ["Included work", "A task review, an agreed improvement, and a written proposal."],
-      ["Price", PUBLIC_OFFERS["ai-operator"].price],
+      { key: "choose", term: "Choose this when", description: "One repeated problem keeps slowing important work." },
+      { key: "useful", term: "Useful change", description: PUBLIC_OFFERS["ai-operator"].summary },
+      { key: "included", term: "Included work", description: "A task review, an agreed improvement, and a written proposal." },
     ],
     cta: "See Managed Automation details",
     href: PUBLIC_OFFERS["ai-operator"].detailHref,
@@ -47,27 +44,50 @@ export function OfferComparison({
         {heading}
       </h2>
       <div className="offer-comparison mt-10 md:grid md:grid-cols-2">
-        {comparison.map((offer) => (
-          <article key={offer.name}
-            className="p-7 text-[var(--public-ink)] sm:p-9">
-            <h3 className="font-playfair text-3xl font-black md:min-h-[4.5rem]">
-              {offer.name}
-            </h3>
-            <p className="offer-comparison__price">{offer.rows.find(([term]) => term === 'Price')?.[1]}</p>
-            <dl className="mt-7 divide-y divide-[var(--public-ink)]/10 border-y border-[var(--public-ink)]/10">
-              {offer.rows.filter(([term]) => term !== 'Price').map(([term, description]) => (
-                <div key={term} className="grid gap-2 py-4 lg:grid-cols-[8rem_1fr]">
-                  <dt className="text-xs font-bold uppercase tracking-wider text-[var(--public-green)]">{term}</dt>
-                  <dd className={term === "Price" ? "text-xl font-bold" : "max-w-[60ch] leading-7 text-[var(--public-muted)]"}>{description}</dd>
-                </div>
-              ))}
-            </dl>
-            <Link href={offer.href}
-              className="mt-4 inline-flex min-h-11 items-center gap-2 py-3 font-bold text-[var(--public-green)] underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-[var(--public-green)]">
-              {offer.cta}<ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
-            </Link>
-          </article>
-        ))}
+          {comparison.map((offer) => (
+            <article
+              key={offer.name}
+              data-pricing-offer-card={offer.name}
+              className="pricing-offer-card p-7 text-[var(--public-ink)] sm:p-9"
+            >
+              <header data-pricing-region="header">
+                <h3 className="font-playfair text-3xl font-black md:min-h-[4.5rem]">
+                  {offer.name}
+                </h3>
+              </header>
+              <div
+                data-pricing-region="price"
+                className="pricing-offer-card__price flex items-start"
+              >
+                <p className="offer-comparison__price">{offer.price}</p>
+              </div>
+              <dl className="pricing-offer-card__details mt-7 flex-1 divide-y divide-[var(--public-ink)]/10 border-y border-[var(--public-ink)]/10">
+                {offer.rows.map((row) => (
+                  <div
+                    key={row.key}
+                    data-pricing-region={row.key}
+                    className={`pricing-offer-card__row pricing-offer-card__row--${row.key} grid gap-2 py-4 lg:grid-cols-[8rem_1fr]`}
+                  >
+                    <dt className="text-xs font-bold uppercase tracking-wider text-[var(--public-green)]">
+                      {row.term}
+                    </dt>
+                    <dd className="max-w-[60ch] leading-7 text-[var(--public-muted)]">
+                      {row.description}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <footer data-pricing-region="actions">
+                <Link
+                  href={offer.href}
+                  className="mt-4 inline-flex min-h-11 items-center gap-2 py-3 font-bold text-[var(--public-green)] underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-[var(--public-green)]"
+                >
+                  {offer.cta}
+                  <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+                </Link>
+              </footer>
+            </article>
+          ))}
       </div>
     </section>
   );

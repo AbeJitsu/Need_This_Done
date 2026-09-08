@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import {
   ArrowRight,
   Check,
@@ -11,6 +12,8 @@ import {
   Target,
   Workflow,
 } from "lucide-react";
+
+const nextStep = PUBLIC_ROUTE_STAGES["/system"].secondary;
 
 export const metadata: Metadata = {
   title: "The System Behind NeedThisDone | NeedThisDone",
@@ -733,10 +736,18 @@ export default function SystemPage() {
             Share the situation in your own words. We will help clarify the
             first piece of work and what you can review before deciding.
           </p>
-          <Link href="/contact" className="system-button system-button--green">
-            Share Your Vision
-            <ArrowRight aria-hidden="true" />
-          </Link>
+          <div className="system-closing__actions">
+            <Link href="/contact" className="system-button system-button--green">
+              Share Your Vision
+              <ArrowRight aria-hidden="true" />
+            </Link>
+            {nextStep && (
+              <Link href={nextStep.href} className="system-button system-button--outline">
+                {nextStep.label}
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            )}
+          </div>
         </div>
       </section>
     </main>

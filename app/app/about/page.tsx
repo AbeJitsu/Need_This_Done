@@ -4,31 +4,31 @@ import { ArrowRight } from "lucide-react";
 
 const principles = [
   [
-    "We listen before suggesting",
-    "We ask what is happening and what you want to make possible. You can describe it in your own words.",
+    "Bounded work, on purpose",
+    "We choose one meaningful piece to improve and name what stays outside it, so the work does not quietly become everything.",
   ],
   [
-    "We respect what you have already tried",
-    "If you have tried something already, we ask what it was meant to achieve and what you learned.",
+    "Context before convention",
+    "Your business, customers, and constraints shape the recommendation. We do not force a familiar solution onto an unfamiliar situation.",
   ],
   [
-    "We stay with the real problem",
-    "We repeat back what we understand, agree on the first piece to resolve, and keep the work aimed there.",
+    "Decisions stay yours",
+    "We make the recommendation and its tradeoffs visible, but you keep the call on scope, timing, and whether the work should begin.",
   ],
   [
-    "We show the change",
-    "You receive a record of the completed work and any remaining questions, so you can review the change against what we agreed.",
+    "Proof over promises",
+    "We show the exact change, call out what remains, and avoid promising a business result we cannot support yet.",
   ],
 ] as const;
 
 export const metadata: Metadata = {
   title: "Why Us | NeedThisDone",
   description:
-    "Help with your website and repeated work, with a clear plan, agreed price, and a result you can review.",
+    "A bounded partner for clear scope, visible decisions, and work you can review.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "Why Us | NeedThisDone",
-    description: "We listen, agree on the work, and show you what changed.",
+    description: "Bounded work, visible decisions, and proof over promises.",
     type: "website",
   },
 };
@@ -42,11 +42,12 @@ export default function AboutPage() {
             Why NeedThisDone
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Your idea deserves to be understood.
+            A partner who makes the work easier to trust.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            You know your business. We help turn what you want to improve into
-            a clear piece of work—with a price and a result you can review.
+            You know your business. We bring structure without pretending to
+            know it better than you do. The work stays bounded, visible, and
+            easy to review.
           </p>
         </div>
       </section>
@@ -57,13 +58,13 @@ export default function AboutPage() {
       >
         <div className="max-w-3xl">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-            The way we work
+            What you can count on
           </p>
           <h2
             id="principles-heading"
             className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
           >
-            We listen. We agree. We follow through.
+            Clarity is part of the work.
           </h2>
         </div>
         <dl className="public-principles mt-14 grid gap-x-10 gap-y-10 py-10 md:grid-cols-2">
@@ -82,11 +83,11 @@ export default function AboutPage() {
       <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
         <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:px-8 md:py-24">
           <h2 className="font-playfair text-4xl font-black md:text-5xl">
-            Bring us the part that is keeping you stuck.
+            Bring us the part that needs a better boundary.
           </h2>
           <p className="mx-auto mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-            You do not need to choose a service or prepare a perfect brief. We
-            will listen and help you resolve the right piece first.
+            You do not need to prepare a perfect brief. We will help make the
+            decision, boundary, and next review point easier to see.
           </p>
           <Link
             href="/contact"
