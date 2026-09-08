@@ -77,7 +77,7 @@ const systemStages = [
     label: "Name the outcome",
     title: "Goal",
     description:
-      "A durable aim gives the work somewhere useful to go: make the owner dashboard easier to act on.",
+      "A durable aim gives the work somewhere useful to go: make the owner dashboard easier to act on. That reference point keeps later decisions aligned.",
     icon: "target",
   },
   {
@@ -85,7 +85,7 @@ const systemStages = [
     label: "Decide the boundary",
     title: "Owner approval",
     description:
-      "The owner sees the scope, route, cost, and expected result before a meaningful action can run.",
+      "The owner sees the scope, route, cost, and expected result before a meaningful action can run. Permission stays explicit instead of being assumed.",
     icon: "shield",
     highlighted: true,
   },
@@ -94,7 +94,7 @@ const systemStages = [
     label: "Move one piece",
     title: "Private execution",
     description:
-      "The outbound-only Mac sends the frozen task to the right lane: OpenClaw for tools or Codex for code.",
+      "The outbound-only Mac sends the frozen task to the right lane: OpenClaw for tools or Codex for code. The private worker only follows the recorded boundary.",
     icon: "lock",
   },
   {
@@ -102,7 +102,7 @@ const systemStages = [
     label: "Bring back evidence",
     title: "Reviewable proof",
     description:
-      "The result, cost, diff, private asset, blocker, or next decision stays attached to the durable record.",
+      "The result, cost, diff, private asset, blocker, or next decision stays attached to the durable record. Nothing important disappears into an informal handoff.",
     icon: "git",
   },
 ] as const;
@@ -113,7 +113,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Start with the outcome",
     title: "Name what better looks like",
     description:
-      "Start with the better state, not a pile of disconnected tasks.",
+      "Start with the better state, not a pile of disconnected tasks. That keeps the next piece connected to the reason it matters.",
     icon: "target",
   },
   {
@@ -121,7 +121,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Shape the work",
     title: "Turn context into a plan",
     description:
-      "Hermes turns the goal into a bounded plan with a visible next step.",
+      "Hermes turns the goal into a bounded plan with a visible next step. The owner can inspect the proposed move before deciding.",
     icon: "workflow",
   },
   {
@@ -129,7 +129,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Cross the boundary",
     title: "Approve the move",
     description:
-      "The owner sees the scope, route, cost, and expected result before anything runs.",
+      "The owner sees the scope, route, cost, and expected result before anything runs. The approval freezes what may happen next.",
     icon: "shield",
     highlighted: true,
   },
@@ -138,7 +138,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Do one useful piece",
     title: "Execute privately",
     description:
-      "The private machine sends the approved task to the right execution lane.",
+      "The private machine sends the approved task to the right execution lane. The public browser never becomes the worker.",
     icon: "code",
   },
   {
@@ -146,7 +146,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Make it legible",
     title: "Review the proof",
     description:
-      "The result comes back with evidence, blockers, and a clear next decision.",
+      "The result comes back with evidence, blockers, and a clear next decision. The mission is ready to resume without guesswork.",
     icon: "git",
   },
 ];
@@ -157,7 +157,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Mission control",
     title: "NeedThisDone",
     description:
-      "Keeps the goal, context, approvals, status, costs, and results together in one durable record.",
+      "Keeps the goal, context, approvals, status, costs, and results together in one durable record. The browser remains the place to inspect the work.",
     icon: "target",
   },
   {
@@ -165,7 +165,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Planning layer",
     title: "Hermes",
     description:
-      "Interprets the long-range objective and turns it into a focused, reviewable work packet.",
+      "Interprets the long-range objective and turns it into a focused, reviewable work packet. It proposes the next move without executing it.",
     icon: "workflow",
     highlighted: true,
   },
@@ -174,7 +174,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Local gateway",
     title: "OpenClaw",
     description:
-      "Runs approved non-code tools and provides the always-on gateway for the private machine.",
+      "Runs approved non-code tools and provides the always-on gateway for the private machine. Its lane stays separate from coding work.",
     icon: "shield",
   },
   {
@@ -182,7 +182,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Coding lane",
     title: "Codex",
     description:
-      "Works inside an isolated repository worktree to inspect, edit, test, and prepare code changes.",
+      "Works inside an isolated repository worktree to inspect, edit, test, and prepare code changes. The live product stays outside that boundary.",
     icon: "code",
   },
   {
@@ -190,7 +190,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Review boundary",
     title: "GitHub",
     description:
-      "Holds the branch, diff, commit, and pull request so changes remain inspectable before merge.",
+      "Holds the branch, diff, commit, and pull request so changes remain inspectable before merge. Review happens before a change becomes part of the product.",
     icon: "git",
   },
 ];
@@ -200,14 +200,14 @@ const codingSteps: readonly RailStep[] = [
     number: "01",
     label: "Start from the boundary",
     title: "Base commit",
-    description: "Start from the exact approved repository state.",
+    description: "Start from the exact approved repository state. The boundary is known before a file changes.",
     icon: "git",
   },
   {
     number: "02",
     label: "Keep the change isolated",
     title: "Dedicated worktree",
-    description: "Keep the change isolated from other work.",
+    description: "Keep the change isolated from other work. That makes the resulting diff easier to review.",
     icon: "lock",
   },
   {
@@ -215,7 +215,7 @@ const codingSteps: readonly RailStep[] = [
     label: "Inspect, edit, verify",
     title: "Codex execution",
     description:
-      "Inspect, edit, run the relevant checks, and explain the result.",
+      "Inspect, edit, run the relevant checks, and explain the result. The evidence travels with the change.",
     icon: "code",
   },
   {
@@ -223,7 +223,7 @@ const codingSteps: readonly RailStep[] = [
     label: "Return the evidence",
     title: "Reviewable handoff",
     description:
-      "Return the branch, diff, tests, and blockers before merge.",
+      "Return the branch, diff, tests, and blockers before merge. A reviewer can decide from the handoff itself.",
     icon: "shield",
     highlighted: true,
   },
@@ -231,6 +231,8 @@ const codingSteps: readonly RailStep[] = [
 
 const differencePoints = [
   {
+    number: "01",
+    icon: "workflow",
     title: "A conversation",
     description:
       "Useful for thinking through the next prompt. The important context and next action may still need to be reconstructed later.",
@@ -241,6 +243,8 @@ const differencePoints = [
     ],
   },
   {
+    number: "02",
+    icon: "target",
     title: "NeedThisDone",
     description:
       "Designed for work that continues after the conversation. The goal stays visible while the system moves one approved piece forward.",
@@ -251,6 +255,34 @@ const differencePoints = [
     ],
   },
 ] as const;
+
+const dailyBeats: readonly RailStep[] = [
+  {
+    number: "01",
+    label: "Check in",
+    title: "See the current mission.",
+    description:
+      "Review what moved, what is blocked, and the one decision that would make the next step clear. The owner starts from the current record.",
+    icon: "target",
+  },
+  {
+    number: "02",
+    label: "Approve",
+    title: "Authorize one useful move.",
+    description:
+      "The owner decides what the system may do, which route it may use, and what result should come back. The approval remains bounded.",
+    icon: "shield",
+    highlighted: true,
+  },
+  {
+    number: "03",
+    label: "Review",
+    title: "Pick up from evidence.",
+    description:
+      "Return to a result, diff, or blocker—not a blank conversation where the entire project has to be explained again. The next decision stays visible.",
+    icon: "git",
+  },
+];
 
 const proofItems = [
   "Authenticated browser control plane",
@@ -306,15 +338,19 @@ function SystemMap() {
             )}
           >
             <article className="system-map__card">
-              <div className="system-map__topline">
-                <span className="system-map__number">{stage.number}</span>
-                <span className="system-map__icon">
-                  <StepIcon name={stage.icon} />
-                </span>
+              <div className="system-card-identity system-map__identity">
+                <div className="system-map__topline">
+                  <span className="system-map__number">{stage.number}</span>
+                  <span className="system-map__icon">
+                    <StepIcon name={stage.icon} />
+                  </span>
+                </div>
+                <p className="system-map__label">{stage.label}</p>
+                <h2 className="system-map__title">{stage.title}</h2>
               </div>
-              <p className="system-map__label">{stage.label}</p>
-              <h2 className="system-map__title">{stage.title}</h2>
-              <p className="system-map__description">{stage.description}</p>
+              <div className="system-card-detail system-map__detail">
+                <p className="system-map__description">{stage.description}</p>
+              </div>
             </article>
             {index < systemStages.length - 1 && (
               <span className="system-map__connector" aria-hidden="true">
@@ -355,15 +391,19 @@ function SystemRail({
           )}
         >
           <article className="system-rail__card">
-            <div className="system-rail__topline">
-              <span className="system-rail__number">{step.number}</span>
-              <span className="system-rail__icon">
-                <StepIcon name={step.icon} />
-              </span>
+            <div className="system-card-identity system-rail__identity">
+              <div className="system-rail__topline">
+                <span className="system-rail__number">{step.number}</span>
+                <span className="system-rail__icon">
+                  <StepIcon name={step.icon} />
+                </span>
+              </div>
+              <p className="system-rail__label">{step.label}</p>
+              <h3 className="system-rail__title">{step.title}</h3>
             </div>
-            <p className="system-rail__label">{step.label}</p>
-            <h3 className="system-rail__title">{step.title}</h3>
-            <p className="system-rail__description">{step.description}</p>
+            <div className="system-card-detail system-rail__detail">
+              <p className="system-rail__description">{step.description}</p>
+            </div>
           </article>
           {index < steps.length - 1 && (
             <span className="system-rail__connector" aria-hidden="true">
@@ -458,19 +498,34 @@ export default function SystemPage() {
                   index === 1 && "system-difference-card--dark",
                 )}
               >
-                <p className="system-card-kicker">
-                  {index === 0 ? "Starting point" : "System outcome"}
-                </p>
-                <h3>{item.title}</h3>
-                <p className="system-difference-card__description">{item.description}</p>
-                <ul>
-                  {item.points.map((point) => (
-                    <li key={point}>
-                      <Check aria-hidden="true" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="system-card-identity system-difference-card__identity">
+                  <div className="system-difference-card__topline">
+                    <span className="system-difference-card__number">{item.number}</span>
+                    <span className="system-difference-card__icon">
+                      <StepIcon name={item.icon} />
+                    </span>
+                  </div>
+                  <p className="system-card-kicker">
+                    {index === 0 ? "Starting point" : "System outcome"}
+                  </p>
+                  <h3>{item.title}</h3>
+                </div>
+                <div className="system-card-detail system-difference-card__detail">
+                  <p className="system-difference-card__description">{item.description}</p>
+                  <ul>
+                    {item.points.map((point) => (
+                      <li key={point}>
+                        <Check aria-hidden="true" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {index < differencePoints.length - 1 && (
+                  <span className="system-difference-card__connector" aria-hidden="true">
+                    <ArrowRight />
+                  </span>
+                )}
               </article>
             ))}
           </div>
@@ -570,30 +625,31 @@ export default function SystemPage() {
             </h2>
           </div>
           <div className="system-beats">
-            <article className="system-beat">
-              <p className="system-card-kicker">01 · Check in</p>
-              <h3>See the current mission.</h3>
-              <p>
-                Review what moved, what is blocked, and the one decision that
-                would make the next step clear.
-              </p>
-            </article>
-            <article className="system-beat system-beat--highlighted">
-              <p className="system-card-kicker">02 · Approve</p>
-              <h3>Authorize one useful move.</h3>
-              <p>
-                The owner decides what the system may do, which route it may
-                use, and what result should come back.
-              </p>
-            </article>
-            <article className="system-beat">
-              <p className="system-card-kicker">03 · Review</p>
-              <h3>Pick up from evidence.</h3>
-              <p>
-                Return to a result, diff, or blocker—not a blank conversation
-                where the entire project has to be explained again.
-              </p>
-            </article>
+            {dailyBeats.map((beat, index) => (
+              <article
+                key={beat.number}
+                className={cx("system-beat", beat.highlighted && "system-beat--highlighted")}
+              >
+                <div className="system-card-identity system-beat__identity">
+                  <div className="system-beat__topline">
+                    <span className="system-beat__number">{beat.number}</span>
+                    <span className="system-beat__icon">
+                      <StepIcon name={beat.icon} />
+                    </span>
+                  </div>
+                  <p className="system-card-kicker">{beat.label}</p>
+                  <h3>{beat.title}</h3>
+                </div>
+                <div className="system-card-detail system-beat__detail">
+                  <p>{beat.description}</p>
+                </div>
+                {index < dailyBeats.length - 1 && (
+                  <span className="system-beat__connector" aria-hidden="true">
+                    <ArrowRight />
+                  </span>
+                )}
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -617,28 +673,51 @@ export default function SystemPage() {
           </div>
           <div className="system-status-grid">
             <article className="system-status-card">
-              <p className="system-card-kicker">In the repository</p>
-              <h3>Control-plane foundation</h3>
-              <ul>
-                {proofItems.map((item) => (
-                  <li key={item}>
-                    <Check aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="system-card-identity system-status-card__identity">
+                <div className="system-status-card__topline">
+                  <span className="system-status-card__number">01</span>
+                  <span className="system-status-card__icon">
+                    <StepIcon name="shield" />
+                  </span>
+                </div>
+                <p className="system-card-kicker">In the repository</p>
+                <h3>Control-plane foundation</h3>
+              </div>
+              <div className="system-card-detail system-status-card__detail">
+                <ul>
+                  {proofItems.map((item) => (
+                    <li key={item}>
+                      <Check aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <span className="system-status-card__connector" aria-hidden="true">
+                <ArrowRight />
+              </span>
             </article>
             <article className="system-status-card system-status-card--dark">
-              <p className="system-card-kicker">Next proof</p>
-              <h3>A bounded coding handoff</h3>
-              <ul>
-                {nextItems.map((item) => (
-                  <li key={item}>
-                    <span className="system-status-card__dot" aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="system-card-identity system-status-card__identity">
+                <div className="system-status-card__topline">
+                  <span className="system-status-card__number">02</span>
+                  <span className="system-status-card__icon">
+                    <StepIcon name="code" />
+                  </span>
+                </div>
+                <p className="system-card-kicker">Next proof</p>
+                <h3>A bounded coding handoff</h3>
+              </div>
+              <div className="system-card-detail system-status-card__detail">
+                <ul>
+                  {nextItems.map((item) => (
+                    <li key={item}>
+                      <span className="system-status-card__dot" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </article>
           </div>
         </div>

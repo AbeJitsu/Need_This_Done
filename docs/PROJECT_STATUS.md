@@ -8,21 +8,52 @@
 - On 2026-09-07, the public `/system` route was refreshed as a static editorial
   case study. Its four-stage map names Goal, Owner approval, Private execution,
   and Reviewable proof; both primary CTAs go to `/contact`, and the technical
-  proof link goes to the reviewed GitHub tree. The map and reusable execution,
-  architecture, and coding rails keep cards in responsive two-column rows at
-  desktop widths; a single odd final row is centered, while even card counts
-  remain paired evenly. Titles are contained without mid-word breaks or card
-  overlap, and mobile rails stack vertically. Focused `/system` Chromium checks
-  cover 375, 768, 1024, and 1280 pixels, including no overflow, connector
-  separation, reduced motion, console errors, and main-content axe checks. The
-  final public desktop/mobile matrix passed 54 tests with 4 skips, and the
-  merged release-line code gate passed lint, type-check, 65 unit files/334 tests, 6
-  accessibility files/60 tests, and the production build.
-  Future changes to the stage model, CTA destinations, or responsive row rule
-  must update the route assertions and release evidence with the page.
-- Rollback: revert this focused `/system` presentation and test change on
-  `dev`; no schema, API, hosted write, deployment, secret, provider or Mac
+  proof link goes to the reviewed GitHub tree. Every repeated map, difference,
+  execution, architecture, coding, daily-beat, and status group now keeps one
+  full-width card per row at 375, 768, 1024, and 1280 pixels. Card internals
+  use an approximately `0.65fr / 1.35fr` identity/detail split from 768 pixels
+  upward and a readable single column below it; the hero remains copy beside the
+  map at wide desktop widths, and architecture/coding sections retain
+  intro-plus-visual splits. Vertical connectors appear between every adjacent
+  card with no hidden desktop routing or centered odd rows. Focused `/system`
+  Chromium checks passed all four target widths with no overflow, connector
+  intersections, text escape, hidden connectors, or console/page errors; they
+  also verified visible actions, reduced motion, wrapper completeness,
+  main-content axe, and `/tmp/system-vertical-375.png`,
+  `/tmp/system-vertical-768.png`, `/tmp/system-vertical-1024.png`, and
+  `/tmp/system-vertical-1280.png`. The retained public/mobile smoke suite
+  passed 76 tests with 6 expected skips. The code gate passed lint, type-check,
+  65 unit files/335 tests, 6 accessibility files/60 tests, and production
+  build. No schema, API, hosted write, deployment, secret, provider or Mac
   activation, publication, message, or spend occurred.
+- Rollback: revert this focused `/system` presentation, test, and
+  documentation change on `dev`; no data or external state needs rollback.
+- On 2026-09-07, the homepage became the public trailer for the detailed
+  `/system` proof. The static server-rendered page keeps the owners-and-founders
+  audience, “Your vision, brought to life.” promise, `/contact` primary action,
+  `/services` secondary action, two offer destinations, and two example
+  destinations. Its three-beat teaser names See the friction, Define better,
+  and Make it real; the highlighted better-state card, connected signal, offer
+  previews, numbered resolution principles, framed examples, and explicit
+  `/system` bridge all stay under the dedicated `.homepage-trailer` scope.
+  CSS-only glow, entrance, connector, hover, and focus treatments stop their
+  active animation or transform under reduced motion. Every teaser, offer,
+  principle, example, and bridge-node group now keeps one full-width card per
+  row at 375, 768, 1024, and 1280 pixels, with a vertical connector between
+  each adjacent card. Card internals use an approximately `0.65fr / 1.35fr`
+  identity/detail split from 768 pixels upward and a readable single column
+  below it; the hero remains copy beside the teaser at wide desktop widths.
+  Focused public Chromium checks passed 7/7, including all four target widths
+  with no overflow, connector intersections, text escape, hidden connectors,
+  or console/page errors; they also verified visible actions, reduced motion,
+  wrapper completeness, main-content axe, keyboard focus, and
+  `/tmp/homepage-trailer-375.png`, `/tmp/homepage-trailer-768.png`,
+  `/tmp/homepage-trailer-1024.png`, and `/tmp/homepage-trailer-1280.png`.
+  The configured mobile project passed 3 applicable checks with 4 expected
+  skips. No API, schema, hosted, deployment, publication, provider, Mac,
+  customer, message, or spend action occurred.
+- Rollback: revert this focused homepage trailer presentation, test, and
+  documentation change on `dev`; no data or external state needs rollback.
 - On 2026-09-07, the repository gained a subscription-first Mac worker CLI with
   explicit `preflight`, `prepare`, `test --local`, `start`, `status`, and
   `stop` commands. It discovers absolute Node/OpenClaw paths, keeps the

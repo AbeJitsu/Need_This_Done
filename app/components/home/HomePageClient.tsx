@@ -1,28 +1,115 @@
 import Link from "next/link";
-import { PUBLIC_OFFERS } from "@/lib/public-offers";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, Sparkles, Target } from "lucide-react";
+import { Fragment } from "react";
+import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 
-const principles = [
-  [
-    "We hear you out",
-    "You can bring the problem exactly as it is. We listen before we start suggesting answers.",
-  ],
-  [
-    "We make it clear",
-    "Before work begins, you see what we will resolve, what it costs, and what is included.",
-  ],
-  [
-    "We start where it matters",
-    "We take on the first useful piece instead of making the work bigger than it needs to be.",
-  ],
-  [
-    "We are straight with you",
-    "If something needs a different kind of help, we say so early and plainly.",
-  ],
+type TeaserBeat = {
+  number: string;
+  label: string;
+  title: string;
+  description: string;
+  icon: "eye" | "target" | "sparkles";
+  highlighted?: boolean;
+};
+
+type OfferPreview = {
+  id: PublicOfferId;
+  number: string;
+  icon: TeaserBeat["icon"];
+  problem: string;
+  linkLabel: string;
+};
+
+type ExampleFrame = {
+  number: string;
+  icon: TeaserBeat["icon"];
+  href: string;
+  title: string;
+  happening: string;
+  tried: string;
+  after: string;
+};
+
+const teaserBeats: readonly TeaserBeat[] = [
+  {
+    number: "01",
+    label: "Start here",
+    title: "See the friction",
+    description:
+      "Start with what is getting in the way. A clear starting point keeps the next conversation grounded.",
+    icon: "eye",
+  },
+  {
+    number: "02",
+    label: "Name the shift",
+    title: "Define better",
+    description:
+      "Name the result worth moving toward. That gives the first piece of work a direction everyone can see.",
+    icon: "target",
+    highlighted: true,
+  },
+  {
+    number: "03",
+    label: "Make the move",
+    title: "Make it real",
+    description:
+      "Resolve one focused piece and show the change. A focused handoff makes the progress easier to review.",
+    icon: "sparkles",
+  },
 ] as const;
 
-const examples = [
+const offerPreviews: readonly OfferPreview[] = [
   {
+    id: "website-improvement",
+    number: "01",
+    icon: "target",
+    problem: "An important page feels unclear, slow, inaccessible, or difficult to use.",
+    linkLabel: "See how Website Fix works",
+  },
+  {
+    id: "ai-operator",
+    number: "02",
+    icon: "sparkles",
+    problem: "A recurring task keeps crossing inboxes, notes, and tools without a dependable path.",
+    linkLabel: "See how repeated work can change",
+  },
+] as const;
+
+const principles = [
+  {
+    number: "01",
+    icon: "eye",
+    title: "Listen before prescribing",
+    description:
+      "You can bring the problem exactly as it is. We listen before we start suggesting answers.",
+  },
+  {
+    number: "02",
+    icon: "target",
+    title: "Define what better means",
+    description:
+      "Before work begins, you see what we will resolve, what it costs, and what is included.",
+  },
+  {
+    number: "03",
+    icon: "sparkles",
+    title: "Start with the right piece",
+    description:
+      "We take on the first useful piece instead of making the work bigger than it needs to be.",
+  },
+  {
+    number: "04",
+    icon: "target",
+    title: "Be direct about what will help",
+    description:
+      "If something needs a different kind of help, we say so early and plainly.",
+  },
+] as const;
+
+const examples: readonly ExampleFrame[] = [
+  {
+    number: "01",
+    icon: "eye",
     href: "/work#website-fix",
     title: "A website that earns the next click",
     happening:
@@ -33,6 +120,8 @@ const examples = [
       "We find the friction, make the agreed fix, and hand back a clearer page with a record of what changed.",
   },
   {
+    number: "02",
+    icon: "target",
     href: "/work#managed-automation",
     title: "A better way through repeated work",
     happening:
@@ -44,43 +133,118 @@ const examples = [
   },
 ] as const;
 
+const bridgeNodes = [
+  {
+    number: "01",
+    title: "Clear goal",
+    description: "Name the outcome before the work begins.",
+    icon: "target",
+  },
+  {
+    number: "02",
+    title: "Bounded move",
+    description: "Keep the next step focused and understandable.",
+    icon: "sparkles",
+    highlighted: true,
+  },
+  {
+    number: "03",
+    title: "Visible result",
+    description: "Return a change the owner can review.",
+    icon: "eye",
+  },
+] as const;
+
+function TeaserIcon({
+  name,
+  className = "h-5 w-5",
+}: {
+  name: TeaserBeat["icon"];
+  className?: string;
+}) {
+  switch (name) {
+    case "eye":
+      return <Eye className={className} aria-hidden="true" />;
+    case "target":
+      return <Target className={className} aria-hidden="true" />;
+    case "sparkles":
+      return <Sparkles className={className} aria-hidden="true" />;
+  }
+}
+
 export default function HomePageClient() {
   return (
-    <main
-      id="main-content"
-      className="overflow-hidden bg-[var(--public-cream)] text-[var(--public-ink)]"
-    >
-      <section className="relative border-b border-[var(--public-ink)]/10">
-        <div
-          className="pointer-events-none absolute right-[-12rem] top-[-15rem] h-[34rem] w-[34rem] rounded-full bg-[#d0a94f]/10 blur-3xl"
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24 lg:py-28">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-            For owners and founders
-          </p>
-          <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] tracking-tight sm:text-6xl md:text-7xl">
-            Your vision, brought to life.
-          </h1>
-          <p className="mt-8 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)] md:text-xl">
-            A clearer website. A smoother working day. More room for the idea you
-            want to bring to life. Tell us what you have in mind, and we will
-            help you find a useful place to start.
-          </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/contact"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e]"
-            >
-              Share Your Vision{" "}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/services"
-              className="inline-flex min-h-12 items-center justify-center px-3 py-3 font-bold text-[var(--public-green)] underline underline-offset-4"
-            >
-              See what we do
-            </Link>
+    <main id="main-content" className="homepage-trailer">
+      <section className="homepage-hero" aria-labelledby="homepage-hero-heading">
+        <div className="homepage-hero__glow homepage-hero__glow--gold" aria-hidden="true" />
+        <div className="homepage-hero__glow homepage-hero__glow--green" aria-hidden="true" />
+        <div className="homepage-hero__inner">
+          <div className="homepage-hero__grid">
+            <div className="homepage-hero__copy">
+              <p className="homepage-eyebrow homepage-eyebrow--light">For owners and founders</p>
+              <h1 id="homepage-hero-heading" className="homepage-hero__title">
+                Your vision, brought to life.
+              </h1>
+              <p className="homepage-hero__lead">
+                A clearer website. A smoother working day. More room for the idea you
+                want to bring to life. Tell us what you have in mind, and we will
+                help you find a useful place to start.
+              </p>
+              <div className="homepage-hero__actions">
+                <Link href="/contact" className="homepage-button homepage-button--gold">
+                  Share Your Vision
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+                <Link href="/services" className="homepage-button homepage-button--ghost">
+                  See what we do
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
+            <figure className="homepage-teaser" aria-labelledby="homepage-teaser-caption">
+              <div className="homepage-teaser__header">
+                <div>
+                  <p className="homepage-teaser__kicker">A clearer way to begin</p>
+                  <figcaption id="homepage-teaser-caption" className="homepage-teaser__caption">
+                    From friction to a useful change
+                  </figcaption>
+                </div>
+                <span className="homepage-teaser__status">
+                  <span aria-hidden="true" /> keep it focused
+                </span>
+              </div>
+              <ol className="homepage-teaser__path" aria-label="Three beats for moving a problem forward">
+                {teaserBeats.map((beat, index) => (
+                  <li
+                    key={beat.number}
+                    className={`homepage-teaser__stage${beat.highlighted ? " homepage-teaser__stage--better" : ""}`}
+                  >
+                    <article className="homepage-teaser__card">
+                      <div className="homepage-card-identity homepage-teaser__identity">
+                        <div className="homepage-teaser__topline">
+                          <span className="homepage-teaser__number">{beat.number}</span>
+                          <span className="homepage-teaser__icon">
+                            <TeaserIcon name={beat.icon} />
+                          </span>
+                        </div>
+                        <p className="homepage-teaser__label">{beat.label}</p>
+                        <h2 className="homepage-teaser__title">{beat.title}</h2>
+                      </div>
+                      <div className="homepage-card-detail homepage-teaser__detail">
+                        <p className="homepage-teaser__description">{beat.description}</p>
+                      </div>
+                    </article>
+                    {index < teaserBeats.length - 1 && (
+                      <span className="homepage-teaser__connector" aria-hidden="true">
+                        <span className="homepage-teaser__connector-dot" />
+                        <ArrowRight />
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </figure>
           </div>
         </div>
       </section>
@@ -88,49 +252,60 @@ export default function HomePageClient() {
       <section
         id="what-we-do"
         aria-labelledby="what-we-do-heading"
-        className="scroll-mt-24"
+        className="homepage-section homepage-section--light"
       >
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.75fr_1.25fr] lg:gap-16">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-              What we do
+        <div className="homepage-section__inner">
+          <div className="homepage-section__intro homepage-section__intro--split">
+            <div>
+              <p className="homepage-eyebrow">What we do</p>
+              <h2 id="what-we-do-heading" className="homepage-heading homepage-heading--compact">
+                A website problem. Repeated work. One place to start.
+              </h2>
+            </div>
+            <p className="homepage-section__lead">
+              Two focused starting points for making something important easier to move forward.
             </p>
-            <h2
-              id="what-we-do-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
-            >
-              A website problem. Repeated work. One place to start.
-            </h2>
           </div>
-          <div className="divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
-            <article className="py-7">
-              <h3 className="font-playfair text-3xl font-black">{PUBLIC_OFFERS["website-improvement"].name}</h3>
-              <p className="mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-                {PUBLIC_OFFERS["website-improvement"].summary}
-              </p>
-              <Link
-                href={PUBLIC_OFFERS["website-improvement"].detailHref}
-                className="mt-5 inline-flex items-center gap-2 font-bold text-[var(--public-green)]"
-              >
-                See how Website Fix works{" "}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </article>
-            <article className="py-7">
-              <h3 className="font-playfair text-3xl font-black">
-                {PUBLIC_OFFERS["ai-operator"].name}
-              </h3>
-              <p className="mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-                {PUBLIC_OFFERS["ai-operator"].summary}
-              </p>
-              <Link
-                href={PUBLIC_OFFERS["ai-operator"].detailHref}
-                className="mt-5 inline-flex items-center gap-2 font-bold text-[var(--public-green)]"
-              >
-                See how repeated work can change{" "}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </article>
+
+          <div className="homepage-offer-grid">
+            {offerPreviews.map((preview) => {
+              const offer = PUBLIC_OFFERS[preview.id];
+              return (
+                <article key={preview.id} className="homepage-offer-card">
+                  <div className="homepage-card-identity homepage-offer-card__identity">
+                    <div className="homepage-offer-card__topline">
+                      <span className="homepage-offer-card__number">{preview.number}</span>
+                      <span className="homepage-offer-card__icon">
+                        <TeaserIcon name={preview.icon} />
+                      </span>
+                    </div>
+                    <p className="homepage-card-kicker">Starting point</p>
+                    <h3>{offer.name}</h3>
+                  </div>
+                  <div className="homepage-card-detail homepage-offer-card__detail">
+                    <dl className="homepage-offer-card__details">
+                      <div>
+                        <dt>The problem</dt>
+                        <dd>{preview.problem}</dd>
+                      </div>
+                      <div>
+                        <dt>The useful change</dt>
+                        <dd>{offer.summary}</dd>
+                      </div>
+                    </dl>
+                    <Link href={offer.detailHref} className="homepage-link">
+                      {preview.linkLabel}
+                      <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </div>
+                  {preview !== offerPreviews[offerPreviews.length - 1] && (
+                    <span className="homepage-offer-card__connector" aria-hidden="true">
+                      <ArrowRight />
+                    </span>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -138,112 +313,164 @@ export default function HomePageClient() {
       <section
         id="why-us"
         aria-labelledby="why-us-heading"
-        className="scroll-mt-24 border-y border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white"
+        className="homepage-section homepage-section--dark"
       >
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
-              Why Need This Done
-            </p>
-            <h2
-              id="why-us-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-6xl"
-            >
-              You deserve to be heard before anyone starts prescribing
-              solutions.
+        <div className="homepage-section__inner">
+          <div className="homepage-section__intro">
+            <p className="homepage-eyebrow homepage-eyebrow--light">How we think</p>
+            <h2 id="why-us-heading" className="homepage-heading">
+              A useful next move starts with listening.
             </h2>
+            <p className="homepage-section__lead">
+              The way we work is simple: understand the real friction, agree on what better means,
+              and make the next piece easier to see.
+            </p>
           </div>
-          <dl className="mt-14 grid gap-x-10 gap-y-9 border-t border-white/15 pt-10 md:grid-cols-2">
-            {principles.map(([term, description]) => (
-              <div key={term}>
-                <dt className="font-playfair text-2xl font-black text-white">
-                  {term}
-                </dt>
-                <dd className="mt-3 max-w-lg leading-7 text-[#dce8dd]">
-                  {description}
-                </dd>
-              </div>
+
+          <ol className="homepage-principles">
+            {principles.map((principle, index) => (
+              <li key={principle.number} className="homepage-principle">
+                <article className="homepage-principle__card">
+                  <div className="homepage-card-identity homepage-principle__identity">
+                    <div className="homepage-principle__topline">
+                      <span className="homepage-principle__number">{principle.number}</span>
+                      <span className="homepage-principle__signal" aria-hidden="true">
+                        <TeaserIcon name={principle.icon} />
+                      </span>
+                    </div>
+                    <p className="homepage-card-kicker">Resolution principle</p>
+                    <h3>{principle.title}</h3>
+                  </div>
+                  <div className="homepage-card-detail homepage-principle__detail">
+                    <p>{principle.description}</p>
+                  </div>
+                </article>
+                {index < principles.length - 1 && (
+                  <span className="homepage-principle__connector" aria-hidden="true">
+                    <ArrowRight />
+                  </span>
+                )}
+              </li>
             ))}
-          </dl>
+          </ol>
         </div>
       </section>
 
-      <section aria-labelledby="examples-heading">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-            How we move a stuck problem forward
-          </p>
-          <h2
-            id="examples-heading"
-            className="mt-5 max-w-3xl font-playfair text-4xl font-black leading-tight md:text-5xl"
-          >
-            What better can look like.
-          </h2>
-          <div className="mt-12 divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
+      <section
+        id="examples"
+        aria-labelledby="examples-heading"
+        className="homepage-section homepage-section--light"
+      >
+        <div className="homepage-section__inner">
+          <div className="homepage-section__intro">
+            <p className="homepage-eyebrow">How we move a stuck problem forward</p>
+            <h2 id="examples-heading" className="homepage-heading homepage-heading--compact">
+              What better can look like.
+            </h2>
+            <p className="homepage-section__lead">
+              Short frames of the problems, workarounds, and focused changes we can help make clearer.
+            </p>
+          </div>
+
+          <div className="homepage-example-grid">
             {examples.map((example) => (
-              <article
-                key={example.title}
-                className="grid gap-6 py-9 md:grid-cols-[.7fr_1fr] md:gap-14"
-              >
-                <h3 className="font-playfair text-3xl font-black">
-                  {example.title}
-                </h3>
-                <dl className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">
-                      What is happening
-                    </dt>
-                    <dd className="mt-3 leading-7 text-[var(--public-muted)]">
-                      {example.happening}
-                    </dd>
+              <article key={example.title} className="homepage-example-card">
+                <div className="homepage-card-identity homepage-example-card__identity">
+                  <div className="homepage-example-card__topline">
+                    <span className="homepage-example-card__number">{example.number}</span>
+                    <span className="homepage-example-card__icon">
+                      <TeaserIcon name={example.icon} />
+                    </span>
                   </div>
-                  <div>
-                    <dt className="text-xs font-bold uppercase tracking-[.16em] text-[#775d22]">
-                      What might be tried
-                    </dt>
-                    <dd className="mt-3 leading-7 text-[var(--public-muted)]">
-                      {example.tried}
-                    </dd>
-                  </div>
-                </dl>
-                <p className="leading-7 text-[var(--public-muted)] md:col-start-2">
-                  <span className="font-bold text-[var(--public-green)]">
-                    How we help resolve it:{" "}
+                  <p className="homepage-card-kicker">Trailer frame</p>
+                  <h3>{example.title}</h3>
+                </div>
+                <div className="homepage-card-detail homepage-example-card__detail">
+                  <dl className="homepage-example-card__details">
+                    <div>
+                      <dt>What is happening</dt>
+                      <dd>{example.happening}</dd>
+                    </div>
+                    <div>
+                      <dt>What might be tried</dt>
+                      <dd>{example.tried}</dd>
+                    </div>
+                  </dl>
+                  <p className="homepage-example-card__resolution">
+                    <span>How we help resolve it</span>
+                    {example.after}
+                  </p>
+                  <Link href={example.href} className="homepage-link">
+                    Explore this example: {example.title}
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </div>
+                {example !== examples[examples.length - 1] && (
+                  <span className="homepage-example-card__connector" aria-hidden="true">
+                    <ArrowRight />
                   </span>
-                  {example.after}
-                </p>
-                <Link href={example.href} className="public-explore md:col-start-2">Explore this example: {example.title}</Link>
+                )}
               </article>
             ))}
           </div>
-          <Link
-            href="/work"
-            className="mt-7 inline-flex items-center gap-2 font-bold text-[var(--public-green)]"
-          >
-            See more examples{" "}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <Link href="/work" className="homepage-link homepage-link--standalone">
+            See more examples
+            <ArrowRight aria-hidden="true" />
           </Link>
         </div>
       </section>
 
-      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
-        <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-            The next move
-          </p>
-          <h2 className="mt-5 font-playfair text-4xl font-black md:text-6xl">
+      <section className="homepage-bridge" aria-labelledby="homepage-bridge-heading">
+        <div className="homepage-bridge__inner">
+          <div className="homepage-bridge__copy">
+            <p className="homepage-eyebrow homepage-eyebrow--light">Behind the work</p>
+            <h2 id="homepage-bridge-heading" className="homepage-heading">
+              We use the same discipline on our own flows.
+            </h2>
+            <p>
+              The deeper page shows how goals stay clear, actions stay bounded, and results stay
+              reviewable—from the first useful move to the evidence that comes back.
+            </p>
+            <Link href="/system" className="homepage-button homepage-button--gold">
+              See the system behind the work
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="homepage-bridge__visual" aria-hidden="true">
+            {bridgeNodes.map((node, index) => (
+              <Fragment key={node.number}>
+                <div className={`homepage-bridge__node${"highlighted" in node && node.highlighted ? " homepage-bridge__node--gold" : ""}`}>
+                  <div className="homepage-bridge__node-identity">
+                    <div className="homepage-bridge__node-topline">
+                      <span>{node.number}</span>
+                      <span className="homepage-bridge__node-icon">
+                        <TeaserIcon name={node.icon} />
+                      </span>
+                    </div>
+                    <strong>{node.title}</strong>
+                  </div>
+                  <p className="homepage-bridge__node-detail">{node.description}</p>
+                </div>
+                {index < bridgeNodes.length - 1 && <span className="homepage-bridge__line" />}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-closing" aria-labelledby="homepage-closing-heading">
+        <div className="homepage-closing__inner">
+          <p className="homepage-eyebrow">The next move</p>
+          <h2 id="homepage-closing-heading" className="homepage-heading">
             You do not have to have it all figured out.
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-[var(--public-muted)]">
-            Share what is getting in the way. We will hear you out and help you
-            resolve the right piece first.
+          <p>
+            Share what is getting in the way. We will hear you out and help you resolve the right
+            piece first.
           </p>
-          <Link
-            href="/contact"
-            className="mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
-          >
-            Share Your Vision{" "}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <Link href="/contact" className="homepage-button homepage-button--green">
+            Share Your Vision
+            <ArrowRight aria-hidden="true" />
           </Link>
         </div>
       </section>

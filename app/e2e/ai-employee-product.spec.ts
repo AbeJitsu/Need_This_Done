@@ -24,7 +24,202 @@ test('homepage first viewport identifies audience, promise, and action without m
   await expect(firstSection.getByText('For owners and founders', { exact: true })).toBeVisible();
   await expect(firstSection.getByRole('heading', { name: 'Your vision, brought to life.' })).toBeVisible();
   await expect(firstSection.getByRole('link', { name: /share your vision/i })).toBeVisible();
-  await expect(firstSection).not.toContainText(/API|database|automation system|technical implementation/i);
+  await expect(firstSection.getByRole('figure')).toBeVisible();
+  await expect(firstSection.locator('.homepage-teaser__stage')).toHaveCount(3);
+  for (const beat of ['See the friction', 'Define better', 'Make it real']) {
+    await expect(firstSection.getByRole('heading', { name: beat, exact: true })).toBeVisible();
+  }
+  await expect(firstSection.locator('.homepage-teaser__stage--better')).toHaveCount(1);
+  await expect(firstSection).not.toContainText(/Hermes|OpenClaw|Codex|approval lifecycles?|API|database|automation system|technical implementation/i);
+});
+
+test('homepage trailer preserves public routes and points to the system proof', async ({ page }) => {
+  await page.goto('/');
+  const main = page.getByRole('main');
+
+  await expect(main.getByRole('link', { name: 'See the system behind the work', exact: true })).toHaveAttribute('href', '/system');
+  await expect(main.getByRole('link', { name: 'See how Website Fix works', exact: true })).toHaveAttribute('href', '/website-fix');
+  await expect(main.getByRole('link', { name: 'See how repeated work can change', exact: true })).toHaveAttribute('href', '/managed-automation');
+  await expect(main.getByRole('link', { name: 'Explore this example: A website that earns the next click', exact: true })).toHaveAttribute('href', '/work#website-fix');
+  await expect(main.getByRole('link', { name: 'Explore this example: A better way through repeated work', exact: true })).toHaveAttribute('href', '/work#managed-automation');
+
+  const primaryHrefs = await main.locator('.homepage-button').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+  expect(primaryHrefs).toEqual(['/contact', '/services', '/system', '/contact']);
+  expect(primaryHrefs.every((href) => href && !href.startsWith('#'))).toBe(true);
+});
+
+test('homepage trailer keeps every card in a vertical editorial stack', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'The explicit homepage visual matrix runs in the desktop public project.');
+  test.setTimeout(180_000);
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+
+  for (const viewport of [
+    { width: 375, height: 800 },
+    { width: 768, height: 900 },
+    { width: 1024, height: 900 },
+    { width: 1280, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    const layout = await page.evaluate(() => {
+      const intersects = (first: DOMRect, second: DOMRect) => first.left < second.right - 0.5
+        && first.right > second.left + 0.5
+        && first.top < second.bottom - 0.5
+        && first.bottom > second.top + 0.5;
+      const cards = Array.from(document.querySelectorAll<HTMLElement>(
+        '.homepage-teaser__card, .homepage-offer-card, .homepage-principle__card, .homepage-example-card, .homepage-bridge__node',
+      ));
+      const connectors = Array.from(document.querySelectorAll<HTMLElement>(
+        '.homepage-teaser__connector, .homepage-offer-card__connector, .homepage-principle__connector, .homepage-example-card__connector, .homepage-bridge__line',
+      ));
+      const connectorHitsCard = connectors.some((connector) => {
+        const connectorRect = connector.getBoundingClientRect();
+        return cards.some((card) => intersects(connectorRect, card.getBoundingClientRect()));
+      });
+      const textEscapeDetails = cards.flatMap((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const textNodes = Array.from(card.querySelectorAll<HTMLElement>('h2, h3, p, dt, dd'));
+        return [
+          ...textNodes.filter((node) => {
+            const textRect = node.getBoundingClientRect();
+            return textRect.left < cardRect.left - 1
+              || textRect.right > cardRect.right + 1
+              || textRect.top < cardRect.top - 1
+              || textRect.bottom > cardRect.bottom + 1;
+          }).map((node) => `${card.className}:text:${node.textContent}`),
+        ];
+      });
+      const rowsFor = (selector: string) => {
+        const rows = new Map<number, number>();
+        document.querySelectorAll<HTMLElement>(selector).forEach((item) => {
+          const top = Math.round(item.getBoundingClientRect().top);
+          rows.set(top, (rows.get(top) || 0) + 1);
+        });
+        return Array.from(rows.values());
+      };
+      const stackContract = (containerSelector: string, itemSelector: string, cardSelector: string, connectorSelector: string) => {
+        const container = document.querySelector<HTMLElement>(containerSelector);
+        if (!container) return { rowCounts: [], connectorCount: 0, vertical: false };
+        const items = Array.from(container.querySelectorAll<HTMLElement>(`:scope > ${itemSelector}`));
+        const cardRects = items.map((item) => (item.matches(cardSelector) ? item : item.querySelector<HTMLElement>(cardSelector))?.getBoundingClientRect());
+        const connectorRects = items.slice(0, -1).map((item) => item.querySelector<HTMLElement>(connectorSelector)?.getBoundingClientRect());
+        return {
+          rowCounts: rowsFor(`${containerSelector} > ${itemSelector}`),
+          connectorCount: connectorRects.filter(Boolean).length,
+          vertical: connectorRects.every((connector, index) => {
+            const from = cardRects[index];
+            const to = cardRects[index + 1];
+            if (!connector || !from || !to) return false;
+            return connector.width <= 2
+              && connector.height > 0
+              && connector.top >= from.bottom - 0.5
+              && connector.bottom <= to.top + 0.5;
+          }),
+        };
+      };
+      const bridgeNodes = Array.from(document.querySelectorAll<HTMLElement>('.homepage-bridge__node'));
+      const bridgeLines = Array.from(document.querySelectorAll<HTMLElement>('.homepage-bridge__line'));
+      const bridgeVertical = bridgeLines.every((line, index) => {
+        const from = bridgeNodes[index]?.getBoundingClientRect();
+        const to = bridgeNodes[index + 1]?.getBoundingClientRect();
+        const connector = line.getBoundingClientRect();
+        return Boolean(from && to)
+          && connector.width <= 2
+          && connector.height > 0
+          && connector.top >= from!.bottom - 0.5
+          && connector.bottom <= to!.top + 0.5;
+      });
+      const columnCount = (selector: string) => {
+        const element = document.querySelector<HTMLElement>(selector);
+        return element ? getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length : 0;
+      };
+      return {
+        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        connectorHitsCard,
+        textEscapesCard: textEscapeDetails.length > 0,
+        hiddenConnectors: connectors.filter((connector) => getComputedStyle(connector).display === 'none').length,
+        identityDetailComplete: cards.every((card) => Boolean(
+          card.querySelector(':scope > .homepage-card-identity, :scope > .homepage-bridge__node-identity'),
+        ) && Boolean(card.querySelector(':scope > .homepage-card-detail, :scope > .homepage-bridge__node-detail'))),
+        stacks: [
+          stackContract('.homepage-teaser__path', '.homepage-teaser__stage', '.homepage-teaser__card', '.homepage-teaser__connector'),
+          stackContract('.homepage-offer-grid', '.homepage-offer-card', '.homepage-offer-card', '.homepage-offer-card__connector'),
+          stackContract('.homepage-principles', '.homepage-principle', '.homepage-principle__card', '.homepage-principle__connector'),
+          stackContract('.homepage-example-grid', '.homepage-example-card', '.homepage-example-card', '.homepage-example-card__connector'),
+        ],
+        bridgeRows: rowsFor('.homepage-bridge__node'),
+        bridgeConnectorCount: bridgeLines.length,
+        bridgeVertical,
+        editorialColumns: [
+          columnCount('.homepage-teaser__card'),
+          columnCount('.homepage-offer-card'),
+          columnCount('.homepage-principle__card'),
+          columnCount('.homepage-example-card'),
+          columnCount('.homepage-bridge__node'),
+        ],
+        heroColumns: columnCount('.homepage-hero__grid'),
+        heroActionVisible: Boolean(document.querySelector('.homepage-hero__actions a[href="/contact"]')),
+        teaserVisible: Boolean(document.querySelector('.homepage-teaser')),
+        reducedGlowMotion: getComputedStyle(document.querySelector('.homepage-hero__glow')!).animationName,
+        reducedCardMotion: getComputedStyle(document.querySelector('.homepage-teaser__stage')!).animationName,
+        reducedSignalMotion: getComputedStyle(document.querySelector('.homepage-teaser__connector-dot')!).animationName,
+      };
+    });
+
+    expect(layout.overflow).toBe(false);
+    expect(layout.connectorHitsCard).toBe(false);
+    expect(layout.textEscapesCard).toBe(false);
+    expect(layout.hiddenConnectors).toBe(0);
+    expect(layout.identityDetailComplete).toBe(true);
+    expect(layout.heroActionVisible).toBe(true);
+    expect(layout.teaserVisible).toBe(true);
+    expect(layout.reducedGlowMotion).toBe('none');
+    expect(layout.reducedCardMotion).toBe('none');
+    expect(layout.reducedSignalMotion).toBe('none');
+    expect(layout.stacks.every((stack) => stack.rowCounts.every((count) => count === 1))).toBe(true);
+    expect(layout.stacks.every((stack) => stack.connectorCount === stack.rowCounts.length - 1 && stack.vertical)).toBe(true);
+    expect(layout.bridgeRows).toEqual([1, 1, 1]);
+    expect(layout.bridgeConnectorCount).toBe(2);
+    expect(layout.bridgeVertical).toBe(true);
+    expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
+    expect(layout.heroColumns).toBe(viewport.width >= 1200 ? 2 : 1);
+    await expect(page.getByRole('main')).toHaveCount(1);
+    await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
+    await page.screenshot({ path: `/tmp/homepage-trailer-${viewport.width}.png`, fullPage: true });
+    await expect(page.locator('.homepage-hero__actions a[href="/contact"]')).toBeVisible();
+    await page.locator('.homepage-hero__actions a[href="/contact"]').focus();
+    expect(await page.locator('.homepage-hero__actions a[href="/contact"]').evaluate((link) => getComputedStyle(link).outlineStyle)).not.toBe('none');
+    expect(errors).toEqual([]);
+    errors.length = 0;
+  }
+});
+
+test('homepage trailer motion is active only when motion is allowed', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'The motion contract runs in the desktop public project.');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const activeMotion = await page.evaluate(() => ({
+    glow: getComputedStyle(document.querySelector('.homepage-hero__glow')!).animationName,
+    card: getComputedStyle(document.querySelector('.homepage-teaser__stage')!).animationName,
+    signal: getComputedStyle(document.querySelector('.homepage-teaser__connector-dot')!).animationName,
+  }));
+  expect(activeMotion.glow).not.toBe('none');
+  expect(activeMotion.card).not.toBe('none');
+  expect(activeMotion.signal).not.toBe('none');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  const reducedMotion = await page.evaluate(() => ({
+    glow: getComputedStyle(document.querySelector('.homepage-hero__glow')!).animationName,
+    card: getComputedStyle(document.querySelector('.homepage-teaser__stage')!).animationName,
+    signal: getComputedStyle(document.querySelector('.homepage-teaser__connector-dot')!).animationName,
+  }));
+  expect(reducedMotion).toEqual({ glow: 'none', card: 'none', signal: 'none' });
 });
 
 async function fillIntake(page: import('@playwright/test').Page) {
@@ -117,7 +312,7 @@ test('/system keeps its actions purposeful and its four stages connected', async
   expect(errors).toEqual([]);
 });
 
-test('/system keeps nodes and connectors separated at target widths', async ({ page }, testInfo) => {
+test('/system keeps every map and rail card in a vertical editorial stack', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'The explicit visual matrix runs in the desktop public project.');
   test.setTimeout(120_000);
 
@@ -136,65 +331,97 @@ test('/system keeps nodes and connectors separated at target widths', async ({ p
         && first.right > second.left + 0.5
         && first.top < second.bottom - 0.5
         && first.bottom > second.top + 0.5;
-      const cards = Array.from(document.querySelectorAll<HTMLElement>('.system-map__card, .system-rail__card'));
-      const connectors = Array.from(document.querySelectorAll<HTMLElement>('.system-map__connector, .system-rail__connector'));
-      const connectorHitsCard = connectors.some((connector) => {
-        const connectorRect = connector.getBoundingClientRect();
-        return cards.some((card) => intersects(connectorRect, card.getBoundingClientRect()));
-      });
-      const textEscapesCard = cards.some((card) => {
+      const allCards = Array.from(document.querySelectorAll<HTMLElement>(
+        '.system-map__card, .system-rail__card, .system-difference-card, .system-beat, .system-status-card',
+      ));
+      const allConnectors = Array.from(document.querySelectorAll<HTMLElement>(
+        '.system-map__connector, .system-rail__connector, .system-difference-card__connector, .system-beat__connector, .system-status-card__connector',
+      ));
+      const textEscapeDetails = allCards.flatMap((card) => {
         const cardRect = card.getBoundingClientRect();
-        const textNodes = Array.from(card.querySelectorAll<HTMLElement>('.system-map__title, .system-map__description, .system-rail__title, .system-rail__description'));
-        return card.scrollWidth > card.clientWidth + 1
-          || card.scrollHeight > card.clientHeight + 1
-          || textNodes.some((node) => {
+        const textNodes = Array.from(card.querySelectorAll<HTMLElement>('h2, h3, p, li, dt, dd'));
+        return [
+          ...textNodes.filter((node) => {
             const textRect = node.getBoundingClientRect();
             return textRect.left < cardRect.left - 1
               || textRect.right > cardRect.right + 1
               || textRect.top < cardRect.top - 1
               || textRect.bottom > cardRect.bottom + 1;
-          });
+          }).map((node) => `${card.className}:text:${node.textContent}`),
+        ];
       });
-      const titleWraps = Array.from(document.querySelectorAll<HTMLElement>('.system-map__title, .system-rail__title')).some((title) => {
-        const lineHeight = parseFloat(getComputedStyle(title).lineHeight);
-        return title.getBoundingClientRect().height > lineHeight * 1.25;
-      });
-      const architectureRows = new Set(
-        Array.from(document.querySelectorAll<HTMLElement>('.system-rail--architecture .system-rail__item'))
-          .map((item) => Math.round(item.getBoundingClientRect().top)),
-      ).size;
-      const mapRows = new Map<number, number>();
-      Array.from(document.querySelectorAll<HTMLElement>('.system-map__stage')).forEach((stage) => {
-        const top = Math.round(stage.getBoundingClientRect().top);
-        mapRows.set(top, (mapRows.get(top) || 0) + 1);
-      });
-      const railLayouts = Array.from(document.querySelectorAll<HTMLElement>('.system-rail--five, .system-rail--four')).map((rail) => {
-        const railRect = rail.getBoundingClientRect();
-        const rows = new Map<number, DOMRect[]>();
-        Array.from(rail.querySelectorAll<HTMLElement>(':scope > .system-rail__item')).forEach((item) => {
-          const itemRect = item.getBoundingClientRect();
-          const row = rows.get(Math.round(itemRect.top)) || [];
-          row.push(itemRect);
-          rows.set(Math.round(itemRect.top), row);
+      const stackContractForElement = (container: HTMLElement, itemSelector: string, cardSelector: string, connectorSelector: string) => {
+        const items = Array.from(container.querySelectorAll<HTMLElement>(`:scope > ${itemSelector}`));
+        const cardRects = items.map((item) => (item.matches(cardSelector) ? item : item.querySelector<HTMLElement>(cardSelector))?.getBoundingClientRect());
+        const connectorRects = items.slice(0, -1).map((item) => item.querySelector<HTMLElement>(connectorSelector)?.getBoundingClientRect());
+        const rows = new Map<number, number>();
+        items.forEach((item) => {
+          const top = Math.round(item.getBoundingClientRect().top);
+          rows.set(top, (rows.get(top) || 0) + 1);
         });
         return {
-          kind: rail.classList.contains('system-rail--five') ? 'five' : 'four',
-          rowCounts: Array.from(rows.values()).map((row) => row.length),
-          centeredShortRows: Array.from(rows.values()).filter((row) => row.length < 3).every((row) => {
-            const left = Math.min(...row.map((rect) => rect.left));
-            const right = Math.max(...row.map((rect) => rect.right));
-            return Math.abs((left + right) / 2 - (railRect.left + railRect.right) / 2) < 2;
+          rowCounts: Array.from(rows.values()),
+          connectorCount: connectorRects.filter(Boolean).length,
+          vertical: connectorRects.every((connector, index) => {
+            const from = cardRects[index];
+            const to = cardRects[index + 1];
+            if (!connector || !from || !to) return false;
+            return connector.width <= 2
+              && connector.height > 0
+              && connector.top >= from.bottom - 0.5
+              && connector.bottom <= to.top + 0.5;
           }),
         };
-      });
+      };
+      const stackContract = (containerSelector: string, itemSelector: string, cardSelector: string, connectorSelector: string) => {
+        const container = document.querySelector<HTMLElement>(containerSelector);
+        if (!container) return { rowCounts: [], connectorCount: 0, vertical: false };
+        return stackContractForElement(container, itemSelector, cardSelector, connectorSelector);
+      };
+      const mapStack = stackContract('.system-map', '.system-map__stage', '.system-map__card', '.system-map__connector');
+      const railStacks = Array.from(document.querySelectorAll<HTMLElement>('.system-rail')).map((rail) => ({
+        kind: rail.classList.contains('system-rail--five') ? 'five' : 'four',
+        ...stackContractForElement(rail, '.system-rail__item', '.system-rail__card', '.system-rail__connector'),
+      }));
+      const extraStacks = [
+        stackContract('.system-difference-grid', '.system-difference-card', '.system-difference-card', '.system-difference-card__connector'),
+        stackContract('.system-beats', '.system-beat', '.system-beat', '.system-beat__connector'),
+        stackContract('.system-status-grid', '.system-status-card', '.system-status-card', '.system-status-card__connector'),
+      ];
+      const columnCount = (selector: string) => {
+        const element = document.querySelector<HTMLElement>(selector);
+        return element ? getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length : 0;
+      };
       return {
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-        connectorHitsCard,
-        textEscapesCard,
-        titleWraps,
-        architectureRows,
-        mapRowCounts: Array.from(mapRows.values()),
-        railLayouts,
+        connectorHitsCard: allConnectors.some((connector) => {
+          const connectorRect = connector.getBoundingClientRect();
+          return allCards.some((card) => intersects(connectorRect, card.getBoundingClientRect()));
+        }),
+        textEscapesCard: textEscapeDetails.length > 0,
+        mapRows: mapStack.rowCounts,
+        mapConnectorCount: mapStack.connectorCount,
+        mapVertical: mapStack.vertical,
+        railStacks,
+        extraStacks,
+        editorialColumns: [
+          columnCount('.system-map__card'),
+          columnCount('.system-rail__card'),
+          columnCount('.system-difference-card'),
+          columnCount('.system-beat'),
+          columnCount('.system-status-card'),
+        ],
+        heroColumns: columnCount('.system-hero__grid'),
+        architectureColumns: columnCount('.system-two-column--architecture'),
+        codingColumns: columnCount('.system-two-column--dark'),
+        identityDetailComplete: allCards.every((card) => Boolean(
+          card.querySelector(':scope > .system-card-identity') && card.querySelector(':scope > .system-card-detail'),
+        )),
+        hiddenConnectors: allConnectors.filter((connector) => getComputedStyle(connector).display === 'none').length,
+        architectureRows: new Set(
+          Array.from(document.querySelectorAll<HTMLElement>('.system-rail--architecture .system-rail__item'))
+            .map((item) => Math.round(item.getBoundingClientRect().top)),
+        ).size,
         heroMapVisible: Boolean(document.querySelector('.system-map-shell')),
         primaryVisible: Boolean(document.querySelector('.system-hero__actions a[href="/contact"]')),
         reducedMapMotion: getComputedStyle(document.querySelector('.system-map__connector')!, '::after').animationName,
@@ -205,21 +432,27 @@ test('/system keeps nodes and connectors separated at target widths', async ({ p
     expect(layout.overflow).toBe(false);
     expect(layout.connectorHitsCard).toBe(false);
     expect(layout.textEscapesCard).toBe(false);
-    expect(layout.titleWraps).toBe(false);
-    expect(layout.mapRowCounts).toEqual(viewport.width >= 1200 ? [2, 2] : [1, 1, 1, 1]);
-    expect(layout.railLayouts.every((rail) => rail.rowCounts.every((count) => count <= 3))).toBe(true);
-    if (viewport.width >= 1024) {
-      expect(layout.railLayouts.filter((rail) => rail.kind === 'five').every((rail) => rail.rowCounts.join(',') === '2,2,1')).toBe(true);
-      expect(layout.railLayouts.filter((rail) => rail.kind === 'four').every((rail) => rail.rowCounts.join(',') === '2,2')).toBe(true);
-      expect(layout.railLayouts.every((rail) => rail.centeredShortRows)).toBe(true);
-    }
-    expect(layout.architectureRows).toBe(viewport.width >= 1024 ? 3 : 5);
+    expect(layout.identityDetailComplete).toBe(true);
+    expect(layout.mapRows).toEqual([1, 1, 1, 1]);
+    expect(layout.mapConnectorCount).toBe(3);
+    expect(layout.mapVertical).toBe(true);
+    expect(layout.railStacks.every((rail) => rail.rowCounts.every((count) => count === 1))).toBe(true);
+    expect(layout.railStacks.every((rail) => rail.connectorCount === rail.rowCounts.length - 1 && rail.vertical)).toBe(true);
+    expect(layout.extraStacks.every((stack) => stack.rowCounts.every((count) => count === 1))).toBe(true);
+    expect(layout.extraStacks.every((stack) => stack.connectorCount === stack.rowCounts.length - 1 && stack.vertical)).toBe(true);
+    expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
+    expect(layout.heroColumns).toBe(viewport.width >= 1200 ? 2 : 1);
+    expect(layout.architectureColumns).toBe(viewport.width >= 768 ? 2 : 1);
+    expect(layout.codingColumns).toBe(viewport.width >= 768 ? 2 : 1);
+    expect(layout.hiddenConnectors).toBe(0);
+    expect(layout.architectureRows).toBe(5);
     expect(layout.heroMapVisible).toBe(true);
     expect(layout.primaryVisible).toBe(true);
     expect(layout.reducedMapMotion).toBe('none');
     expect(layout.reducedRailMotion).toBe('none');
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
+    await page.screenshot({ path: `/tmp/system-vertical-${viewport.width}.png`, fullPage: true });
   }
 });
 

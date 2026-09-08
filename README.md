@@ -85,21 +85,26 @@ product and the only active product roadmap.
 ## Public service front door
 
 The separately approved public website presents NeedThisDone as an outcome
-partner for owners and founders: “Your vision, brought to life.” Visitors can
-share the better state they want without preparing a technical brief. Website
-Fix ($500) and proposal-based Managed Automation remain bounded secondary
-starting points; choosing either one is optional in the public intake.
+partner for owners and founders: “Your vision, brought to life.” The homepage
+is the short public teaser: it helps visitors recognize the friction, imagine
+the better state, and choose a useful place to start without explaining the
+whole operating system. Visitors can share the better state they want without
+preparing a technical brief. Website Fix ($500) and proposal-based Managed
+Automation remain bounded secondary starting points; choosing either one is
+optional in the public intake.
 
 This public positioning does not expand the assistant roadmap or grant action
 authority. A public request starts a conversation only. It does not create an
 automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
-The public [`/system` case study](app/app/system/page.tsx) explains this
-boundary through the four-stage system map and reviewable evidence rails. It is
-an explanatory public page, not a second control plane. Keep its route contract
-and responsive presentation aligned with [Project status](docs/PROJECT_STATUS.md)
-and [Release evidence](docs/RELEASE_EVIDENCE.md) when the page changes.
+The public [`/system` case study](app/app/system/page.tsx) is the proof page
+behind that teaser. It explains this boundary through the four-stage system map
+and reviewable evidence rails. It is an explanatory public page, not a second
+control plane. Keep the homepage-to-`/system` relationship, each route
+contract, and both responsive presentations aligned with [Project
+status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md)
+when either page changes.
 
 Internal public-service writing guidance lives in
 [Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).

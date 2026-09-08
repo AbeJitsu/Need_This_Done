@@ -61,6 +61,21 @@ It is complete only when all of these are true:
 - New providers, integrations, agent roles, or tools without a need proven by
   the assistant workflow.
 
+## Public homepage trailer and `/system` proof
+
+The public homepage is the short teaser for the outcome-partner front door. It
+helps visitors recognize the problem, see the resolution philosophy, and find
+the two bounded starting points without reproducing the internal operating
+system. The public [system case study](app/app/system/page.tsx) is the detailed
+proof page: it shows how NeedThisDone applies the same discipline to its own
+flows.
+
+Maintain the relationship as one public journey: homepage copy and teaser
+geometry should stay lightweight and human, while `/system` remains the
+authoritative detailed explanation. Changes to the teaser beats, CTA
+destinations, bridge link, card geometry, or motion must update the homepage
+assertions in `app/e2e/ai-employee-product.spec.ts` and the factual ledgers.
+
 ## Public `/system` case study
 
 The public [system case study](app/app/system/page.tsx) is an explanatory page
