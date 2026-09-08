@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Fragment } from "react";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
@@ -34,6 +33,15 @@ export const metadata: Metadata = {
 
 type IconName = "target" | "workflow" | "shield" | "code" | "git" | "lock";
 
+type RailStep = {
+  number: string;
+  label: string;
+  title: string;
+  description: string;
+  icon: IconName;
+  highlighted?: boolean;
+};
+
 function StepIcon({
   name,
   className = "h-5 w-5",
@@ -63,91 +71,163 @@ function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-const executionSteps = [
+const systemStages = [
   {
     number: "01",
-    title: "Name the outcome",
+    label: "Name the outcome",
+    title: "Goal",
+    description:
+      "A durable aim gives the work somewhere useful to go: make the owner dashboard easier to act on.",
+    icon: "target",
+  },
+  {
+    number: "02",
+    label: "Decide the boundary",
+    title: "Owner approval",
+    description:
+      "The owner sees the scope, route, cost, and expected result before a meaningful action can run.",
+    icon: "shield",
+    highlighted: true,
+  },
+  {
+    number: "03",
+    label: "Move one piece",
+    title: "Private execution",
+    description:
+      "The outbound-only Mac sends the frozen task to the right lane: OpenClaw for tools or Codex for code.",
+    icon: "lock",
+  },
+  {
+    number: "04",
+    label: "Bring back evidence",
+    title: "Reviewable proof",
+    description:
+      "The result, cost, diff, private asset, blocker, or next decision stays attached to the durable record.",
+    icon: "git",
+  },
+] as const;
+
+const executionSteps: readonly RailStep[] = [
+  {
+    number: "01",
+    label: "Start with the outcome",
+    title: "Name what better looks like",
     description:
       "Start with the better state, not a pile of disconnected tasks.",
     icon: "target",
   },
   {
     number: "02",
-    title: "Shape the work",
+    label: "Shape the work",
+    title: "Turn context into a plan",
     description:
       "Hermes turns the goal into a bounded plan with a visible next step.",
     icon: "workflow",
   },
   {
     number: "03",
+    label: "Cross the boundary",
     title: "Approve the move",
     description:
       "The owner sees the scope, route, cost, and expected result before anything runs.",
     icon: "shield",
+    highlighted: true,
   },
   {
     number: "04",
-    title: "Do the work",
+    label: "Do one useful piece",
+    title: "Execute privately",
     description:
       "The private machine sends the approved task to the right execution lane.",
     icon: "code",
   },
   {
     number: "05",
+    label: "Make it legible",
     title: "Review the proof",
     description:
       "The result comes back with evidence, blockers, and a clear next decision.",
     icon: "git",
   },
-] as const;
+];
 
-const systemParts = [
+const architectureSteps: readonly RailStep[] = [
   {
     number: "01",
-    title: "NeedThisDone",
     label: "Mission control",
+    title: "NeedThisDone",
     description:
       "Keeps the goal, context, approvals, status, costs, and results together in one durable record.",
     icon: "target",
-    tone: "bg-[var(--public-green)] text-white",
   },
   {
     number: "02",
-    title: "Hermes",
     label: "Planning layer",
+    title: "Hermes",
     description:
       "Interprets the long-range objective and turns it into a focused, reviewable work packet.",
     icon: "workflow",
-    tone: "bg-[#d0a94f] text-[var(--public-ink)]",
+    highlighted: true,
   },
   {
     number: "03",
-    title: "OpenClaw",
     label: "Local gateway",
+    title: "OpenClaw",
     description:
       "Runs approved non-code tools and provides the always-on gateway for the private machine.",
     icon: "shield",
-    tone: "bg-[#668b70] text-white",
   },
   {
     number: "04",
-    title: "Codex",
     label: "Coding lane",
+    title: "Codex",
     description:
       "Works inside an isolated repository worktree to inspect, edit, test, and prepare code changes.",
     icon: "code",
-    tone: "bg-[#2a5f50] text-white",
   },
   {
     number: "05",
-    title: "GitHub",
     label: "Review boundary",
+    title: "GitHub",
     description:
       "Holds the branch, diff, commit, and pull request so changes remain inspectable before merge.",
     icon: "git",
-    tone: "bg-[#31506a] text-white",
   },
-] as const;
+];
+
+const codingSteps: readonly RailStep[] = [
+  {
+    number: "01",
+    label: "Start from the boundary",
+    title: "Base commit",
+    description: "Start from the exact approved repository state.",
+    icon: "git",
+  },
+  {
+    number: "02",
+    label: "Keep the change isolated",
+    title: "Dedicated worktree",
+    description: "Keep the change isolated from other work.",
+    icon: "lock",
+  },
+  {
+    number: "03",
+    label: "Inspect, edit, verify",
+    title: "Codex execution",
+    description:
+      "Inspect, edit, run the relevant checks, and explain the result.",
+    icon: "code",
+  },
+  {
+    number: "04",
+    label: "Return the evidence",
+    title: "Reviewable handoff",
+    description:
+      "Return the branch, diff, tests, and blockers before merge.",
+    icon: "shield",
+    highlighted: true,
+  },
+];
 
 const differencePoints = [
   {
@@ -170,13 +250,6 @@ const differencePoints = [
       "The output includes evidence and the next decision",
     ],
   },
-] as const;
-
-const codingSteps = [
-  ["Base commit", "Start from the exact approved repository state."],
-  ["Dedicated worktree", "Keep the change isolated from other work."],
-  ["Codex execution", "Inspect, edit, run the relevant checks, and explain the result."],
-  ["Reviewable handoff", "Return the branch, diff, tests, and blockers before merge."],
 ] as const;
 
 const proofItems = [
@@ -203,233 +276,197 @@ function SectionLabel({
   light?: boolean;
 }) {
   return (
-    <p
-      className={cx(
-        "text-xs font-bold uppercase tracking-[.22em]",
-        light ? "text-[#c9dcca]" : "text-[var(--public-green)]",
-      )}
-    >
+    <p className={cx("system-eyebrow", light && "system-eyebrow--light")}>
       {children}
     </p>
   );
 }
 
-function ExecutionDiagram() {
+function SystemMap() {
   return (
-    <div className="mt-12 grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
-      {executionSteps.map((step, index) => (
-        <Fragment key={step.number}>
-          <article className="flex min-h-[15rem] flex-col rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white p-5 shadow-[0_16px_40px_rgba(24,55,46,.06)]">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-black text-[#775d22]">{step.number}</span>
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--public-soft)] text-[var(--public-green)]">
+    <figure className="system-map-shell">
+      <div className="system-map-shell__header">
+        <div>
+          <p className="system-map-shell__kicker">Four controls, one handoff</p>
+          <figcaption className="system-map-shell__caption">
+            What a controlled next move looks like
+          </figcaption>
+        </div>
+        <span className="system-map-shell__status">
+          <span aria-hidden="true" /> guardrails on
+        </span>
+      </div>
+      <ol className="system-map" aria-label="The four stages of a NeedThisDone work move">
+        {systemStages.map((stage, index) => (
+          <li
+            key={stage.title}
+            className={cx(
+              "system-map__stage",
+              "highlighted" in stage && stage.highlighted && "system-map__stage--approval",
+            )}
+          >
+            <article className="system-map__card">
+              <div className="system-map__topline">
+                <span className="system-map__number">{stage.number}</span>
+                <span className="system-map__icon">
+                  <StepIcon name={stage.icon} />
+                </span>
+              </div>
+              <p className="system-map__label">{stage.label}</p>
+              <h2 className="system-map__title">{stage.title}</h2>
+              <p className="system-map__description">{stage.description}</p>
+            </article>
+            {index < systemStages.length - 1 && (
+              <span className="system-map__connector" aria-hidden="true">
+                <ArrowRight />
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </figure>
+  );
+}
+
+function SystemRail({
+  steps,
+  dark = false,
+  className,
+}: {
+  steps: readonly RailStep[];
+  dark?: boolean;
+  className?: string;
+}) {
+  return (
+    <ol
+      className={cx(
+        "system-rail",
+        steps.length === 5 ? "system-rail--five" : "system-rail--four",
+        dark && "system-rail--dark",
+        className,
+      )}
+    >
+      {steps.map((step, index) => (
+        <li
+          key={step.number}
+          className={cx(
+            "system-rail__item",
+            step.highlighted && "system-rail__item--highlighted",
+          )}
+        >
+          <article className="system-rail__card">
+            <div className="system-rail__topline">
+              <span className="system-rail__number">{step.number}</span>
+              <span className="system-rail__icon">
                 <StepIcon name={step.icon} />
               </span>
             </div>
-            <h3 className="mt-7 font-playfair text-2xl font-black leading-tight">
-              {step.title}
-            </h3>
-            <p className="mt-3 text-[.98rem] leading-7 text-[var(--public-muted)]">
-              {step.description}
-            </p>
+            <p className="system-rail__label">{step.label}</p>
+            <h3 className="system-rail__title">{step.title}</h3>
+            <p className="system-rail__description">{step.description}</p>
           </article>
-          {index < executionSteps.length - 1 && (
-            <ArrowRight
-              className="mx-auto self-center text-[#b28a2d] max-lg:rotate-90"
-              aria-hidden="true"
-            />
+          {index < steps.length - 1 && (
+            <span className="system-rail__connector" aria-hidden="true">
+              <span className="system-rail__connector-dot" />
+              <ArrowRight />
+            </span>
           )}
-        </Fragment>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
 
 export default function SystemPage() {
   return (
-    <main
-      id="main-content"
-      className="overflow-hidden bg-[var(--public-cream)] text-[var(--public-ink)]"
-    >
-      <section className="relative border-b border-white/10 bg-[var(--public-dark)] text-white">
-        <div
-          className="pointer-events-none absolute -right-40 -top-48 h-[38rem] w-[38rem] rounded-full bg-[#d0a94f]/10 blur-3xl"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -bottom-48 -left-40 h-[30rem] w-[30rem] rounded-full bg-[#668b70]/20 blur-3xl"
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24 lg:py-28">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-20">
-            <div>
-              <SectionLabel light>Engineering case study</SectionLabel>
-              <h1 className="mt-6 max-w-4xl font-playfair text-[clamp(3rem,7vw,6.5rem)] font-black leading-[.92] tracking-tight">
-                A system that keeps important work moving.
+    <main id="main-content" className="system-case-study">
+      <section className="system-hero" aria-labelledby="system-hero-heading">
+        <div className="system-hero__glow system-hero__glow--gold" aria-hidden="true" />
+        <div className="system-hero__glow system-hero__glow--green" aria-hidden="true" />
+        <div className="system-hero__inner">
+          <div className="system-hero__grid">
+            <div className="system-hero__copy">
+              <SectionLabel light>A private system for follow-through</SectionLabel>
+              <h1 id="system-hero-heading" className="system-hero__title">
+                Important work, kept moving.
               </h1>
-              <p className="mt-8 max-w-[61ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-                NeedThisDone is a private control plane for turning long-range
-                goals into approved, reviewable work across a local machine,
-                specialized agents, and GitHub.
+              <p className="system-hero__lead">
+                NeedThisDone turns a long-range goal into one approved, reviewable next move.
               </p>
-              <p className="mt-5 max-w-[61ch] leading-7 text-[#b9d5bd]">
-                The models are not the product. The product is the continuity:
-                remembering what matters, deciding what should happen next,
-                requiring permission before meaningful action, and showing what
-                actually changed.
+              <p className="system-hero__support">
+                It remembers what matters, asks before it acts, and shows what changed.
               </p>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#execution-loop"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#d0a94f] px-7 py-3 font-bold text-[var(--public-ink)] transition hover:bg-[#e1bd65]"
-                >
-                  See the execution loop
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+              <div className="system-hero__actions">
+                <Link href="/contact" className="system-button system-button--gold">
+                  Share Your Vision
+                  <ArrowRight aria-hidden="true" />
+                </Link>
                 <a
                   href="https://github.com/AbeJitsu/Need_This_Done/tree/dev"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3 font-bold text-white transition hover:border-white/60 hover:bg-white/10"
+                  className="system-button system-button--ghost"
                 >
-                  Browse the repository
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  Inspect the implementation
+                  <ArrowRight aria-hidden="true" />
                 </a>
               </div>
-              <dl className="mt-12 grid max-w-xl gap-6 border-t border-white/15 pt-6 sm:grid-cols-3">
+              <dl className="system-hero__stats">
                 <div>
-                  <dt className="text-2xl font-black text-white">15–20 min</dt>
-                  <dd className="mt-1 text-sm leading-6 text-[#b9d5bd]">owner check-in</dd>
+                  <dt>15–20 min</dt>
+                  <dd>owner check-in</dd>
                 </div>
                 <div>
-                  <dt className="text-2xl font-black text-white">1 goal</dt>
-                  <dd className="mt-1 text-sm leading-6 text-[#b9d5bd]">next useful move</dd>
+                  <dt>1 goal</dt>
+                  <dd>next useful move</dd>
                 </div>
                 <div>
-                  <dt className="text-2xl font-black text-white">1 record</dt>
-                  <dd className="mt-1 text-sm leading-6 text-[#b9d5bd]">proof of what changed</dd>
+                  <dt>1 record</dt>
+                  <dd>proof of what changed</dd>
                 </div>
               </dl>
             </div>
-
-            <figure className="relative rounded-[2rem] border border-white/15 bg-[#21483a] p-5 shadow-[0_28px_80px_rgba(0,0,0,.18)] sm:p-7">
-              <div className="flex items-center justify-between border-b border-white/15 pb-4">
-                <figcaption className="text-sm font-bold text-[#e9f2e9]">
-                  One approved work packet
-                </figcaption>
-                <span className="rounded-full bg-[#c9dcca]/15 px-3 py-1 text-xs font-bold uppercase tracking-[.14em] text-[#c9dcca]">
-                  reviewable
-                </span>
-              </div>
-              <div className="mt-7 space-y-3">
-                <div className="rounded-2xl border border-white/10 bg-[#18372e] p-4">
-                  <p className="text-xs font-bold uppercase tracking-[.16em] text-[#b9d5bd]">
-                    Goal
-                  </p>
-                  <p className="mt-2 font-playfair text-xl font-black text-white">
-                    Make the owner dashboard easier to act on.
-                  </p>
-                </div>
-                <div className="flex items-center gap-3 px-3 text-[#d0a94f]">
-                  <div className="h-8 w-px bg-[#d0a94f]/50" aria-hidden="true" />
-                  <span className="text-sm font-bold">bounded next step</span>
-                </div>
-                <div className="rounded-2xl border border-[#d0a94f]/35 bg-[#d0a94f]/10 p-4">
-                  <p className="text-xs font-bold uppercase tracking-[.16em] text-[#ead28f]">
-                    Approved task
-                  </p>
-                  <p className="mt-2 leading-7 text-[#f5ecd1]">
-                    Improve one empty state, run the relevant checks, and return
-                    the diff for review.
-                  </p>
-                </div>
-                <div className="grid gap-3 pt-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs font-bold uppercase tracking-[.16em] text-[#b9d5bd]">
-                      Execution
-                    </p>
-                    <p className="mt-2 font-bold text-white">Private Mac → Codex</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs font-bold uppercase tracking-[.16em] text-[#b9d5bd]">
-                      Handoff
-                    </p>
-                    <p className="mt-2 font-bold text-white">Branch → diff → review</p>
-                  </div>
-                </div>
-              </div>
-            </figure>
+            <SystemMap />
           </div>
         </div>
       </section>
 
       <section
         id="difference"
-        className="scroll-mt-24"
+        className="system-section system-section--light"
         aria-labelledby="difference-heading"
       >
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="max-w-3xl">
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
             <SectionLabel>The reason to build it</SectionLabel>
-            <h2
-              id="difference-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-6xl"
-            >
-              A conversation can start the work. The system is responsible for
-              what happens next.
+            <h2 id="difference-heading" className="system-heading">
+              A conversation starts the work. The system carries it forward.
             </h2>
-            <p className="mt-6 max-w-[64ch] text-lg leading-8 text-[var(--public-muted)]">
+            <p className="system-section__lead">
               NeedThisDone is not trying to be a prettier prompt box. It is
               designed for work that spans days or weeks, continues while the
               owner is away, and still needs to remain understandable and
               controllable.
             </p>
           </div>
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
+          <div className="system-difference-grid">
             {differencePoints.map((item, index) => (
               <article
                 key={item.title}
                 className={cx(
-                  "rounded-[1.75rem] border p-7 md:p-9",
-                  index === 1
-                    ? "border-[var(--public-green)]/30 bg-[var(--public-dark)] text-white"
-                    : "border-[var(--public-ink)]/10 bg-white",
+                  "system-difference-card",
+                  index === 1 && "system-difference-card--dark",
                 )}
               >
-                <p
-                  className={cx(
-                    "text-xs font-bold uppercase tracking-[.18em]",
-                    index === 1 ? "text-[#c9dcca]" : "text-[#775d22]",
-                  )}
-                >
+                <p className="system-card-kicker">
                   {index === 0 ? "Starting point" : "System outcome"}
                 </p>
-                <h3 className="mt-5 font-playfair text-3xl font-black">{item.title}</h3>
-                <p
-                  className={cx(
-                    "mt-4 max-w-[48ch] leading-7",
-                    index === 1 ? "text-[#dce8dd]" : "text-[var(--public-muted)]",
-                  )}
-                >
-                  {item.description}
-                </p>
-                <ul
-                  className={cx(
-                    "mt-7 space-y-4 border-t pt-6",
-                    index === 1
-                      ? "border-white/15 text-[#dce8dd]"
-                      : "border-[var(--public-ink)]/10 text-[var(--public-muted)]",
-                  )}
-                >
+                <h3>{item.title}</h3>
+                <p className="system-difference-card__description">{item.description}</p>
+                <ul>
                   {item.points.map((point) => (
-                    <li key={point} className="flex gap-3 leading-7">
-                      <Check
-                        className={cx(
-                          "mt-1 h-4 w-4 shrink-0",
-                          index === 1 ? "text-[#d0a94f]" : "text-[var(--public-green)]",
-                        )}
-                        aria-hidden="true"
-                      />
+                    <li key={point}>
+                      <Check aria-hidden="true" />
                       <span>{point}</span>
                     </li>
                   ))}
@@ -442,68 +479,45 @@ export default function SystemPage() {
 
       <section
         id="execution-loop"
-        className="scroll-mt-24 border-y border-[var(--public-ink)]/10 bg-[var(--public-sand)]"
+        className="system-section system-section--sand"
         aria-labelledby="execution-heading"
       >
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="max-w-3xl">
+        <div className="system-section__inner">
+          <div className="system-section__intro">
             <SectionLabel>How the loop works</SectionLabel>
-            <h2
-              id="execution-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-6xl"
-            >
-              Keep the mission visible while the next piece gets done.
+            <h2 id="execution-heading" className="system-heading">
+              Keep the mission visible as the next piece moves.
             </h2>
-            <p className="mt-6 max-w-[64ch] text-lg leading-8 text-[var(--public-muted)]">
+            <p className="system-section__lead">
               Every run has a beginning, a boundary, and a handoff. That makes
               long-range work easier to resume and easier to trust.
             </p>
           </div>
-          <ExecutionDiagram />
+          <SystemRail steps={executionSteps} />
         </div>
       </section>
 
-      <section id="architecture" className="scroll-mt-24" aria-labelledby="architecture-heading">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr] lg:gap-20">
-            <div>
+      <section
+        id="architecture"
+        className="system-section system-section--light"
+        aria-labelledby="architecture-heading"
+      >
+        <div className="system-section__inner">
+          <div className="system-two-column system-two-column--architecture">
+            <div className="system-section__intro">
               <SectionLabel>One system, focused responsibilities</SectionLabel>
-              <h2
-                id="architecture-heading"
-                className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
-              >
-                The pieces are intentionally not interchangeable.
+              <h2 id="architecture-heading" className="system-heading system-heading--compact">
+                Clear boundaries make the system easier to trust.
               </h2>
-              <p className="mt-6 leading-7 text-[var(--public-muted)]">
+              <p className="system-section__lead">
                 The goal is not to make every agent do everything. Each layer
                 owns one kind of responsibility, which makes authority easier
                 to understand and the failure boundary easier to contain.
               </p>
             </div>
             <figure>
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                {systemParts.map((part) => (
-                  <article
-                    key={part.title}
-                    className="flex min-h-[16rem] flex-col rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white p-5 shadow-[0_16px_40px_rgba(24,55,46,.05)]"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-black text-[#775d22]">{part.number}</span>
-                      <span className={cx("grid h-10 w-10 place-items-center rounded-full", part.tone)}>
-                        <StepIcon name={part.icon} />
-                      </span>
-                    </div>
-                    <p className="mt-7 text-xs font-bold uppercase tracking-[.15em] text-[var(--public-green)]">
-                      {part.label}
-                    </p>
-                    <h3 className="mt-2 font-playfair text-2xl font-black">{part.title}</h3>
-                    <p className="mt-3 text-[.95rem] leading-7 text-[var(--public-muted)]">
-                      {part.description}
-                    </p>
-                  </article>
-                ))}
-              </div>
-              <figcaption className="mt-5 text-sm leading-6 text-[var(--public-muted)]">
+              <SystemRail steps={architectureSteps} className="system-rail--architecture" />
+              <figcaption className="system-figure-caption">
                 The browser and Supabase hold the durable record. The private
                 Mac performs approved work. GitHub is where code changes become
                 reviewable before they can become part of the product.
@@ -515,88 +529,67 @@ export default function SystemPage() {
 
       <section
         id="coding-lane"
-        className="scroll-mt-24 border-y border-white/10 bg-[var(--public-dark)] text-white"
+        className="system-section system-section--dark"
         aria-labelledby="coding-heading"
       >
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-start lg:gap-20">
-            <div>
+        <div className="system-section__inner">
+          <div className="system-two-column system-two-column--dark">
+            <div className="system-section__intro">
               <SectionLabel light>The coding lane</SectionLabel>
-              <h2
-                id="coding-heading"
-                className="mt-5 font-playfair text-4xl font-black leading-tight md:text-6xl"
-              >
-                Codex changes code. The system makes the change safe to review.
+              <h2 id="coding-heading" className="system-heading">
+                Code can change without losing the boundary.
               </h2>
-              <p className="mt-6 max-w-[58ch] text-lg leading-8 text-[#dce8dd]">
+              <p className="system-section__lead">
                 A coding task is not permission to modify the live product. It
                 is permission to make one bounded change in a designated
                 worktree, run the relevant checks, and return the evidence.
               </p>
-              <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-[#d0a94f]/40 bg-[#d0a94f]/10 px-4 py-2 text-sm font-bold text-[#ead28f]">
-                <Lock className="h-4 w-4" aria-hidden="true" />
+              <div className="system-guardrail">
+                <Lock aria-hidden="true" />
                 No merge or deployment by default
               </div>
             </div>
-            <figure className="rounded-[2rem] border border-white/15 bg-[#21483a] p-5 sm:p-7">
-              <figcaption className="border-b border-white/15 pb-4 text-sm font-bold text-[#e9f2e9]">
-                A reviewable code change
-              </figcaption>
-              <div className="mt-7 space-y-3">
-                {codingSteps.map(([title, description], index) => (
-                  <div key={title} className="relative flex gap-4">
-                    <div className="flex flex-col items-center">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#d0a94f] text-sm font-black text-[var(--public-ink)]">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      {index < codingSteps.length - 1 && (
-                        <span className="mt-2 h-full min-h-7 w-px bg-[#d0a94f]/45" aria-hidden="true" />
-                      )}
-                    </div>
-                    <div className="pb-5">
-                      <h3 className="font-playfair text-2xl font-black">{title}</h3>
-                      <p className="mt-2 leading-7 text-[#dce8dd]">{description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <figure>
+              <figcaption className="system-rail-caption">A reviewable code change</figcaption>
+              <SystemRail steps={codingSteps} dark />
             </figure>
           </div>
         </div>
       </section>
 
-      <section id="daily-loop" className="scroll-mt-24" aria-labelledby="daily-heading">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="max-w-3xl">
+      <section
+        id="daily-loop"
+        className="system-section system-section--light"
+        aria-labelledby="daily-heading"
+      >
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
             <SectionLabel>The intended rhythm</SectionLabel>
-            <h2
-              id="daily-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
-            >
-              Short check-ins. Useful progress. No mystery about what happened.
+            <h2 id="daily-heading" className="system-heading system-heading--compact">
+              Short check-ins. Clear next moves.
             </h2>
           </div>
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
-            <article className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white p-7">
-              <p className="text-sm font-black text-[#775d22]">01 · Check in</p>
-              <h3 className="mt-4 font-playfair text-2xl font-black">See the current mission.</h3>
-              <p className="mt-3 leading-7 text-[var(--public-muted)]">
+          <div className="system-beats">
+            <article className="system-beat">
+              <p className="system-card-kicker">01 · Check in</p>
+              <h3>See the current mission.</h3>
+              <p>
                 Review what moved, what is blocked, and the one decision that
                 would make the next step clear.
               </p>
             </article>
-            <article className="rounded-[1.5rem] border border-[var(--public-green)]/25 bg-[var(--public-soft)] p-7">
-              <p className="text-sm font-black text-[var(--public-green)]">02 · Approve</p>
-              <h3 className="mt-4 font-playfair text-2xl font-black">Authorize one useful move.</h3>
-              <p className="mt-3 leading-7 text-[var(--public-muted)]">
+            <article className="system-beat system-beat--highlighted">
+              <p className="system-card-kicker">02 · Approve</p>
+              <h3>Authorize one useful move.</h3>
+              <p>
                 The owner decides what the system may do, which route it may
                 use, and what result should come back.
               </p>
             </article>
-            <article className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white p-7">
-              <p className="text-sm font-black text-[#775d22]">03 · Review</p>
-              <h3 className="mt-4 font-playfair text-2xl font-black">Pick up from evidence.</h3>
-              <p className="mt-3 leading-7 text-[var(--public-muted)]">
+            <article className="system-beat">
+              <p className="system-card-kicker">03 · Review</p>
+              <h3>Pick up from evidence.</h3>
+              <p>
                 Return to a result, diff, or blocker—not a blank conversation
                 where the entire project has to be explained again.
               </p>
@@ -607,48 +600,41 @@ export default function SystemPage() {
 
       <section
         id="status"
-        className="border-y border-[var(--public-ink)]/10 bg-[var(--public-sand)]"
+        className="system-section system-section--sand"
         aria-labelledby="status-heading"
       >
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="max-w-3xl">
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
             <SectionLabel>Where the project stands</SectionLabel>
-            <h2
-              id="status-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
-            >
-              The system is being built in proofs, not promises.
+            <h2 id="status-heading" className="system-heading system-heading--compact">
+              Build proof before making promises.
             </h2>
-            <p className="mt-5 max-w-[64ch] leading-7 text-[var(--public-muted)]">
+            <p className="system-section__lead">
               The repository already contains the control-plane foundation.
               The coding lane is the next proof, so the public story stays
               honest about what exists and what still needs to be demonstrated.
             </p>
           </div>
-          <div className="mt-12 grid gap-5 lg:grid-cols-2">
-            <article className="rounded-[1.75rem] border border-[var(--public-green)]/25 bg-white p-7 md:p-9">
-              <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
-                In the repository
-              </p>
-              <h3 className="mt-4 font-playfair text-3xl font-black">Control-plane foundation</h3>
-              <ul className="mt-7 space-y-4">
+          <div className="system-status-grid">
+            <article className="system-status-card">
+              <p className="system-card-kicker">In the repository</p>
+              <h3>Control-plane foundation</h3>
+              <ul>
                 {proofItems.map((item) => (
-                  <li key={item} className="flex gap-3 leading-7 text-[var(--public-muted)]">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-[var(--public-green)]" aria-hidden="true" />
+                  <li key={item}>
+                    <Check aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </article>
-            <article className="rounded-[1.75rem] border border-[var(--public-ink)]/10 bg-[var(--public-dark)] p-7 text-white md:p-9">
-              <p className="text-xs font-bold uppercase tracking-[.18em] text-[#c9dcca]">
-                Next proof
-              </p>
-              <h3 className="mt-4 font-playfair text-3xl font-black">A bounded coding handoff</h3>
-              <ul className="mt-7 space-y-4">
+            <article className="system-status-card system-status-card--dark">
+              <p className="system-card-kicker">Next proof</p>
+              <h3>A bounded coding handoff</h3>
+              <ul>
                 {nextItems.map((item) => (
-                  <li key={item} className="flex gap-3 leading-7 text-[#dce8dd]">
-                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#d0a94f]" aria-hidden="true" />
+                  <li key={item}>
+                    <span className="system-status-card__dot" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -658,34 +644,20 @@ export default function SystemPage() {
         </div>
       </section>
 
-      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-cream)]">
-        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:px-8 md:py-24">
-          <SectionLabel>See the idea in context</SectionLabel>
-          <h2 className="mt-5 font-playfair text-4xl font-black leading-tight md:text-6xl">
-            The point is not more automation. It is more useful follow-through.
+      <section className="system-closing" aria-labelledby="closing-heading">
+        <div className="system-closing__inner">
+          <SectionLabel>Take the next real-world step</SectionLabel>
+          <h2 id="closing-heading" className="system-heading">
+            More useful follow-through starts with one clear outcome.
           </h2>
-          <p className="mx-auto mt-6 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)]">
-            Explore the code, follow the next proof, or see how the public
-            service turns an unclear problem into a focused starting point.
+          <p>
+            Share the situation in your own words. We will help clarify the
+            first piece of work and what you can review before deciding.
           </p>
-          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-            <a
-              href="https://github.com/AbeJitsu/Need_This_Done/tree/dev"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e]"
-            >
-              Open the repository
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <Link
-              href="/how-it-works"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[var(--public-green)]/30 px-7 py-3 font-bold text-[var(--public-green)] transition hover:bg-[var(--public-soft)]"
-            >
-              See the public process
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
+          <Link href="/contact" className="system-button system-button--green">
+            Share Your Vision
+            <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </main>
