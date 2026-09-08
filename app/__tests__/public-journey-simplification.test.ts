@@ -13,7 +13,7 @@ describe('vision-first public journey', () => {
   it('leads with the approved audience, promise, and actions', () => {
     const home = source('components/home/HomePageClient.tsx');
     expect(home).toContain('For owners and founders');
-    expect(home).toContain('Your vision, brought to life.');
+    for (const line of ['Your vision,', 'brought', 'to life.']) expect(home).toContain(line);
     expect(home).toContain('help you find a useful place to start');
     expect(home).toContain('href="/contact"');
     expect(home).toContain('Share Your Vision');

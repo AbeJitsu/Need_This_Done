@@ -1,7 +1,7 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 
 ## Current facts
 
@@ -54,6 +54,19 @@
   customer, message, or spend action occurred.
 - Rollback: revert this focused homepage trailer presentation, test, and
   documentation change on `dev`; no data or external state needs rollback.
+- On 2026-09-08, the homepage trailer gained a centered desktop content rail
+  from 1024 pixels upward: hero, section, and bridge containers use
+  `min(80%, 88rem)`, while the closing CTA keeps its narrower
+  `min(80%, 57rem)` readability cap. The 375/768 responsive rails remain on
+  their existing mobile/tablet widths. The What We Do intro still spans its
+  full section rail, keeps the `1.25fr / 0.75fr` columns, the `34ch` lead cap,
+  and heading-aligned supporting copy; wide hero title spans render as three
+  rows. The code gate passed lint, type-check, 65 unit files/335 tests, 6
+  accessibility files/60 tests, and production build. No API, schema, hosted,
+  deployment, publication, provider, Mac, customer, message, or spend action
+  occurred.
+- Rollback: revert this focused homepage desktop-rail presentation, test,
+  and documentation change on `dev`; no data or external state needs rollback.
 - On 2026-09-07, the repository gained a subscription-first Mac worker CLI with
   explicit `preflight`, `prepare`, `test --local`, `start`, `status`, and
   `stop` commands. It discovers absolute Node/OpenClaw paths, keeps the
@@ -415,6 +428,10 @@ launchd templates/wrappers, local-mode validation, tests, and documentation;
 it adds no migration. This work created no private runtime files, loaded no
 launchd job, started no Gateway or bridge, and made no hosted or external
 change. Any future Mac activation remains a separate owner-approved action.
+
+The 2026-09-08 homepage desktop-rail change is presentation-only and
+reversible by a reviewed Git revert on `dev`; it adds no database migration,
+hosted state, or external action.
 
 The independent OpenClaw profile can be stopped without touching the default
 profile. Revoke its OpenAI OAuth grant if required, archive only

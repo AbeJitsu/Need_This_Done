@@ -183,7 +183,9 @@ export default function HomePageClient() {
             <div className="homepage-hero__copy">
               <p className="homepage-eyebrow homepage-eyebrow--light">For owners and founders</p>
               <h1 id="homepage-hero-heading" className="homepage-hero__title">
-                Your vision, brought to life.
+                <span className="homepage-hero__title-line">Your vision,</span>{" "}
+                <span className="homepage-hero__title-line">brought</span>{" "}
+                <span className="homepage-hero__title-line">to life.</span>
               </h1>
               <p className="homepage-hero__lead">
                 A clearer website. A smoother working day. More room for the idea you

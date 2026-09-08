@@ -2101,8 +2101,12 @@ Blog Markdown Content — Reading Experience
   font-family: var(--font-playfair), Georgia, serif;
   font-size: clamp(3.25rem, 8vw, 6.4rem);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.91;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.homepage-hero__title-line {
+  display: inline;
 }
 
 .homepage-hero__lead {
@@ -2448,6 +2452,7 @@ Blog Markdown Content — Reading Experience
 
 .homepage-section__intro--split {
   display: grid;
+  max-width: none;
   gap: 1.5rem;
 }
 
@@ -2477,6 +2482,7 @@ Blog Markdown Content — Reading Experience
 .homepage-heading--compact {
   max-width: 23ch;
   font-size: clamp(2.35rem, 4.4vw, 4.5rem);
+  line-height: 1.05;
 }
 
 .homepage-offer-grid,
@@ -2907,13 +2913,28 @@ Blog Markdown Content — Reading Experience
   }
 
   .homepage-section__intro--split {
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.6fr);
-    align-items: end;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: start;
     gap: 3rem;
+  }
+
+  .homepage-section__intro--split .homepage-section__lead {
+    max-width: 34ch;
+    margin-top: 2.15rem;
   }
 }
 
 @media (min-width: 1024px) {
+  .homepage-hero__inner,
+  .homepage-section__inner,
+  .homepage-bridge__inner {
+    width: min(80%, 88rem);
+  }
+
+  .homepage-closing__inner {
+    width: min(80%, 57rem);
+  }
+
   .homepage-bridge__inner {
     grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.9fr);
     gap: clamp(3rem, 7vw, 7rem);
@@ -2922,11 +2943,15 @@ Blog Markdown Content — Reading Experience
 
 @media (min-width: 1200px) {
   .homepage-hero__grid {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .homepage-hero__copy {
     max-width: 34rem;
+  }
+
+  .homepage-hero__title-line {
+    display: block;
   }
 }
 
