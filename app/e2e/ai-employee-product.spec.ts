@@ -60,6 +60,7 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
     { width: 768, height: 900 },
     { width: 1024, height: 900 },
     { width: 1280, height: 900 },
+    { width: 2048, height: 1200 },
   ]) {
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -138,7 +139,33 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
         const element = document.querySelector<HTMLElement>(selector);
         return element ? getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length : 0;
       };
+      const heroTitle = document.querySelector<HTMLElement>('.homepage-hero__title');
+      const heroTitleLines = Array.from(document.querySelectorAll<HTMLElement>('.homepage-hero__title-line'));
+      const whatWeDoIntro = document.querySelector<HTMLElement>('.homepage-section__intro--split');
+      const whatWeDoRail = document.querySelector<HTMLElement>('#what-we-do .homepage-section__inner');
+      const whatWeDoLead = whatWeDoIntro?.querySelector<HTMLElement>('.homepage-section__lead');
+      const whatWeDoLeadColumn = whatWeDoLead?.getBoundingClientRect();
+      const whatWeDoIntroStyle = whatWeDoIntro ? getComputedStyle(whatWeDoIntro) : null;
+      const whatWeDoIntroRect = whatWeDoIntro?.getBoundingClientRect();
+      const whatWeDoLeadRect = whatWeDoLead?.getBoundingClientRect();
+      const whatWeDoHeadingRect = whatWeDoIntro?.querySelector<HTMLElement>('.homepage-heading')?.getBoundingClientRect();
+      const whatWeDoFirstColumnWidth = whatWeDoIntro
+        ? whatWeDoIntro.children[0]?.getBoundingClientRect().width || 0
+        : 0;
+      const whatWeDoColumnWidths = whatWeDoIntroRect && whatWeDoIntroStyle
+        ? [
+            whatWeDoFirstColumnWidth,
+            whatWeDoIntroRect.width - parseFloat(whatWeDoIntroStyle.columnGap) - whatWeDoFirstColumnWidth,
+          ]
+        : [];
+      const homepageRails = Array.from(document.querySelectorAll<HTMLElement>(
+        '.homepage-hero__inner, .homepage-section__inner, .homepage-bridge__inner, .homepage-closing__inner',
+      )).map((rail) => {
+        const rect = rail.getBoundingClientRect();
+        return { left: rect.left, right: rect.right, width: rect.width };
+      });
       return {
+        viewportWidth: window.innerWidth,
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
         connectorHitsCard,
         textEscapesCard: textEscapeDetails.length > 0,
@@ -163,6 +190,20 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
           columnCount('.homepage-bridge__node'),
         ],
         heroColumns: columnCount('.homepage-hero__grid'),
+        heroTitleLineCount: heroTitleLines.length,
+        heroTitleRows: new Set(heroTitleLines.map((line) => Math.round(line.getBoundingClientRect().top))).size,
+        heroTitleSpanDisplays: heroTitleLines.map((line) => getComputedStyle(line).display),
+        heroTitleWidth: heroTitle?.getBoundingClientRect().width || 0,
+        whatWeDoIntroWidth: whatWeDoIntroRect?.width || 0,
+        whatWeDoRailWidth: whatWeDoRail?.getBoundingClientRect().width || 0,
+        whatWeDoColumns: whatWeDoIntroStyle?.gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length || 0,
+        whatWeDoColumnGap: parseFloat(whatWeDoIntroStyle?.columnGap || '0'),
+        whatWeDoLeadTop: whatWeDoLeadRect?.top || 0,
+        whatWeDoHeadingTop: whatWeDoHeadingRect?.top || 0,
+        whatWeDoLeadWidth: whatWeDoLeadColumn?.width || 0,
+        whatWeDoLeadMaxWidth: whatWeDoIntroStyle && whatWeDoLead ? parseFloat(getComputedStyle(whatWeDoLead).maxWidth) : 0,
+        whatWeDoColumnWidths,
+        homepageRails,
         heroActionVisible: Boolean(document.querySelector('.homepage-hero__actions a[href="/contact"]')),
         teaserVisible: Boolean(document.querySelector('.homepage-teaser')),
         reducedGlowMotion: getComputedStyle(document.querySelector('.homepage-hero__glow')!).animationName,
@@ -178,6 +219,38 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
     expect(layout.identityDetailComplete).toBe(true);
     expect(layout.heroActionVisible).toBe(true);
     expect(layout.teaserVisible).toBe(true);
+    expect(layout.heroTitleLineCount).toBe(3);
+    expect(layout.heroTitleSpanDisplays.every((display) => display === (viewport.width >= 1200 ? 'block' : 'inline'))).toBe(true);
+    if (viewport.width >= 1200) {
+      expect(layout.heroTitleRows).toBe(3);
+    } else {
+      expect(layout.heroTitleRows).toBeGreaterThanOrEqual(1);
+    }
+    expect(layout.whatWeDoIntroWidth).toBeCloseTo(layout.whatWeDoRailWidth, 0);
+    expect(layout.whatWeDoColumns).toBe(viewport.width >= 768 ? 2 : 1);
+    expect(layout.whatWeDoLeadMaxWidth).toBeGreaterThan(0);
+    expect(layout.homepageRails.length).toBeGreaterThan(0);
+    if (viewport.width >= 1024) {
+      const minimumGutter = viewport.width * 0.095;
+      expect(layout.homepageRails.every((rail) => (
+        rail.left >= minimumGutter - 1
+        && viewport.width - rail.right >= minimumGutter - 1
+      ))).toBe(true);
+    } else {
+      const expectedGutter = viewport.width < 640 ? 20 : 32;
+      expect(layout.homepageRails.every((rail) => (
+        Math.abs(rail.left - expectedGutter) <= 1
+        && Math.abs(viewport.width - rail.right - expectedGutter) <= 1
+      ))).toBe(true);
+    }
+    if (viewport.width >= 768) {
+      expect(Math.abs(layout.whatWeDoLeadTop - layout.whatWeDoHeadingTop)).toBeLessThanOrEqual(1);
+      expect(layout.whatWeDoColumnGap).toBeGreaterThanOrEqual(32);
+      expect(layout.whatWeDoLeadMaxWidth).toBeLessThan(450);
+      expect(layout.whatWeDoLeadWidth).toBeLessThanOrEqual(layout.whatWeDoLeadMaxWidth + 1);
+      expect(layout.whatWeDoLeadWidth).toBeLessThan(layout.whatWeDoIntroWidth * 0.75);
+      expect(layout.whatWeDoColumnWidths[0] / layout.whatWeDoColumnWidths[1]).toBeCloseTo(1.25 / 0.75, 1);
+    }
     expect(layout.reducedGlowMotion).toBe('none');
     expect(layout.reducedCardMotion).toBe('none');
     expect(layout.reducedSignalMotion).toBe('none');

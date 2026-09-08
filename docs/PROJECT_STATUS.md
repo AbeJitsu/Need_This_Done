@@ -61,10 +61,17 @@
   their existing mobile/tablet widths. The What We Do intro still spans its
   full section rail, keeps the `1.25fr / 0.75fr` columns, the `34ch` lead cap,
   and heading-aligned supporting copy; wide hero title spans render as three
-  rows. The code gate passed lint, type-check, 65 unit files/335 tests, 6
-  accessibility files/60 tests, and production build. No API, schema, hosted,
-  deployment, publication, provider, Mac, customer, message, or spend action
-  occurred.
+  rows. Focused homepage Chromium checks passed 4/4 tests across 375, 768,
+  1024, 1280, and 2048 pixels, including rail gutters, overflow, connector,
+  text, motion, focus, console/page-error, and main-content axe checks. The
+  refreshed screenshots are `/tmp/homepage-trailer-375.png`,
+  `/tmp/homepage-trailer-768.png`, `/tmp/homepage-trailer-1024.png`,
+  `/tmp/homepage-trailer-1280.png`, and `/tmp/homepage-trailer-2048.png`.
+  The retained public/mobile smoke suite passed 76 tests with 6 expected
+  skips; the code gate passed lint, type-check, 65 unit files/335 tests, 6
+  accessibility files/60 tests, and production build. `git diff --check`
+  passed. No API, schema, hosted, deployment, publication, provider, Mac,
+  customer, message, or spend action occurred.
 - Rollback: revert this focused homepage desktop-rail presentation, test,
   and documentation change on `dev`; no data or external state needs rollback.
 - On 2026-09-07, the repository gained a subscription-first Mac worker CLI with
