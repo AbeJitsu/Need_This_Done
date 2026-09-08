@@ -15,19 +15,19 @@ import {
 export const metadata: Metadata = {
   title: "The System Behind NeedThisDone | NeedThisDone",
   description:
-    "A practical look at how NeedThisDone turns long-range goals into approved, reviewable work across a private machine, Hermes, OpenClaw, Codex, and GitHub.",
+    "See how our private assistant is designed to ask before acting, keep work private, and show what changed.",
   alternates: { canonical: "/system" },
   openGraph: {
     title: "The System Behind NeedThisDone | NeedThisDone",
     description:
-      "A private control plane for turning long-range goals into approved, reviewable work.",
+      "A private assistant designed around clear plans, owner approval, and results you can review.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "The System Behind NeedThisDone | NeedThisDone",
     description:
-      "A private control plane for turning long-range goals into approved, reviewable work.",
+      "A private assistant designed around clear plans, owner approval, and results you can review.",
   },
 };
 
@@ -77,7 +77,7 @@ const systemStages = [
     label: "Name the outcome",
     title: "Goal",
     description:
-      "A durable aim gives the work somewhere useful to go: make the owner dashboard easier to act on. That reference point keeps later decisions aligned.",
+      "Start with a clear goal, such as making the owner’s dashboard easier to use. Keep that goal with the task so the purpose stays clear.",
     icon: "target",
   },
   {
@@ -85,7 +85,7 @@ const systemStages = [
     label: "Decide the boundary",
     title: "Owner approval",
     description:
-      "The owner sees the scope, route, cost, and expected result before a meaningful action can run. Permission stays explicit instead of being assumed.",
+      "The owner sees what will happen, which tools will be used, the cost, and the expected result. Work needs approval before it starts.",
     icon: "shield",
     highlighted: true,
   },
@@ -94,7 +94,7 @@ const systemStages = [
     label: "Move one piece",
     title: "Private execution",
     description:
-      "The outbound-only Mac sends the frozen task to the right lane: OpenClaw for tools or Codex for code. The private worker only follows the recorded boundary.",
+      "A private Mac picks up only the exact work the owner approved. It connects outward; this public website cannot send it commands.",
     icon: "lock",
   },
   {
@@ -102,7 +102,7 @@ const systemStages = [
     label: "Bring back evidence",
     title: "Reviewable proof",
     description:
-      "The result, cost, diff, private asset, blocker, or next decision stays attached to the durable record. Nothing important disappears into an informal handoff.",
+      "The owner can review the result, changed files, cost, and anything still unfinished in one private record.",
     icon: "git",
   },
 ] as const;
@@ -431,7 +431,7 @@ export default function SystemPage() {
                 Important work, kept moving.
               </h1>
               <p className="system-hero__lead">
-                NeedThisDone turns a long-range goal into one approved, reviewable next move.
+                We are building a private assistant that turns a goal into a clear plan, asks for approval, and brings back the result.
               </p>
               <p className="system-hero__support">
                 It remembers what matters, asks before it acts, and shows what changed.

@@ -54,7 +54,7 @@ const desiredFeelings = [
 const reviewFields: [keyof State, string, number][] = [
   ["situation", "Happening now", 1],
   ["repeatedPattern", "What keeps happening", 1],
-  ["pastContext", "Past context", 1],
+  ["pastContext", "What we should know", 1],
   ["priorStrategies", "What you tried and how it went", 2],
   ["strategyPurpose", "What those attempts were meant to accomplish", 2],
   ["preferences", "How you would like this to work", 2],
@@ -303,7 +303,7 @@ function ContactIntake() {
                 />
               </label>
               <label className="font-semibold">
-                Relevant past context{" "}
+                What else should we know?{" "}
                 <span className="font-normal text-[#50675e]">(optional)</span>
                 <textarea
                   className={input}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import ServiceIllustration from "@/components/public/ServiceIllustration";
 
 const examples = [
   {
@@ -9,9 +10,9 @@ const examples = [
     happening:
       "An important page is not guiding visitors to the next step. The message, layout, or call to action is getting in the way.",
     tried:
-      "A team might adjust the copy, rearranged sections, or added calls to action, but the page still feels harder to use than it should.",
+      "You might rewrite the headline or move a button, but visitors still struggle to find what they need.",
     better:
-      "We identify the specific friction, make the agreed correction, and hand back a clearer page with a record of what changed.",
+      "We find what is confusing, make the fix you approve, and show you what changed.",
   },
   {
     id: "managed-automation", href: "/managed-automation", link: "Explore Managed Automation",
@@ -22,18 +23,18 @@ const examples = [
     tried:
       "A team might add reminders, documents, or another tool, but the work still depends on memory and manual follow-up.",
     better:
-      "We map the real bottleneck, define the desired result, and give you a focused proposal for how to resolve it.",
+      "We find where requests get stuck and propose a clearer way to handle them, with a price for the agreed work.",
   },
   {
     id: "first-step", href: "/contact", link: "Share Your Vision",
     title: "Turn a broad idea into one useful move",
-    area: "Vision-first starting point",
+    area: "An idea you want to explore",
     happening:
       "You can see the better experience you want, but the problem is still broad and the first move is unclear.",
     tried:
-      "An owner might carry the idea, discussed it, or started looking for someone to build it, but the work has not yet become a clear plan.",
+      "You might have talked it through or looked for someone to build it, but still need a clear starting point.",
     better:
-      "We listen for the outcome, turn the problem into a workable brief, and define the first focused piece we can complete together.",
+      "We listen to your idea and work out a first step we can help you complete.",
   },
 ] as const;
 
@@ -79,6 +80,7 @@ export default function WorkPageClient() {
                 <h3 className="mt-4 font-playfair text-3xl font-black">
                   {example.title}
                 </h3>
+                {index < 2 && <ServiceIllustration kind={index === 0 ? 'website' : 'work'} />}
               </div>
               <div>
                 <dl className="grid gap-6 sm:grid-cols-2">

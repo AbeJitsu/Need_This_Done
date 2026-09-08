@@ -26,10 +26,11 @@ test('homepage first viewport identifies audience, promise, and action without m
   await expect(firstSection.getByRole('link', { name: /share your vision/i })).toBeVisible();
   await expect(firstSection.getByRole('figure')).toBeVisible();
   await expect(firstSection.locator('.homepage-teaser__stage')).toHaveCount(3);
-  for (const beat of ['See the friction', 'Define better', 'Make it real']) {
+  for (const beat of ['Tell us what’s stuck', 'Choose what to change', 'Make it real']) {
     await expect(firstSection.getByRole('heading', { name: beat, exact: true })).toBeVisible();
   }
   await expect(firstSection.locator('.homepage-teaser__stage--better')).toHaveCount(1);
+  await expect(page.locator('.homepage-offer-card .service-illustration')).toHaveCount(2);
   await expect(firstSection).not.toContainText(/Hermes|OpenClaw|Codex|approval lifecycles?|API|database|automation system|technical implementation/i);
 });
 

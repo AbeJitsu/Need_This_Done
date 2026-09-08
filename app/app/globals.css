@@ -357,6 +357,42 @@ body {
   line-height: 1.6;
 }
 
+/* Concrete public service illustrations and open editorial treatments. */
+.public-shell .service-illustration { margin-top: 2rem; padding: 1.5rem; color: #183229; background: #e4eee6; border-radius: .35rem 2.5rem .35rem .35rem; }
+.public-shell .service-illustration figcaption { margin-bottom: 1.25rem; font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.public-shell .service-illustration--work { background: #eee4cd; border-radius: 2.5rem .35rem .35rem .35rem; }
+.public-shell .service-illustration__browser { overflow: hidden; background: #fffdf8; border: 1px solid #18322930; box-shadow: 6px 8px 0 #18322912; }
+.public-shell .service-illustration__toolbar { display: flex; align-items: center; gap: 4px; padding: .65rem; border-bottom: 1px solid #18322920; }
+.public-shell .service-illustration__toolbar > i { width: 5px; height: 5px; border-radius: 50%; background: #789184; }
+.public-shell .service-illustration__toolbar > span { margin-left: auto; font-size: .6rem; }
+.public-shell .service-illustration__page { padding: 1.5rem 1rem; }
+.public-shell .service-illustration__eyebrow { font-size: .6rem; text-transform: uppercase; letter-spacing: .08em; }
+.public-shell .service-illustration__page p { margin-top: .75rem; font-family: var(--font-playfair), Georgia, serif; font-size: clamp(1.35rem, 2vw, 2rem); font-weight: 800; line-height: 1.15; color: #183229; }
+.public-shell .service-illustration__lines { display: grid; gap: .4rem; margin: 1rem 0; }
+.public-shell .service-illustration__lines i { height: 4px; width: 85%; background: #dce4dc; }
+.public-shell .service-illustration__lines i:last-child { width: 60%; }
+.public-shell .service-illustration__button { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem; background: #183229; color: white; font-size: .7rem; font-weight: 700; }
+.public-shell .service-illustration__flow { list-style: none; margin: 0; padding: 0; }
+.public-shell .service-illustration__flow li > div { display: flex; align-items: center; gap: .75rem; border-bottom: 1px solid #18322935; padding: .8rem 0; }
+.public-shell .service-illustration__flow li:last-child > div { border: 0; }
+.public-shell .service-illustration__flow li > div > span { display: grid; place-items: center; flex-shrink: 0; width: 2rem; height: 2rem; border: 1px solid #18322960; border-radius: 50%; font-size: .7rem; }
+.public-shell .service-illustration__flow p { margin: 0; color: #183229; font-size: .85rem; line-height: 1.5; font-weight: 700; }
+.public-shell .service-illustration__arrow { width: 16px; height: 24px; margin: .2rem 0 .2rem .5rem; }
+.public-shell .offer-hero { display: grid; align-items: center; gap: 3rem; }
+.public-shell .offer-hero h1 { font-size: clamp(2.75rem, 5vw, 4.5rem); }
+.public-shell .public-process { border-left: 1px solid #b7c5b9; margin-left: 1.5rem; padding-left: 2rem; }
+.public-shell .public-process > li { position: relative; border-bottom: 1px solid #18322920; }
+.public-shell .public-process__number { font-family: Georgia, serif; font-size: 2.75rem; line-height: 1; color: #126b4e; }
+.public-shell .public-process > li::before { content: ''; position: absolute; left: -2.4rem; top: 2.8rem; width: .75rem; height: .75rem; border-radius: 50%; background: #126b4e; box-shadow: 0 0 0 6px #f7f4ed; }
+.public-shell .public-principles > div { border-top: 1px solid #18322935; padding-top: 1.5rem; }
+.public-shell .public-principles__number { display: block; margin-bottom: 1.5rem; font-family: Georgia, serif; font-size: 4rem; line-height: 1; color: #126b4e; }
+.public-shell .offer-comparison { gap: 2rem; }
+.public-shell .offer-comparison > article { border-top: 4px solid #126b4e; background: #e4eee6; }
+.public-shell .offer-comparison > article + article { border-color: #8b6b26; background: #eee4cd; }
+.public-shell .offer-comparison__price { font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.15; }
+@media (min-width: 1024px) { .public-shell .offer-hero { grid-template-columns: 1.3fr 1fr; } }
+@media (max-width: 767px) { .public-shell .offer-comparison > article + article { margin-top: 2rem; } }
+
 /* Public marketing pages use an editorial palette without changing private UI. */
 .public-shell {
   --public-cream: #f7f4ed;

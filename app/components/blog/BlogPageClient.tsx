@@ -13,7 +13,7 @@ export default function BlogPageClient({ initialContent, posts }: { initialConte
       </div>
     </section>
     <section className="public-section" aria-label="All articles">
-      {posts.length ? <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map(post => <BlogPostCard key={post.id} post={post} />)}</div> : <p>{initialContent.emptyState.description}</p>}
+      {posts.length ? <div className="grid gap-8 md:grid-cols-2"><div className="md:col-span-2"><BlogPostCard post={posts[0]} featured /></div>{posts.slice(1).map(post => <BlogPostCard key={post.id} post={post} />)}</div> : <p>{initialContent.emptyState.description}</p>}
     </section>
     <PublicClosing title="Have a question of your own?">
       <p>Share the website change or working day you have in mind. We can discuss a useful next step.</p>

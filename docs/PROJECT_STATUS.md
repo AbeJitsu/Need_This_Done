@@ -5,6 +5,25 @@
 
 ## Current facts
 
+- On 2026-09-08, the public presentation refresh simplified homepage, services,
+  process, about, examples, contact labels, and system-introduction copy.
+  Homepage teaser beats now read “Tell us what’s stuck”, “Choose what to
+  change”, and “Make it real”. Static website/request illustrations add concrete
+  examples to the homepage, service list, both offer pages, and examples page.
+  Offer heroes split copy and illustration on desktop and stack on mobile;
+  pricing emphasizes the existing $500 total/proposal terms, the process uses
+  an open timeline, about uses numbered principles, and articles feature the
+  first entry. Existing destinations, approval boundaries, and four system
+  stages remain intact. Illustrations are examples, not customer results.
+  Validation: lint, type-check, 65 unit files/335 tests, 6 accessibility
+  files/60 tests, and production build passed. The retained desktop/mobile
+  browser suite passed 76 tests with 6 expected skips, including the public
+  375/768/1280 accessibility matrix and homepage 375–2048 layout matrix.
+  `git diff --check` passed; local preview on port 3000 returned HTTP 200. Desktop/mobile
+  screenshots are `/tmp/public-refresh-<route>-<width>.png` at 375 and 1280.
+  Rollback: revert this presentation, test, and ledger diff on `dev`.
+  No deployment, hosted change, provider activation, or external message occurred.
+
 - On 2026-09-07, the public `/system` route was refreshed as a static editorial
   case study. Its four-stage map names Goal, Owner approval, Private execution,
   and Reviewable proof; both primary CTAs go to `/contact`, and the technical

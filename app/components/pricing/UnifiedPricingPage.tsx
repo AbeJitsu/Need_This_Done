@@ -42,7 +42,7 @@ export default function UnifiedPricingPage() {
           className="absolute top-0 scroll-mt-24"
           aria-hidden="true"
         />
-        <OfferComparison heading="Two clear ways to get help, each explained before work begins." />
+        <OfferComparison heading="Start with one thing you want to improve." />
       </div>
 
       <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8">

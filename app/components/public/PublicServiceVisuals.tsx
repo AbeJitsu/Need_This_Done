@@ -46,15 +46,16 @@ export function OfferComparison({
       >
         {heading}
       </h2>
-      <div className="mt-10 overflow-hidden rounded-[2rem] border border-[var(--public-ink)]/15 bg-white md:grid md:grid-cols-2">
+      <div className="offer-comparison mt-10 md:grid md:grid-cols-2">
         {comparison.map((offer) => (
           <article key={offer.name}
-            className="border-b border-[var(--public-ink)]/15 p-7 text-[var(--public-ink)] last:border-b-0 sm:p-9 md:border-b-0 md:first:border-r">
+            className="p-7 text-[var(--public-ink)] sm:p-9">
             <h3 className="font-playfair text-3xl font-black md:min-h-[4.5rem]">
               {offer.name}
             </h3>
+            <p className="offer-comparison__price">{offer.rows.find(([term]) => term === 'Price')?.[1]}</p>
             <dl className="mt-7 divide-y divide-[var(--public-ink)]/10 border-y border-[var(--public-ink)]/10">
-              {offer.rows.map(([term, description]) => (
+              {offer.rows.filter(([term]) => term !== 'Price').map(([term, description]) => (
                 <div key={term} className="grid gap-2 py-4 lg:grid-cols-[8rem_1fr]">
                   <dt className="text-xs font-bold uppercase tracking-wider text-[var(--public-green)]">{term}</dt>
                   <dd className={term === "Price" ? "text-xl font-bold" : "max-w-[60ch] leading-7 text-[var(--public-muted)]"}>{description}</dd>
@@ -131,7 +132,7 @@ export function OutcomeFocusFlow() {
         id="human-control-heading"
         className="mt-4 font-playfair text-4xl font-black"
       >
-        Keep the better state in view.
+        Know what you want to change.
       </h2>
       <ol
         className="mt-8 grid gap-3 sm:grid-cols-2"

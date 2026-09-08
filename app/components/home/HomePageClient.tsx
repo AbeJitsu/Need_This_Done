@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Eye, Sparkles, Target } from "lucide-react";
 import { Fragment } from "react";
+import ServiceIllustration from "@/components/public/ServiceIllustration";
 import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 
 type TeaserBeat = {
@@ -34,17 +35,17 @@ const teaserBeats: readonly TeaserBeat[] = [
   {
     number: "01",
     label: "Start here",
-    title: "See the friction",
+    title: "Tell us what’s stuck",
     description:
-      "Start with what is getting in the way. A clear starting point keeps the next conversation grounded.",
+      "A confusing page? A task you keep chasing? Start there.",
     icon: "eye",
   },
   {
     number: "02",
-    label: "Name the shift",
-    title: "Define better",
+    label: "Picture the result",
+    title: "Choose what to change",
     description:
-      "Name the result worth moving toward. That gives the first piece of work a direction everyone can see.",
+      "We agree on what should improve, what we will do, and the price.",
     icon: "target",
     highlighted: true,
   },
@@ -53,7 +54,7 @@ const teaserBeats: readonly TeaserBeat[] = [
     label: "Make the move",
     title: "Make it real",
     description:
-      "Resolve one focused piece and show the change. A focused handoff makes the progress easier to review.",
+      "You approve the work. We complete it and show you what changed.",
     icon: "sparkles",
   },
 ] as const;
@@ -79,14 +80,14 @@ const principles = [
   {
     number: "01",
     icon: "eye",
-    title: "Listen before prescribing",
+    title: "Listen first",
     description:
       "You can bring the problem exactly as it is. We listen before we start suggesting answers.",
   },
   {
     number: "02",
     icon: "target",
-    title: "Define what better means",
+    title: "Agree on the result",
     description:
       "Before work begins, you see what we will resolve, what it costs, and what is included.",
   },
@@ -142,7 +143,7 @@ const bridgeNodes = [
   },
   {
     number: "02",
-    title: "Bounded move",
+    title: "Agreed next step",
     description: "Keep the next step focused and understandable.",
     icon: "sparkles",
     highlighted: true,
@@ -209,7 +210,7 @@ export default function HomePageClient() {
                 <div>
                   <p className="homepage-teaser__kicker">A clearer way to begin</p>
                   <figcaption id="homepage-teaser-caption" className="homepage-teaser__caption">
-                    From friction to a useful change
+                    From stuck to done
                   </figcaption>
                 </div>
                 <span className="homepage-teaser__status">
@@ -265,7 +266,7 @@ export default function HomePageClient() {
               </h2>
             </div>
             <p className="homepage-section__lead">
-              Two focused starting points for making something important easier to move forward.
+              Fix one part of your website or simplify one task you keep repeating.
             </p>
           </div>
 
@@ -283,6 +284,7 @@ export default function HomePageClient() {
                     </div>
                     <p className="homepage-card-kicker">Starting point</p>
                     <h3>{offer.name}</h3>
+                    <ServiceIllustration kind={preview.id === 'website-improvement' ? 'website' : 'work'} />
                   </div>
                   <div className="homepage-card-detail homepage-offer-card__detail">
                     <dl className="homepage-offer-card__details">
@@ -324,8 +326,8 @@ export default function HomePageClient() {
               A useful next move starts with listening.
             </h2>
             <p className="homepage-section__lead">
-              The way we work is simple: understand the real friction, agree on what better means,
-              and make the next piece easier to see.
+              Tell us what is getting in the way. We will listen, agree on the work,
+              and keep you informed as it moves forward.
             </p>
           </div>
 
@@ -340,7 +342,7 @@ export default function HomePageClient() {
                         <TeaserIcon name={principle.icon} />
                       </span>
                     </div>
-                    <p className="homepage-card-kicker">Resolution principle</p>
+                    <p className="homepage-card-kicker">Our approach</p>
                     <h3>{principle.title}</h3>
                   </div>
                   <div className="homepage-card-detail homepage-principle__detail">
@@ -370,7 +372,7 @@ export default function HomePageClient() {
               What better can look like.
             </h2>
             <p className="homepage-section__lead">
-              Short frames of the problems, workarounds, and focused changes we can help make clearer.
+              A clearer page. Fewer loose ends. Here are two examples of where we can help.
             </p>
           </div>
 
@@ -384,7 +386,7 @@ export default function HomePageClient() {
                       <TeaserIcon name={example.icon} />
                     </span>
                   </div>
-                  <p className="homepage-card-kicker">Trailer frame</p>
+                  <p className="homepage-card-kicker">Example</p>
                   <h3>{example.title}</h3>
                 </div>
                 <div className="homepage-card-detail homepage-example-card__detail">
@@ -427,7 +429,7 @@ export default function HomePageClient() {
           <div className="homepage-bridge__copy">
             <p className="homepage-eyebrow homepage-eyebrow--light">Behind the work</p>
             <h2 id="homepage-bridge-heading" className="homepage-heading">
-              We use the same discipline on our own flows.
+              We put the same care into our own work.
             </h2>
             <p>
               The deeper page shows how goals stay clear, actions stay bounded, and results stay

@@ -15,15 +15,15 @@ const steps = [
     "Bring the messy version. You do not need the right words, a finished plan, or a technical brief.",
   ],
   [
-    "We clarify the context",
+    "We ask what you have tried",
     "Tell us about any earlier attempts, what matters to you, and what you would like to avoid.",
   ],
   [
-    "We agree on what fixed means",
+    "We agree on the result",
     "We repeat the problem back in plain language and make sure we are aiming at the change that matters to you.",
   ],
   [
-    "We show you the first piece we can resolve",
+    "You get a plan and a price",
     "Before work starts, you see what we will take on, what it costs, and what is not included.",
   ],
   [
@@ -41,7 +41,7 @@ export default function HowItWorksPage() {
             How we help
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            From your first idea to work you can review.
+            Tell us the problem. We’ll work out the next step.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
             You share the situation. We clarify the goal, agree on the work,
@@ -69,13 +69,13 @@ export default function HowItWorksPage() {
             same answer. We start by hearing you out.
           </p>
         </div>
-        <ol className="mt-12 divide-y divide-[var(--public-ink)]/15 border-y border-[var(--public-ink)]/15">
+        <ol className="public-process mt-12">
           {steps.map(([title, description], index) => (
             <li
               key={title}
               className="grid gap-4 py-8 sm:grid-cols-[4rem_1fr] sm:gap-8"
             >
-              <span className="text-sm font-bold text-[#775d22]">
+              <span className="public-process__number">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <div>

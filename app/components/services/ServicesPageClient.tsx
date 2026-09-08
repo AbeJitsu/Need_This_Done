@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { ThreeStepFlow } from "@/components/public/PublicServiceVisuals";
 import { PUBLIC_OFFERS } from "@/lib/public-offers";
+import ServiceIllustration from "@/components/public/ServiceIllustration";
 
 const paths = [
   {
@@ -14,9 +15,9 @@ const paths = [
     details: PUBLIC_OFFERS["website-improvement"].detailHref,
     contact: PUBLIC_OFFERS["website-improvement"].contactHref,
     goodFor: [
-      "One page, path, or component",
-      "A clear, contained correction",
-      "A clear record of the result",
+      "One part of your website",
+      "One fix agreed with you",
+      "A record of what changed",
     ],
   },
   {
@@ -45,11 +46,11 @@ export default function ServicesPageClient() {
             What we do
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Make one useful change to your website or your working day.
+            A clearer website. Less busywork.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            You do not need to know which service fits. Tell us what you want to
-            improve. We will listen and clarify a useful first piece of work.
+            Help people take the next step on your website, or simplify a task
+            you keep doing by hand. We will work out where to start together.
           </p>
         </div>
       </section>
@@ -84,6 +85,7 @@ export default function ServicesPageClient() {
                   <h3 className="mt-3 font-playfair text-3xl font-black md:text-4xl">
                     {path.name}
                   </h3>
+                  <ServiceIllustration kind={path.id === 'website-fix' ? 'website' : 'work'} />
                 </div>
                 <div>
                   <p className="max-w-[60ch] text-2xl font-semibold leading-9">

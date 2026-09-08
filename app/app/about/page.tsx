@@ -24,11 +24,11 @@ const principles = [
 export const metadata: Metadata = {
   title: "Why Us | NeedThisDone",
   description:
-    "How NeedThisDone keeps the desired outcome visible, the next step clear, and the work honestly bounded.",
+    "Help with your website and repeated work, with a clear plan, agreed price, and a result you can review.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "Why Us | NeedThisDone",
-    description: "Outcome-led help with clear focus and honest boundaries.",
+    description: "We listen, agree on the work, and show you what changed.",
     type: "website",
   },
 };
@@ -42,12 +42,11 @@ export default function AboutPage() {
             Why NeedThisDone
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Good work starts with understanding each other.
+            Your idea deserves to be understood.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            We help owners and founders get to the real issue, agree on the
-            first part to resolve, and move it forward without pretending every
-            answer is simple.
+            You know your business. We help turn what you want to improve into
+            a clear piece of work—with a price and a result you can review.
           </p>
         </div>
       </section>
@@ -64,12 +63,13 @@ export default function AboutPage() {
             id="principles-heading"
             className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
           >
-            You bring the context. We bring care, clarity, and follow-through.
+            We listen. We agree. We follow through.
           </h2>
         </div>
-        <dl className="mt-14 grid gap-x-10 gap-y-10 border-y border-[var(--public-ink)]/15 py-10 md:grid-cols-2">
-          {principles.map(([term, description]) => (
+        <dl className="public-principles mt-14 grid gap-x-10 gap-y-10 py-10 md:grid-cols-2">
+          {principles.map(([term, description], index) => (
             <div key={term}>
+              <span className="public-principles__number" aria-hidden="true">0{index + 1}</span>
               <dt className="font-playfair text-2xl font-black">{term}</dt>
               <dd className="mt-3 max-w-lg leading-7 text-[var(--public-muted)]">
                 {description}

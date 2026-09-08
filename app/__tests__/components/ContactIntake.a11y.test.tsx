@@ -50,7 +50,7 @@ describe('discovery review and recovery', () => {
     const answer = (name: RegExp, value: string) => fireEvent.change(view.getByRole('textbox', { name }), { target: { value } });
     answer(/idea or situation/i, 'Requests disappear between inboxes.');
     answer(/what keeps happening/i, 'People follow up twice.');
-    answer(/past context/i, 'This started last spring.');
+    answer(/what else should we know/i, 'This started last spring.');
     go(2);
     answer(/what have you tried/i, 'A shared inbox. It was confusing.');
     answer(/hoping those attempts/i, 'Keep requests together.');

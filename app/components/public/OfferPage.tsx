@@ -3,6 +3,7 @@ import PublicClosing from "./PublicClosing";
 import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { ArrowRight, Check } from "lucide-react";
+import ServiceIllustration from "./ServiceIllustration";
 
 type OfferPageProps = {
   offerId: PublicOfferId;
@@ -26,7 +27,8 @@ export default function OfferPage({
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-ink)] text-white">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
+        <div className="offer-hero mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
+          <div>
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#b9d5bd]">
             {offer.name} · A clear place to start
           </p>
@@ -43,6 +45,9 @@ export default function OfferPage({
             Share Your Vision
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
+          <p className="mt-5 font-bold text-[#dce8dd]">{offer.price} · Work agreed before we start</p>
+          </div>
+          <ServiceIllustration kind={offerId === 'website-improvement' ? 'website' : 'work'} />
         </div>
       </section>
       <section className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:grid-cols-[.7fr_1.3fr] md:py-24">
@@ -51,7 +56,7 @@ export default function OfferPage({
             Before you say yes
           </p>
           <h2 className="mt-4 font-playfair text-4xl font-black">
-            You will know what we are taking on.
+            Clear work. Clear price. Your say.
           </h2>
         </div>
         <p className="max-w-[60ch] text-lg leading-8 text-[#40564e]">

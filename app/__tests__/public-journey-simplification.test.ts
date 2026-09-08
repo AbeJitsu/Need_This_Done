@@ -34,7 +34,7 @@ describe('vision-first public journey', () => {
     const system = source('app/system/page.tsx');
     expect(system).toContain('A private system for follow-through');
     expect(system).toContain('Important work, kept moving.');
-    expect(system).toContain('NeedThisDone turns a long-range goal into one approved, reviewable next move.');
+    expect(system).toContain('We are building a private assistant that turns a goal into a clear plan, asks for approval, and brings back the result.');
     expect(system).toContain('It remembers what matters, asks before it acts, and shows what changed.');
     expect(system).toContain('href="/contact"');
     expect(system).toContain('Inspect the implementation');
