@@ -5,6 +5,40 @@
 
 ## Current facts
 
+- On 2026-09-08, the public homepage became a guided, single-page version of
+  the public navigation. `PUBLIC_HOME_JOURNEY` is the shared source for the
+  five homepage section IDs and route destinations; on `/`, the header links
+  to `/#what-we-do`, `/#how-it-works`, `/#the-system`, `/#examples`, and
+  `/#why-us`, while the same header keeps full route links everywhere else.
+  The homepage now follows that order and ends in the Share Your Vision CTA.
+  The hero is intentionally lighter; the three-beat visual appears once in
+  the How We Work section instead of competing with the first screen. The
+  existing sticky React header is the single journey map; there is no second
+  progress bar. Each homepage section ends with a data-driven next-step link,
+  and the `/services`, `/how-it-works`, `/system`, and `/work` closing actions
+  hand visitors to the same next route before the final Share Your Vision
+  action. The full `/services`, `/how-it-works`, `/system`, `/work`, and
+  `/about` routes remain available for deeper reading.
+  `/about` now answers Why Us with bounded-work, context, owner-decision, and
+  proof standards, while `/how-it-works` remains the concrete five-step
+  process; source coverage verifies that their central explanations do not
+  repeat each other. `/pricing` now gives each offer a shared price band,
+  fixed desktop detail-row bands, flex-pushed details, and a shared action
+  baseline, so `$500 total` and `Priced by proposal` no longer cause intrinsic
+  sizing drift between cards. The full public/mobile browser run passed 65
+  tests with 11 expected skips, including no-overflow checks for the homepage,
+  pricing, and both differentiated pages, the pricing row geometry assertion,
+  the homepage anchor and next-step contract, reduced motion, and main-content axe
+  checks. The exact `npm run verify:code` gate passed lint, type-check, 66 unit
+  files/339 tests, 6 accessibility files/60 tests, and production build.
+  `git diff --check` passed. Reviewed local screenshots include
+  `/tmp/homepage-trailer-375.png`, `/tmp/homepage-trailer-1280.png`, and
+  `/tmp/pricing-aligned.png`.
+  Rollback: revert this presentation, test, and ledger diff on `dev`; no data
+  or external state needs rollback. No API/schema, deployment, hosted write,
+  provider activation, Mac activation, publication, external message,
+  customer result, or spend occurred.
+
 - On 2026-09-08, the public journey was split so `/services` answers what help
   is available and `/work` answers what a useful change could look like.
   `PUBLIC_OFFERS` now owns the two concise fit descriptions, and the typed

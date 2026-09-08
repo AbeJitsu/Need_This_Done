@@ -2,7 +2,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { normalizePublicOfferId, PUBLIC_OFFERS } from '@/lib/public-offers';
-import { PUBLIC_NAVIGATION, PUBLIC_FOOTER_GROUPS, PUBLIC_PRIMARY_ACTION } from '@/lib/public-journey';
+import {
+  getPublicHomeNextStep,
+  getPublicHomeHref,
+  PUBLIC_HOME_JOURNEY,
+  PUBLIC_NAVIGATION,
+  PUBLIC_FOOTER_GROUPS,
+  PUBLIC_PRIMARY_ACTION,
+} from '@/lib/public-journey';
 import { contrastRatio } from '@/lib/wcag-contrast';
 
 const appRoot = resolve(__dirname, '..');
@@ -17,16 +24,24 @@ describe('vision-first public journey', () => {
     expect(home).toContain('help you find a useful place to start');
     expect(home).toContain('href="/contact"');
     expect(home).toContain('Share Your Vision');
-    expect(home).toContain('href="/services"');
-    expect(home).toContain('See what we do');
+    expect(home).toContain('href="#what-we-do"');
+    expect(home).toContain('Follow the path');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
   });
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
     expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'The System', 'Examples', 'Why Us']);
+    expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['what-we-do', 'how-it-works', 'the-system', 'examples', 'why-us']);
+    for (const link of PUBLIC_NAVIGATION) expect(getPublicHomeHref(link.href)).toMatch(/^\/#/);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
     for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
+
+    expect(getPublicHomeNextStep('what-we-do')).toEqual({ href: '#how-it-works', label: 'Next: How We Work' });
+    expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#the-system', label: 'Next: The System' });
+    expect(getPublicHomeNextStep('the-system')).toEqual({ href: '#examples', label: 'Next: Examples' });
+    expect(getPublicHomeNextStep('examples')).toEqual({ href: '#why-us', label: 'Next: Why Us' });
+    expect(getPublicHomeNextStep('why-us')).toEqual({ href: '#share-your-vision', label: 'Next: Share Your Vision' });
 
   });
 
@@ -99,12 +114,26 @@ describe('vision-first public journey', () => {
     expect(home).not.toContain('What might be tried');
   });
 
+  it('gives How We Work and Why Us distinct jobs', () => {
+    const howItWorks = source('app/how-it-works/page.tsx');
+    const about = source('app/about/page.tsx');
+    expect(howItWorks).toContain('Tell us what is going on');
+    expect(howItWorks).toContain('You decide, then we do the agreed work');
+    expect(about).toContain('Bounded work, on purpose');
+    expect(about).toContain('Decisions stay yours');
+    expect(about).toContain('Proof over promises');
+    expect(about).not.toContain('Tell us what is going on');
+    expect(about).not.toContain('You decide, then we do the agreed work');
+  });
+
   it('keeps public styles scoped away from the authenticated interface', () => {
     expect(source('components/public/PublicChrome.tsx')).toContain('className="public-shell"');
     expect(source('app/globals.css')).toContain('.public-shell');
     expect(source('components/public/PublicChrome.tsx')).toContain('if (isPrivate)');
     expect(source('lib/page-config.ts')).toContain("{ href: '/website-fix', label: 'Website Fix' }");
     expect(source('lib/page-config.ts')).toContain("{ href: '/managed-automation', label: 'Managed Automation' }");
+    expect(source('components/public/PublicChrome.tsx')).not.toContain('HomeJourneyProgress');
+    expect(source('app/globals.css')).not.toContain('homepage-journey-progress');
   });
 
   it('keeps the editorial palette readable and honors reduced motion', () => {

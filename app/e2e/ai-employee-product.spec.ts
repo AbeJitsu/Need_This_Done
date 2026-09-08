@@ -24,12 +24,13 @@ test('homepage first viewport identifies audience, promise, and action without m
   await expect(firstSection.getByText('For owners and founders', { exact: true })).toBeVisible();
   await expect(firstSection.getByRole('heading', { name: 'Your vision, brought to life.' })).toBeVisible();
   await expect(firstSection.getByRole('link', { name: /share your vision/i })).toBeVisible();
-  await expect(firstSection.getByRole('figure')).toBeVisible();
-  await expect(firstSection.locator('.homepage-teaser__stage')).toHaveCount(3);
+  await expect(firstSection.getByRole('figure')).toHaveCount(0);
+  await expect(page.locator('#how-it-works .homepage-teaser')).toBeVisible();
+  await expect(page.locator('#how-it-works .homepage-teaser__stage')).toHaveCount(3);
   for (const beat of ['Tell us what’s stuck', 'Choose what to change', 'Make it real']) {
-    await expect(firstSection.getByRole('heading', { name: beat, exact: true })).toBeVisible();
+    await expect(page.locator('#how-it-works').getByRole('heading', { name: beat, exact: true })).toBeVisible();
   }
-  await expect(firstSection.locator('.homepage-teaser__stage--better')).toHaveCount(1);
+  await expect(page.locator('#how-it-works .homepage-teaser__stage--better')).toHaveCount(1);
   await expect(page.locator('.homepage-offer-card')).toHaveCount(2);
   await expect(page.locator('.homepage-offer-card .service-illustration')).toHaveCount(0);
   await expect(firstSection).not.toContainText(/Hermes|OpenClaw|Codex|approval lifecycles?|API|database|automation system|technical implementation/i);
@@ -39,7 +40,7 @@ test('homepage trailer preserves public routes and points to the system proof', 
   await page.goto('/');
   const main = page.getByRole('main');
 
-  await expect(main.getByRole('link', { name: 'See the system behind the work', exact: true })).toHaveAttribute('href', '/system');
+  await expect(main.getByRole('link', { name: 'Inspect the system behind the work', exact: true })).toHaveAttribute('href', '/system');
   await expect(main.getByRole('link', { name: 'See how Website Fix works', exact: true })).toHaveAttribute('href', '/website-fix');
   await expect(main.getByRole('link', { name: 'See how Managed Automation works', exact: true })).toHaveAttribute('href', '/managed-automation');
   for (const [title, href] of [
@@ -51,8 +52,8 @@ test('homepage trailer preserves public routes and points to the system proof', 
   }
 
   const primaryHrefs = await main.locator('.homepage-button').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-  expect(primaryHrefs).toEqual(['/contact', '/services', '/system', '/contact']);
-  expect(primaryHrefs.every((href) => href && !href.startsWith('#'))).toBe(true);
+  expect(primaryHrefs).toEqual(['/contact', '#what-we-do', '/system', '/contact']);
+  expect(primaryHrefs.filter((href) => href?.startsWith('/')).every((href) => href && !href.startsWith('#'))).toBe(true);
 });
 
 test('services explain offers while examples show illustrative changes', async ({ page }) => {
@@ -116,6 +117,39 @@ test('service offer cards align their internal rows on desktop', async ({ page }
   for (const region of ['fit', 'summary', 'actions'] as const) {
     expect(Math.abs(geometry.cards[0].rows[region]! - geometry.cards[1].rows[region]!)).toBeLessThanOrEqual(1);
   }
+});
+
+test('pricing cards align their internal rows on desktop', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'The desktop pricing geometry check runs in the public project.');
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/pricing');
+
+  const geometry = await page.locator('[data-pricing-offer-card]').evaluateAll((cards) => {
+    const regions = ['price', 'choose', 'useful', 'included', 'actions'] as const;
+    return {
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      cards: cards.map((card) => {
+        const element = card as HTMLElement;
+        return {
+          height: Math.round(element.getBoundingClientRect().height),
+          rows: Object.fromEntries(
+            regions.map((region) => {
+              const target = card.querySelector<HTMLElement>(`[data-pricing-region="${region}"]`);
+              return [region, target ? Math.round(target.getBoundingClientRect().top) : null];
+            }),
+          ),
+        };
+      }),
+    };
+  });
+
+  expect(geometry.overflow).toBe(false);
+  expect(geometry.cards).toHaveLength(2);
+  expect(Math.abs(geometry.cards[0].height - geometry.cards[1].height)).toBeLessThanOrEqual(1);
+  for (const region of ['price', 'choose', 'useful', 'included', 'actions'] as const) {
+    expect(Math.abs(geometry.cards[0].rows[region]! - geometry.cards[1].rows[region]!)).toBeLessThanOrEqual(1);
+  }
+  await page.screenshot({ path: '/tmp/pricing-aligned.png', fullPage: true });
 });
 
 test('examples use side-by-side comparisons on desktop and a visible transition on mobile', async ({ page }, testInfo) => {
@@ -389,7 +423,7 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
     expect(layout.bridgeConnectorCount).toBe(2);
     expect(layout.bridgeVertical).toBe(true);
     expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
-    expect(layout.heroColumns).toBe(viewport.width >= 1200 ? 2 : 1);
+    expect(layout.heroColumns).toBe(1);
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
     await page.screenshot({ path: `/tmp/homepage-trailer-${viewport.width}.png`, fullPage: true });
@@ -479,11 +513,60 @@ test('desktop public navigation follows the approved public journey', async ({ p
   for (const label of ['What We Do', 'How We Work', 'The System', 'Examples', 'Why Us']) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
-  await expect(navigation.getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/about');
+  await expect(navigation.getByRole('link', { name: 'What We Do', exact: true })).toHaveAttribute('href', '/#what-we-do');
+  await expect(navigation.getByRole('link', { name: 'How We Work', exact: true })).toHaveAttribute('href', '/#how-it-works');
+  await expect(navigation.getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/#the-system');
+  await expect(navigation.getByRole('link', { name: 'Examples', exact: true })).toHaveAttribute('href', '/#examples');
+  await expect(navigation.getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/#why-us');
   await expect(page.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
   await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/about');
   await expect(navigation.getByRole('link', { name: /how it works/i })).toHaveCount(0);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
+});
+
+test('homepage navigation keeps the journey in one place', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'The homepage navigation contract runs in the desktop public project.');
+  await page.goto('/');
+
+  const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+  await expect(page.getByRole('navigation', { name: 'Homepage progress' })).toHaveCount(0);
+  for (const [label, href] of [
+    ['What We Do', '/#what-we-do'],
+    ['How We Work', '/#how-it-works'],
+    ['The System', '/#the-system'],
+    ['Examples', '/#examples'],
+    ['Why Us', '/#why-us'],
+  ]) {
+    await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
+  }
+  await expect(page.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
+
+  await navigation.getByRole('link', { name: 'How We Work', exact: true }).click();
+  await expect(page).toHaveURL(/\/#how-it-works$/);
+  await expect(page.locator('#how-it-works')).toBeVisible();
+
+  for (const [sectionId, label, href] of [
+    ['what-we-do', 'Next: How We Work', '#how-it-works'],
+    ['how-it-works', 'Next: The System', '#the-system'],
+    ['the-system', 'Next: Examples', '#examples'],
+    ['examples', 'Next: Why Us', '#why-us'],
+    ['why-us', 'Next: Share Your Vision', '#share-your-vision'],
+  ]) {
+    await expect(page.locator(`#${sectionId}`).getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
+  }
+});
+
+test('interior public pages hand off to the next journey step', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'The interior journey handoff runs in the desktop public project.');
+  for (const [route, label, href] of [
+    ['/services', 'Next: How We Work', '/how-it-works'],
+    ['/how-it-works', 'Next: The System', '/system'],
+    ['/system', 'Next: Examples', '/work'],
+    ['/work', 'Next: Why Us', '/about'],
+  ]) {
+    await page.goto(route);
+    await expect(page.getByRole('main').getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
+  }
 });
 
 test('/system keeps its actions purposeful and its four stages connected', async ({ page }, testInfo) => {
