@@ -5,6 +5,29 @@
 
 ## Current facts
 
+- On 2026-09-08, the anonymous public language audit and rewrite covered all
+  16 sitemap pages, the three retained articles, analyzer and report states,
+  runtime recovery states, and legacy redirects. `PUBLIC_CORE_PROMISE` now
+  supplies the shared promise for homepage copy, metadata, social previews,
+  JSON-LD, footer copy, and offer summaries. Public report output no longer
+  presents score, grade, lawsuit, legal-risk, certification, or AI-powered
+  claims; the existing score/grade data fields remain for compatibility.
+  Generated report prose now has short-sentence and claim guards with a
+  deterministic fallback. The four-step intake, offer names/prices, intake
+  payload, route destinations, API/schema, billing behavior, private-system
+  boundary, and legal disclosures remain unchanged in meaning. The audit is
+  recorded in `docs/PUBLIC_LANGUAGE_AUDIT.md`. `npm run verify:code` passed
+  lint, type-check, 67 unit files/350 tests, 6 accessibility files/60 tests,
+  and production build. The retained anonymous Chromium suite passed 83 tests
+  with 11 expected project skips across desktop and mobile projects, including
+  the 375/768/1280 route, report, redirect, intake, accessibility, overflow,
+  and console-error checks. `git diff --check` passed. The development server
+  still emits existing listener-count and reduced-motion informational
+  warnings during browser compilation. Legal and generated-report copy need
+  owner review before publication. No deployment, publication, hosted write,
+  provider activation, Mac activation, external message, customer result, or
+  spend occurred. Rollback is a reviewed Git revert on `dev`.
+
 - On 2026-09-08, the public homepage became a guided, single-page version of
   the public navigation. `PUBLIC_HOME_JOURNEY` is the shared source for the
   five homepage section IDs and route destinations; on `/`, the header links
@@ -512,6 +535,11 @@ The public outcome-partner refresh can be reverted as one reviewed Git change.
 It changes public copy, layout, navigation, intake composition, tests, and
 metadata only; the projects API and database schema were not changed. No hosted
 rollback is involved because deployment and publication were not performed.
+
+The 2026-09-08 public language clarity audit can be reverted as one reviewed
+Git change on `dev`. It changes anonymous copy, report presentation, generated
+copy guards, retained article output, tests, and audit evidence only; no API,
+schema, billing, hosted, provider, Mac, or publication state changed.
 
 The navigation/page-boundary follow-up can be reverted as one reviewed Git
 change. It changes the public Why Us route, shared navigation destinations,
