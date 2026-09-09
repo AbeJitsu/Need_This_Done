@@ -1,7 +1,5 @@
 // ============================================================================
-// Score Breakdown — 10 horizontal bars with earned/possible
-// ============================================================================
-// Color-coded: green=full, yellow=partial, red=zero
+// Selected signal summary — visual coverage bars without a public score label.
 
 interface Category {
   name: string;
@@ -9,6 +7,17 @@ interface Category {
   possible: number;
   note: string;
 }
+
+const DISPLAY_NAMES: Record<string, string> = {
+  'Meta Tags': 'Page titles and descriptions',
+  'OG Tags': 'Social sharing details',
+  'Heading Structure': 'Heading order',
+  'Content Depth': 'Page content',
+  'CTA Presence': 'Next-step links',
+  'H1 Consistency': 'Main headings',
+  'Page Coverage': 'Pages checked',
+  Readability: 'Reading clarity',
+};
 
 function getBarColor(earned: number, possible: number): string {
   const pct = earned / possible;
@@ -27,7 +36,7 @@ function getBarBg(earned: number, possible: number): string {
 export default function ScoreBreakdown({ categories }: { categories: Category[] }) {
   return (
     <section>
-      <h2 className="text-2xl font-bold text-slate-900 mb-2">Selected signals</h2><p className="mb-6 text-sm leading-6 text-slate-600">These observations are prompts for review, not a site grade or completeness claim.</p>
+      <h2 className="text-2xl font-bold text-slate-900 mb-2">Selected signals</h2><p className="mb-6 text-sm leading-6 text-slate-600">These checks show places worth a closer look. They are limited signals, not a complete review.</p>
 
       <div className="space-y-4">
         {categories.map((cat) => {
@@ -35,9 +44,9 @@ export default function ScoreBreakdown({ categories }: { categories: Category[] 
           return (
             <div key={cat.name} className="group">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-sm font-semibold text-slate-700">{cat.name}</span>
+                <span className="text-sm font-semibold text-slate-700">{DISPLAY_NAMES[cat.name] || cat.name}</span>
                 <span className="text-sm text-slate-500">
-                  {cat.earned}/{cat.possible}
+                  {pct >= 100 ? 'Covered' : pct >= 50 ? 'Partial' : 'Review'}
                 </span>
               </div>
 

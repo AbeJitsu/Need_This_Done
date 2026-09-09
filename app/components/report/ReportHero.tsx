@@ -1,5 +1,5 @@
 // ============================================================================
-// Report Hero — a limited signal summary, not a grade or certification.
+// Report Hero — a limited summary of selected website signals.
 
 interface ReportHeroProps {
   domain: string;
@@ -17,6 +17,6 @@ export default function ReportHero({ domain, executiveSummary, pagesCrawled }: R
           {domain}
         </h1>
 
-        <p className="mb-4 text-sm text-[#b9d5bd]">Selected signals from {pagesCrawled} page{pagesCrawled === 1 ? '' : 's'} reviewed</p><p className="max-w-3xl text-lg leading-relaxed text-[#dce8dd]">{executiveSummary}</p><p className="mt-6 max-w-3xl text-sm leading-6 text-[#b9d5bd]">This snapshot can miss issues and does not certify accessibility, security, legal compliance, or overall site quality.</p></div></section>
+        <p className="mb-4 text-sm text-[#b9d5bd]">Selected signals from {pagesCrawled} page{pagesCrawled === 1 ? '' : 's'} reviewed</p><p className="max-w-3xl text-lg leading-relaxed text-[#dce8dd]">{executiveSummary}</p><p className="mt-6 max-w-3xl text-sm leading-6 text-[#b9d5bd]">These signals are limited. A full review may find other issues.</p></div></section>
   );
 }

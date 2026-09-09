@@ -14,6 +14,7 @@ import { openai } from '@ai-sdk/openai';
 import * as cheerio from 'cheerio';
 import type { Element as DomElement } from 'domhandler';
 import { parsePublicHttpUrl } from '@/lib/public-url';
+import { acceptPublicGeneratedCopy } from '@/lib/public-copy';
 
 // ============================================
 // TYPES
@@ -509,13 +510,12 @@ export function discoverNavPages(html: string, baseUrl: string): string[] {
 // AI EVALUATION PROMPT
 // ============================================
 
-export function buildTechnicalFindings(allMetrics: TechnicalMetrics[], score: ScoreBreakdown): string {
+export function buildTechnicalFindings(allMetrics: TechnicalMetrics[], _score: ScoreBreakdown): string {
   const lines: string[] = [];
-  lines.push(`- Overall Score: ${score.total}/100 (${score.grade})`);
 
-  for (const cat of score.categories) {
-    if (cat.earned < cat.possible) {
-      lines.push(`- ${cat.name}: ${cat.note}`);
+  for (const category of _score.categories) {
+    if (category.earned < category.possible) {
+      lines.push(`- ${category.name}: ${category.note}`);
     }
   }
 
@@ -526,11 +526,11 @@ export function buildTechnicalFindings(allMetrics: TechnicalMetrics[], score: Sc
     lines.push(`- Heading Gaps: ${allGaps.join(', ')}`);
   }
 
-  const readabilities = allMetrics.map((m) => {
+  const pageSignals = allMetrics.map((m) => {
     const path = new URL(m.url).pathname;
-    return `${path} ${m.readingLevel}`;
+    return `${path} ${m.wordCount} visible words`;
   });
-  lines.push(`- Readability: ${readabilities.join(', ')}`);
+  lines.push(`- Page text signals: ${pageSignals.join(', ')}`);
 
   const a11y = allMetrics[0].accessibility;
   const a11yFindings: string[] = [];
@@ -547,9 +547,9 @@ export function buildTechnicalFindings(allMetrics: TechnicalMetrics[], score: Sc
   if (tabTotal > 0) a11yFindings.push(`${tabTotal} positive tabindex elements`);
 
   if (a11yFindings.length > 0) {
-    lines.push(`- Accessibility Issues: ${a11yFindings.join(', ')}`);
+    lines.push(`- Accessibility checks: ${a11yFindings.join(', ')}`);
   } else {
-    lines.push(`- Accessibility: No static HTML issues detected`);
+    lines.push(`- Accessibility checks: No selected barriers flagged`);
   }
 
   return lines.join('\n');
@@ -561,9 +561,7 @@ export function buildEvaluationPrompt(allMetrics: TechnicalMetrics[], score: Sco
 
   const perPageSummary = allMetrics.map((m) => {
     const path = new URL(m.url).pathname;
-    const gradeMatch = m.readingLevel.match(/Grade (\d+)/);
-    const readGrade = gradeMatch ? `G${gradeMatch[1]}` : 'N/A';
-    return `  ${path.padEnd(25)} | ${(m.title || 'NO TITLE').slice(0, 30).padEnd(30)} | ${String(m.wordCount).padStart(5)} words | H1: ${m.h1Count} | Read: ${readGrade}`;
+    return `  ${path.padEnd(25)} | ${(m.title || 'NO TITLE').slice(0, 30).padEnd(30)} | ${String(m.wordCount).padStart(5)} words | H1: ${m.h1Count}`;
   }).join('\n');
 
   const allCtas = Array.from(new Set(allMetrics.flatMap((m) => m.ctas)));
@@ -576,7 +574,10 @@ RULES:
 - Every recommendation must reference something concrete on a specific page. Include the page path.
 - Do NOT say things like "add more keywords" or "improve your SEO." Those are useless.
 - Write as if speaking to a non-technical small business owner.
-- Use short sentences and everyday words. Do not use em dashes or internal communication-framework names or instructional terminology.
+- Use short sentences and everyday words. Keep every sentence to 20 words or fewer.
+- Never exceed 25 words in one sentence. Code, URLs, and quoted website text may stay as supplied.
+- Do not use em dashes, internal communication-framework names, or instructional terminology.
+- Do not mention grades, certifications, lawsuits, legal risk, or AI-powered claims.
 - Do not invent results, visitor feelings, or previous attempts. Promise only work that has been agreed.
 - Be direct but encouraging. Start with what's working before what needs fixing.
 - Reference technical findings where relevant (e.g., missing OG tags, heading gaps).
@@ -584,7 +585,7 @@ RULES:
 
 SITE OVERVIEW:
 - Pages crawled: ${totalPages}
-- HTTPS: ${homepage.https ? 'Yes' : 'NO. security risk'}
+- HTTPS: ${homepage.https ? 'Yes' : 'No'}
 - Homepage title: ${homepage.title ? `"${homepage.title}"` : 'MISSING'}
 - Homepage meta description: ${homepage.metaDescription ? `"${homepage.metaDescription.slice(0, 120)}"` : 'MISSING'}
 
@@ -609,9 +610,9 @@ Are services and pricing explained clearly? Can a visitor understand what they'd
 What trust elements exist (testimonials, case studies, credentials, guarantees, social proof)? What's missing? Be specific about where trust signals should appear and what form they should take.
 
 ## 4. Technical Health
-Reference the technical findings above. Explain in plain language what the OG tag gaps, heading issues, readability scores, or other technical problems mean for the business. Focus on business impact, not developer jargon.
+Reference the technical findings above. Explain what selected page signals mean in plain language. Focus on useful next steps, not developer jargon.
 
-## 5. Accessibility findings
+## 5. Accessibility checks
 Based on the technical findings, what accessibility barriers exist? Explain each issue in plain language: what does it mean for someone using a screen reader, keyboard navigation, or assistive technology? Reference specific pages and elements. Prioritize observed barriers to using the page. Do not infer legal risk, certify compliance, or claim selected checks cover every interaction.
 
 ## 6. Top 5 Action Items
@@ -663,7 +664,7 @@ function computeAccessibilityScore(allMetrics: TechnicalMetrics[]): ScoreBreakdo
   earned = Math.max(0, Math.min(20, earned));
 
   const note = issues.length === 0
-    ? 'No accessibility issues detected'
+    ? 'No selected barriers flagged'
     : issues.slice(0, 3).join(', ');
 
   return { name: 'Accessibility', earned, possible: 20, note };
@@ -674,7 +675,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
   const categories: ScoreBreakdown['categories'] = [];
 
   const httpsScore = allMetrics[0].https ? 5 : 0;
-  categories.push({ name: 'HTTPS', earned: httpsScore, possible: 5, note: httpsScore === 5 ? 'Secure' : 'Not secure; visitors see a warning' });
+  categories.push({ name: 'HTTPS', earned: httpsScore, possible: 5, note: httpsScore === 5 ? 'Secure connection' : 'Connection is not HTTPS' });
 
   const pagesWithMeta = allMetrics.filter((m) => m.metaCompleteness.title && m.metaCompleteness.description).length;
   const metaScore = Math.round((pagesWithMeta / total) * 10);
@@ -682,7 +683,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
 
   const pagesWithOg = allMetrics.filter((m) => m.metaCompleteness.ogTitle && m.metaCompleteness.ogImage).length;
   const ogScore = Math.round((pagesWithOg / total) * 10);
-  categories.push({ name: 'OG Tags', earned: ogScore, possible: 10, note: `${pagesWithOg}/${total} pages; social shares ${pagesWithOg === 0 ? 'look broken' : pagesWithOg < total ? 'partially covered' : 'look great'}` });
+  categories.push({ name: 'OG Tags', earned: ogScore, possible: 10, note: `${pagesWithOg}/${total} pages have complete social-sharing data` });
 
   const pagesWithGaps = allMetrics.filter((m) => m.headingHierarchyGaps.length > 0).length;
   const headingScore = Math.max(0, 10 - (2 * pagesWithGaps));
@@ -716,7 +717,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
   if (avgGrade >= 6 && avgGrade <= 8) readabilityScore = 10;
   else if (avgGrade === 5 || avgGrade === 9) readabilityScore = 7;
   else readabilityScore = 4;
-  categories.push({ name: 'Readability', earned: readabilityScore, possible: 10, note: `Avg Grade ${avgGrade}` });
+  categories.push({ name: 'Readability', earned: readabilityScore, possible: 10, note: `Average reading signal: level ${avgGrade}` });
 
   const a11y = computeAccessibilityScore(allMetrics);
   categories.push(a11y);
@@ -738,15 +739,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
 // ============================================
 
 export function buildExecutiveSummary(score: ScoreBreakdown, allMetrics: TechnicalMetrics[]): string {
-  const lines: string[] = [];
-
-  switch (score.grade) {
-    case 'A': lines.push('This site is in excellent shape. The fundamentals are solid and it\'s well-positioned to convert visitors.'); break;
-    case 'B': lines.push('This site has a strong foundation with a few areas that could be tightened up to improve performance.'); break;
-    case 'C': lines.push('This site covers the basics but has notable gaps that are likely costing it visitors and conversions.'); break;
-    case 'D': lines.push('This site needs significant work. Several key areas are underperforming and likely hurting first impressions.'); break;
-    case 'F': lines.push('This site has critical issues across multiple areas that need immediate attention before other improvements will matter.'); break;
-  }
+  const lines: string[] = [`We checked selected website signals across ${allMetrics.length} page${allMetrics.length === 1 ? '' : 's'}.`];
 
   const lostPoints = score.categories
     .map((c) => ({ ...c, lost: c.possible - c.earned }))
@@ -757,18 +750,23 @@ export function buildExecutiveSummary(score: ScoreBreakdown, allMetrics: Technic
     const topIssues: string[] = [];
     for (const issue of lostPoints.slice(0, 3)) {
       if (issue.name === 'OG Tags' && issue.earned === 0) {
-        topIssues.push('no Open Graph tags (social media shares will look broken)');
+        topIssues.push('Social-sharing data is missing on every checked page');
       } else if (issue.name === 'Heading Structure') {
-        topIssues.push('heading hierarchy gaps that hurt SEO');
+        const gapPages = allMetrics.filter((metric) => metric.headingHierarchyGaps.length > 0).length;
+        topIssues.push(`${gapPages} page${gapPages === 1 ? '' : 's'} have heading-order gaps`);
       } else if (issue.name === 'Content Depth' && issue.earned <= 5) {
         const avgWords = Math.round(allMetrics.reduce((s, m) => s + m.wordCount, 0) / allMetrics.length);
-        topIssues.push(`thin content (avg ${avgWords} words/page)`);
+        topIssues.push(`Pages average ${avgWords} visible words`);
       } else if (issue.name === 'Meta Tags') {
-        topIssues.push('incomplete meta tags on some pages');
+        const pagesWithMeta = allMetrics.filter((metric) => metric.metaCompleteness.title && metric.metaCompleteness.description).length;
+        const missingPages = allMetrics.length - pagesWithMeta;
+        topIssues.push(`${missingPages} page${missingPages === 1 ? '' : 's'} need a title or description`);
       } else if (issue.name === 'CTA Presence' && issue.earned < 7) {
-        topIssues.push('too few clear calls-to-action');
+        topIssues.push('Few clear next-step links were found');
       } else if (issue.name === 'H1 Consistency') {
-        topIssues.push('inconsistent H1 usage');
+        const pagesWithOneH1 = allMetrics.filter((metric) => metric.h1Count === 1).length;
+        const missingPages = allMetrics.length - pagesWithOneH1;
+        topIssues.push(`${missingPages} page${missingPages === 1 ? '' : 's'} need one main heading`);
       } else if (issue.name === 'Accessibility') {
         const a11yParts: string[] = [];
         const unlabeledCount = allMetrics.reduce((s, m) => s + m.accessibility.formLabels.unlabeled.length, 0);
@@ -778,14 +776,18 @@ export function buildExecutiveSummary(score: ScoreBreakdown, allMetrics: Technic
         const emptyCount = allMetrics.reduce((s, m) => s + m.accessibility.emptyInteractives.length, 0);
         if (emptyCount > 0) a11yParts.push('empty links/buttons');
         topIssues.push(a11yParts.length > 0
-          ? `accessibility gaps: ${a11yParts.join(', ')} (hurts screen reader users)`
-          : 'accessibility issues detected');
+          ? `Accessibility checks flagged ${a11yParts.join(', ')}`
+          : 'Accessibility checks flagged a barrier');
       }
     }
 
     if (topIssues.length > 0) {
-      lines.push(`The biggest opportunities: ${topIssues.join(', ')}.`);
+      lines.push(`${topIssues.slice(0, 3).join('. ')}.`);
     }
+  }
+
+  if (lines.length === 1) {
+    lines.push('These selected signals show no measured gaps. A fuller review may find other issues.');
   }
 
   return lines.join(' ');
@@ -803,14 +805,14 @@ export function buildDeterministicAnalysis(score: ScoreBreakdown): string {
     .slice(0, 3);
 
   if (!priorities.length) {
-    return 'Local evidence review: the measured website fundamentals passed every retained check. Keep monitoring accessibility, calls to action, content clarity, and metadata as the site changes.';
+    return 'Selected checks found no gaps in the measured signals. A fuller review may find other issues.';
   }
 
   const recommendations = priorities.map((category, index) =>
     `${index + 1}. ${category.name} (${category.earned}/${category.possible}): ${category.note}.`,
   );
   return [
-    'Local evidence review: these priorities come directly from the measured page data; no external model service was used.',
+    'These priorities come from the measured page data; no external model service was used.',
     ...recommendations,
   ].join('\n');
 }
@@ -890,7 +892,7 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
         temperature: 0.3,
         maxOutputTokens: 2000,
       });
-      if (result.text.trim()) aiAnalysis = result.text;
+      aiAnalysis = acceptPublicGeneratedCopy(result.text, aiAnalysis);
     } catch {
       log('Model analysis unavailable; using local evidence analysis.');
     }

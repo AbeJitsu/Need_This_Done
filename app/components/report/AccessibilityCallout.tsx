@@ -1,7 +1,5 @@
 // ============================================================================
-// Accessibility Callout — Dedicated a11y issues box
-// ============================================================================
-// Not buried in scores — gets its own callout with "why this matters" context.
+// Accessibility Callout — selected barriers get their own review box.
 
 interface AccessibilityData {
   hasLangAttribute?: boolean;
@@ -94,7 +92,7 @@ export default function AccessibilityCallout({ accessibility }: { accessibility:
 
   return (
     <section>
-      <h2 className="text-2xl font-bold text-slate-900 mb-4">Accessibility findings</h2>
+      <h2 className="text-2xl font-bold text-slate-900 mb-4">Accessibility checks</h2>
 
       <div className={`rounded-xl border p-6 ${
         hasIssues
@@ -107,11 +105,11 @@ export default function AccessibilityCallout({ accessibility }: { accessibility:
               <span className="text-amber-500 text-xl mt-0.5" aria-hidden="true">&#9888;</span>
               <div>
                 <p className="font-semibold text-amber-800">
-                  {issues.length} accessibility issue{issues.length !== 1 ? 's' : ''} found
+                  {issues.length} accessibility check{issues.length !== 1 ? 's' : ''} flagged
                 </p>
                 <p className="text-sm text-amber-700 mt-1">
-                  ADA lawsuits have increased 300% since 2018. These issues affect real users and
-                  create legal risk for your business.
+                  These checks highlight barriers that may affect people using the page.
+                  They are a starting point for review.
                 </p>
               </div>
             </div>
@@ -129,7 +127,7 @@ export default function AccessibilityCallout({ accessibility }: { accessibility:
           <div className="flex items-center gap-3">
             <span className="text-emerald-500 text-xl" aria-hidden="true">&#10003;</span>
             <div>
-              <p className="font-semibold text-emerald-800">No issues flagged by these checks</p>
+                <p className="font-semibold text-emerald-800">No selected barriers flagged</p>
               <p className="text-sm text-emerald-700 mt-1">
                 Manual review may reveal other barriers. These findings cover only the selected checks.
               </p>

@@ -10,13 +10,18 @@ import {
   Link,
 } from '@react-email/components';
 import * as React from 'react';
+import {
+  acceptPublicGeneratedCopy,
+  PUBLIC_BRAND_PROMISE,
+  PUBLIC_CORE_PROMISE,
+  PUBLIC_REPORT_FALLBACK,
+} from '@/lib/public-copy';
 
 // ============================================================================
 // Site Report Email Template
 // ============================================================================
 // Sent after a user submits their URL for analysis.
-// Shows enough to hook (score, top wins/losses, summary) — drives click-through
-// to the full report page for detailed results.
+// Shows a short summary and a link to the full report.
 
 export interface SiteReportEmailProps {
   email: string;
@@ -28,26 +33,15 @@ export interface SiteReportEmailProps {
   reportUrl: string;
 }
 
-// Grade → color mapping (BJJ belt progression)
-const gradeColors: Record<string, string> = {
-  A: '#10b981', // emerald
-  B: '#3b82f6', // blue
-  C: '#8b5cf6', // purple
-  D: '#eab308', // gold
-  F: '#ef4444', // red
-};
-
 export default function SiteReportEmail({
   url,
-  score,
-  grade,
   categories,
   executiveSummary,
   reportUrl,
 }: SiteReportEmailProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
   const domain = new URL(url).hostname;
-  const gradeColor = gradeColors[grade] || '#6b7280';
+  const summary = acceptPublicGeneratedCopy(executiveSummary, PUBLIC_REPORT_FALLBACK);
 
   // Top wins (full marks) and losses (lost most points)
   const wins = categories.filter((c) => c.earned === c.possible).slice(0, 3);
@@ -64,15 +58,15 @@ export default function SiteReportEmail({
         <Container style={container}>
           {/* Header */}
           <Section style={header}>
-            <Text style={headerTitle}>Your Site Report Is Ready</Text>
+            <Text style={headerTitle}>Your Website Snapshot Is Ready</Text>
             <Text style={headerSubtitle}>{domain}</Text>
           </Section>
 
           <Section style={section}>
-            {/* Score card */}
-            <Section style={scoreCard}>
-              <Text style={scoreNumber}>{score}<span style={scoreMax}>/100</span></Text>
-              <Text style={{ ...gradeBadge, backgroundColor: gradeColor }}>{grade}</Text>
+            {/* Signal summary */}
+            <Section style={signalCard}>
+              <Text style={signalTitle}>Selected website signals</Text>
+              <Text style={signalText}>A short review of {domain} is ready.</Text>
             </Section>
 
             {/* Wins and losses */}
@@ -80,7 +74,7 @@ export default function SiteReportEmail({
               <Section style={resultsList}>
                 {wins.map((w) => (
                   <Text key={w.name} style={resultItem}>
-                    <span style={checkMark}>&#10003;</span> {w.name}: {w.note}
+                    <span style={checkMark}>&#10003;</span> {w.name}: {acceptPublicGeneratedCopy(w.note, 'Review this signal.')}
                   </Text>
                 ))}
               </Section>
@@ -90,19 +84,19 @@ export default function SiteReportEmail({
               <Section style={resultsList}>
                 {losses.map((l) => (
                   <Text key={l.name} style={resultItem}>
-                    <span style={xMark}>&#10007;</span> {l.name}: {l.note}
+                    <span style={xMark}>&#10007;</span> {l.name}: {acceptPublicGeneratedCopy(l.note, 'This signal may need a closer look.')}
                   </Text>
                 ))}
               </Section>
             )}
 
             {/* Executive summary */}
-            <Text style={summaryText}>{executiveSummary}</Text>
+            <Text style={summaryText}>{summary}</Text>
 
             {/* Primary CTA */}
             <Section style={ctaSection}>
               <Button style={primaryButton} href={reportUrl}>
-                View Your Full Report
+                View Your Website Snapshot
               </Button>
             </Section>
 
@@ -110,11 +104,11 @@ export default function SiteReportEmail({
 
             {/* Soft CTA */}
             <Text style={softCtaText}>
-              Want help fixing these issues?
+              Want to discuss one finding?
             </Text>
             <Section style={ctaSection}>
               <Button style={secondaryButton} href={`${siteUrl}/contact`}>
-                Book a Free 15-Min Call
+                Share Your Vision
               </Button>
             </Section>
           </Section>
@@ -127,7 +121,10 @@ export default function SiteReportEmail({
               </Link>
             </Text>
             <Text style={footerText}>
-              Websites, automation & AI for small businesses
+              {PUBLIC_BRAND_PROMISE}
+            </Text>
+            <Text style={footerText}>
+              {PUBLIC_CORE_PROMISE}
             </Text>
           </Section>
         </Container>
@@ -178,33 +175,22 @@ const section: React.CSSProperties = {
   padding: '30px',
 };
 
-const scoreCard: React.CSSProperties = {
+const signalCard: React.CSSProperties = {
   textAlign: 'center',
   padding: '20px 0',
   marginBottom: '20px',
 };
 
-const scoreNumber: React.CSSProperties = {
-  fontSize: '52px',
+const signalTitle: React.CSSProperties = {
+  fontSize: '24px',
   fontWeight: 'bold',
   color: '#0f172a',
-  margin: '0 0 12px 0',
-  lineHeight: '1',
+  margin: '0 0 8px 0',
 };
 
-const scoreMax: React.CSSProperties = {
-  fontSize: '24px',
+const signalText: React.CSSProperties = {
+  fontSize: '15px',
   color: '#94a3b8',
-  fontWeight: 'normal',
-};
-
-const gradeBadge: React.CSSProperties = {
-  display: 'inline-block',
-  color: '#ffffff',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  padding: '6px 20px',
-  borderRadius: '20px',
   margin: '0',
 };
 

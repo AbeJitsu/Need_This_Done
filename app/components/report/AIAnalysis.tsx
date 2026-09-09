@@ -1,5 +1,5 @@
 // ============================================================================
-// AI Analysis — 6 expandable accordion sections
+// Report findings — expandable sections
 // ============================================================================
 // Parses the markdown AI analysis into sections and renders as accordion.
 // Section 6 (Action Items) is open by default since it's the most actionable.
@@ -7,13 +7,14 @@
 'use client';
 
 import { useState } from 'react';
+import { acceptPublicGeneratedCopy, PUBLIC_REPORT_FALLBACK } from '@/lib/public-copy';
 
 const SECTION_TITLES = [
   'First Impression & Messaging',
   'Service & Offer Clarity',
   'Trust Signals',
   'Technical Health',
-  'Accessibility & ADA Compliance',
+  'Accessibility checks',
   'Top 5 Action Items',
 ];
 
@@ -143,7 +144,8 @@ function renderInlineMarkdown(text: string): React.ReactNode {
 }
 
 export default function AIAnalysis({ aiAnalysis }: { aiAnalysis: string }) {
-  const sections = parseSections(aiAnalysis);
+  const safeAnalysis = acceptPublicGeneratedCopy(aiAnalysis, PUBLIC_REPORT_FALLBACK);
+  const sections = parseSections(safeAnalysis);
 
   // Section 6 (index 5) is open by default
   const [openSections, setOpenSections] = useState<Set<number>>(() => {

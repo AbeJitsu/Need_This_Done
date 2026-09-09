@@ -33,14 +33,14 @@ export default function AnalyzerForm() {
       });
       const data = await response.json().catch(() => null);
       if (response.status === 429) {
-        setError('The snapshot limit has been reached. Please try again tomorrow. Your entries are still here.');
+        setError('The snapshot limit is reached. Try again tomorrow. Your entries are still here.');
       } else if (!response.ok) {
-        setError('We could not create your snapshot. Check the website address and try again. Your entries are still here.');
+        setError('We could not create the snapshot. Check the address and try again. Your entries are still here.');
       } else if (typeof data?.redirectUrl === 'string' && /^\/report\/[^/?#]+(?:\?[^#]*)?$/.test(data.redirectUrl)) {
         router.push(data.redirectUrl);
         return;
       } else {
-        setError('The report link was unavailable. Please try again. Your entries are still here.');
+        setError('We could not open the report link. Try again. Your entries are still here.');
       }
     } catch {
       setError('We could not connect. Check your connection and try again. Your entries are still here.');

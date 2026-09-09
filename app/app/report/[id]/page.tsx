@@ -7,11 +7,12 @@ import AccessibilityCallout from '@/components/report/AccessibilityCallout';
 import PageMetricsTable from '@/components/report/PageMetricsTable';
 import AIAnalysis from '@/components/report/AIAnalysis';
 import ReportCTA from '@/components/report/ReportCTA';
+import { acceptPublicGeneratedCopy, PUBLIC_REPORT_FALLBACK } from '@/lib/public-copy';
 
 // ============================================================================
 // Report Page - /report/[id]
 // ============================================================================
-// Server-rendered dashboard-style scorecard. No auth required — the UUID in
+// Server-rendered dashboard-style signal report. No auth required — the UUID in
 // the URL acts as the access token. Data fetched from Supabase.
 
 interface ReportPageProps {
@@ -47,9 +48,13 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
   }
 
   const domain = new URL(report.url).hostname;
+  const summary = acceptPublicGeneratedCopy(
+    String(report.executive_summary || ''),
+    PUBLIC_REPORT_FALLBACK,
+  );
   return {
     title: `Website Snapshot: ${domain} | Need This Done`,
-    description: report.executive_summary,
+    description: summary,
     robots: { index: false, follow: false },
   };
 }
@@ -63,6 +68,10 @@ export default async function ReportPage({ params }: ReportPageProps) {
   }
 
   const domain = new URL(report.url).hostname;
+  const executiveSummary = acceptPublicGeneratedCopy(
+    String(report.executive_summary || ''),
+    PUBLIC_REPORT_FALLBACK,
+  );
   const categories = Array.isArray(report.categories) ? report.categories : [];
   const metrics = Array.isArray(report.metrics) ? report.metrics : [];
   const accessibility = report.accessibility && typeof report.accessibility === 'object' && !Array.isArray(report.accessibility)
@@ -74,7 +83,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
       <ReportHero
         domain={domain}
         url={report.url}
-        executiveSummary={report.executive_summary}
+        executiveSummary={executiveSummary}
         pagesCrawled={report.pages_crawled}
       />
 

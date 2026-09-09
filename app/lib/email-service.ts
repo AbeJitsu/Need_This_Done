@@ -235,10 +235,9 @@ export type SiteReportEmailProps = {
 };
 
 /**
- * Send site report email with score summary and link to full report.
- * Drives click-through to the report page with tiered CTAs.
+ * Send site report email with a short signal summary and report link.
  *
- * @param data - Report data (score, grade, categories, summary, report URL)
+ * @param data - Report data (categories, summary, and report URL)
  * @returns Email ID if successful, null if failed
  */
 export async function sendSiteReportEmail(
@@ -248,7 +247,7 @@ export async function sendSiteReportEmail(
   const { default: SiteReportEmail } = await import('../emails/SiteReportEmail');
 
   const domain = new URL(data.url).hostname;
-  const subject = `Your Site Report: ${domain} scored ${data.score}/100`;
+  const subject = `Your Website Snapshot Is Ready: ${domain}`;
 
   return sendRenderedTransactionalEmail(data.email, subject, SiteReportEmail(data), operation);
 }

@@ -1,7 +1,7 @@
 // ============================================================================
-// Page Metrics Table — Collapsible per-page breakdown
+// Pages reviewed — collapsible per-page breakdown
 // ============================================================================
-// Shows path, title, word count, H1 count, and alt text coverage for each
+// Shows path, title, word count, heading count, and image text coverage for each
 // crawled page. Collapsed by default on mobile, open on desktop.
 
 'use client';
@@ -28,7 +28,7 @@ export default function PageMetricsTable({ metrics }: { metrics: PageMetric[] })
         aria-expanded={isOpen}
       >
         <h2 className="text-2xl font-bold text-slate-900">
-          Page-by-Page Metrics
+          Pages reviewed
         </h2>
         <span className="text-slate-400 group-hover:text-slate-600 transition-colors text-xl" aria-hidden="true">
           {isOpen ? '−' : '+'}
@@ -36,7 +36,7 @@ export default function PageMetricsTable({ metrics }: { metrics: PageMetric[] })
       </button>
 
       <p className="text-sm text-slate-500 mt-1 mb-4">
-        {metrics.length} page{metrics.length !== 1 ? 's' : ''} crawled
+        {metrics.length} page{metrics.length !== 1 ? 's' : ''} checked
       </p>
 
       {isOpen && (
@@ -47,8 +47,8 @@ export default function PageMetricsTable({ metrics }: { metrics: PageMetric[] })
                 <th className="text-left px-4 py-3 font-semibold">Page</th>
                 <th className="text-left px-4 py-3 font-semibold">Title</th>
                 <th className="text-right px-4 py-3 font-semibold">Words</th>
-                <th className="text-right px-4 py-3 font-semibold">H1s</th>
-                <th className="text-right px-4 py-3 font-semibold">Alt Coverage</th>
+                <th className="text-right px-4 py-3 font-semibold">Main headings</th>
+                <th className="text-right px-4 py-3 font-semibold">Image text</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
