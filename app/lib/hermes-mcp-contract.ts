@@ -18,6 +18,47 @@ export const MCP_TOOL_DESCRIPTIONS = {
   list_workflows: 'List recent workflows without exposing internal records or credentials.',
 } as const;
 
+export const MCP_TOOL_DEFINITIONS = [
+  {
+    name: 'start_workflow',
+    title: 'Start workflow',
+    description: MCP_TOOL_DESCRIPTIONS.start_workflow,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        request: { type: 'string', minLength: 1, maxLength: 12_000 },
+        idempotencyKey: { type: 'string', format: 'uuid' },
+      },
+      required: ['request'],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'get_workflow_status',
+    title: 'Get workflow status',
+    description: MCP_TOOL_DESCRIPTIONS.get_workflow_status,
+    inputSchema: {
+      type: 'object',
+      properties: { workflowId: { type: 'string', format: 'uuid' } },
+      required: ['workflowId'],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'list_workflows',
+    title: 'List workflows',
+    description: MCP_TOOL_DESCRIPTIONS.list_workflows,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        limit: { type: 'integer', minimum: 1, maximum: 50, default: 20 },
+        cursor: { type: 'string', minLength: 1, maxLength: 256 },
+      },
+      additionalProperties: false,
+    },
+  },
+] as const;
+
 const workflowIdSchema = z.string().uuid();
 const timestampSchema = z.string().datetime();
 
@@ -88,3 +129,9 @@ export type ListWorkflowsInput = z.infer<typeof listWorkflowsInputSchema>;
 export type StartWorkflowResult = z.infer<typeof startWorkflowResultSchema>;
 export type WorkflowStatusResult = z.infer<typeof workflowStatusResultSchema>;
 export type ListWorkflowsResult = z.infer<typeof listWorkflowsResultSchema>;
+
+export type HermesMcpDispatcher = {
+  startWorkflow(input: StartWorkflowInput): Promise<StartWorkflowResult>;
+  getWorkflowStatus(input: GetWorkflowStatusInput): Promise<WorkflowStatusResult>;
+  listWorkflows(input: ListWorkflowsInput): Promise<ListWorkflowsResult>;
+};

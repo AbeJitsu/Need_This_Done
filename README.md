@@ -109,6 +109,13 @@ defines the TDD gate, explains what each test layer proves and does not prove,
 and records the rules for consolidating tests without losing a safety or
 product invariant.
 
+The opt-in `npm run test:hermes-mcp` Playwright diagnostic walks the real
+application boundary through health, MCP authentication and discovery, Hermes
+start/list/status, and (in `test:hermes-mcp:full`) the explicitly approved
+worker-execution checkpoints. It attaches a stage-by-stage JSON report and
+fails with the missing boundary; it is intentionally separate from the
+provider-free retained browser gate.
+
 ## Product boundary
 
 This is the owner's private assistant, not a public worker service or an

@@ -15,17 +15,41 @@
   device-independent tool surface: `start_workflow`, `get_workflow_status`,
   and `list_workflows`. The schemas bound request sizes, reject server-owned
   fields, require approval-gated start results, validate reviewable status
-  envelopes, and bound list cursors. This is a transport-neutral contract
-  only; no MCP endpoint, Hermes persistence call, worker dispatch, or Mac
-  connectivity is claimed yet.
+  envelopes, and bound list cursors. This remains the transport-neutral
+  contract underneath the endpoint; Hermes persistence, worker dispatch, and
+  Mac connectivity are still separate proof items.
+
+- On 2026-09-09, the MCP transport increment added a single Next.js
+  `/api/mcp` Streamable HTTP boundary with JSON-RPC initialization, tool
+  discovery, tool calls, protocol validation, body bounds, origin checks, and
+  a constant-time bearer-token seam. The route is classified in the capability
+  manifest and the opt-in `npm run test:hermes-mcp` Playwright diagnostic now
+  exercises the real route from health through MCP discovery and workflow
+  calls. Seven focused transport tests pass. The handler currently uses an
+  unavailable Hermes adapter by default, so no workflow is persisted or
+  dispatched yet. Production OAuth/connector setup, secure remote reachability,
+  and live Hermes wiring remain separate proof items.
+
+- On 2026-09-09, the MCP vertical-slice diagnostic was run against a disposable
+  local test environment with dummy, non-secret values. It reported the exact
+  current gaps: Supabase and Redis were unavailable, vector memory was
+  `not_configured`, and the default MCP dispatcher returned the deliberate
+  `Hermes workflow service is unavailable` tool error; the test attached a
+  redacted stage report and failed rather than treating those gaps as a pass.
+  A run without even the private local environment failed earlier at the
+  Playwright web-server boot because required Supabase variables were absent.
+  The normal diagnostic remains draft/control-plane scoped; the `:full` mode
+  additionally requires an explicitly approved workflow fixture and signed
+  worker. No hosted writes, worker claims, external actions, or credentials
+  were made.
 
 - On 2026-09-09, the assistant infrastructure audit confirmed the hardware
   split: the MacBook Pro is Abe's interactive development and coding machine;
   the Mac mini is the intended always-on private worker. Existing Redis is
   wired through `REDIS_URL` and the Node Redis client for cache, rate limiting,
   request deduplication, and health checks; it is not currently the agent task
-  queue. No active Upstash Vector or Qdrant client exists, and the legacy
-  chatbot/page-embedding system was retired in `c5989bd8`. The build now
+  queue. No live Upstash Vector or Qdrant connection is verified, and the
+  legacy chatbot/page-embedding system was retired in `c5989bd8`. The build now
   includes a private, optional Upstash Vector adapter using
   `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional
   `VECTOR_MEMORY_NAMESPACE`; it uses derived semantic memory only and does not
@@ -33,8 +57,8 @@
   the MacBook/Mac-mini server-side environments and the intended Vercel server
   environment, never in browser variables, Git, prompts, logs, Redis, or
   durable business rows. The adapter request/response contract has six passing
-  unit tests, and the application code gate passed lint, type-check, 68 unit
-  files/358 tests, 6 accessibility files/60 tests, and production build. Live
+  unit tests, and the application code gate passed lint, type-check, 70 unit
+  files/370 tests, 6 accessibility files/60 tests, and production build. Live
   vector connectivity, Vercel configuration, and Mac-mini activation remain
   unverified and separately approved.
 

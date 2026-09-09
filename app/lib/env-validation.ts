@@ -160,6 +160,28 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must be 1–64 characters: letters, numbers, dot, underscore, colon, or hyphen',
     },
 
+    // The bearer value is a controlled transport bootstrap only. The
+    // production ChatGPT connection still requires a reviewed OAuth/connector
+    // decision; this value must never reach browser code or worker payloads.
+    MCP_BEARER_TOKEN: {
+      name: 'MCP_BEARER_TOKEN',
+      required: false,
+      validate: (v) => v.length >= 32,
+      errorMessage: 'Must be at least 32 characters',
+    },
+    MCP_ALLOWED_ORIGINS: {
+      name: 'MCP_ALLOWED_ORIGINS',
+      required: false,
+      validate: (v) => v.split(',').every((origin) => {
+        try {
+          return new URL(origin.trim()).protocol === 'https:';
+        } catch {
+          return false;
+        }
+      }),
+      errorMessage: 'Must be a comma-separated list of HTTPS origins',
+    },
+
     // Redis is optional acceleration/protection. Retained caches and rate
     // limiting already degrade safely when it is unavailable.
     REDIS_URL: {

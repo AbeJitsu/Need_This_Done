@@ -33,7 +33,7 @@ contract—for example, “do not touch the database before signature validation
 | Database/RLS | `npm run verify:database` | SQL constraints, migrations, RLS, security posture, and durable lifecycle rules against disposable local Supabase | Hosted Supabase state or production data |
 | Integration | `vitest.integration.config.ts` | Multiple application components working together with controlled local dependencies | Hosted providers or a real worker |
 | Accessibility | `npm run test:a11y` | Semantic roles, keyboard behavior, focus, and axe-level regressions | Every browser, device, or screen reader |
-| Browser/E2E | `app/e2e` Playwright suites | Route composition, browser auth, approvals, recovery, responsive behavior, and visible outcomes | Real Mac execution, live provider calls, or customer outcomes unless stated |
+| Browser/E2E | `app/e2e` Playwright suites; `npm run test:hermes-mcp` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice | Real Mac execution, live provider calls, or customer outcomes unless stated |
 | Bridge/worker | `bridge/test` | HMAC, frozen-plan enforcement, loopback RPC, artifact safety, and no-delivery defaults | macOS launchd behavior on Linux, live Gateway credentials, or external effects |
 | Live rehearsal | MacBook Pro first, Mac mini later | Configured hardware, network, providers, durable result, and operator handoff | Lower-level regression coverage; this is expensive environment-specific evidence |
 
@@ -46,10 +46,12 @@ contract—for example, “do not touch the database before signature validation
 | `npm run test:retained-smoke` | Public desktop/mobile smoke | Retained public routes and recovery paths; not private worker proof |
 | `npm run test:browser-harness` | Browser boot contract | Separates harness startup failures from product failures |
 | `npm run test:hermes-browser` | Hermes UI contract | Plan preview and approval using controlled internal endpoints; no provider or worker dispatch |
+| `npm run test:hermes-mcp` | MCP control-plane diagnostic | Calls the real `/api/mcp` route and reports application health, authentication, discovery, Hermes start/list/status, and the exact missing boundary; local draft creation is opt-in and the command is separate from the retained gate |
+| `npm run test:hermes-mcp:full` | Full worker-rehearsal diagnostic | Adds signed worker status, terminal workflow polling, and the semantic-memory projection checkpoint; requires explicit approved-rehearsal environment values |
 | `npm test` in `bridge/` | Private bridge suite | Bridge logic and worker safety; macOS-only assertions need macOS evidence |
 
-The latest recorded application gate passed 68 deterministic unit/API files
-with 358 tests and 6 accessibility files with 60 tests. The database/RLS
+The latest recorded application gate passed 70 deterministic unit/API files
+with 370 tests and 6 accessibility files with 60 tests. The database/RLS
 suites are intentionally excluded from the fast unit command and belong to
 `verify:database`; they are not missing.
 
@@ -176,6 +178,7 @@ These suites are intentionally excluded from the fast unit command and run via
 | `e2e/browser-harness.spec.ts` | Browser startup/route load | Isolates harness failures | Full workflow |
 | `e2e/daily-cockpit.spec.ts` | Daily operator cockpit | Protects review flow | Worker completion |
 | `e2e/hermes-plan-preview.spec.ts` | Draft preview/approval UI | Protects review before dispatch | Provider/Redis/Mac |
+| `e2e/hermes-mcp-vertical-slice.spec.ts` | Real application diagnostic for health, MCP auth/handshake/discovery, Hermes start/list/status, and optional signed-worker/full-execution checkpoints; attaches a redacted stage report | Shows the first missing connected boundary when the operating-system path is run | Production OAuth, remote ChatGPT reachability, workflow persistence until the dispatcher is wired, live vector projection, or external effects |
 | `e2e/prospecting-workspace.spec.ts` | Prospect review/suppression UI | Protects operator controls | Outreach |
 | `e2e/retained-core-smoke.spec.ts` | Public/mobile smoke matrix | Catches route/overflow/recovery regressions | Hosted/customer results |
 
@@ -202,18 +205,28 @@ that only mirror private implementation details with public-contract tests.
 
 ## Explicit gaps
 
-The suite does not yet prove the target operating-system path end to end:
+The diagnostic suite now gives one command a stage-by-stage report, but the
+target operating-system path still does not pass end to end:
 
-- the three-tool MCP schemas exist, but the authenticated MCP transport is not
-  implemented;
+- the three-tool MCP schemas, local authenticated Streamable HTTP handler, and
+  opt-in diagnostic exist, but production OAuth/connector setup, remote
+  reachability, and Hermes persistence wiring are not verified;
 - Hermes remains an application planning role, not yet the standalone workflow
   service in the architecture;
 - Redis is not yet the workflow queue/lease/heartbeat layer;
+- the full diagnostic cannot safely claim worker execution until an explicitly
+  approved workflow fixture and live signed worker are supplied;
+- semantic-memory configuration is observable through health, but no workflow
+  currently exposes a safe end-to-end vector projection probe;
 - no coding worker has completed an isolated task and returned a GitHub commit;
 - MacBook Pro rehearsal and Mac mini activation have not occurred;
 - no live Upstash Vector index or Vercel environment configuration is verified;
 - no hosted, provider, paid-action, external-message, or customer-result proof
   is implied by local tests.
 
-The next TDD increment should implement the authenticated MCP transport against
-these schemas before adding worker breadth.
+Run `npm run test:hermes-mcp` after copying and filling the private local
+environment. Use `npm run test:hermes-mcp:full` only for a separately approved
+worker rehearsal, with `MCP_E2E_WORKFLOW_ID`, `MCP_E2E_OWNER_ID`,
+`MCP_E2E_WORKER_ID`, and the server-side bridge secret supplied outside Git.
+The next TDD increment should replace the unavailable default MCP dispatcher
+with a durable Hermes adapter and then make the diagnostic's next stage pass.
