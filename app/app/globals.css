@@ -1692,6 +1692,30 @@ Blog Markdown Content — Reading Experience
   word-break: normal;
 }
 
+.system-rail__status {
+  display: inline-flex;
+  max-width: 100%;
+  margin: 0.8rem 0 0;
+  padding: 0.38rem 0.58rem;
+  border: 1px solid rgba(18, 107, 78, 0.2);
+  border-radius: 0.55rem;
+  background: var(--system-soft);
+  color: var(--system-green, #126b4e);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+
+.system-plain-flow {
+  margin-top: 3rem;
+}
+
+.system-plain-flow .system-rail__card {
+  min-height: 11.5rem;
+}
+
 .system-rail__description {
   margin: 0.85rem 0 0;
   color: var(--system-muted);
@@ -1801,6 +1825,12 @@ Blog Markdown Content — Reading Experience
 
 .system-rail--dark .system-rail__description {
   color: #dce8dd;
+}
+
+.system-rail--dark .system-rail__status {
+  border-color: rgba(201, 220, 202, 0.24);
+  background: rgba(201, 220, 202, 0.12);
+  color: #c9dcca;
 }
 
 .system-rail--dark .system-card-detail {

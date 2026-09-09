@@ -33,7 +33,7 @@ contract—for example, “do not touch the database before signature validation
 | Database/RLS | `npm run verify:database` | SQL constraints, migrations, RLS, security posture, and durable lifecycle rules against disposable local Supabase | Hosted Supabase state or production data |
 | Integration | `vitest.integration.config.ts` | Multiple application components working together with controlled local dependencies | Hosted providers or a real worker |
 | Accessibility | `npm run test:a11y` | Semantic roles, keyboard behavior, focus, and axe-level regressions | Every browser, device, or screen reader |
-| Browser/E2E | `app/e2e` Playwright suites; `npm run test:hermes-mcp` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice | Real Mac execution, live provider calls, or customer outcomes unless stated |
+| Browser/E2E | `app/e2e` Playwright suites; `npm run test:hermes-mcp:local`; `npm run test:hermes-mcp:hosted` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice against an explicitly selected environment | Real Mac execution, live provider calls, or customer outcomes unless stated |
 | Bridge/worker | `bridge/test` | HMAC, frozen-plan enforcement, loopback RPC, artifact safety, and no-delivery defaults | macOS launchd behavior on Linux, live Gateway credentials, or external effects |
 | Live rehearsal | MacBook Pro first, Mac mini later | Configured hardware, network, providers, durable result, and operator handoff | Lower-level regression coverage; this is expensive environment-specific evidence |
 
@@ -46,14 +46,31 @@ contract—for example, “do not touch the database before signature validation
 | `npm run test:retained-smoke` | Public desktop/mobile smoke | Retained public routes and recovery paths; not private worker proof |
 | `npm run test:browser-harness` | Browser boot contract | Separates harness startup failures from product failures |
 | `npm run test:hermes-browser` | Hermes UI contract | Plan preview and approval using controlled internal endpoints; no provider or worker dispatch |
-| `npm run test:hermes-mcp` | MCP control-plane diagnostic | Calls the real `/api/mcp` route and reports application health, authentication, discovery, Hermes start/list/status, and the exact missing boundary; local draft creation is opt-in and the command is separate from the retained gate |
-| `npm run test:hermes-mcp:full` | Full worker-rehearsal diagnostic | Adds signed worker status, terminal workflow polling, and the semantic-memory projection checkpoint; requires explicit approved-rehearsal environment values |
+| `npm run test:hermes-mcp:local` (also `test:hermes-mcp`) | Local-first MCP control-plane diagnostic | Runs `verify:database` first against the real local Supabase instance, then calls the local `/api/mcp` route and reports health, vector configuration, authentication, discovery, Hermes start/list/status, and the exact missing boundary; dummy credentials do not count |
+| `npm run test:hermes-mcp:hosted` | Hosted Supabase read-only preflight | Uses an explicit non-local `BASE_URL`, skips the local web server, and proves the deployed app's server-side Supabase/Redis health plus MCP auth/handshake/discovery and safe read-only listing; it never starts a hosted workflow |
+| `npm run test:hermes-mcp:full` | Full local worker-rehearsal diagnostic | Runs the local database gate first, then adds signed worker status, terminal workflow polling, and the semantic-memory projection checkpoint; requires explicit approved-rehearsal environment values |
 | `npm test` in `bridge/` | Private bridge suite | Bridge logic and worker safety; macOS-only assertions need macOS evidence |
 
 The latest recorded application gate passed 70 deterministic unit/API files
 with 370 tests and 6 accessibility files with 60 tests. The database/RLS
 suites are intentionally excluded from the fast unit command and belong to
 `verify:database`; they are not missing.
+
+The Hermes vertical slice has an intentional environment order:
+
+1. `npm run test:hermes-mcp:local` proves the real local Supabase database/RLS
+   gate first, then proves the local application, Redis, vector configuration,
+   MCP transport, and Hermes control-plane boundary. The command refuses a
+   remote `BASE_URL` or non-local Supabase target.
+2. Only after the local run passes, `npm run test:hermes-mcp:hosted` runs against
+   the deployed app. Its `/api/health` response is the hosted server-side
+   Supabase/Redis check; the test process's local `.env.local` is not used as a
+   substitute for hosted connectivity. The hosted profile is read-only by
+   default and does not call `start_workflow`.
+3. A hosted workflow creation or worker execution is a separate approved
+   rehearsal. It requires `HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true`, a controlled
+   idempotency key or fixture, and the corresponding hosted bridge credentials
+   outside Git.
 
 ## Application suite inventory
 

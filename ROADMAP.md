@@ -68,7 +68,7 @@ It is complete only when all of these are true:
 | Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only MacBook rehearsal |
 | Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
 | Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
-| MCP facade | Device-independent schemas, a local Streamable HTTP handler, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; production OAuth/remote access and Hermes persistence wiring remain pending | Run the diagnostic against the configured app, then connect the dispatcher to durable Hermes records |
+| MCP facade | Device-independent schemas, a local Streamable HTTP handler, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production OAuth/remote access and Hermes persistence wiring remain pending | Pass the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
 | MacBook Pro | Interactive coding and first bridge-rehearsal host | Configure the private bridge environment and validate the loopback Gateway |
 | Mac mini | Intended always-on worker host; not activated | Repeat the approved worker proof after the MacBook proof |
 | Codex/GitHub worker | Coding worker contract remains future; current bridge is OpenClaw non-code | Add isolated worktree, branch, checks, commit SHA, and review evidence |
@@ -81,7 +81,7 @@ Each capability must carry the narrowest useful evidence at each layer:
 | --- | --- | --- |
 | Unit | Pure validation, redaction, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
 | Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
-| Integration | Disposable local Supabase/RLS, controlled Redis, signed bridge routes, and mocked Upstash REST | Hosted Supabase, Upstash account, and Mac runtime integration |
+| Integration | Disposable local Supabase/RLS, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
 | Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote ChatGPT connector |
 | Live rehearsal | Not available in this environment | MacBook Pro/Mac mini, Vercel, Supabase, Redis/vector, provider, and durable result |
 
@@ -139,7 +139,10 @@ What We Do → How We Work → Examples → Why Us, and the page ends with Share
 Vision. How We Work remains part of the primary reassurance path. The page
 keeps the work understandable without requiring technical detail.
 The public [system case study](app/app/system/page.tsx) remains the complete
-technical-details page for curious or technical visitors.
+technical-details page for curious or technical visitors. It starts with a
+plain-English five-card explanation of how the system differs from prompting
+ChatGPT alone, then names the technology stack, why each piece exists, and
+which connections are built or still pending.
 
 Keep `/system` available as optional detail from the footer Explore links and
 its direct URL, while keeping it out of the primary homepage navigation and
@@ -152,10 +155,12 @@ update its route assertions and the same ledgers.
 ## Public `/system` case study
 
 The public [system case study](app/app/system/page.tsx) is an explanatory page
-for the private-system boundary, not part of the assistant finish line. If its
-stage model, CTA destinations, or responsive card geometry changes, update the
-route assertions in `app/e2e/ai-employee-product.spec.ts` and record the new
-validation in [Project status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md).
+for the private-system boundary, not part of the assistant finish line. Its
+plain-English flow must precede the technical stack explanation, and its
+proof-state labels must match the current repository status. If its stage model,
+stack descriptions, CTA destinations, or responsive card geometry changes,
+update the route assertions in `app/e2e/ai-employee-product.spec.ts` and record
+the new validation in [Project status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md).
 
 ## Later, only under a new approval
 

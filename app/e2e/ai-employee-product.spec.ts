@@ -581,6 +581,12 @@ test('/system keeps its actions purposeful and its four stages connected', async
   await expect(main.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
   await expect(main.getByRole('link', { name: 'Inspect the implementation', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done/tree/dev');
   await expect(main.locator('.system-map__stage')).toHaveCount(4);
+  await expect(main.locator('.system-plain-flow > .system-rail__item')).toHaveCount(5);
+  await expect(main.getByRole('heading', { name: 'You explain the outcome. NeedThisDone keeps the work moving.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Prompting ChatGPT by itself', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'NeedThisDone around ChatGPT', exact: true })).toBeVisible();
+  await expect(main.getByText('Local MCP built · Hermes wiring next', { exact: true })).toBeVisible();
+  await expect(main.getByText('Connections still being proven', { exact: true })).toBeVisible();
   for (const title of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
     await expect(main.getByRole('heading', { name: title, exact: true })).toBeVisible();
   }
@@ -726,7 +732,7 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
     expect(layout.architectureColumns).toBe(viewport.width >= 768 ? 2 : 1);
     expect(layout.codingColumns).toBe(viewport.width >= 768 ? 2 : 1);
     expect(layout.hiddenConnectors).toBe(0);
-    expect(layout.architectureRows).toBe(5);
+    expect(layout.architectureRows).toBe(11);
     expect(layout.heroMapVisible).toBe(true);
     expect(layout.primaryVisible).toBe(true);
     expect(layout.reducedMapMotion).toBe('none');

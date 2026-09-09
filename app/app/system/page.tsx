@@ -7,8 +7,11 @@ import {
   ArrowRight,
   Check,
   Code2,
+  Database,
   GitBranch,
   Lock,
+  MessageCircle,
+  Server,
   ShieldCheck,
   Target,
   Workflow,
@@ -34,7 +37,16 @@ export const metadata: Metadata = {
   },
 };
 
-type IconName = "target" | "workflow" | "shield" | "code" | "git" | "lock";
+type IconName =
+  | "target"
+  | "workflow"
+  | "shield"
+  | "code"
+  | "git"
+  | "lock"
+  | "message"
+  | "database"
+  | "server";
 
 type RailStep = {
   number: string;
@@ -43,6 +55,7 @@ type RailStep = {
   description: string;
   icon: IconName;
   highlighted?: boolean;
+  status?: string;
 };
 
 function StepIcon({
@@ -65,6 +78,12 @@ function StepIcon({
       return <GitBranch className={className} aria-hidden="true" />;
     case "lock":
       return <Lock className={className} aria-hidden="true" />;
+    case "message":
+      return <MessageCircle className={className} aria-hidden="true" />;
+    case "database":
+      return <Database className={className} aria-hidden="true" />;
+    case "server":
+      return <Server className={className} aria-hidden="true" />;
     default:
       return null;
   }
@@ -109,6 +128,55 @@ const systemStages = [
     icon: "git",
   },
 ] as const;
+
+const plainLanguageSteps: readonly RailStep[] = [
+  {
+    number: "01",
+    label: "You talk normally",
+    title: "Tell ChatGPT what you want done",
+    description:
+      "You describe the outcome in everyday language. ChatGPT helps clarify the request; you do not need to choose a prompt, model, or worker.",
+    icon: "message",
+    status: "Reasoning layer",
+  },
+  {
+    number: "02",
+    label: "The system makes it durable",
+    title: "A small doorway turns talk into work",
+    description:
+      "NeedThisDone gives ChatGPT one authenticated MCP doorway. Hermes is meant to turn the request into a trackable workflow instead of leaving it as a loose answer.",
+    icon: "workflow",
+    status: "Local MCP built · Hermes wiring next",
+  },
+  {
+    number: "03",
+    label: "You decide",
+    title: "Nothing important runs by surprise",
+    description:
+      "Before work that sends, publishes, spends, changes a system, or hands off code, you see the scope and decide whether to approve it.",
+    icon: "shield",
+    highlighted: true,
+    status: "Approval boundary",
+  },
+  {
+    number: "04",
+    label: "A private machine helps",
+    title: "Approved work goes to the right worker",
+    description:
+      "The always-on Mac mini is the intended worker. OpenClaw handles approved non-code tasks; Codex handles approved code changes in an isolated worktree.",
+    icon: "code",
+    status: "Mac mini connection pending",
+  },
+  {
+    number: "05",
+    label: "You get proof",
+    title: "The result comes back with a trail",
+    description:
+      "Supabase keeps durable workflow truth, GitHub keeps code truth, Redis handles temporary coordination, and vector memory helps retrieve selected findings.",
+    icon: "git",
+    status: "Connections still being proven",
+  },
+];
 
 const executionSteps: readonly RailStep[] = [
   {
@@ -157,44 +225,103 @@ const executionSteps: readonly RailStep[] = [
 const architectureSteps: readonly RailStep[] = [
   {
     number: "01",
-    label: "Mission control",
-    title: "NeedThisDone",
+    label: "Reasoning and conversation",
+    title: "ChatGPT",
     description:
-      "Keeps goals, approvals, status, costs, and results in one durable record. The browser remains the place to inspect it.",
-    icon: "target",
+      "The reasoning engine and conversational interface. It is meant to work from the MacBook Pro, Mac mini, or another approved client. The remote ChatGPT-to-MCP connection is designed but not yet verified.",
+    icon: "message",
+    status: "Interface designed · connection pending",
   },
   {
     number: "02",
-    label: "Planning layer",
-    title: "Hermes",
+    label: "Small authenticated doorway",
+    title: "MCP facade",
     description:
-      "Turns a long-range objective into a focused work packet. It proposes the next move without executing it.",
-    icon: "workflow",
-    highlighted: true,
+      "The Model Context Protocol endpoint exposes only start_workflow, get_workflow_status, and list_workflows. The local route, handshake, authentication seam, and discovery contract are built; a secure hosted ChatGPT connection is still pending.",
+    icon: "lock",
+    status: "Built locally · hosted reachability pending",
   },
   {
     number: "03",
-    label: "Local gateway",
-    title: "OpenClaw",
+    label: "Internet-facing control plane",
+    title: "Next.js on Vercel",
     description:
-      "Runs approved non-code tools on the private machine. Its work stays separate from coding tasks.",
-    icon: "shield",
+      "Hosts the authenticated browser and server-side API boundary. It records policy decisions and never becomes the always-on worker. The hosted environment must be proven separately from local development.",
+    icon: "server",
+    status: "Application boundary exists · hosted proof pending",
   },
   {
     number: "04",
-    label: "Coding lane",
-    title: "Codex",
+    label: "Workflow coordination",
+    title: "Hermes",
     description:
-      "Works inside an isolated repository worktree to inspect, edit, test, and prepare code changes. The live product stays outside it.",
-    icon: "code",
+      "Validates the request, creates and tracks the workflow, assigns approved work, and returns a reviewable result. The three-tool contract is built, but the default MCP dispatcher is deliberately unavailable until durable Hermes persistence is connected.",
+    icon: "workflow",
+    highlighted: true,
+    status: "Contract built · durable dispatcher pending",
   },
   {
     number: "05",
-    label: "Review boundary",
+    label: "Durable source of truth",
+    title: "Supabase",
+    description:
+      "Stores authentication, plans, approvals, tasks, costs, results, and private assets with RLS. The local real-Supabase gate must pass before the hosted Supabase proof.",
+    icon: "database",
+    status: "Application boundary exists · local-first proof next",
+  },
+  {
+    number: "06",
+    label: "Temporary coordination",
+    title: "Redis",
+    description:
+      "Carries short-lived cache, locks, deduplication, leases, heartbeats, and wake-up signals. It is not durable workflow truth and is not yet wired as the task queue.",
+    icon: "server",
+    status: "Client active · workflow coordination pending",
+  },
+  {
+    number: "07",
+    label: "Semantic retrieval aid",
+    title: "Upstash Vector",
+    description:
+      "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it never overrides Supabase or GitHub and does not restore the retired public chatbot.",
+    icon: "database",
+    status: "Adapter built · live index and projection pending",
+  },
+  {
+    number: "08",
+    label: "Always-on private host",
+    title: "Mac mini",
+    description:
+      "The intended worker machine. It should poll outward, expose no public listener, and act only on a frozen approval. The MacBook Pro is the interactive coding and first rehearsal machine; neither live worker connection is complete here.",
+    icon: "server",
+    status: "Target host · activation pending",
+  },
+  {
+    number: "09",
+    label: "Replaceable workers",
+    title: "OpenClaw and Codex",
+    description:
+      "OpenClaw runs approved non-code local tools through its loopback Gateway. Codex changes code only in a designated worktree and returns tests, files, a commit, and review evidence.",
+    icon: "code",
+    status: "Safety contracts built · live task pending",
+  },
+  {
+    number: "10",
+    label: "Code source of truth",
     title: "GitHub",
     description:
-      "Holds the branch, diff, commit, and pull request. Review happens before a change becomes part of the product.",
+      "Holds the branch, diff, commit, and pull request for code work. A worker never makes a merge or deployment decision by itself.",
     icon: "git",
+    status: "Repository boundary active · coding rehearsal pending",
+  },
+  {
+    number: "11",
+    label: "Model route",
+    title: "OpenRouter",
+    description:
+      "Provides the application-side planner/model route. An allowed free route is preferred; a paid route remains a separate owner approval.",
+    icon: "workflow",
+    status: "Policy boundary built · live route proof pending",
   },
 ];
 
@@ -235,26 +362,26 @@ const codingSteps: readonly RailStep[] = [
 const differencePoints = [
   {
     number: "01",
-    icon: "workflow",
-    title: "A conversation",
+    icon: "message",
+    title: "Prompting ChatGPT by itself",
     description:
-      "Useful for thinking through a next step. The context may need to be rebuilt later.",
+      "A prompt can produce an answer, draft, or plan. It usually leaves you to remember what should happen next.",
     points: [
-      "The work is centered on the current exchange",
-      "The result may be an answer, draft, or recommendation",
-      "Continuity depends on remembering where the conversation stopped",
+      "The useful output stays in the conversation",
+      "A worker is not automatically assigned",
+      "Status, approvals, and evidence are not one durable workflow record",
     ],
   },
   {
     number: "02",
     icon: "target",
-    title: "NeedThisDone",
+    title: "NeedThisDone around ChatGPT",
     description:
-      "Built for work that continues after the conversation. The goal stays visible as one approved piece moves.",
+      "NeedThisDone is the coordination layer around the conversation. ChatGPT remains the reasoning and interface layer; the platform keeps approved work legible.",
     points: [
-      "The goal and constraints remain durable",
-      "Every meaningful action crosses an approval boundary",
-      "The output includes evidence and the next decision",
+      "The goal and constraints become a durable work record",
+      "MCP exposes a small set of workflow actions instead of arbitrary control",
+      "A human approval and reviewable result sit around execution",
     ],
   },
 ] as const;
@@ -288,19 +415,20 @@ const dailyBeats: readonly RailStep[] = [
 ];
 
 const proofItems = [
-  "Authenticated browser control plane",
-  "Supabase-backed plans, approvals, costs, and results",
-  "A protected connection to the private machine",
-  "Approval steps around each task",
-  "Safety checks around private work",
+  "Local MCP route, handshake, authentication, and tool contract",
+  "Supabase-backed plans, approvals, costs, results, and RLS boundaries",
+  "Redis client for cache, rate limits, deduplication, and health checks",
+  "Server-only vector-memory adapter with namespaced provenance metadata",
+  "Signed worker bridge and fail-closed OpenClaw/Codex safety contracts",
 ] as const;
 
 const nextItems = [
-  "A first-class coding task contract",
-  "A reviewable code handoff",
-  "Change, test, and review evidence",
-  "A durable goal and milestone record",
-  "A bounded coding rehearsal",
+  "Pass the real local-Supabase-first diagnostic",
+  "Pass the hosted read-only Supabase preflight",
+  "Connect MCP to durable Hermes workflow records",
+  "Wire Redis into workflow queue, lease, and heartbeat coordination",
+  "Run the approved MacBook Pro, then Mac mini, worker proof",
+  "Add a safe end-to-end vector projection probe",
 ] as const;
 
 function SectionLabel({
@@ -380,7 +508,7 @@ function SystemRail({
     <ol
       className={cx(
         "system-rail",
-        steps.length === 5 ? "system-rail--five" : "system-rail--four",
+        steps.length === 5 ? "system-rail--five" : steps.length === 4 ? "system-rail--four" : "system-rail--many",
         dark && "system-rail--dark",
         className,
       )}
@@ -403,6 +531,7 @@ function SystemRail({
               </div>
               <p className="system-rail__label">{step.label}</p>
               <h3 className="system-rail__title">{step.title}</h3>
+              {step.status && <p className="system-rail__status">{step.status}</p>}
             </div>
             <div className="system-card-detail system-rail__detail">
               <p className="system-rail__description">{step.description}</p>
@@ -437,7 +566,7 @@ export default function SystemPage() {
                 We are building a private assistant that turns a goal into a clear plan, asks for approval, and brings back the result.
               </p>
               <p className="system-hero__support">
-                It remembers what matters, asks before it acts, and shows what changed.
+                ChatGPT helps you think and talk. NeedThisDone keeps an approved piece of work, its status, and its proof together after the conversation ends.
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
@@ -460,17 +589,39 @@ export default function SystemPage() {
                   <dd>owner check-in</dd>
                 </div>
                 <div>
-                  <dt>1 goal</dt>
-                  <dd>next useful move</dd>
+                  <dt>3 tools</dt>
+                  <dd>small MCP contract</dd>
                 </div>
                 <div>
-                  <dt>1 record</dt>
-                  <dd>proof of what changed</dd>
+                  <dt>1 boundary</dt>
+                  <dd>owner approval first</dd>
                 </div>
               </dl>
             </div>
             <SystemMap />
           </div>
+        </div>
+      </section>
+
+      <section
+        id="plain-language"
+        className="system-section system-section--light"
+        aria-labelledby="plain-language-heading"
+      >
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
+            <SectionLabel>In plain English</SectionLabel>
+            <h2 id="plain-language-heading" className="system-heading">
+              You explain the outcome. NeedThisDone keeps the work moving.
+            </h2>
+            <p className="system-section__lead">
+              Think of it as a dependable work trail around a conversation. You
+              talk naturally, the system keeps the request and decisions clear,
+              and you can see what happened next. The labels below separate the
+              intended design from the connections we still need to prove.
+            </p>
+          </div>
+          <SystemRail steps={plainLanguageSteps} className="system-plain-flow" />
         </div>
       </section>
 
@@ -481,14 +632,14 @@ export default function SystemPage() {
       >
         <div className="system-section__inner system-section__inner--narrow">
           <div className="system-section__intro">
-              <SectionLabel>The reason to build it</SectionLabel>
+            <SectionLabel>The reason to build it</SectionLabel>
             <h2 id="difference-heading" className="system-heading">
-              A conversation starts the work. A clear record carries it forward.
+              ChatGPT can answer. NeedThisDone is designed to carry the work forward.
             </h2>
             <p className="system-section__lead">
-              NeedThisDone is for work that continues after the first
-              conversation. The goal stays visible while one approved piece
-              moves forward.
+              The difference is not another chatbot. It is the durable trail
+              around the conversation: what you asked for, what was approved,
+              what happened, and what should happen next.
             </p>
           </div>
           <div className="system-difference-grid">
@@ -666,9 +817,10 @@ export default function SystemPage() {
               Show what exists before making promises.
             </h2>
             <p className="system-section__lead">
-              The repository contains the control-plane foundation. The next
-              proof is a bounded coding handoff. This page stays honest about
-              what exists and what still needs to be shown.
+              The repository contains a meaningful control-plane foundation,
+              but the connections are not all live yet. This page stays honest
+              about what is built, what has only been contract-tested, and what
+              still needs a local, hosted, or Mac proof.
             </p>
           </div>
           <div className="system-status-grid">

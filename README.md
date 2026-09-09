@@ -109,12 +109,16 @@ defines the TDD gate, explains what each test layer proves and does not prove,
 and records the rules for consolidating tests without losing a safety or
 product invariant.
 
-The opt-in `npm run test:hermes-mcp` Playwright diagnostic walks the real
-application boundary through health, MCP authentication and discovery, Hermes
-start/list/status, and (in `test:hermes-mcp:full`) the explicitly approved
-worker-execution checkpoints. It attaches a stage-by-stage JSON report and
-fails with the missing boundary; it is intentionally separate from the
-provider-free retained browser gate.
+The opt-in `npm run test:hermes-mcp:local` Playwright diagnostic first runs the
+real local-Supabase database/RLS gate, then walks the local application
+boundary through health, vector configuration, MCP authentication and
+discovery, and Hermes start/list/status. After that passes,
+`npm run test:hermes-mcp:hosted` repeats the safe read-only checks against an
+explicit deployed `BASE_URL`, including the hosted server-side Supabase and
+Redis health path. Both commands attach a stage-by-stage JSON report and fail
+with the missing boundary; `test:hermes-mcp:full` is reserved for a separately
+approved local worker rehearsal. Hosted workflow writes require a separate
+explicit remote-write approval and are never part of the safe preflight.
 
 ## Product boundary
 
@@ -140,14 +144,15 @@ automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
 The public [`/system` case study](app/app/system/page.tsx) remains a complete,
-discoverable technical-details page. It explains this boundary through the
-four-stage system map and reviewable evidence rails. It is optional detail for
-curious or technical visitors, available from the footer Explore links and the
-direct `/system` URL; it is not required for conversion or part of the primary
-homepage path. Keep its route contract, sitemap entry, metadata, responsive
-presentation, and direct contact/action links aligned with [Project
-status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md)
-when the page changes.
+discoverable technical-details page. It starts with a plain-English card flow
+that explains how this differs from prompting ChatGPT alone, then follows with
+the four-stage system map, the named technology stack, and reviewable evidence
+rails. It is optional detail for curious or technical visitors, available from
+the footer Explore links and the direct `/system` URL; it is not required for
+conversion or part of the primary homepage path. Keep its route contract,
+sitemap entry, metadata, responsive presentation, and direct contact/action
+links aligned with [Project status](docs/PROJECT_STATUS.md) and [Release
+evidence](docs/RELEASE_EVIDENCE.md) when the page changes.
 
 Internal public-service writing guidance lives in
 [Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).

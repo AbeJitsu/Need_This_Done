@@ -43,6 +43,19 @@
   worker. No hosted writes, worker claims, external actions, or credentials
   were made.
 
+- On 2026-09-09, the MCP diagnostic was split into explicit environment
+  profiles so the evidence cannot mix local and hosted state. The default
+  `test:hermes-mcp:local` (also `test:hermes-mcp`) runs `verify:database` first
+  against the real local Supabase instance, then requires a localhost app and
+  `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321` before running the live
+  application health/MCP stages. `test:hermes-mcp:hosted` requires an explicit
+  non-local `BASE_URL`, checks the deployed app's server-side Supabase and
+  Redis health, and remains read-only: it does not call `start_workflow`.
+  Hosted workflow creation and worker execution remain separately approved
+  and require explicit remote-write credentials outside Git. The previously
+  recorded dummy-value run is diagnostic evidence only, not local-Supabase
+  proof.
+
 - On 2026-09-09, the assistant infrastructure audit confirmed the hardware
   split: the MacBook Pro is Abe's interactive development and coding machine;
   the Mac mini is the intended always-on private worker. Existing Redis is
@@ -82,6 +95,21 @@
   publication. No API, schema, billing, deployment, hosted write, provider
   activation, Mac activation, external message, customer result, or spend
   occurred. Rollback is a reviewed Git revert on `dev`.
+
+- On 2026-09-09, the public `/system` page was aligned with the current
+  assistant architecture. It now opens with a plain-English five-card flow
+  explaining the difference between prompting ChatGPT alone and using
+  NeedThisDone as the durable coordination layer. Its technical section names
+  ChatGPT, MCP, Next.js/Vercel, Hermes, Supabase, Redis, Upstash Vector, the
+  MacBook Pro/Mac mini split, OpenClaw, Codex, GitHub, and OpenRouter, and each
+  card explains its job and current proof state. The page explicitly marks
+  hosted reachability, Hermes persistence, live vector projection, and worker
+  activation as pending rather than implying they are live. The existing
+  `/system` responsive/accessibility contract was expanded to cover the new
+  flow and the architecture rail now has 11 named layers; browser execution
+  is pending in this environment because the Playwright Chromium executable is
+  not installed. Lint and type-check passed. No deployment or hosted action
+  occurred.
 
 - On 2026-09-09, the public promise was broadened to “NeedThisDone helps
   teams and individuals solve technology problems and simplify repeated work

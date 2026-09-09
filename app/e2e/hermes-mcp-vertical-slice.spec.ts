@@ -7,6 +7,7 @@ const MCP_PROTOCOL_VERSION = '2025-06-18';
 const expectedTools = ['start_workflow', 'get_workflow_status', 'list_workflows'];
 const localOnlyHosts = new Set(['127.0.0.1', 'localhost']);
 const controlPlaneRequiredStages = new Set([
+  'environment.target',
   'application.health',
   'vector-memory.configuration',
   'mcp.authentication',
@@ -146,12 +147,82 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   const token = process.env.MCP_BEARER_TOKEN?.trim();
   const requireExecution = process.env.HERMES_MCP_E2E_REQUIRE_EXECUTION === 'true';
   const allowDraft = process.env.HERMES_MCP_E2E_ALLOW_DRAFT === 'true';
+  const target = process.env.HERMES_MCP_E2E_TARGET?.trim() || 'local';
+  const explicitBaseUrl = process.env.BASE_URL?.trim();
   const baseUrl = process.env.BASE_URL || `http://127.0.0.1:${process.env.PLAYWRIGHT_PORT || '3100'}`;
   const baseHost = new URL(baseUrl).hostname;
+  const allowRemoteWrite = process.env.HERMES_MCP_E2E_ALLOW_REMOTE_WRITE === 'true';
+  const hostedReadOnly = target === 'hosted' && !allowRemoteWrite && process.env.HERMES_MCP_E2E_HOSTED_READONLY !== 'false';
   const workflowFixture = process.env.MCP_E2E_WORKFLOW_ID?.trim();
   let workflowId = isUuid(workflowFixture) ? workflowFixture : undefined;
   let nextRequestId = 1;
   let healthServices: Record<string, unknown> = {};
+  const requiredStages = new Set(controlPlaneRequiredStages);
+  if (hostedReadOnly) {
+    requiredStages.delete('hermes.start-workflow');
+    if (!workflowId) requiredStages.delete('hermes.workflow-status');
+  }
+
+  await runStage(stages, 'environment.target', async () => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+    let parsedSupabaseUrl: URL | undefined;
+    try {
+      if (supabaseUrl) parsedSupabaseUrl = new URL(supabaseUrl);
+    } catch {
+      parsedSupabaseUrl = undefined;
+    }
+
+    if (target === 'local') {
+      const localSupabase = Boolean(
+        parsedSupabaseUrl
+        && localOnlyHosts.has(parsedSupabaseUrl.hostname)
+        && parsedSupabaseUrl.port === '54321'
+        && process.env.ENV_TARGET === 'local',
+      );
+      const valid = localOnlyHosts.has(baseHost) && localSupabase;
+      return {
+        state: valid ? 'passed' : 'failed',
+        detail: valid
+          ? 'Local profile selected: the app and Supabase target are local; the next stage will prove the live local services.'
+          : 'Local profile requires a localhost BASE_URL, ENV_TARGET=local, and NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321. Run the real local Supabase gate before this diagnostic; dummy credentials are not a pass.',
+        evidence: {
+          target,
+          baseHost,
+          envTarget: process.env.ENV_TARGET || null,
+          supabaseHost: parsedSupabaseUrl?.hostname || null,
+          supabasePort: parsedSupabaseUrl?.port || null,
+          baseUrlExplicit: Boolean(explicitBaseUrl),
+        },
+      };
+    }
+
+    if (target === 'hosted') {
+      const valid = Boolean(explicitBaseUrl)
+        && !localOnlyHosts.has(baseHost)
+        && (hostedReadOnly || allowRemoteWrite);
+      return {
+        state: valid ? 'passed' : 'failed',
+        detail: valid
+          ? hostedReadOnly
+            ? 'Hosted profile selected in read-only mode; health will prove the deployed app can reach its server-side Supabase and Redis.'
+            : 'Hosted profile selected with explicit remote-write permission.'
+          : 'Hosted profile requires an explicit non-local BASE_URL. Keep HERMES_MCP_E2E_HOSTED_READONLY=true for the safe preflight; remote workflow writes additionally require HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true.',
+        evidence: {
+          target,
+          baseHost,
+          hostedReadOnly,
+          remoteWriteAllowed: allowRemoteWrite,
+          baseUrlExplicit: Boolean(explicitBaseUrl),
+        },
+      };
+    }
+
+    return {
+      state: 'failed',
+      detail: `Unknown HERMES_MCP_E2E_TARGET=${target}; use local or hosted.`,
+      evidence: { target },
+    };
+  });
 
   await runStage(stages, 'application.health', async () => {
     const response = await request.get('/api/health');
@@ -251,8 +322,14 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
     stages.push({ name: 'mcp.tool-discovery', state: 'blocked', detail: 'Blocked because MCP initialization did not succeed.' });
   }
 
-  const canStart = allowDraft && (localOnlyHosts.has(baseHost) || process.env.HERMES_MCP_E2E_ALLOW_REMOTE_WRITE === 'true');
-  if (workflowId && !canStart) {
+  const canStart = allowDraft && ((target === 'local' && localOnlyHosts.has(baseHost)) || allowRemoteWrite);
+  if (hostedReadOnly) {
+    stages.push({
+      name: 'hermes.start-workflow',
+      state: 'blocked',
+      detail: 'Hosted read-only mode intentionally skips start_workflow so the preflight cannot create or mutate a hosted workflow. Use a separately approved remote-write rehearsal for this stage.',
+    });
+  } else if (workflowId && !canStart) {
     stages.push({ name: 'hermes.start-workflow', state: 'passed', detail: 'Using the supplied MCP_E2E_WORKFLOW_ID fixture; no new workflow was created.' });
   } else if (!toolsDiscovered) {
     stages.push({ name: 'hermes.start-workflow', state: 'blocked', detail: 'Blocked because MCP tool discovery did not succeed.' });
@@ -260,7 +337,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
     stages.push({
       name: 'hermes.start-workflow',
       state: 'blocked',
-      detail: 'Set HERMES_MCP_E2E_ALLOW_DRAFT=true on a local target to create the approval-gated draft; remote writes require HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true.',
+      detail: 'Set HERMES_MCP_E2E_ALLOW_DRAFT=true on the local target to create the approval-gated draft; hosted writes require HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true and a separately approved rehearsal.',
     });
   } else {
     await runStage(stages, 'hermes.start-workflow', async () => {
@@ -448,6 +525,8 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
     generatedAt: new Date().toISOString(),
     baseUrl,
     executionRequired: requireExecution,
+    target,
+    hostedReadOnly,
     stages,
     failures: stages.filter((stage) => stage.state === 'failed').map(({ name, detail, status }) => ({ name, detail, status })),
     blocked: stages.filter((stage) => stage.state === 'blocked').map(({ name, detail }) => ({ name, detail })),
@@ -458,6 +537,6 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   });
   console.info(`[hermes-mcp-e2e] ${stages.map((stage) => `${stage.name}=${stage.state}`).join(' | ')}`);
 
-  const actionable = stages.filter((stage) => stage.state === 'failed' || (stage.state === 'blocked' && (requireExecution || controlPlaneRequiredStages.has(stage.name))));
+  const actionable = stages.filter((stage) => stage.state === 'failed' || (stage.state === 'blocked' && (requireExecution || requiredStages.has(stage.name))));
   expect(actionable, `Hermes MCP vertical-slice diagnostics:\n${actionable.map((stage) => `- ${stage.name}: ${stage.detail}`).join('\n')}`).toEqual([]);
 });
