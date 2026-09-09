@@ -101,7 +101,8 @@
   explaining the difference between prompting ChatGPT alone and using
   NeedThisDone as the durable coordination layer. Its technical section names
   ChatGPT, MCP, Next.js/Vercel, Hermes, Supabase, Redis, Upstash Vector, the
-  MacBook Pro/Mac mini split, OpenClaw, Codex, GitHub, and OpenRouter, and each
+  MacBook Pro/Mac mini split, OpenClaw with its Codex runtime, GitHub, and
+  OpenRouter, and each
   card explains its job and current proof state. The page explicitly marks
   hosted reachability, Hermes persistence, live vector projection, and worker
   activation as pending rather than implying they are live. The existing
@@ -454,8 +455,9 @@
   the browser is the control plane, Supabase is durable truth, and the Mac mini
   is an outbound-only private runtime. The canonical source is `README.md`.
 - Hermes plans bounded work and proposes an approved model route; OpenClaw is
-  the approved local non-code executor; Codex is the approved worktree coding
-  executor. An allowed OpenRouter free route is preferred; paid routing needs a
+  the approved coding worker and uses its Codex agent runtime in the worktree.
+  Standalone Codex CLI operation is not part of the target model. An allowed
+  OpenRouter free route is preferred; paid routing needs a
   separate browser approval. This is the target operating contract, not proof
   that a live provider or Mac runtime has been activated.
 - Hermes is now the code-facing application role layered on the retained

@@ -34,8 +34,7 @@ those proofs hold.
              +-----------------------  ALWAYS-ON MAC MINI  -----------+
                                       private outbound worker           |
                             Hermes: plans and chooses approved route    |
-                            OpenClaw: runs approved non-code tools      |
-                            Codex: makes approved worktree code changes |
+                            OpenClaw: coding worker via Codex runtime    |
                             OpenRouter: free route first; paid needs    |
                                         browser approval                 |
 ```
@@ -49,8 +48,8 @@ The MacBook is the first separately approved rehearsal host for this seam. The
 Mac mini remains a later always-on target after the MacBook proof is accepted.
 
 - Hermes proposes a bounded plan and records the allowed model route.
-- OpenClaw carries out an approved local, non-code tool task.
-- Codex handles an approved coding task only in its designated worktree.
+- OpenClaw carries out an approved coding task through its configured Codex
+  agent runtime in a designated worktree.
 - OpenRouter uses an allowed free route first. A paid route is a separate
   browser approval, not an automatic fallback.
 
@@ -89,16 +88,21 @@ work.
 | Upstash Vector | Private semantic-memory projection of selected durable decisions and findings | Retrieval aid only; configured with `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional `VECTOR_MEMORY_NAMESPACE` |
 | MacBook Pro | Abe's interactive coding and first controlled rehearsal machine | Not the always-on worker |
 | Mac mini | Always-on private worker host | Outbound-only execution node; activation remains separately approved |
-| OpenClaw | Approved non-code local tool executor through its loopback Gateway | Cannot send, publish, spend, change accounts, or bypass frozen approvals |
-| Codex | Approved coding worker in an isolated worktree | Returns tests, changed files, commit SHA, and review evidence; no automatic merge/deploy |
+| OpenClaw | Approved coding worker through its loopback Gateway and configured Codex agent runtime | Returns tests, changed files, commit SHA, and review evidence; no automatic merge/deploy |
 | GitHub | Code, branch, commit, and pull-request source of truth | Production branches remain protected and review-gated |
 | OpenRouter | Current application-side planner/model route | Free route first; paid route requires separate approval |
+
+OpenClaw is intended to authenticate through its supported ChatGPT/Codex OAuth
+path and use the Codex agent runtime for coding. That makes Codex an internal
+OpenClaw runtime in this design, not a separately operated Codex CLI worker.
+OpenAI API-key billing and ChatGPT/Codex subscription authentication remain
+separate credential paths and must not be treated as interchangeable.
 
 The normal request path is: ChatGPT understands the request from the MacBook Pro,
 Mac mini, or another approved client → the stable MCP facade authenticates and
 validates it → Hermes creates the durable Supabase record →
 Redis carries only transient coordination → the Mac mini claims and runs the
-approved job → OpenClaw or Codex returns structured evidence → Hermes persists
+approved job → OpenClaw's Codex runtime returns structured evidence → Hermes persists
 the result → ChatGPT reports the status and next decision. Upstash Vector may
 receive a provenance-bearing projection after durable state exists, but it
 never overrides current Supabase or GitHub facts and does not restore the

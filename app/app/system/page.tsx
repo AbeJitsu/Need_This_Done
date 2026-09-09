@@ -163,7 +163,7 @@ const plainLanguageSteps: readonly RailStep[] = [
     label: "A private machine helps",
     title: "Approved work goes to the right worker",
     description:
-      "The always-on Mac mini is the intended worker. OpenClaw handles approved non-code tasks; Codex handles approved code changes in an isolated worktree.",
+      "The always-on Mac mini is the intended worker. OpenClaw handles approved coding tasks through its configured Codex agent runtime in an isolated worktree.",
     icon: "code",
     status: "Mac mini connection pending",
   },
@@ -298,10 +298,10 @@ const architectureSteps: readonly RailStep[] = [
   },
   {
     number: "09",
-    label: "Replaceable workers",
-    title: "OpenClaw and Codex",
+    label: "Replaceable coding worker",
+    title: "OpenClaw with Codex runtime",
     description:
-      "OpenClaw runs approved non-code local tools through its loopback Gateway. Codex changes code only in a designated worktree and returns tests, files, a commit, and review evidence.",
+      "OpenClaw is the coding worker. Its Codex agent runtime inspects, edits, tests, and explains changes through the loopback Gateway, then returns files, a commit, and review evidence. The intended login is the supported ChatGPT/Codex OAuth path; standalone Codex CLI operation is not part of this design.",
     icon: "code",
     status: "Safety contracts built · live task pending",
   },
@@ -343,9 +343,9 @@ const codingSteps: readonly RailStep[] = [
   {
     number: "03",
     label: "Inspect, edit, verify",
-    title: "Codex execution",
+    title: "OpenClaw coding execution",
     description:
-      "Inspect, edit, test, and explain the result. The evidence travels with the change.",
+      "OpenClaw uses its configured Codex runtime to inspect, edit, test, and explain the result. The evidence travels with the change.",
     icon: "code",
   },
   {
@@ -419,7 +419,7 @@ const proofItems = [
   "Supabase-backed plans, approvals, costs, results, and RLS boundaries",
   "Redis client for cache, rate limits, deduplication, and health checks",
   "Server-only vector-memory adapter with namespaced provenance metadata",
-  "Signed worker bridge and fail-closed OpenClaw/Codex safety contracts",
+  "Signed worker bridge and fail-closed OpenClaw coding-worker safety contracts",
 ] as const;
 
 const nextItems = [

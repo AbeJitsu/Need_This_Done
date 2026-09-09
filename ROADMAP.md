@@ -71,7 +71,7 @@ It is complete only when all of these are true:
 | MCP facade | Device-independent schemas, a local Streamable HTTP handler, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production OAuth/remote access and Hermes persistence wiring remain pending | Pass the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
 | MacBook Pro | Interactive coding and first bridge-rehearsal host | Configure the private bridge environment and validate the loopback Gateway |
 | Mac mini | Intended always-on worker host; not activated | Repeat the approved worker proof after the MacBook proof |
-| Codex/GitHub worker | Coding worker contract remains future; current bridge is OpenClaw non-code | Add isolated worktree, branch, checks, commit SHA, and review evidence |
+| OpenClaw/GitHub coding worker | Coding worker contract remains future; OpenClaw is the worker and its Codex agent runtime is the coding engine | Add isolated worktree, branch, checks, commit SHA, and review evidence |
 
 ## Test evidence map
 
