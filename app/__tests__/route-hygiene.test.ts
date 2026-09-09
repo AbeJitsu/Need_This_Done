@@ -11,13 +11,13 @@ const repositoryRoot = resolve(appRoot, '..');
 
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/how-it-works', '/system', '/work', '/about']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/how-it-works', '/work', '/about']);
     expect(PUBLIC_PRIMARY_ACTION.label).toBe('Share Your Vision');
   });
 
   it('does not publish retired route entries in the sitemap and keeps private surfaces out of indexing', async () => {
     const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
-    expect(urls).toEqual(expect.arrayContaining(['/services', '/about', '/pricing', '/how-it-works', '/site-analyzer', '/work', '/blog']));
+    expect(urls).toEqual(expect.arrayContaining(['/services', '/about', '/pricing', '/how-it-works', '/system', '/site-analyzer', '/work', '/blog']));
     for (const retired of ['/resume', '/guide', '/build']) expect(urls).not.toContain(retired);
 
     const disallow = robots().rules?.[0]?.disallow || [];

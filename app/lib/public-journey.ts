@@ -5,7 +5,6 @@ export const PUBLIC_VARIANT = "match-crib-v1" as const;
 export const PUBLIC_NAVIGATION = [
   { href: "/services", label: "What We Do" },
   { href: "/how-it-works", label: "How We Work" },
-  { href: "/system", label: "The System" },
   { href: "/work", label: "Examples" },
   { href: "/about", label: "Why Us" },
 ] as const;
@@ -13,7 +12,6 @@ export const PUBLIC_NAVIGATION = [
 export const PUBLIC_HOME_JOURNEY = [
   { id: "what-we-do", href: "/services", label: "What We Do" },
   { id: "how-it-works", href: "/how-it-works", label: "How We Work" },
-  { id: "the-system", href: "/system", label: "The System" },
   { id: "examples", href: "/work", label: "Examples" },
   { id: "why-us", href: "/about", label: "Why Us" },
 ] as const;
@@ -62,7 +60,7 @@ export const PUBLIC_ROUTE_STAGES = {
   "/how-it-works": {
     stage: "reassure",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/system", label: "Next: The System" },
+    secondary: { href: "/work", label: "Next: Examples" },
     event: "how_it_works",
   },
   "/system": {
@@ -196,7 +194,7 @@ export const ENGAGEMENT_ROUTES = [
 
 
 export const PUBLIC_FOOTER_GROUPS = [
-  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/blog', label: 'Insights' }] },
+  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/system', label: 'The System' }, { href: '/blog', label: 'Insights' }] },
   { title: 'Starting points', links: [
     ...Object.values(PUBLIC_OFFERS).map(offer => ({ href: offer.detailHref, label: offer.name })),
     { href: '/pricing', label: 'Pricing' }, { href: '/site-analyzer', label: 'Website Snapshot' },

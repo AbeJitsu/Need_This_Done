@@ -61,20 +61,23 @@ It is complete only when all of these are true:
 - New providers, integrations, agent roles, or tools without a need proven by
   the assistant workflow.
 
-## Public homepage trailer and `/system` proof
+## Public homepage and optional `/system` proof
 
-The public homepage is the short teaser for the outcome-partner front door. It
-helps visitors recognize the problem, see the resolution philosophy, and find
-the two bounded starting points without reproducing the internal operating
-system. The public [system case study](app/app/system/page.tsx) is the detailed
-proof page: it shows how NeedThisDone applies the same discipline to its own
-flows.
+The public homepage explains what NeedThisDone does, how it works in practical
+terms, and why visitors should share their vision. Its primary navigation is
+What We Do → How We Work → Examples → Why Us, and the page ends with Share Your
+Vision. How We Work remains part of the primary reassurance path. The page
+keeps the work understandable without requiring technical detail.
+The public [system case study](app/app/system/page.tsx) remains the complete
+technical-details page for curious or technical visitors.
 
-Maintain the relationship as one public journey: homepage copy and teaser
-geometry should stay lightweight and human, while `/system` remains the
-authoritative detailed explanation. Changes to the teaser beats, CTA
-destinations, bridge link, card geometry, or motion must update the homepage
-assertions in `app/e2e/ai-employee-product.spec.ts` and the factual ledgers.
+Keep `/system` available as optional detail from the footer Explore links and
+its direct URL, while keeping it out of the primary homepage navigation and
+conversion path. Changes to the homepage sections, CTA destinations, footer
+link, card geometry, or motion must update the homepage assertions in
+`app/e2e/ai-employee-product.spec.ts` and the factual ledgers. Changes to the
+system stage model, metadata, direct CTAs, or responsive card geometry must
+update its route assertions and the same ledgers.
 
 ## Public `/system` case study
 

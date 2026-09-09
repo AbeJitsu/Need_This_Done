@@ -38,6 +38,18 @@ report copy still needs owner review before publication.
 | `/privacy` | Long legal paragraphs made collection, retention, and choice boundaries hard to scan. | “NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.” Keep the rewritten legal sections and disclosures below it. | 17 | Implemented; owner/legal review pending |
 | `/terms` | Long legal paragraphs mixed scope, billing, approval, and liability in dense sentences. | “NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.” Keep the rewritten scope, payment, approval, and liability terms below it. | 17 | Implemented; owner/legal review pending |
 
+## Public journey contract
+
+The homepage explains what NeedThisDone does, how it works in practical terms,
+and why visitors should share their vision. Its primary navigation stays focused
+on What We Do, How We Work, Examples, and Why Us. How We Work remains part of
+the primary reassurance path, and the homepage closes with Share Your Vision.
+
+The System is optional technical detail. The complete `/system` page remains
+available from the footer Explore links and its direct URL, with its sitemap
+entry, metadata, technical content, and direct contact/action links intact. It
+is useful for curious or technical visitors but is not required for conversion.
+
 ## State, article, and redirect audit
 
 | Surface | Current wording and issue | Proposed wording or invariant | Word count | Approval status |
@@ -59,6 +71,9 @@ report copy still needs owner review before publication.
   site description, report fallback, sentence limits, and generated-copy guard.
 - `PUBLIC_CORE_PROMISE` feeds homepage copy, metadata, social previews,
   structured data, footer copy, and both offer summaries.
+- The homepage journey covers What We Do, How We Work, Examples, and Why Us;
+  The System is intentionally excluded from primary navigation and homepage
+  conversion while remaining a footer/direct-URL technical-details page.
 - The shared audience language is “teams and individuals,” while the homepage
   uses no demographic label. Focused scope is a delivery guideline, not a
   limit on who can bring a problem or what kind of technology, workflow, tool,
@@ -80,9 +95,12 @@ report copy still needs owner review before publication.
 The implementation has targeted automated coverage for sentence length, banned
 report claims, the retired narrow brand promise, the broader homepage and FAQ
 language, future-work reassurance, duplicate invitation copy, offer fact
-consistency, system-term placement, and redirect destinations. The completed
-checks are recorded in `docs/PROJECT_STATUS.md` and `docs/RELEASE_EVIDENCE.md`
-after the final code gate. On 2026-09-09, `npm run verify:code` passed lint,
+consistency, system-term placement, the four-link primary navigation, the
+footer `/system` link, the shortened homepage next-step sequence, the
+`/how-it-works` → `/work` handoff, the unchanged `/system` route contract, and
+redirect destinations. The completed checks are recorded in
+`docs/PROJECT_STATUS.md` and `docs/RELEASE_EVIDENCE.md` after the final code
+gate. On 2026-09-09, `npm run verify:code` passed lint,
 type-check, 67 unit files/352 tests, 6 accessibility files/60 tests, and the
 production build; the focused public-language checks passed 24/24 and
 `git diff --check` passed. `npm run test:retained-smoke` ran 96 public desktop

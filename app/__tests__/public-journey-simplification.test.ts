@@ -27,20 +27,22 @@ describe('vision-first public journey', () => {
     expect(home).toContain('Share Your Vision');
     expect(home).toContain('href="#what-we-do"');
     expect(home).toContain('Follow the path');
+    expect(home).not.toContain('homepage-bridge');
+    expect(home).not.toContain('Inspect the system behind the work');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
   });
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'The System', 'Examples', 'Why Us']);
-    expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['what-we-do', 'how-it-works', 'the-system', 'examples', 'why-us']);
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'Examples', 'Why Us']);
+    expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['what-we-do', 'how-it-works', 'examples', 'why-us']);
     for (const link of PUBLIC_NAVIGATION) expect(getPublicHomeHref(link.href)).toMatch(/^\/#/);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
-    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
+    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms', '/system']) expect(destinations).toContain(route);
+    expect(PUBLIC_FOOTER_GROUPS.find(group => group.title === 'Explore')?.links).toContainEqual({ href: '/system', label: 'The System' });
 
     expect(getPublicHomeNextStep('what-we-do')).toEqual({ href: '#how-it-works', label: 'Next: How We Work' });
-    expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#the-system', label: 'Next: The System' });
-    expect(getPublicHomeNextStep('the-system')).toEqual({ href: '#examples', label: 'Next: Examples' });
+    expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#examples', label: 'Next: Examples' });
     expect(getPublicHomeNextStep('examples')).toEqual({ href: '#why-us', label: 'Next: Why Us' });
     expect(getPublicHomeNextStep('why-us')).toEqual({ href: '#share-your-vision', label: 'Next: Share Your Vision' });
 
@@ -48,6 +50,7 @@ describe('vision-first public journey', () => {
 
   it('keeps the system case study on purposeful route exits', () => {
     const system = source('app/system/page.tsx');
+    const sitemap = source('app/sitemap.ts');
     expect(system).toContain('A private system for follow-through');
     expect(system).toContain('Important work, kept moving.');
     expect(system).toContain('We are building a private assistant that turns a goal into a clear plan, asks for approval, and brings back the result.');
@@ -56,6 +59,8 @@ describe('vision-first public journey', () => {
     expect(system).toContain('Inspect the implementation');
     expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');
     expect(system).not.toMatch(/href=["']#/);
+    expect(system).toContain('alternates: { canonical: "/system" }');
+    expect(sitemap).toContain("{ path: '/system'");
     for (const stage of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
       expect(system).toContain(`title: "${stage}"`);
     }

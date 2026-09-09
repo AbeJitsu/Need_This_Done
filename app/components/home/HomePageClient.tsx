@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight, Eye, Sparkles, Target } from "lucide-react";
-import { Fragment } from "react";
 import {
   getPublicHomeNextStep,
   type PublicHomeSectionId,
@@ -98,28 +97,6 @@ const principles = [
     title: "Be direct about what will help",
     description:
       "If something needs a different kind of help, we say so early and plainly.",
-  },
-] as const;
-
-const bridgeNodes = [
-  {
-    number: "01",
-    title: "Clear goal",
-    description: "Name the outcome before the work begins.",
-    icon: "target",
-  },
-  {
-    number: "02",
-    title: "Agreed next step",
-    description: "Keep the next step focused and understandable.",
-    icon: "sparkles",
-    highlighted: true,
-  },
-  {
-    number: "03",
-    title: "Visible result",
-    description: "Return a change the owner can review.",
-    icon: "eye",
   },
 ] as const;
 
@@ -317,53 +294,6 @@ export default function HomePageClient() {
               See the full process
               <ArrowRight aria-hidden="true" />
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="the-system"
-        className="homepage-bridge"
-        aria-labelledby="homepage-bridge-heading"
-      >
-        <div className="homepage-bridge__inner">
-          <div className="homepage-bridge__copy">
-            <p className="homepage-eyebrow homepage-eyebrow--light">The system</p>
-            <h2 id="homepage-bridge-heading" className="homepage-heading">
-              Keep the problem, work, and result connected.
-            </h2>
-            <p>
-              See how a problem becomes approved work. The deeper page explains
-              the private system and the result you can review.
-            </p>
-            <div className="homepage-bridge__actions">
-              <Link href="/system" className="homepage-button homepage-button--gold">
-                Inspect the system behind the work
-                <ArrowRight aria-hidden="true" />
-              </Link>
-              <HomeNextStep sectionId="the-system" light />
-            </div>
-          </div>
-          <div className="homepage-bridge__visual" aria-hidden="true">
-            {bridgeNodes.map((node, index) => (
-              <Fragment key={node.number}>
-                <div className={`homepage-bridge__node${"highlighted" in node && node.highlighted ? " homepage-bridge__node--gold" : ""}`}>
-                  <div className="homepage-bridge__node-identity">
-                    <div className="homepage-bridge__node-topline">
-                      <span>{node.number}</span>
-                      <span className="homepage-bridge__node-icon">
-                        <TeaserIcon name={node.icon} />
-                      </span>
-                    </div>
-                    <strong>{node.title}</strong>
-                  </div>
-                  <p className="homepage-bridge__node-detail">{node.description}</p>
-                </div>
-                {index < bridgeNodes.length - 1 && (
-                  <span className="homepage-bridge__line" />
-                )}
-              </Fragment>
-            ))}
           </div>
         </div>
       </section>

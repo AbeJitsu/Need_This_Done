@@ -2106,7 +2106,6 @@ Blog Markdown Content — Reading Experience
 
 .homepage-hero__inner,
 .homepage-section__inner,
-.homepage-bridge__inner,
 .homepage-closing__inner {
   position: relative;
   z-index: 1;
@@ -2373,8 +2372,7 @@ Blog Markdown Content — Reading Experience
 .homepage-teaser__topline,
 .homepage-offer-card__topline,
 .homepage-example-card__topline,
-.homepage-principle__topline,
-.homepage-bridge__node-topline {
+.homepage-principle__topline {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2403,8 +2401,7 @@ Blog Markdown Content — Reading Experience
 
 .homepage-offer-card__icon,
 .homepage-example-card__icon,
-.homepage-principle__signal,
-.homepage-bridge__node-icon {
+.homepage-principle__signal {
   display: grid;
   width: 2.55rem;
   height: 2.55rem;
@@ -2415,11 +2412,6 @@ Blog Markdown Content — Reading Experience
 }
 
 .homepage-principle__signal {
-  background: rgba(201, 220, 202, 0.14);
-  color: #c9dcca;
-}
-
-.homepage-bridge__node-icon {
   background: rgba(201, 220, 202, 0.14);
   color: #c9dcca;
 }
@@ -2512,15 +2504,13 @@ Blog Markdown Content — Reading Experience
   background: var(--homepage-sand);
 }
 
-.homepage-section--dark,
-.homepage-bridge {
+.homepage-section--dark {
   border-top-color: rgba(255, 255, 255, 0.1);
   background: var(--homepage-dark);
   color: white;
 }
 
 .homepage-section__inner,
-.homepage-bridge__inner,
 .homepage-closing__inner {
   padding-block: clamp(4.5rem, 9vw, 8rem);
 }
@@ -2543,8 +2533,7 @@ Blog Markdown Content — Reading Experience
   line-height: 1.8;
 }
 
-.homepage-section--dark .homepage-section__lead,
-.homepage-bridge__copy > p:not(.homepage-eyebrow) {
+.homepage-section--dark .homepage-section__lead {
   color: #dce8dd;
 }
 
@@ -2709,8 +2698,7 @@ Blog Markdown Content — Reading Experience
   padding-top: 0;
 }
 
-.homepage-section__actions,
-.homepage-bridge__actions {
+.homepage-section__actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -2718,12 +2706,7 @@ Blog Markdown Content — Reading Experience
   margin-top: 1.75rem;
 }
 
-.homepage-bridge__actions {
-  margin-top: 2rem;
-}
-
-.homepage-section__actions > .homepage-link,
-.homepage-bridge__actions > .homepage-link {
+.homepage-section__actions > .homepage-link {
   margin-top: 0;
   padding-top: 0;
 }
@@ -2737,8 +2720,7 @@ Blog Markdown Content — Reading Experience
   text-decoration: none;
 }
 
-.homepage-section__actions > .homepage-next-step,
-.homepage-bridge__actions > .homepage-next-step {
+.homepage-section__actions > .homepage-next-step {
   padding: 0.75rem 1.1rem;
 }
 
@@ -2854,89 +2836,6 @@ Blog Markdown Content — Reading Experience
   font-weight: 800;
 }
 
-.homepage-bridge__inner {
-  display: grid;
-  align-items: center;
-  gap: 3rem;
-}
-
-.homepage-bridge__copy {
-  min-width: 0;
-}
-
-.homepage-bridge__copy > p:not(.homepage-eyebrow) {
-  max-width: 58ch;
-  margin: 1.35rem 0 0;
-  font-size: 1.05rem;
-  line-height: 1.8;
-}
-
-.homepage-bridge__copy .homepage-button {
-  margin-top: 2rem;
-}
-
-.homepage-bridge__visual {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
-  align-items: center;
-  min-width: 0;
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 1.6rem;
-  background: rgba(33, 72, 58, 0.72);
-  box-shadow: 0 1.5rem 3.5rem rgba(0, 0, 0, 0.16);
-}
-
-.homepage-bridge__node {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  min-width: 0;
-  padding: 1rem;
-  border: 1px solid rgba(201, 220, 202, 0.2);
-  border-radius: 1.1rem;
-  background: rgba(16, 44, 37, 0.7);
-}
-
-.homepage-bridge__node-topline > span:first-child {
-  color: #ead28f;
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-}
-
-.homepage-bridge__node strong {
-  display: block;
-  margin-top: 1.25rem;
-  color: white;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-size: clamp(1.25rem, 2.5vw, 1.8rem);
-  line-height: 1;
-}
-
-.homepage-bridge__node-detail {
-  margin: 0;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(201, 220, 202, 0.2);
-  color: #dce8dd;
-  line-height: 1.65;
-}
-
-.homepage-bridge__node--gold {
-  border-color: rgba(208, 169, 79, 0.7);
-  background: linear-gradient(160deg, rgba(208, 169, 79, 0.2), rgba(16, 44, 37, 0.86));
-}
-
-.homepage-bridge__line {
-  display: block;
-  width: 1px;
-  height: 1.1rem;
-  justify-self: start;
-  margin-left: 1.7rem;
-  background: rgba(208, 169, 79, 0.55);
-}
-
 .homepage-closing {
   text-align: center;
 }
@@ -2999,7 +2898,6 @@ Blog Markdown Content — Reading Experience
 @media (min-width: 640px) {
   .homepage-hero__inner,
   .homepage-section__inner,
-  .homepage-bridge__inner,
   .homepage-closing__inner {
     width: min(100% - 4rem, 88rem);
   }
@@ -3029,14 +2927,13 @@ Blog Markdown Content — Reading Experience
   .homepage-teaser__card,
   .homepage-offer-card,
   .homepage-example-card,
-  .homepage-principle__card,
-  .homepage-bridge__node {
+  .homepage-principle__card {
     grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
     gap: clamp(1.5rem, 4vw, 4rem);
   }
 
   .homepage-card-detail,
-  .homepage-bridge__node-detail {
+  .homepage-card-detail {
     padding-top: 0;
     padding-left: clamp(1.5rem, 4vw, 4rem);
     border-top: 0;
@@ -3044,8 +2941,7 @@ Blog Markdown Content — Reading Experience
   }
 
   .homepage-teaser__detail,
-  .homepage-principle__detail,
-  .homepage-bridge__node-detail {
+  .homepage-principle__detail {
     border-left-color: rgba(255, 255, 255, 0.14);
   }
 
@@ -3068,8 +2964,7 @@ Blog Markdown Content — Reading Experience
 
 @media (min-width: 1024px) {
   .homepage-hero__inner,
-  .homepage-section__inner,
-  .homepage-bridge__inner {
+  .homepage-section__inner {
     width: min(80%, 88rem);
   }
 
@@ -3086,10 +2981,6 @@ Blog Markdown Content — Reading Experience
     margin-top: 0;
   }
 
-  .homepage-bridge__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.9fr);
-    gap: clamp(3rem, 7vw, 7rem);
-  }
 }
 
 @media (min-width: 1200px) {
@@ -3113,7 +3004,7 @@ Blog Markdown Content — Reading Experience
   }
 
   .homepage-section__actions,
-  .homepage-bridge__actions {
+  .homepage-section__actions {
     align-items: stretch;
     flex-direction: column;
   }
@@ -3123,7 +3014,7 @@ Blog Markdown Content — Reading Experience
   }
 
   .homepage-section__actions > .homepage-link,
-  .homepage-bridge__actions > .homepage-link {
+  .homepage-section__actions > .homepage-link {
     width: 100%;
     justify-content: center;
   }

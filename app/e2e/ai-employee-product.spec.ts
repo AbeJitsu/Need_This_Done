@@ -40,11 +40,15 @@ test('homepage first viewport leads with the promise and action without mechanic
   await expect(firstSection).not.toContainText(/Hermes|OpenClaw|Codex|approval lifecycles?|API|database|automation system|technical implementation/i);
 });
 
-test('homepage trailer preserves public routes and points to the system proof', async ({ page }) => {
+test('homepage trailer preserves public routes while keeping system detail optional', async ({ page }) => {
   await page.goto('/');
   const main = page.getByRole('main');
 
-  await expect(main.getByRole('link', { name: 'Inspect the system behind the work', exact: true })).toHaveAttribute('href', '/system');
+  await expect(main.locator(':scope > section')).toHaveCount(6);
+  expect(await main.locator(':scope > section').evaluateAll((sections) => sections.map((section) => section.id))).toEqual(['', 'what-we-do', 'how-it-works', 'examples', 'why-us', 'share-your-vision']);
+  await expect(main.getByRole('link', { name: 'Inspect the system behind the work', exact: true })).toHaveCount(0);
+  await expect(main.locator('a[href="/system"]')).toHaveCount(0);
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/system');
   await expect(main.getByRole('link', { name: 'See how Website Fix works', exact: true })).toHaveAttribute('href', '/website-fix');
   await expect(main.getByRole('link', { name: 'See how Managed Automation works', exact: true })).toHaveAttribute('href', '/managed-automation');
   for (const [title, href] of [
@@ -56,7 +60,7 @@ test('homepage trailer preserves public routes and points to the system proof', 
   }
 
   const primaryHrefs = await main.locator('.homepage-button').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-  expect(primaryHrefs).toEqual(['/contact', '#what-we-do', '/system', '/contact']);
+  expect(primaryHrefs).toEqual(['/contact', '#what-we-do', '/contact']);
   expect(primaryHrefs.filter((href) => href?.startsWith('/')).every((href) => href && !href.startsWith('#'))).toBe(true);
 });
 
@@ -224,10 +228,10 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
         && first.top < second.bottom - 0.5
         && first.bottom > second.top + 0.5;
       const cards = Array.from(document.querySelectorAll<HTMLElement>(
-        '.homepage-teaser__card, .homepage-offer-card, .homepage-principle__card, .homepage-example-card, .homepage-bridge__node',
+        '.homepage-teaser__card, .homepage-offer-card, .homepage-principle__card, .homepage-example-card',
       ));
       const connectors = Array.from(document.querySelectorAll<HTMLElement>(
-        '.homepage-teaser__connector, .homepage-offer-card__connector, .homepage-principle__connector, .homepage-example-card__connector, .homepage-bridge__line',
+        '.homepage-teaser__connector, .homepage-offer-card__connector, .homepage-principle__connector, .homepage-example-card__connector',
       ));
       const connectorHitsCard = connectors.some((connector) => {
         const connectorRect = connector.getBoundingClientRect();
@@ -274,18 +278,6 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
           }),
         };
       };
-      const bridgeNodes = Array.from(document.querySelectorAll<HTMLElement>('.homepage-bridge__node'));
-      const bridgeLines = Array.from(document.querySelectorAll<HTMLElement>('.homepage-bridge__line'));
-      const bridgeVertical = bridgeLines.every((line, index) => {
-        const from = bridgeNodes[index]?.getBoundingClientRect();
-        const to = bridgeNodes[index + 1]?.getBoundingClientRect();
-        const connector = line.getBoundingClientRect();
-        return Boolean(from && to)
-          && connector.width <= 2
-          && connector.height > 0
-          && connector.top >= from!.bottom - 0.5
-          && connector.bottom <= to!.top + 0.5;
-      });
       const columnCount = (selector: string) => {
         const element = document.querySelector<HTMLElement>(selector);
         return element ? getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length : 0;
@@ -311,7 +303,7 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
           ]
         : [];
       const homepageRails = Array.from(document.querySelectorAll<HTMLElement>(
-        '.homepage-hero__inner, .homepage-section__inner, .homepage-bridge__inner, .homepage-closing__inner',
+        '.homepage-hero__inner, .homepage-section__inner, .homepage-closing__inner',
       )).map((rail) => {
         const rect = rail.getBoundingClientRect();
         return { left: rect.left, right: rect.right, width: rect.width };
@@ -323,23 +315,19 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
         textEscapesCard: textEscapeDetails.length > 0,
         hiddenConnectors: connectors.filter((connector) => getComputedStyle(connector).display === 'none').length,
         identityDetailComplete: cards.every((card) => Boolean(
-          card.querySelector(':scope > .homepage-card-identity, :scope > .homepage-bridge__node-identity'),
-        ) && Boolean(card.querySelector(':scope > .homepage-card-detail, :scope > .homepage-bridge__node-detail'))),
+          card.querySelector(':scope > .homepage-card-identity'),
+        ) && Boolean(card.querySelector(':scope > .homepage-card-detail'))),
         stacks: [
           stackContract('.homepage-teaser__path', '.homepage-teaser__stage', '.homepage-teaser__card', '.homepage-teaser__connector'),
           stackContract('.homepage-offer-grid', '.homepage-offer-card', '.homepage-offer-card', '.homepage-offer-card__connector'),
           stackContract('.homepage-principles', '.homepage-principle', '.homepage-principle__card', '.homepage-principle__connector'),
           stackContract('.homepage-example-grid', '.homepage-example-card', '.homepage-example-card', '.homepage-example-card__connector'),
         ],
-        bridgeRows: rowsFor('.homepage-bridge__node'),
-        bridgeConnectorCount: bridgeLines.length,
-        bridgeVertical,
         editorialColumns: [
           columnCount('.homepage-teaser__card'),
           columnCount('.homepage-offer-card'),
           columnCount('.homepage-principle__card'),
           columnCount('.homepage-example-card'),
-          columnCount('.homepage-bridge__node'),
         ],
         heroColumns: columnCount('.homepage-hero__grid'),
         heroTitleLineCount: heroTitleLines.length,
@@ -423,9 +411,6 @@ test('homepage trailer keeps every card in a vertical editorial stack', async ({
     expect(layout.reducedSignalMotion).toBe('none');
     expect(layout.stacks.every((stack) => stack.rowCounts.every((count) => count === 1))).toBe(true);
     expect(layout.stacks.every((stack) => stack.connectorCount === stack.rowCounts.length - 1 && stack.vertical)).toBe(true);
-    expect(layout.bridgeRows).toEqual([1, 1, 1]);
-    expect(layout.bridgeConnectorCount).toBe(2);
-    expect(layout.bridgeVertical).toBe(true);
     expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
     expect(layout.heroColumns).toBe(1);
     await expect(page.getByRole('main')).toHaveCount(1);
@@ -522,16 +507,17 @@ test('desktop public navigation follows the approved public journey', async ({ p
   test.skip(testInfo.project.name !== 'public', 'Desktop navigation is intentionally collapsed on mobile.');
   await page.goto('/');
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
-  for (const label of ['What We Do', 'How We Work', 'The System', 'Examples', 'Why Us']) {
+  for (const label of ['What We Do', 'How We Work', 'Examples', 'Why Us']) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
   await expect(navigation.getByRole('link', { name: 'What We Do', exact: true })).toHaveAttribute('href', '/#what-we-do');
   await expect(navigation.getByRole('link', { name: 'How We Work', exact: true })).toHaveAttribute('href', '/#how-it-works');
-  await expect(navigation.getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/#the-system');
   await expect(navigation.getByRole('link', { name: 'Examples', exact: true })).toHaveAttribute('href', '/#examples');
   await expect(navigation.getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/#why-us');
   await expect(page.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
   await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/about');
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/system');
+  await expect(navigation.getByRole('link', { name: 'The System', exact: true })).toHaveCount(0);
   await expect(navigation.getByRole('link', { name: /how it works/i })).toHaveCount(0);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });
@@ -545,7 +531,6 @@ test('homepage navigation keeps the journey in one place', async ({ page }, test
   for (const [label, href] of [
     ['What We Do', '/#what-we-do'],
     ['How We Work', '/#how-it-works'],
-    ['The System', '/#the-system'],
     ['Examples', '/#examples'],
     ['Why Us', '/#why-us'],
   ]) {
@@ -559,8 +544,7 @@ test('homepage navigation keeps the journey in one place', async ({ page }, test
 
   for (const [sectionId, label, href] of [
     ['what-we-do', 'Next: How We Work', '#how-it-works'],
-    ['how-it-works', 'Next: The System', '#the-system'],
-    ['the-system', 'Next: Examples', '#examples'],
+    ['how-it-works', 'Next: Examples', '#examples'],
     ['examples', 'Next: Why Us', '#why-us'],
     ['why-us', 'Next: Share Your Vision', '#share-your-vision'],
   ]) {
@@ -572,7 +556,7 @@ test('interior public pages hand off to the next journey step', async ({ page },
   test.skip(testInfo.project.name !== 'public', 'The interior journey handoff runs in the desktop public project.');
   for (const [route, label, href] of [
     ['/services', 'Next: How We Work', '/how-it-works'],
-    ['/how-it-works', 'Next: The System', '/system'],
+    ['/how-it-works', 'Next: Examples', '/work'],
     ['/system', 'Next: Examples', '/work'],
     ['/work', 'Next: Why Us', '/about'],
   ]) {

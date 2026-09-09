@@ -86,25 +86,28 @@ product and the only active product roadmap.
 
 The separately approved public website presents NeedThisDone as a practical
 partner for teams and individuals: “Your vision, brought to life.” The homepage
-is the short public teaser: it helps visitors recognize the friction, imagine
-the better state, and choose a useful place to start without explaining the
-whole operating system. Visitors can share the better state they want without
-preparing a technical brief. Website Fix ($500) and proposal-based Managed
-Automation remain bounded secondary starting points; choosing either one is
-optional in the public intake.
+sections explain what NeedThisDone does, how it works in practical terms, and
+why visitors should share their vision. Its primary path is What We Do → How We
+Work → Examples → Why Us, with Share Your Vision as the dominant hero and
+closing action. How We Work remains part of that primary reassurance path.
+Visitors can share the better state they want without preparing a technical
+brief. Website Fix ($500) and proposal-based Managed Automation remain bounded
+secondary starting points; choosing either one is optional in the public intake.
 
 This public positioning does not expand the assistant roadmap or grant action
 authority. A public request starts a conversation only. It does not create an
 automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
-The public [`/system` case study](app/app/system/page.tsx) is the proof page
-behind that teaser. It explains this boundary through the four-stage system map
-and reviewable evidence rails. It is an explanatory public page, not a second
-control plane. Keep the homepage-to-`/system` relationship, each route
-contract, and both responsive presentations aligned with [Project
+The public [`/system` case study](app/app/system/page.tsx) remains a complete,
+discoverable technical-details page. It explains this boundary through the
+four-stage system map and reviewable evidence rails. It is optional detail for
+curious or technical visitors, available from the footer Explore links and the
+direct `/system` URL; it is not required for conversion or part of the primary
+homepage path. Keep its route contract, sitemap entry, metadata, responsive
+presentation, and direct contact/action links aligned with [Project
 status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md)
-when either page changes.
+when the page changes.
 
 Internal public-service writing guidance lives in
 [Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).

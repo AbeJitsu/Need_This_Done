@@ -5,6 +5,27 @@
 
 ## Current facts
 
+- On 2026-09-09, the public homepage journey was simplified so the primary
+  navigation and homepage sections stay focused on What We Do, How We Work,
+  Examples, and Why Us. The homepage The System bridge and its CTA were
+  removed; the hero and closing section keep Share Your Vision as the dominant
+  action. `PUBLIC_HOME_JOURNEY` now drives the four-section anchor sequence,
+  and How We Work remains part of the primary reassurance path before Examples.
+  `/system` remains a complete, discoverable technical-details page with its
+  direct contact and implementation links, canonical metadata, sitemap entry,
+  and direct route contract; it is now available from the explicit footer
+  Explore link rather than required for conversion. The `/how-it-works` closing
+  handoff now goes to `/work`. `npm run verify:code` passed lint, type-check,
+  67 unit files/352 tests, 6 accessibility files/60 tests, and production
+  build. `npm run test:retained-smoke` ran 96 public desktop/mobile checks:
+  81 passed and 11 expected skips; four existing report-fixture checks remain
+  unavailable because the default local report ID returns 404 and the snapshot
+  handoff stays on `/site-analyzer`; owner: application test owner, follow up
+  by 2026-09-16. `git diff --check` passed. Owner review is pending before
+  publication. No API, schema, billing, deployment, hosted write, provider
+  activation, Mac activation, external message, customer result, or spend
+  occurred. Rollback is a reviewed Git revert on `dev`.
+
 - On 2026-09-09, the public promise was broadened to “NeedThisDone helps
   teams and individuals solve technology problems and simplify repeated work
   with clear, focused solutions.” The homepage no longer uses a demographic
@@ -85,6 +106,9 @@
   or external state needs rollback. No API/schema, deployment, hosted write,
   provider activation, Mac activation, publication, external message,
   customer result, or spend occurred.
+
+  This five-section arrangement was superseded on 2026-09-09 by the
+  optional-system homepage path recorded above.
 
 - On 2026-09-08, the public journey was split so `/services` answers what help
   is available and `/work` answers what a useful change could look like.
