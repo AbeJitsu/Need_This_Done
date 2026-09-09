@@ -1,9 +1,28 @@
 # NeedThisDone — Project Status
 
-**Branch:** `dev`
+**Branch:** `codex/ai-operating-system-foundation` (branched from `dev`)
 **Last updated:** 2026-09-09
 
 ## Current facts
+
+- On 2026-09-09, the assistant infrastructure audit confirmed the hardware
+  split: the MacBook Pro is Abe's interactive development and coding machine;
+  the Mac mini is the intended always-on private worker. Existing Redis is
+  wired through `REDIS_URL` and the Node Redis client for cache, rate limiting,
+  request deduplication, and health checks; it is not currently the agent task
+  queue. No active Upstash Vector or Qdrant client exists, and the legacy
+  chatbot/page-embedding system was retired in `c5989bd8`. The build now
+  includes a private, optional Upstash Vector adapter using
+  `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional
+  `VECTOR_MEMORY_NAMESPACE`; it uses derived semantic memory only and does not
+  restore public chat or page indexing. The values must be configured only in
+  the MacBook/Mac-mini server-side environments and the intended Vercel server
+  environment, never in browser variables, Git, prompts, logs, Redis, or
+  durable business rows. The adapter request/response contract has six passing
+  unit tests, and the application code gate passed lint, type-check, 68 unit
+  files/358 tests, 6 accessibility files/60 tests, and production build. Live
+  vector connectivity, Vercel configuration, and Mac-mini activation remain
+  unverified and separately approved.
 
 - On 2026-09-09, the public homepage journey was simplified so the primary
   navigation and homepage sections stay focused on What We Do, How We Work,

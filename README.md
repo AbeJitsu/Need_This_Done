@@ -76,6 +76,33 @@ requires a human approval. An expired, altered, unapproved, or stopped task
 must fail closed. A completed result never grants permission for follow-on
 work.
 
+### Stack responsibilities
+
+| Component | Responsibility | Boundary |
+|---|---|---|
+| ChatGPT | Conversational interface, reasoning, clarification, planning, status interpretation, and summaries | Does not run long-lived workers, queues, or arbitrary shell commands |
+| MCP facade | Small authenticated adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` | Does not become a second workflow engine or database |
+| Hermes | Validates requests, creates and tracks workflows, assigns workers, handles leases/retries/events, and persists outcomes | Coordinates execution; it does not replace ChatGPT's conversation layer |
+| Next.js/Vercel | Internet-facing authenticated control plane and server-side API boundary | Not the permanent worker and never exposes private credentials to the browser |
+| Supabase/Postgres/Storage | Auth, RLS, durable plans, approvals, tasks, results, costs, and private assets | Canonical source for durable workflow and business truth |
+| Redis/Upstash Redis | Short-lived queues, locks, leases, heartbeats, deduplication, and wake-up signals | Rebuildable coordination only; `REDIS_URL` is the current connection variable |
+| Upstash Vector | Private semantic-memory projection of selected durable decisions and findings | Retrieval aid only; configured with `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional `VECTOR_MEMORY_NAMESPACE` |
+| MacBook Pro | Abe's interactive coding and first controlled rehearsal machine | Not the always-on worker |
+| Mac mini | Always-on private worker host | Outbound-only execution node; activation remains separately approved |
+| OpenClaw | Approved non-code local tool executor through its loopback Gateway | Cannot send, publish, spend, change accounts, or bypass frozen approvals |
+| Codex | Approved coding worker in an isolated worktree | Returns tests, changed files, commit SHA, and review evidence; no automatic merge/deploy |
+| GitHub | Code, branch, commit, and pull-request source of truth | Production branches remain protected and review-gated |
+| OpenRouter | Current application-side planner/model route | Free route first; paid route requires separate approval |
+
+The normal request path is: ChatGPT understands the request → the MCP facade
+authenticates and validates it → Hermes creates the durable Supabase record →
+Redis carries only transient coordination → the Mac mini claims and runs the
+approved job → OpenClaw or Codex returns structured evidence → Hermes persists
+the result → ChatGPT reports the status and next decision. Upstash Vector may
+receive a provenance-bearing projection after durable state exists, but it
+never overrides current Supabase or GitHub facts and does not restore the
+retired public chatbot or page-indexing system.
+
 ## Product boundary
 
 This is the owner's private assistant, not a public worker service or an

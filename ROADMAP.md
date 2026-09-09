@@ -42,14 +42,50 @@ It is complete only when all of these are true:
 1. Keep one durable browser approval and private-asset lifecycle in Next.js and
    Supabase; remove or avoid duplicate queues, dashboards, memory stores, and
    control planes.
-2. Connect the signed private bridge to a real loopback OpenClaw gateway on the
-   MacBook first, while preserving the outbound-only boundary and frozen-plan
-   checks. The Mac mini remains a later separately approved always-on target.
+2. Treat the MacBook Pro as Abe's interactive coding machine and connect the
+   signed private bridge to a real loopback OpenClaw gateway there first, while
+   preserving the outbound-only boundary and frozen-plan checks. The Mac mini
+   is the always-on private worker host and remains a later separately approved
+   activation target.
 3. Use Hermes to return the bounded plan and approved model route. Prefer an
    allowed OpenRouter free route; surface a paid route for separate browser
    approval instead of silently falling back.
-4. Rehearse and record the read-only workflow. Then separately approve and
+4. Keep the existing `REDIS_URL` integration for transient acceleration and
+   coordination only. Add no second durable queue or database.
+5. Configure the private vector-memory projection with
+   `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and the optional
+   `VECTOR_MEMORY_NAMESPACE`. The vector index must have a hosted embedding
+   model; vector memory must never restore the retired chatbot or page
+   indexing.
+6. Rehearse and record the read-only workflow. Then separately approve and
    rehearse one tiny Codex worktree task.
+
+## Foundation progress map — 2026-09-09
+
+| Capability | Current state | Next proof |
+| --- | --- | --- |
+| Vision and operating boundaries | Canonical in `README.md` and this roadmap | Keep implementation aligned with the approval and source-of-truth rules |
+| Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only MacBook rehearsal |
+| Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
+| Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
+| MCP facade | Not yet built | Expose only `start_workflow`, `get_workflow_status`, and `list_workflows` over an authenticated transport |
+| MacBook Pro | Interactive coding and first bridge-rehearsal host | Configure the private bridge environment and validate the loopback Gateway |
+| Mac mini | Intended always-on worker host; not activated | Repeat the approved worker proof after the MacBook proof |
+| Codex/GitHub worker | Coding worker contract remains future; current bridge is OpenClaw non-code | Add isolated worktree, branch, checks, commit SHA, and review evidence |
+
+## Test evidence map
+
+Each capability must carry the narrowest useful evidence at each layer:
+
+| Layer | Evidence we can build now | What remains later |
+| --- | --- | --- |
+| Unit | Pure validation, redaction, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
+| Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
+| Integration | Disposable local Supabase/RLS, controlled Redis, signed bridge routes, and mocked Upstash REST | Hosted Supabase, Upstash account, and Mac runtime integration |
+| Browser/E2E | Authenticated control-plane request, approval, dispatch, and review flows using controlled dependencies | A real worker-backed browser journey |
+| Live rehearsal | Not available in this environment | MacBook Pro/Mac mini, Vercel, Supabase, Redis/vector, provider, and durable result |
+
+Passing local tests never changes a capability to “live” or “hosted.”
 
 ## Explicitly not active
 
