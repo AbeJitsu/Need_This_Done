@@ -1,9 +1,33 @@
 # NeedThisDone — Project Status
 
 **Branch:** `dev`
-**Last updated:** 2026-09-08
+**Last updated:** 2026-09-09
 
 ## Current facts
+
+- On 2026-09-09, the public promise was broadened to “NeedThisDone helps
+  teams and individuals solve technology problems and simplify repeated work
+  with clear, focused solutions.” The homepage no longer uses a demographic
+  audience label. Its hero, What We Do section, `/services`, `/how-it-works`,
+  `/about`, `/contact`, and `/faq` now use direct issue-resolution language:
+  find the issue, agree on the work, help fix it, and show what changed.
+  Websites, workflows, tools, and repeated work remain valid starting points;
+  focused scope remains a delivery guideline, not a limit on what someone can
+  bring. The FAQ now explains that another piece of work can be discussed
+  separately, and the shared offer presentation keeps the same reassurance
+  without changing Website Fix at $500 or proposal-based Managed Automation.
+  The central promise still feeds metadata, social previews, JSON-LD, footer,
+  report email, and offer summaries. `npm run verify:code` passed lint,
+  type-check, 67 unit files/352 tests, 6 accessibility files/60 tests, and
+  production build; the focused public-language checks passed 24/24 and
+  `git diff --check` passed. `npm run test:retained-smoke` ran 96 public
+  desktop/mobile checks with 81 passed and 11 expected skips. Four report
+  fixture checks remain unavailable: the default local report ID returns 404,
+  and the snapshot handoff stays on `/site-analyzer`; owner: application test
+  owner, follow up by 2026-09-16. Owner review is pending before publication.
+  No API, schema, billing, deployment, hosted write, provider activation, Mac
+  activation, external message, customer result, or spend occurred. Rollback
+  is a reviewed Git revert on `dev`.
 
 - On 2026-09-08, the anonymous public language audit and rewrite covered all
   16 sitemap pages, the three retained articles, analyzer and report states,
@@ -137,8 +161,8 @@
 - Rollback: revert this focused `/system` presentation, test, and
   documentation change on `dev`; no data or external state needs rollback.
 - On 2026-09-07, the homepage became the public trailer for the detailed
-  `/system` proof. The static server-rendered page keeps the owners-and-founders
-  audience, “Your vision, brought to life.” promise, `/contact` primary action,
+  `/system` proof. The static server-rendered page keeps the “Your vision,
+  brought to life.” promise, `/contact` primary action,
   `/services` secondary action, two offer destinations, and two example
   destinations. Its three-beat teaser names See the friction, Define better,
   and Make it real; the highlighted better-state card, connected signal, offer
@@ -344,7 +368,7 @@
   exact allowlisted OpenClaw executor `openai/gpt-5.6-luna`. No hosted
   migration, provider activation, or bridge activation was run.
 - The public website now has a separately approved outcome-partner front door
-  for owners and founders: “Your vision, brought to life.” Website Fix remains
+  for teams and individuals: “Your vision, brought to life.” Website Fix remains
   $500 and Managed Automation remains proposal-based. The vision-first intake
   keeps service selection optional and uses the unchanged projects API/schema.
   Public navigation now gives “Why Us” its own `/about` page, links each

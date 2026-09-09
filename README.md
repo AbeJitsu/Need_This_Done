@@ -84,8 +84,8 @@ product and the only active product roadmap.
 
 ## Public service front door
 
-The separately approved public website presents NeedThisDone as an outcome
-partner for owners and founders: “Your vision, brought to life.” The homepage
+The separately approved public website presents NeedThisDone as a practical
+partner for teams and individuals: “Your vision, brought to life.” The homepage
 is the short public teaser: it helps visitors recognize the friction, imagine
 the better state, and choose a useful place to start without explaining the
 whole operating system. Visitors can share the better state they want without

@@ -13,7 +13,6 @@ import {
   PUBLIC_OFFERS,
   type PublicOfferId,
 } from "@/lib/public-offers";
-import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
 type TeaserBeat = {
   number: string;
@@ -171,14 +170,14 @@ export default function HomePageClient() {
         <div className="homepage-hero__inner">
           <div className="homepage-hero__grid">
             <div className="homepage-hero__copy">
-              <p className="homepage-eyebrow homepage-eyebrow--light">For owners and founders</p>
               <h1 id="homepage-hero-heading" className="homepage-hero__title">
                 <span className="homepage-hero__title-line">Your vision,</span>{" "}
                 <span className="homepage-hero__title-line">brought</span>{" "}
                 <span className="homepage-hero__title-line">to life.</span>
               </h1>
               <p className="homepage-hero__lead">
-                {PUBLIC_CORE_PROMISE} Tell us what you have in mind. We will help you find a useful place to start.
+                Bring us the problem. We’ll find the real issue, agree on the
+                work, and help fix it.
               </p>
               <div className="homepage-hero__actions">
                 <Link href="/contact" className="homepage-button homepage-button--gold">
@@ -206,11 +205,12 @@ export default function HomePageClient() {
             <div>
               <p className="homepage-eyebrow">What we do</p>
               <h2 id="what-we-do-heading" className="homepage-heading homepage-heading--compact">
-                A website problem. Repeated work. One place to start.
+                Technology problems. Repeated work. Let&apos;s get things working better.
               </h2>
             </div>
             <p className="homepage-section__lead">
-              Fix one website problem or simplify one repeated task.
+              Websites, workflows, and tools are all good places to start.
+              Focus keeps the work clear. It does not limit what you can bring.
             </p>
           </div>
 
@@ -259,12 +259,12 @@ export default function HomePageClient() {
             <div>
               <p className="homepage-eyebrow homepage-eyebrow--light">How we work</p>
               <h2 id="how-it-works-heading" className="homepage-heading homepage-heading--compact">
-                A small, visible path from idea to agreed work.
+                From stuck to working better.
               </h2>
             </div>
             <p className="homepage-section__lead">
-              Start with the messy version. We clarify the change, agree on the boundary,
-              and show what moved.
+              Start with the messy version. We find the issue, agree on the fix,
+              and show what changed.
             </p>
           </div>
 
@@ -330,11 +330,11 @@ export default function HomePageClient() {
           <div className="homepage-bridge__copy">
             <p className="homepage-eyebrow homepage-eyebrow--light">The system</p>
             <h2 id="homepage-bridge-heading" className="homepage-heading">
-              Keep the goal, boundary, and result connected.
+              Keep the problem, work, and result connected.
             </h2>
             <p>
-              See how a clear goal becomes approved work. The deeper page explains
-              the private boundary and the reviewable result.
+              See how a problem becomes approved work. The deeper page explains
+              the private system and the result you can review.
             </p>
             <div className="homepage-bridge__actions">
               <Link href="/system" className="homepage-button homepage-button--gold">
@@ -439,10 +439,10 @@ export default function HomePageClient() {
           <div className="homepage-section__intro">
             <p className="homepage-eyebrow homepage-eyebrow--light">Why us</p>
             <h2 id="why-us-heading" className="homepage-heading">
-              A useful next move starts with listening.
+              Good work starts by understanding the problem.
             </h2>
             <p className="homepage-section__lead">
-              We keep the work bounded. You see the decision and the result.
+              We keep the work focused. You see what we will do and what changed.
               The Why Us page explains the standards behind that approach.
             </p>
           </div>

@@ -1,13 +1,13 @@
 # Public language audit
 
-**Reviewed:** 2026-09-08
+**Reviewed:** 2026-09-09
 **Branch:** `dev`
 **Scope:** anonymous public routes, retained articles, report and analyzer
 states, recovery states, and legacy redirects.
 
 The public promise is:
 
-> NeedThisDone helps owners and founders fix one website problem or one repeated task.
+> NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.
 
 Public prose targets 20 words or fewer per sentence. Twenty-five words is the
 hard ceiling. Visitor-submitted text, quoted website text, URLs, legal
@@ -21,22 +21,22 @@ report copy still needs owner review before publication.
 
 | Route | Current wording and issue | Proposed wording | Word count | Approval status |
 | --- | --- | --- | ---: | --- |
-| `/` | “A clearer website. A smoother working day.” The outcome was broad and repeated the journey copy. | “NeedThisDone helps owners and founders fix one website problem or one repeated task.” | 13 | Implemented; owner review pending |
-| `/services` | “A clearer website. Less busywork.” The two starting points were not immediate. | “Choose a website fix or a repeated-task improvement. Bring the situation as it is if you are unsure.” | 10 max | Implemented; owner review pending |
+| `/` | The audience label narrowed the doorway to a demographic category. | Remove the audience label. Use “Bring us the problem. We’ll find the real issue, agree on the work, and help fix it.” The What We Do section names technology problems, repeated work, websites, workflows, and tools. | 15 max | Implemented; owner review pending |
+| `/services` | The introduction led with a one-problem frame. | “Technology problems. Repeated work. Let’s get things working better.” Websites, workflows, and tools are good places to start; the page explains how we find the issue and get it moving. | 14 max | Implemented; owner review pending |
 | `/pricing` | “A clear price starts with a clear piece of work.” The next action was indirect. | “A clear price starts with a clear piece of work. We agree on the work and price before you commit.” | 10 max | Implemented; owner review pending |
 | `/website-fix` | “That page should be helping, not getting in the way.” The offer boundary needed a concrete outcome. | “We review one website problem. We agree on one correction and show what changed.” | 10 max | Implemented; owner review pending |
 | `/managed-automation` | “Make recurring work easier.” The proposal-based boundary needed earlier context. | “We review one task that keeps taking time. We outline a more dependable way to handle it.” | 10 max | Implemented; owner review pending |
-| `/how-it-works` | “Tell us the problem. We’ll work out the next step.” The five-step sequence carried longer explanations. | “Tell us the problem. We will work out the next step.” | 7 max | Implemented; owner review pending |
-| `/system` | Internal architecture terms appeared before the reader understood the purpose. | “NeedThisDone helps owners and founders fix one website problem or one repeated task.” Plain-language system stages come before the technical section. | 13 | Implemented; owner review pending |
+| `/how-it-works` | The introduction named a problem but not the wider technical-help scope. | “Tell us what is not working. We’ll find the next move.” The supporting copy names websites, workflows, tools, repeated work, the agreed work, and visible change. | 14 max | Implemented; owner review pending |
+| `/system` | Internal architecture terms appeared before the reader understood the purpose. | “NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.” Plain-language system stages come before the technical section. | 16 | Implemented; owner review pending |
 | `/work` | “Illustrative before-and-after stories” was accurate but abstract. | “These examples are illustrative. They show what one focused change could look like.” | 9 max | Implemented; owner review pending |
-| `/about` | “A bounded partner” used internal or abstract language. | “You know your business. We bring structure without pretending to know it better. The work stays bounded and easy to review.” | 9 max | Implemented; owner review pending |
-| `/faq` | The FAQ began with scope questions instead of the visitor’s problem. | “Start with what you want to change. We can clarify the next useful step together.” | 10 max | Implemented; owner review pending |
-| `/blog` | The metadata described a broad vision instead of the practical public offer. | “Ideas you can put to use.” Article cards now introduce three retained articles with shorter copy. | 7 max | Implemented; owner review pending |
+| `/about` | The introduction did not sound like an effective technical partner. | “Clear help for problems that matter.” The supporting copy names technical know-how, focused work, and visible change. | 12 max | Implemented; owner review pending |
+| `/faq` | The FAQ began with fit and scope questions without sounding like a direct source of help. | “Answers about what we can help with, how we work, pricing, and what happens next.” A new answer explains that future work can be discussed separately. | 14 max | Implemented; owner review pending |
+| `/blog` | The metadata described a broad vision instead of practical help. | “Practical ideas for teams and individuals trying to get work moving.” Article cards introduce three retained articles with shorter copy. | 12 max | Implemented; owner review pending |
 | `/site-analyzer` | “SEO,” “certify compliance,” and “every interaction” made a limited tool sound broader than it is. | “We check selected website signals. The findings can point to one useful correction.” | 10 max | Implemented; owner review pending |
 | `/ada-compliance` | “What it cannot certify” risked a certification implication. | “Our limited website snapshot checks common barriers, search signals, and basic speed clues. It points to a problem worth reviewing. It is not legal advice.” | 13 max | Implemented; owner/legal review pending |
-| `/contact` | “We’ll listen before suggesting a path” appeared twice. Labels also assumed the visitor had chosen a service. | “You do not need a technical brief or a chosen service. This form starts a conversation only.” | 11 max | Implemented; owner review pending |
-| `/privacy` | Long legal paragraphs made collection, retention, and choice boundaries hard to scan. | “NeedThisDone helps owners and founders fix one website problem or one repeated task.” Keep the rewritten legal sections and disclosures below it. | 13 | Implemented; owner/legal review pending |
-| `/terms` | Long legal paragraphs mixed scope, billing, approval, and liability in dense sentences. | “NeedThisDone helps owners and founders fix one website problem or one repeated task.” Keep the rewritten scope, payment, approval, and liability terms below it. | 13 | Implemented; owner/legal review pending |
+| `/contact` | The introduction assumed a service choice and did not name broader technical starting points. | “Tell us what is not working.” The form accepts a website, workflow, tool, or repeated task, then agrees on the work before anything starts. | 15 max | Implemented; owner review pending |
+| `/privacy` | Long legal paragraphs made collection, retention, and choice boundaries hard to scan. | “NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.” Keep the rewritten legal sections and disclosures below it. | 17 | Implemented; owner/legal review pending |
+| `/terms` | Long legal paragraphs mixed scope, billing, approval, and liability in dense sentences. | “NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.” Keep the rewritten scope, payment, approval, and liability terms below it. | 17 | Implemented; owner/legal review pending |
 
 ## State, article, and redirect audit
 
@@ -59,6 +59,10 @@ report copy still needs owner review before publication.
   site description, report fallback, sentence limits, and generated-copy guard.
 - `PUBLIC_CORE_PROMISE` feeds homepage copy, metadata, social previews,
   structured data, footer copy, and both offer summaries.
+- The shared audience language is “teams and individuals,” while the homepage
+  uses no demographic label. Focused scope is a delivery guideline, not a
+  limit on who can bring a problem or what kind of technology, workflow, tool,
+  or repeated work they can discuss.
 - `PUBLIC_OFFERS` remains the source for offer names, prices, contact links,
   detail links, fit text, and summaries.
 - `blog-content.ts` overlays the reviewed retained article copy without changing
@@ -74,7 +78,16 @@ report copy still needs owner review before publication.
 ## Validation record
 
 The implementation has targeted automated coverage for sentence length, banned
-report claims, duplicate invitation copy, offer fact consistency, system-term
-placement, and redirect destinations. The completed checks are recorded in
-`docs/PROJECT_STATUS.md` and `docs/RELEASE_EVIDENCE.md` after the final code
-gate. Legal and generated-report copy remain owner-review items.
+report claims, the retired narrow brand promise, the broader homepage and FAQ
+language, future-work reassurance, duplicate invitation copy, offer fact
+consistency, system-term placement, and redirect destinations. The completed
+checks are recorded in `docs/PROJECT_STATUS.md` and `docs/RELEASE_EVIDENCE.md`
+after the final code gate. On 2026-09-09, `npm run verify:code` passed lint,
+type-check, 67 unit files/352 tests, 6 accessibility files/60 tests, and the
+production build; the focused public-language checks passed 24/24 and
+`git diff --check` passed. `npm run test:retained-smoke` ran 96 public desktop
+and mobile checks: 81 passed and 11 were expected skips. Four report-fixture
+checks remain unavailable because the default local report ID returns 404 and
+the snapshot handoff does not open a report; owner: application test owner,
+follow up by 2026-09-16. Legal and generated-report copy remain owner-review
+items, and this copy change is not published.

@@ -12,7 +12,7 @@ import {
 } from '@/lib/public-copy';
 import { PUBLIC_EXAMPLES, PUBLIC_OFFERS } from '@/lib/public-offers';
 import { RETAINED_ARTICLE_COPY } from '@/lib/public-article-copy';
-import { defaultPrivacyContent, defaultTermsContent } from '@/lib/default-page-content';
+import { defaultFAQContent, defaultPrivacyContent, defaultTermsContent } from '@/lib/default-page-content';
 import { getRetiredBlogDestination, listBlogPosts } from '@/lib/blog-content';
 import {
   buildDeterministicAnalysis,
@@ -34,9 +34,33 @@ function textValues(value: unknown): string[] {
 describe('public language contract', () => {
   it('keeps the core promise centralized and within the sentence target', () => {
     expect(PUBLIC_CORE_PROMISE).toBe(
-      'NeedThisDone helps owners and founders fix one website problem or one repeated task.',
+      'NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.',
     );
     expect(isPublicCopyWithinLimit(PUBLIC_CORE_PROMISE)).toBe(true);
+  });
+
+  it('keeps the retired narrow brand promise out of active public copy', () => {
+    const retiredPromise = 'NeedThisDone helps owners and founders fix one website problem or one repeated task.';
+    const activePublicSources = [
+      'lib/public-copy.ts',
+      'components/home/HomePageClient.tsx',
+      'components/services/ServicesPageClient.tsx',
+      'components/public/OfferPage.tsx',
+      'app/how-it-works/page.tsx',
+      'app/about/page.tsx',
+      'app/contact/page.tsx',
+      'components/faq/FAQPageClient.tsx',
+      'lib/page-config.ts',
+    ].map(readApp).join('\n');
+
+    expect(activePublicSources).not.toContain(retiredPromise);
+  });
+
+  it('keeps the future-work reassurance in the FAQ defaults', () => {
+    expect(defaultFAQContent.items).toContainEqual({
+      question: 'Can we discuss another piece of work later?',
+      answer: 'We start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.',
+    });
   });
 
   it('keeps retained article copy to short sentences while preserving code blocks', () => {
@@ -125,7 +149,7 @@ describe('public language contract', () => {
 
   it('keeps the contact form focused and avoids duplicate invitation copy', () => {
     const contact = readApp('app/contact/page.tsx');
-    const invitation = 'We’ll listen before suggesting a path.';
+    const invitation = 'Tell us what is not working.';
     expect(contact.split(invitation).length - 1).toBe(1);
     expect(contact).toContain('Which starting point fits?');
     expect(contact).toContain('Your name');

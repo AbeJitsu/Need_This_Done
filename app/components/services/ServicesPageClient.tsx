@@ -41,11 +41,11 @@ export default function ServicesPageClient() {
             What we do
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Fix one problem. Free up attention.
+            Technology problems. Repeated work. Let&apos;s get things working better.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            Choose a website fix or a repeated-task improvement. Bring the
-            situation as it is if you are unsure.
+            Websites, workflows, and tools are good places to start. We find
+            the issue, agree on the work, and get it moving.
           </p>
         </div>
       </section>

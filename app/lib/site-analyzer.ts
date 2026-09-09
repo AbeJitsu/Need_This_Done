@@ -573,7 +573,7 @@ RULES:
 - Reference specific text, headlines, and CTAs from the page content. Quote them.
 - Every recommendation must reference something concrete on a specific page. Include the page path.
 - Do NOT say things like "add more keywords" or "improve your SEO." Those are useless.
-- Write as if speaking to a non-technical small business owner.
+- Write as if speaking to a non-technical person reviewing a business website.
 - Use short sentences and everyday words. Keep every sentence to 20 words or fewer.
 - Never exceed 25 words in one sentence. Code, URLs, and quoted website text may stay as supplied.
 - Do not use em dashes, internal communication-framework names, or instructional terminology.
@@ -616,7 +616,7 @@ Reference the technical findings above. Explain what selected page signals mean 
 Based on the technical findings, what accessibility barriers exist? Explain each issue in plain language: what does it mean for someone using a screen reader, keyboard navigation, or assistive technology? Reference specific pages and elements. Prioritize observed barriers to using the page. Do not infer legal risk, certify compliance, or claim selected checks cover every interaction.
 
 ## 6. Top 5 Action Items
-The 5 highest-impact changes this business owner could make this week, in priority order. Be specific. "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-5. These should be NEW, additional improvements.
+The 5 highest-impact changes the team responsible for this website could make this week, in priority order. Be specific. "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-5. These should be NEW, additional improvements.
 
 FORMAT: Use markdown with ## headers for each section. Keep each section to 3-5 sentences. End with Action Items as a numbered list.`;
 }

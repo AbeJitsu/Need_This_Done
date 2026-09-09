@@ -17,12 +17,12 @@ for (const route of publicRoutes) {
   });
 }
 
-test('homepage first viewport identifies audience, promise, and action without mechanics', async ({ page }) => {
+test('homepage first viewport leads with the promise and action without mechanics', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/');
   const firstSection = page.locator('main > section').first();
-  await expect(firstSection.getByText('For owners and founders', { exact: true })).toBeVisible();
   await expect(firstSection.getByRole('heading', { name: 'Your vision, brought to life.' })).toBeVisible();
+  await expect(firstSection).toContainText('Bring us the problem. We’ll find the real issue, agree on the work, and help fix it.');
   await expect(firstSection.getByRole('link', { name: /share your vision/i })).toBeVisible();
   await expect(firstSection.getByRole('figure')).toHaveCount(0);
   await expect(page.locator('#how-it-works .homepage-teaser')).toBeVisible();
@@ -33,6 +33,10 @@ test('homepage first viewport identifies audience, promise, and action without m
   await expect(page.locator('#how-it-works .homepage-teaser__stage--better')).toHaveCount(1);
   await expect(page.locator('.homepage-offer-card')).toHaveCount(2);
   await expect(page.locator('.homepage-offer-card .service-illustration')).toHaveCount(0);
+  const whatWeDo = page.locator('#what-we-do');
+  await expect(whatWeDo.getByRole('heading', { name: "Technology problems. Repeated work. Let's get things working better.", exact: true })).toBeVisible();
+  await expect(whatWeDo).toContainText('Websites, workflows, and tools are all good places to start.');
+  await expect(whatWeDo).toContainText('Focus keeps the work clear. It does not limit what you can bring.');
   await expect(firstSection).not.toContainText(/Hermes|OpenClaw|Codex|approval lifecycles?|API|database|automation system|technical implementation/i);
 });
 
@@ -504,6 +508,14 @@ test('faq answers the retained offer boundary', async ({ page }) => {
   const question = page.getByRole('button', { name: /what does website fix include/i });
   await question.click();
   await expect(page.getByText(/\$500 total/i)).toBeVisible();
+});
+
+test('faq explains that future work is discussed separately', async ({ page }) => {
+  await page.goto('/faq');
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: /can we discuss another piece of work later/i }).click();
+  await expect(page.getByText(/We start with one clear piece so you can see what you are agreeing to\./i)).toBeVisible();
+  await expect(page.getByText(/If something else would help, we can discuss it separately\./i)).toBeVisible();
 });
 
 test('desktop public navigation follows the approved public journey', async ({ page }, testInfo) => {

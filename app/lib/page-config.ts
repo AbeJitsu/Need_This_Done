@@ -687,7 +687,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Questions, answered.',
-        description: 'Short answers about scope, cost, and what happens next.',
+        description: 'Answers about what we can help with, how we work, pricing, and what happens next.',
       },
       items: [
         { question: 'Do I need to know which service fits?', answer: 'No. Start with what you want to change. We can clarify the next useful step together. Explore the two starting points.', links: [{ text: 'Explore the two starting points.', href: '/services' }] },
@@ -697,6 +697,7 @@ export const PAGE_CONFIGS = {
         { question: 'What does Managed Automation start with?', answer: `${PUBLIC_OFFERS['ai-operator'].summary} Explore Managed Automation.`, links: [{ text: 'Explore Managed Automation.', href: PUBLIC_OFFERS['ai-operator'].detailHref }] },
         { question: 'When do we agree on the price?', answer: 'We agree on the work and price before you commit. Review pricing.', links: [{ text: 'Review pricing.', href: '/pricing' }] },
         { question: 'What if the request grows?', answer: 'The original agreement remains the reference. We discuss extra work and its price separately. You decide whether to continue.' },
+        { question: 'Can we discuss another piece of work later?', answer: 'We start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.' },
         { question: 'What does a website snapshot cover?', answer: 'It highlights selected issues worth reviewing. It does not review every interaction or provide legal advice. Read what the checks cover.', links: [{ text: 'Read what the checks cover.', href: '/ada-compliance' }] },
         { question: 'How do I get started?', answer: 'Share the change you want in your own words. Choosing a service is optional. Share Your Vision.', links: [{ text: 'Share Your Vision.', href: '/contact' }] },
       ],
@@ -820,7 +821,7 @@ blog: {
     displayName: 'Blog',
     contentType: 'blog_page',
     defaults: {
-      header: { title: 'Insights', description: 'Short notes for owners and founders choosing a useful next move.' },
+      header: { title: 'Insights', description: 'Practical ideas for teams and individuals trying to get work moving.' },
       emptyState: { emoji: '📝', title: 'Fresh notes soon', description: 'New notes will focus on clearer decisions and more useful workflows.' },
       morePostsTitle: 'More Articles',
       categoryFilterLabel: 'All Insights',

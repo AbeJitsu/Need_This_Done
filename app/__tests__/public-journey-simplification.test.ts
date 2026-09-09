@@ -19,11 +19,10 @@ const repositoryRoot = resolve(appRoot, '..');
 const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
 describe('vision-first public journey', () => {
-  it('leads with the approved audience, promise, and actions', () => {
+  it('leads with the promise and actions', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('For owners and founders');
     for (const line of ['Your vision,', 'brought', 'to life.']) expect(home).toContain(line);
-    expect(home).toContain('help you find a useful place to start');
+    expect(home).toContain('Bring us the problem');
     expect(home).toContain('href="/contact"');
     expect(home).toContain('Share Your Vision');
     expect(home).toContain('href="#what-we-do"');
@@ -166,6 +165,6 @@ describe('vision-first public journey', () => {
     expect(source('app/layout.tsx')).toContain('PUBLIC_BRAND_TITLE');
     expect(source('public/og-image.svg')).toContain('Your vision,');
     expect(source('public/og-image.svg')).toContain('brought to life.');
-    expect(seoConfig.description).toContain('owners and founders');
+    expect(seoConfig.description).toContain('teams and individuals');
   });
 });

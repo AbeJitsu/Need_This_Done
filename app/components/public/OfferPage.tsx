@@ -62,6 +62,10 @@ export default function OfferPage({
         <p className="max-w-[60ch] text-lg leading-8 text-[#40564e]">
           {commitment}
         </p>
+        <p className="max-w-[60ch] text-lg leading-8 text-[#40564e] md:col-start-2">
+          Starting with one piece keeps the work clear. If something else would
+          help, we can talk about it separately.
+        </p>
       </section>
       <section className="border-y border-[var(--public-ink)]/10 bg-white">
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 sm:px-8 md:grid-cols-2 md:py-20">

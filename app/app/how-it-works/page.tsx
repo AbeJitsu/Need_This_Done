@@ -42,11 +42,11 @@ export default function HowItWorksPage() {
             How we help
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Tell us the problem. We will work out the next step.
+            Tell us what is not working. We&apos;ll find the next move.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            You share the situation. We clarify the goal and agree on the work.
-            Then we show the completed change.
+            We help with websites, workflows, tools, and repeated work. We find
+            the issue, agree on the work, and show what changed.
           </p>
         </div>
       </section>

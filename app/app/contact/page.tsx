@@ -213,11 +213,12 @@ function ContactIntake() {
             Share your vision
           </p>
           <h1 className="mt-5 font-playfair text-5xl font-black">
-            We’ll listen before suggesting a path.
+            Tell us what is not working.
           </h1>
           <p className="mt-5 max-w-2xl text-[#dce8dd]">
-            You do not need a technical brief or a chosen service. This form
-            starts a conversation only.
+            It could be a website, workflow, tool, or repeated task. Tell us
+            what is happening. We&apos;ll help find the right fix or next step,
+            then agree on the work before anything starts.
           </p>
         </div>
       </section>

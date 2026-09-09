@@ -15,7 +15,7 @@ test.describe('Retained core smoke checks', () => {
     const response = await page.goto('/contact?offer=website-fix');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /listen before suggesting/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /tell us what is not working/i })).toBeVisible();
     await page.getByRole('button', { name: /^Step 4:/ }).click();
     await expect(page.getByRole('radio', { name: 'Website Fix', exact: true })).toBeChecked();
     await page.getByRole('radio', { name: 'Managed Automation', exact: true }).check();

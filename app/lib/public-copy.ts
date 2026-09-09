@@ -5,7 +5,7 @@
  * summaries cannot quietly drift apart.
  */
 export const PUBLIC_CORE_PROMISE =
-  'NeedThisDone helps owners and founders fix one website problem or one repeated task.';
+  'NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.';
 
 export const PUBLIC_BRAND_PROMISE = 'Your vision, brought to life.';
 export const PUBLIC_BRAND_TITLE = 'Your Vision, Brought to Life';

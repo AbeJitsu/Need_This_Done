@@ -37,8 +37,8 @@ export const seoConfig = {
   // SEO keywords
   keywords: [
     'your vision brought to life',
-    'outcome partner for founders',
-    'bring a business vision to life',
+    'outcome partner for teams',
+    'bring a team vision to life',
     'focused business improvement',
     'website fix',
     'website accessibility fix',

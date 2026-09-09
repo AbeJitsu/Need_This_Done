@@ -43,11 +43,11 @@ export default function AboutPage() {
             Why NeedThisDone
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            A partner who makes the work easier to trust.
+            Clear help for problems that matter.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            You know your business. We bring structure without pretending to
-            know it better. The work stays bounded and easy to review.
+            You know your business. We bring the technical know-how, keep the work
+            focused, and show what changed.
           </p>
         </div>
       </section>
