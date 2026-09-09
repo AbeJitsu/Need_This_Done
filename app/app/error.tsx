@@ -22,16 +22,14 @@ export default function Error({ error, reset }: ErrorProps) {
     >
       <section className="max-w-xl">
         <p className="text-xs font-bold uppercase tracking-[.22em] text-[#126b4e]">
-          Something got in the way
+          Something needs another try
         </p>
         <h1 className="mt-5 font-playfair text-5xl font-black">
-          We could not open this page right now.
+          We could not open this page.
         </h1>
         <p className="mt-5 leading-7 text-[#50675e]">
 
-          {canRetry
-            ? "Try this page again."
-            : "You can return to the beginning and keep exploring."}
+          {canRetry ? "Try again to continue." : "Return home to keep exploring."}
         </p>
         {canRetry ? (
           <button
@@ -49,14 +47,6 @@ export default function Error({ error, reset }: ErrorProps) {
             Return Home
           </Link>
         )}
-        <p className="mt-5">
-          <Link
-            href="/contact"
-            className="font-semibold text-[#126b4e] underline"
-          >
-            Share Your Vision instead
-          </Link>
-        </p>
       </section>
     </main>
   );
