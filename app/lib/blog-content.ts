@@ -1,5 +1,6 @@
 import posts from '@/content/blog-posts.json';
 import type { BlogPost, BlogPostSummary } from '@/lib/blog-types';
+import { getRetainedArticleCopy } from '@/lib/public-article-copy';
 
 // Each repository-owned post was reviewed on 2026-08-08. These three remain
 // useful to the two current offers; the other six resolve to the Insights hub
@@ -12,6 +13,10 @@ export const RETAINED_POST_SLUGS = new Set([
 
 const publishedPosts = (posts as BlogPost[])
   .filter((post) => post.status === 'published' && RETAINED_POST_SLUGS.has(post.slug))
+  .map((post) => {
+    const copy = getRetainedArticleCopy(post.slug);
+    return copy ? { ...post, ...copy } : post;
+  })
   .sort((left, right) =>
     (right.published_at || '').localeCompare(left.published_at || ''),
   );
