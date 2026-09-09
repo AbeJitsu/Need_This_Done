@@ -68,7 +68,7 @@ It is complete only when all of these are true:
 | Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only MacBook rehearsal |
 | Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
 | Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
-| MCP facade | Not yet built | Expose only `start_workflow`, `get_workflow_status`, and `list_workflows` over an authenticated transport |
+| MCP facade | Device-independent request/result schemas are implemented and unit-tested; authenticated transport is not yet built | Expose only `start_workflow`, `get_workflow_status`, and `list_workflows` over a stable authenticated transport |
 | MacBook Pro | Interactive coding and first bridge-rehearsal host | Configure the private bridge environment and validate the loopback Gateway |
 | Mac mini | Intended always-on worker host; not activated | Repeat the approved worker proof after the MacBook proof |
 | Codex/GitHub worker | Coding worker contract remains future; current bridge is OpenClaw non-code | Add isolated worktree, branch, checks, commit SHA, and review evidence |
@@ -86,6 +86,40 @@ Each capability must carry the narrowest useful evidence at each layer:
 | Live rehearsal | Not available in this environment | MacBook Pro/Mac mini, Vercel, Supabase, Redis/vector, provider, and durable result |
 
 Passing local tests never changes a capability to “live” or “hosted.”
+
+## TDD policy and test-suite audit
+
+Test count is not the quality measure. A test is retained when it protects at
+least one of these things:
+
+- a user-visible outcome or API response;
+- a security, approval, ownership, or source-of-truth boundary;
+- a durable data invariant or migration/RLS rule;
+- a replaceable-worker or provider contract; or
+- an accessibility, responsive, or retirement requirement that would be easy
+  to regress silently.
+
+The test-first sequence for each new capability is: write the smallest failing
+contract test, implement only enough behavior to pass it, run the narrow test,
+then run the relevant broader gate and record the evidence here and in
+`docs/RELEASE_EVIDENCE.md`.
+
+| Current suite | Why it exists | Audit decision |
+| --- | --- | --- |
+| Required deterministic unit/API tests: 68 files and 358 tests in the latest code gate | Fast feedback for validation, authorization, idempotency, provider adapters, public contracts, and pure library behavior | Keep behavior coverage; consolidate shared fixtures/helpers only when failure meaning stays clear |
+| Security, RLS, schema, and provider-recovery suites | Prove database permissions and durable invariants that mocked unit tests cannot prove | Keep separate from the fast unit gate and run through `verify:database` |
+| Accessibility tests: 6 files and 60 tests | Protect keyboard, semantic, and axe-level regressions on retained UI primitives and flows | Keep the meaningful accessibility matrix; parameterize repeated setup rather than deleting variants |
+| Browser/E2E suites | Prove route composition, authentication, approval, recovery, responsive behavior, and real browser boundaries | Keep focused journeys; do not treat every page assertion as an end-to-end workflow proof |
+| Bridge and worker tests | Prove signatures, frozen-plan checks, loopback behavior, artifact safety, and no-delivery defaults | Keep worker safety tests separate because the Mac runtime has platform-specific evidence |
+| Retired-surface and documentation tests | Prove that removed systems do not quietly return and that canonical docs remain aligned | Keep one focused assertion set per boundary; remove only after the boundary itself is removed |
+
+The first audit found no safe behavior deletions yet. The apparent volume is
+mostly separate boundaries and parameterized UI/accessibility cases. The
+initial consolidation target is test setup and repeated fixtures, not
+assertions. Any future test removal must name the invariant it duplicates,
+show the surviving test that protects it, and be followed by a full relevant
+gate. A passing test that only mirrors implementation details is a candidate
+for replacement with a public-contract assertion.
 
 ## Explicitly not active
 

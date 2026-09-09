@@ -81,7 +81,7 @@ work.
 | Component | Responsibility | Boundary |
 |---|---|---|
 | ChatGPT | Conversational interface, reasoning, clarification, planning, status interpretation, and summaries | Does not run long-lived workers, queues, or arbitrary shell commands |
-| MCP facade | Small authenticated adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` | Does not become a second workflow engine or database |
+| MCP facade | Stable authenticated control-plane adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` from any approved device | Device-independent; does not become a second workflow engine or database |
 | Hermes | Validates requests, creates and tracks workflows, assigns workers, handles leases/retries/events, and persists outcomes | Coordinates execution; it does not replace ChatGPT's conversation layer |
 | Next.js/Vercel | Internet-facing authenticated control plane and server-side API boundary | Not the permanent worker and never exposes private credentials to the browser |
 | Supabase/Postgres/Storage | Auth, RLS, durable plans, approvals, tasks, results, costs, and private assets | Canonical source for durable workflow and business truth |
@@ -94,14 +94,20 @@ work.
 | GitHub | Code, branch, commit, and pull-request source of truth | Production branches remain protected and review-gated |
 | OpenRouter | Current application-side planner/model route | Free route first; paid route requires separate approval |
 
-The normal request path is: ChatGPT understands the request → the MCP facade
-authenticates and validates it → Hermes creates the durable Supabase record →
+The normal request path is: ChatGPT understands the request from the MacBook Pro,
+Mac mini, or another approved client → the stable MCP facade authenticates and
+validates it → Hermes creates the durable Supabase record →
 Redis carries only transient coordination → the Mac mini claims and runs the
 approved job → OpenClaw or Codex returns structured evidence → Hermes persists
 the result → ChatGPT reports the status and next decision. Upstash Vector may
 receive a provenance-bearing projection after durable state exists, but it
 never overrides current Supabase or GitHub facts and does not restore the
 retired public chatbot or page-indexing system.
+
+The reviewer-facing [test strategy and suite inventory](docs/TEST_STRATEGY.md)
+defines the TDD gate, explains what each test layer proves and does not prove,
+and records the rules for consolidating tests without losing a safety or
+product invariant.
 
 ## Product boundary
 

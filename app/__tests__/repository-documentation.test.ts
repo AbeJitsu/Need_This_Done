@@ -17,6 +17,7 @@ const retainedMarkdown = [
   'docs/PROJECT_STATUS.md',
   'docs/PUBLIC_LANGUAGE_AUDIT.md',
   'docs/RELEASE_EVIDENCE.md',
+  'docs/TEST_STRATEGY.md',
   'docs/launch/LAUNCH_CHECKLIST.md',
   'docs/plans/2026-09-04-emotion-first-public-journey.md',
   'supabase/AGENTS.md',

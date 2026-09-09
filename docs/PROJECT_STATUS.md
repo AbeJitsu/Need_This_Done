@@ -5,6 +5,20 @@
 
 ## Current facts
 
+- The reviewer-facing [test strategy and suite inventory](TEST_STRATEGY.md)
+  now records the purpose, value, limitations, commands, and file-level scope
+  of the unit, contract, database/RLS, integration, accessibility, browser,
+  bridge, and live-rehearsal layers. It also defines the TDD definition of done
+  and requires evidence before any test is consolidated or removed.
+
+- On 2026-09-09, the first MCP TDD increment defined and tested the exact
+  device-independent tool surface: `start_workflow`, `get_workflow_status`,
+  and `list_workflows`. The schemas bound request sizes, reject server-owned
+  fields, require approval-gated start results, validate reviewable status
+  envelopes, and bound list cursors. This is a transport-neutral contract
+  only; no MCP endpoint, Hermes persistence call, worker dispatch, or Mac
+  connectivity is claimed yet.
+
 - On 2026-09-09, the assistant infrastructure audit confirmed the hardware
   split: the MacBook Pro is Abe's interactive development and coding machine;
   the Mac mini is the intended always-on private worker. Existing Redis is
