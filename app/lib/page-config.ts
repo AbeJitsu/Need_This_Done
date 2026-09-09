@@ -12,6 +12,7 @@
 // That's it! Routes, types, and mappings are auto-generated.
 
 import { PUBLIC_OFFERS } from './public-offers';
+import { PUBLIC_BRAND_PROMISE, PUBLIC_CORE_PROMISE } from './public-copy';
 import type { AccentColor, AccentVariant } from './colors';
 
 // ============================================================================
@@ -421,11 +422,11 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/how-it-works', label: 'How It Works' },
       { href: '/work', label: 'Work' },
     ],
-    ctaButton: { text: "Tell us what's stuck", href: '/contact' },
+    ctaButton: { text: 'Share Your Vision', href: '/contact' },
   },
   footer: {
     brand: 'Need This Done',
-    tagline: 'One clear outcome for work that keeps getting stuck.',
+    tagline: `${PUBLIC_BRAND_PROMISE} ${PUBLIC_CORE_PROMISE}`,
     links: [
       { href: '/website-fix', label: 'Website Fix' },
       { href: '/managed-automation', label: 'Managed Automation' },
@@ -473,7 +474,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       hero: {
         title: 'Fix the work that’s slowing you down.',
-        description: 'Bring us one website problem or one repeated task. We agree on one outcome and hand the completed work back clearly.',
+        description: PUBLIC_CORE_PROMISE,
         buttons: [
           { text: 'Start a Website Fix', variant: 'blue', href: '/contact?offer=website-fix' },
           { text: 'Discuss Managed Automation', variant: 'gold', href: '/contact?offer=managed-automation' },
@@ -532,29 +533,6 @@ export const PAGE_CONFIGS = {
               },
             },
           },
-          {
-            title: 'Focused work',
-            tagline: 'Keep the better result in view',
-            description: 'Start with one repeated problem and agree on what better looks like.',
-            details: 'A clear problem, a clear result',
-            color: 'purple',
-            linkText: 'Learn more →',
-            modal: {
-              headline: 'Work with a clear focus.',
-              hook: 'Keep the work centered on one better result.',
-              bulletHeader: 'What to start with:',
-              bulletPoints: [
-                'One repeated problem',
-                'The work it affects',
-                'The better result you want',
-                'A focused plan for moving it forward',
-              ],
-              ctas: {
-                primary: { text: 'Discuss Managed Automation', href: '/contact?offer=managed-automation' },
-                secondary: { text: 'See All Services', href: '/services' },
-              },
-            },
-          },
         ],
       },
       processPreview: {
@@ -590,7 +568,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Choose the shape of the fix.',
-        description: 'One visible website problem fits Website Fix. One repeated problem at work fits Managed Automation.',
+        description: PUBLIC_CORE_PROMISE,
       },
       chooseYourPath: {
         title: 'Choose by what is stuck.',
@@ -631,7 +609,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Know the commitment before you start.',
-        description: 'Website Fix has one published price. Managed Automation is priced in a written proposal.',
+        description: 'Website Fix is $500. Managed Automation is priced in a written proposal.',
       },
       tiers: [
         {
@@ -712,14 +690,14 @@ export const PAGE_CONFIGS = {
         description: 'Short answers about scope, cost, and what happens next.',
       },
       items: [
-        { question: 'Do I need to know which service fits?', answer: 'No. Start with what you want to change. We can clarify a useful next step together. Explore the two starting points.', links: [{ text: 'Explore the two starting points.', href: '/services' }] },
-        { question: 'What if I have tried to solve this before?', answer: 'You want the next attempt to be worthwhile. Tell us what you tried, what it was meant to do, and what you learned. We will use that context when discussing the work.' },
-        { question: 'How much time or preparation do I need?', answer: 'A few sentences are enough to begin. You can browse all four intake steps before answering. We discuss any access, review time, and delivery timing before you decide.' },
+        { question: 'Do I need to know which service fits?', answer: 'No. Start with what you want to change. We can clarify the next useful step together. Explore the two starting points.', links: [{ text: 'Explore the two starting points.', href: '/services' }] },
+        { question: 'What if I have tried to solve this before?', answer: 'Tell us what you tried and what you learned. We will use that context when discussing the work.' },
+        { question: 'How much preparation do I need?', answer: 'A few sentences are enough to begin. You can browse all four intake steps first. We discuss access, review time, and delivery timing before you decide.' },
         { question: 'What does Website Fix include?', answer: `${PUBLIC_OFFERS['website-improvement'].summary} ${PUBLIC_OFFERS['website-improvement'].price}. See Website Fix details.`, links: [{ text: 'See Website Fix details.', href: PUBLIC_OFFERS['website-improvement'].detailHref }] },
         { question: 'What does Managed Automation start with?', answer: `${PUBLIC_OFFERS['ai-operator'].summary} Explore Managed Automation.`, links: [{ text: 'Explore Managed Automation.', href: PUBLIC_OFFERS['ai-operator'].detailHref }] },
-        { question: 'When do we agree on the price?', answer: 'You should know the commitment before deciding. We agree on the work and price first. Review pricing.', links: [{ text: 'Review pricing.', href: '/pricing' }] },
-        { question: 'What if the request grows?', answer: 'The original agreement remains the reference. We discuss any extra work and its price separately so you can decide whether to continue.' },
-        { question: 'Is a website snapshot a compliance certification?', answer: 'It can highlight selected issues worth reviewing. It cannot certify accessibility or provide legal advice. Read what the checks cover.', links: [{ text: 'Read what the checks cover.', href: '/ada-compliance' }] },
+        { question: 'When do we agree on the price?', answer: 'We agree on the work and price before you commit. Review pricing.', links: [{ text: 'Review pricing.', href: '/pricing' }] },
+        { question: 'What if the request grows?', answer: 'The original agreement remains the reference. We discuss extra work and its price separately. You decide whether to continue.' },
+        { question: 'What does a website snapshot cover?', answer: 'It highlights selected issues worth reviewing. It does not review every interaction or provide legal advice. Read what the checks cover.', links: [{ text: 'Read what the checks cover.', href: '/ada-compliance' }] },
         { question: 'How do I get started?', answer: 'Share the change you want in your own words. Choosing a service is optional. Share Your Vision.', links: [{ text: 'Share Your Vision.', href: '/contact' }] },
       ],
       cta: {
@@ -739,7 +717,7 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Work backward from the result.',
-        description: 'A simple process that starts with the result you want to improve.',
+        description: 'A simple process that starts with the result you want.',
       },
       trustBadges: [
         { text: 'Start with the result', description: 'Name what should be better' },
@@ -747,10 +725,10 @@ export const PAGE_CONFIGS = {
         { text: 'Stay focused', description: 'Keep the work aimed at the result' },
       ],
       steps: [
-        { number: 1, title: 'Name the outcome', description: 'Start with the result that should be different when the work is done.', details: ['What is stuck now?', 'What would useful improvement look like?', 'What is outside the request?'], color: 'green' },
-        { number: 2, title: 'Understand the work', description: 'Look at the people, tools, and steps around that result.', details: ['See where work gets stuck', 'Keep the scope clear', 'Set the price and scope'], color: 'blue' },
+        { number: 1, title: 'Name the outcome', description: 'Start with the result that should change.', details: ['What is stuck now?', 'What would useful improvement look like?', 'What is outside the request?'], color: 'green' },
+        { number: 2, title: 'Understand the work', description: 'Look at the people, tools, and steps around it.', details: ['See where work gets stuck', 'Keep the scope clear', 'Set the price and scope'], color: 'blue' },
         { number: 3, title: 'Move it forward', description: 'Focus the agreed work on the better result.', details: ['Keep useful details together', 'Make the next step clear', 'Show what is still blocked'], color: 'purple' },
-        { number: 4, title: 'Share what changed', description: 'See what moved forward and decide the next useful step.', details: ['See what is ready', 'See what changed', 'Carry the result into the next step'], color: 'gold' },
+        { number: 4, title: 'Share what changed', description: 'See what moved and decide the next useful step.', details: ['See what is ready', 'See what changed', 'Carry the result into the next step'], color: 'gold' },
       ],
       timeline: {
         title: 'Review boundary',
@@ -782,28 +760,28 @@ export const PAGE_CONFIGS = {
     contentType: 'contact_page',
     defaults: {
       header: {
-        title: 'Give the work context.',
-        description: 'Share only what is needed to scope the first useful move.',
+        title: 'Tell us what needs to change.',
+        description: 'Share the context for one useful first move.',
       },
       quickLink: { text: 'Contact →', href: '/contact' },
       form: {
-        nameField: { label: 'What should we call you?', placeholder: 'Your name' },
-        emailField: { label: 'Where can we reach you?', placeholder: 'your@email.com' },
+        nameField: { label: 'Your name', placeholder: 'Your name' },
+        emailField: { label: 'Your email', placeholder: 'your@email.com' },
         companyField: { label: 'Company', placeholder: 'Where you work', optional: '(if applicable)' },
         serviceField: {
-          label: 'What are you contacting us about?',
+          label: 'Which starting point fits?',
           placeholder: '',
           defaultOption: 'Choose a starting point',
           otherOption: 'Something else',
         },
         messageField: {
-          label: 'What result do you want?',
-          placeholder: 'Describe the problem, workflow, and result in plain language.',
+          label: 'What should change?',
+          placeholder: 'Describe the problem and the result you want.',
         },
         fileUpload: {
           label: 'Have files to share?',
-          optional: '(totally optional)',
-          dropText: 'Drop files here or click to browse',
+          optional: '(optional)',
+          dropText: 'Drop files here or choose files',
           helpText: 'Images, PDFs, or docs. Up to 3 files, 5MB each',
           removeButton: 'Remove',
         },
@@ -811,8 +789,8 @@ export const PAGE_CONFIGS = {
       },
       success: {
         title: 'Request received.',
-        description: 'We\'ll review the context and confirm the next step before work begins.',
-        nextStepsTitle: 'What happens next:',
+        description: 'A person will review your context and confirm the next step.',
+        nextStepsTitle: 'Next steps:',
         nextSteps: [
           'We\'ll review the request',
           'We\'ll confirm the scope and next step',
@@ -821,7 +799,7 @@ export const PAGE_CONFIGS = {
         sendAnotherLink: 'Send another message',
       },
       error: {
-        message: "Something went wrong. Please try again.",
+        message: "We could not send your request. Your answers are still here. Please try again.",
       },
       cta: {
         title: 'Need more context first?',
@@ -842,7 +820,7 @@ blog: {
     displayName: 'Blog',
     contentType: 'blog_page',
     defaults: {
-      header: { title: 'Insights', description: 'Short notes for owners and founders turning a vision for something better into a clear next move.' },
+      header: { title: 'Insights', description: 'Short notes for owners and founders choosing a useful next move.' },
       emptyState: { emoji: '📝', title: 'Fresh notes soon', description: 'New notes will focus on clearer decisions and more useful workflows.' },
       morePostsTitle: 'More Articles',
       categoryFilterLabel: 'All Insights',
@@ -875,17 +853,17 @@ blog: {
     displayName: 'Privacy Policy',
     contentType: 'privacy_page',
     defaults: {
-      header: { title: 'Privacy Policy', description: 'How project requests, technical signals, and authenticated private-workspace records are handled.' },
+      header: { title: 'Privacy Policy', description: 'How we handle requests, site data, and private workspace records.' },
       lastUpdated: 'September 4, 2026',
       quickSummary: {
         title: 'Quick Summary',
-        items: ['We collect the contact, project, technical, and private-workspace information needed to respond and deliver agreed work', 'A public request does not create a subscription, and the public flow does not collect payment-card details', 'We do not sell personal information', 'Private records remain behind authenticated, role-scoped access'],
+        items: ['We collect the information needed to respond and deliver agreed work', 'A public request does not create a subscription or collect payment-card details', 'We do not sell personal information', 'Private records stay behind authenticated, role-scoped access'],
       },
       sections: [
-        { title: '1. Information We Collect', content: 'When you submit a project request, we collect the contact details and project context you provide. The guided intake can include prior attempts, preferences, possibilities, and optional feelings you choose to report. We do not infer sentiment, psychological traits, or emotional categories.\n\nPrivate team records may contain the project, decisions, evidence, outcomes, and files needed to deliver agreed work. We also receive basic technical request and security information needed to operate and protect the site. In the approved hosted environment, we may also count allowlisted page and action events in daily totals. Those totals do not store raw event records, answers, IP addresses, referrers, user agents, cookies, or cross-session identifiers, and are disabled when Do Not Track or Global Privacy Control is enabled.' },
-        { title: '2. How We Use Information', content: 'We use project-request information to respond, scope work, send relevant service communications, and deliver an accepted engagement. Private-workspace information is used to operate and document the agreed work, including approvals and outcomes.\n\nWe do not sell personal information. A public request does not enroll you in an automatic subscription or purchase, and payment-card data is not collected by the current public site flow.' },
-        { title: '3. Vendors and Access', content: 'NeedThisDone uses outside vendors for hosting, sign-in, email delivery when configured, and security or operational support. They may process information only as needed to provide those services.\n\nPrivate team records are limited to authorized operators. Customers receive agreed handoffs and weekly briefs directly.' },
-        { title: '4. Retention and Your Choices', content: 'We retain request and delivery information for as long as reasonably needed to respond, deliver work, meet legal or operational obligations, resolve disputes, and maintain accurate records. You may ask to access, correct, or request deletion of personal information by contacting us. Some records may need to be retained where required for legitimate operational or legal reasons.' },
+        { title: '1. Information We Collect', content: 'When you send a project request, we collect the contact details and context you provide. Guided intake may include prior attempts, preferences, possibilities, and optional feelings. We do not infer sentiment, psychological traits, or emotional categories.\n\nPrivate team records may contain project details, decisions, evidence, outcomes, and files needed for agreed work. We receive basic technical and security data to operate and protect the site. In the approved hosted environment, we may count allowlisted page and action events in daily totals. These totals do not store raw events, answers, IP addresses, referrers, user agents, cookies, or cross-session identifiers. They are disabled when Do Not Track or Global Privacy Control is enabled.' },
+        { title: '2. How We Use Information', content: 'We use project-request information to respond, scope work, send service messages, and deliver accepted work. Private-workspace information helps us operate and document agreed work, including approvals and outcomes.\n\nWe do not sell personal information. A public request does not enroll you in an automatic subscription or purchase. The current public flow does not collect payment-card data.' },
+        { title: '3. Vendors and Access', content: 'NeedThisDone uses vendors for hosting, sign-in, email delivery when configured, and operational support. They may process information only as needed for those services.\n\nPrivate team records are limited to authorized operators. Customers receive agreed handoffs and weekly briefs directly.' },
+        { title: '4. Retention and Your Choices', content: 'We retain request and delivery information as long as reasonably needed. This supports response, delivery, legal or operational duties, disputes, and accurate records. You may ask to access, correct, or delete personal information by contacting us. Some records may remain when legitimate operational or legal reasons require it.' },
         { title: '5. Contact Us', content: 'Questions or requests about privacy?\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
       ],
     } as PrivacyPageContent,
@@ -897,19 +875,19 @@ blog: {
     displayName: 'Terms of Service',
     contentType: 'terms_page',
     defaults: {
-      header: { title: 'Terms of Service', description: 'The public-site terms for project requests, a $500 Website Fix, and proposal-based Managed Automation.' },
+      header: { title: 'Terms of Service', description: 'Terms for requests, Website Fix, and proposal-based Managed Automation.' },
       lastUpdated: 'August 9, 2026',
       quickSummary: {
         title: 'The Short Version',
-        items: ['A request starts a conversation; it is not an automatic purchase, subscription, or binding agreement', 'Website Fix is $500: $250 manual invoice to begin and $250 after the agreed contained fix is delivered', 'Managed Automation is proposal-based, with one repeated task, a 30-day finish line, price, payment, and clear human decisions', 'Messages, publishing, account changes, and spending require explicit human approval'],
+        items: ['A public request starts a conversation. It does not create a subscription or binding agreement', 'Website Fix is $500: two invoices of $250, before and after the agreed contained fix', 'Managed Automation is proposal-based for one repeated task and a 30-day finish line', 'Messages, publishing, account changes, and spending require explicit human approval'],
       },
       sections: [
-        { title: '1. Acceptance and Project Requests', content: "By using NeedThisDone.com, you agree to these terms for your use of the public site. A project request invites a follow-up conversation; it does not create an automatic purchase, subscription, or binding service agreement. Accepted work is governed by the specific written scope, proposal, and invoice agreed for that engagement." },
-        { title: '2. Website Fix Scope', content: 'Website Fix is $500 and includes an evidence-backed review plus one mutually agreed contained fix. A contained fix is one page- or component-level improvement, accessibility/SEO/performance correction, or focused conversion change.\n\nIt does not include a redesign, integration, multi-page build, or other work outside the written scope. Additional work requires a separate agreement.' },
-        { title: '3. Website Fix Payment', content: 'After the contained scope is confirmed, Website Fix uses two manual invoices: $250 (50%) to begin and $250 (50%) after the agreed fix is delivered. The current public site does not activate a checkout or recurring payment flow. Any payment questions or changes are handled directly in the agreed written scope.' },
-        { title: '4. Managed Automation', content: 'Managed Automation is a proposal-based, human-run 30-day pilot for one repeated task. Before work begins, the written proposal sets the requested result, scope, price, payment terms, success measures, and the actions that always need your say. NeedThisDone operators keep the work, evidence, costs, and decisions together.\n\nThe pilot does not create automatic external authority. Any expansion or continuation requires a separate decision and agreement.' },
-        { title: '5. Human Approval and Client Responsibilities', content: 'External messages, publishing, system changes, and spending require explicit human approval. You agree to provide accurate context, timely access or feedback when needed, and authority for any requested work. You remain responsible for your business decisions, content, accounts, and approvals.' },
-        { title: '6. Results, Intellectual Property, and Liability', content: 'NeedThisDone does not guarantee traffic, revenue, legal compliance, accessibility certification, conversion results, or any other business outcome. Ownership, license, confidentiality, and portfolio terms for an accepted engagement are defined in its written scope. To the extent allowed by law, liability is limited to the amounts paid for the specific engagement giving rise to the claim.' },
+        { title: '1. Acceptance and Project Requests', content: "By using NeedThisDone.com, you agree to these public-site terms. A project request invites a follow-up conversation. It does not create an automatic purchase, subscription, or binding service agreement. Accepted work follows the written scope, proposal, and invoice for that engagement." },
+        { title: '2. Website Fix Scope', content: 'Website Fix is $500. It includes an evidence-backed review and one mutually agreed contained fix. A contained fix is one page or component improvement, accessibility, SEO, or performance correction, or focused conversion change.\n\nIt does not include a redesign, integration, multi-page build, or work outside the written scope. Additional work requires a separate agreement.' },
+        { title: '3. Website Fix Payment', content: 'After the contained scope is confirmed, Website Fix uses two manual invoices. Each invoice is $250 (50%). The first starts work, and the second follows delivery. The current public site does not activate checkout or recurring payment. Payment questions or changes are handled in the written scope.' },
+        { title: '4. Managed Automation', content: 'Managed Automation is a proposal-based, human-run 30-day pilot for one repeated task. The proposal sets the result, scope, price, payment terms, success measures, and actions that need your say. NeedThisDone operators keep work, evidence, costs, and decisions together.\n\nThe pilot does not create automatic external authority. Expansion or continuation needs a separate decision and agreement.' },
+        { title: '5. Human Approval and Client Responsibilities', content: 'External messages, publishing, system changes, and spending require explicit human approval. You agree to provide accurate context, timely access, feedback, and authority for requested work. You remain responsible for business decisions, content, accounts, and approvals.' },
+        { title: '6. Results, Intellectual Property, and Liability', content: 'NeedThisDone does not guarantee traffic, revenue, legal compliance, accessibility, conversion results, or other business outcomes. Ownership, license, confidentiality, and portfolio terms appear in the written scope. To the extent allowed by law, liability is limited to amounts paid for the engagement tied to the claim.' },
         { title: '7. Privacy and Contact', content: 'Please review the Privacy Policy for how information is handled. Questions about these terms or a project scope can be sent to:\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
       ],
     } as TermsPageContent,

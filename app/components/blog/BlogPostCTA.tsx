@@ -26,7 +26,7 @@ export default function BlogPostCTA({ offerId }: { offerId: PublicOfferId }) {
               What would you like to improve?
             </h2>
             <p className="text-lg leading-8 text-emerald-50/75">
-              Bring the context and the result you want. We&apos;ll help define the smallest useful next step.
+              Bring the context and the result you want. We will define the smallest useful next step.
             </p>
           </div>
           <Link

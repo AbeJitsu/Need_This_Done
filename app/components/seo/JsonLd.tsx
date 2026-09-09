@@ -5,6 +5,8 @@
 // This helps search engines understand the content and display rich snippets.
 
 import { seoConfig } from '@/lib/seo-config';
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
+import { PUBLIC_OFFERS } from '@/lib/public-offers';
 
 interface JsonLdProps {
   type: 'LocalBusiness' | 'WebSite' | 'Service' | 'FAQPage' | 'ProfessionalService';
@@ -14,7 +16,7 @@ interface JsonLdProps {
 const businessInfo = {
   name: seoConfig.siteName,
   url: seoConfig.baseUrl,
-  description: seoConfig.description,
+  description: PUBLIC_CORE_PROMISE,
   address: {
     '@type': 'PostalAddress',
     addressLocality: seoConfig.business.address.locality,
@@ -117,7 +119,7 @@ const schemas = {
         name: 'What is Website Fix?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'We review one website problem and agree on one correction. You receive the fix and a clear record of what changed. $500 total.',
+          text: `${PUBLIC_OFFERS['website-improvement'].summary} ${PUBLIC_OFFERS['website-improvement'].price}.`,
         },
       },
       {
@@ -133,7 +135,7 @@ const schemas = {
         name: 'What is Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It is a proposal-based way to improve one repeated problem at work, centered on a shared picture of a better result.',
+          text: PUBLIC_OFFERS['ai-operator'].summary,
         },
       },
       {
@@ -146,10 +148,10 @@ const schemas = {
       },
       {
         '@type': 'Question',
-        name: 'Does the site audit certify accessibility or legal compliance?',
+        name: 'What does a website snapshot cover?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. The audit surfaces selected technical signals and may support one focused improvement. It is not legal advice or an accessibility certification.',
+          text: 'It highlights selected website signals. It does not review every interaction or provide legal advice.',
         },
       },
     ],
@@ -237,7 +239,7 @@ export function AllServicesJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Professional Services',
-    description: 'Focused ways to bring a better website or way of working to life.',
+    description: PUBLIC_CORE_PROMISE,
     itemListElement: seoConfig.services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,

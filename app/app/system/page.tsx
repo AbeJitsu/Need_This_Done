@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
+import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 import {
   ArrowRight,
   Check,
@@ -14,23 +15,22 @@ import {
 } from "lucide-react";
 
 const nextStep = PUBLIC_ROUTE_STAGES["/system"].secondary;
+const technicalSectionLabel = "Technical details for curious readers";
 
 export const metadata: Metadata = {
   title: "The System Behind NeedThisDone | NeedThisDone",
   description:
-    "See how our private assistant is designed to ask before acting, keep work private, and show what changed.",
+    PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/system" },
   openGraph: {
     title: "The System Behind NeedThisDone | NeedThisDone",
-    description:
-      "A private assistant designed around clear plans, owner approval, and results you can review.",
+    description: PUBLIC_CORE_PROMISE,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "The System Behind NeedThisDone | NeedThisDone",
-    description:
-      "A private assistant designed around clear plans, owner approval, and results you can review.",
+    description: PUBLIC_CORE_PROMISE,
   },
 };
 
@@ -80,7 +80,7 @@ const systemStages = [
     label: "Name the outcome",
     title: "Goal",
     description:
-      "Start with a clear goal, such as making the owner’s dashboard easier to use. Keep that goal with the task so the purpose stays clear.",
+      "Start with a clear goal. Keep it with the task so the purpose stays visible.",
     icon: "target",
   },
   {
@@ -88,7 +88,7 @@ const systemStages = [
     label: "Decide the boundary",
     title: "Owner approval",
     description:
-      "The owner sees what will happen, which tools will be used, the cost, and the expected result. Work needs approval before it starts.",
+      "The owner sees the scope, cost, and expected result. Work needs approval before it starts.",
     icon: "shield",
     highlighted: true,
   },
@@ -97,7 +97,7 @@ const systemStages = [
     label: "Move one piece",
     title: "Private execution",
     description:
-      "A private Mac picks up only the exact work the owner approved. It connects outward; this public website cannot send it commands.",
+      "A private machine picks up only approved work. This public website cannot send it commands.",
     icon: "lock",
   },
   {
@@ -105,7 +105,7 @@ const systemStages = [
     label: "Bring back evidence",
     title: "Reviewable proof",
     description:
-      "The owner can review the result, changed files, cost, and anything still unfinished in one private record.",
+      "The owner can review the result, cost, and unfinished work in one private record.",
     icon: "git",
   },
 ] as const;
@@ -116,15 +116,15 @@ const executionSteps: readonly RailStep[] = [
     label: "Start with the outcome",
     title: "Name what better looks like",
     description:
-      "Start with the better state, not a pile of disconnected tasks. That keeps the next piece connected to the reason it matters.",
+      "Start with the better state. Keep the next piece connected to why it matters.",
     icon: "target",
   },
   {
     number: "02",
     label: "Shape the work",
-    title: "Turn context into a plan",
+    title: "Turn context into a clear plan",
     description:
-      "Hermes turns the goal into a bounded plan with a visible next step. The owner can inspect the proposed move before deciding.",
+      "We turn the goal into a bounded plan with a visible next step. The owner reviews it before deciding.",
     icon: "workflow",
   },
   {
@@ -132,7 +132,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Cross the boundary",
     title: "Approve the move",
     description:
-      "The owner sees the scope, route, cost, and expected result before anything runs. The approval freezes what may happen next.",
+      "The owner sees the scope, cost, and expected result before anything runs. Approval sets the next move.",
     icon: "shield",
     highlighted: true,
   },
@@ -141,7 +141,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Do one useful piece",
     title: "Execute privately",
     description:
-      "The private machine sends the approved task to the right execution lane. The public browser never becomes the worker.",
+      "The private machine completes the approved task. The public browser never runs private work.",
     icon: "code",
   },
   {
@@ -149,7 +149,7 @@ const executionSteps: readonly RailStep[] = [
     label: "Make it legible",
     title: "Review the proof",
     description:
-      "The result comes back with evidence, blockers, and a clear next decision. The mission is ready to resume without guesswork.",
+      "The result comes back with evidence, blockers, and a clear next decision. Work can resume without guesswork.",
     icon: "git",
   },
 ];
@@ -160,7 +160,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Mission control",
     title: "NeedThisDone",
     description:
-      "Keeps the goal, context, approvals, status, costs, and results together in one durable record. The browser remains the place to inspect the work.",
+      "Keeps goals, approvals, status, costs, and results in one durable record. The browser remains the place to inspect it.",
     icon: "target",
   },
   {
@@ -168,7 +168,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Planning layer",
     title: "Hermes",
     description:
-      "Interprets the long-range objective and turns it into a focused, reviewable work packet. It proposes the next move without executing it.",
+      "Turns a long-range objective into a focused work packet. It proposes the next move without executing it.",
     icon: "workflow",
     highlighted: true,
   },
@@ -177,7 +177,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Local gateway",
     title: "OpenClaw",
     description:
-      "Runs approved non-code tools and provides the always-on gateway for the private machine. Its lane stays separate from coding work.",
+      "Runs approved non-code tools on the private machine. Its work stays separate from coding tasks.",
     icon: "shield",
   },
   {
@@ -185,7 +185,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Coding lane",
     title: "Codex",
     description:
-      "Works inside an isolated repository worktree to inspect, edit, test, and prepare code changes. The live product stays outside that boundary.",
+      "Works inside an isolated repository worktree to inspect, edit, test, and prepare code changes. The live product stays outside it.",
     icon: "code",
   },
   {
@@ -193,7 +193,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Review boundary",
     title: "GitHub",
     description:
-      "Holds the branch, diff, commit, and pull request so changes remain inspectable before merge. Review happens before a change becomes part of the product.",
+      "Holds the branch, diff, commit, and pull request. Review happens before a change becomes part of the product.",
     icon: "git",
   },
 ];
@@ -210,7 +210,7 @@ const codingSteps: readonly RailStep[] = [
     number: "02",
     label: "Keep the change isolated",
     title: "Dedicated worktree",
-    description: "Keep the change isolated from other work. That makes the resulting diff easier to review.",
+    description: "Keep the change isolated from other work. The resulting diff is easier to review.",
     icon: "lock",
   },
   {
@@ -218,7 +218,7 @@ const codingSteps: readonly RailStep[] = [
     label: "Inspect, edit, verify",
     title: "Codex execution",
     description:
-      "Inspect, edit, run the relevant checks, and explain the result. The evidence travels with the change.",
+      "Inspect, edit, test, and explain the result. The evidence travels with the change.",
     icon: "code",
   },
   {
@@ -226,7 +226,7 @@ const codingSteps: readonly RailStep[] = [
     label: "Return the evidence",
     title: "Reviewable handoff",
     description:
-      "Return the branch, diff, tests, and blockers before merge. A reviewer can decide from the handoff itself.",
+      "Return the branch, diff, tests, and blockers before merge. A reviewer can decide from the handoff.",
     icon: "shield",
     highlighted: true,
   },
@@ -238,7 +238,7 @@ const differencePoints = [
     icon: "workflow",
     title: "A conversation",
     description:
-      "Useful for thinking through the next prompt. The important context and next action may still need to be reconstructed later.",
+      "Useful for thinking through a next step. The context may need to be rebuilt later.",
     points: [
       "The work is centered on the current exchange",
       "The result may be an answer, draft, or recommendation",
@@ -250,7 +250,7 @@ const differencePoints = [
     icon: "target",
     title: "NeedThisDone",
     description:
-      "Designed for work that continues after the conversation. The goal stays visible while the system moves one approved piece forward.",
+      "Built for work that continues after the conversation. The goal stays visible as one approved piece moves.",
     points: [
       "The goal and constraints remain durable",
       "Every meaningful action crosses an approval boundary",
@@ -265,7 +265,7 @@ const dailyBeats: readonly RailStep[] = [
     label: "Check in",
     title: "See the current mission.",
     description:
-      "Review what moved, what is blocked, and the one decision that would make the next step clear. The owner starts from the current record.",
+      "Review what moved and what is blocked. See the one decision that would clarify the next step.",
     icon: "target",
   },
   {
@@ -273,7 +273,7 @@ const dailyBeats: readonly RailStep[] = [
     label: "Approve",
     title: "Authorize one useful move.",
     description:
-      "The owner decides what the system may do, which route it may use, and what result should come back. The approval remains bounded.",
+      "The owner decides what may happen and what result should come back. The approval remains bounded.",
     icon: "shield",
     highlighted: true,
   },
@@ -282,7 +282,7 @@ const dailyBeats: readonly RailStep[] = [
     label: "Review",
     title: "Pick up from evidence.",
     description:
-      "Return to a result, diff, or blocker—not a blank conversation where the entire project has to be explained again. The next decision stays visible.",
+      "Return to the result or blocker. The next decision stays visible.",
     icon: "git",
   },
 ];
@@ -290,17 +290,17 @@ const dailyBeats: readonly RailStep[] = [
 const proofItems = [
   "Authenticated browser control plane",
   "Supabase-backed plans, approvals, costs, and results",
-  "Signed outbound bridge to the private worker",
-  "Hermes plan, freeze, and approval lifecycle",
-  "Local safety and lifecycle checks around the worker boundary",
+  "A protected connection to the private machine",
+  "Approval steps around each task",
+  "Safety checks around private work",
 ] as const;
 
 const nextItems = [
   "A first-class coding task contract",
-  "Dedicated worktree and branch metadata",
-  "Test, diff, commit, and pull-request evidence",
-  "A durable goal → milestone → work-packet model",
-  "A bounded end-to-end coding rehearsal",
+  "A reviewable code handoff",
+  "Change, test, and review evidence",
+  "A durable goal and milestone record",
+  "A bounded coding rehearsal",
 ] as const;
 
 function SectionLabel({
@@ -481,15 +481,14 @@ export default function SystemPage() {
       >
         <div className="system-section__inner system-section__inner--narrow">
           <div className="system-section__intro">
-            <SectionLabel>The reason to build it</SectionLabel>
+              <SectionLabel>The reason to build it</SectionLabel>
             <h2 id="difference-heading" className="system-heading">
-              A conversation starts the work. The system carries it forward.
+              A conversation starts the work. A clear record carries it forward.
             </h2>
             <p className="system-section__lead">
-              NeedThisDone is not trying to be a prettier prompt box. It is
-              designed for work that spans days or weeks, continues while the
-              owner is away, and still needs to remain understandable and
-              controllable.
+              NeedThisDone is for work that continues after the first
+              conversation. The goal stays visible while one approved piece
+              moves forward.
             </p>
           </div>
           <div className="system-difference-grid">
@@ -563,22 +562,20 @@ export default function SystemPage() {
         <div className="system-section__inner">
           <div className="system-two-column system-two-column--architecture">
             <div className="system-section__intro">
-              <SectionLabel>One system, focused responsibilities</SectionLabel>
+            <SectionLabel>{technicalSectionLabel}</SectionLabel>
               <h2 id="architecture-heading" className="system-heading system-heading--compact">
-                Clear boundaries make the system easier to trust.
+                How the private pieces fit together.
               </h2>
               <p className="system-section__lead">
-                The goal is not to make every agent do everything. Each layer
-                owns one kind of responsibility, which makes authority easier
-                to understand and the failure boundary easier to contain.
+                Each named layer owns one responsibility. This keeps authority
+                clear and limits where a failure can spread.
               </p>
             </div>
             <figure>
               <SystemRail steps={architectureSteps} className="system-rail--architecture" />
               <figcaption className="system-figure-caption">
-                The browser and Supabase hold the durable record. The private
-                Mac performs approved work. GitHub is where code changes become
-                reviewable before they can become part of the product.
+                NeedThisDone and Supabase hold the durable record. The private
+                Mac performs approved work. GitHub holds code changes for review.
               </figcaption>
             </figure>
           </div>
@@ -593,14 +590,14 @@ export default function SystemPage() {
         <div className="system-section__inner">
           <div className="system-two-column system-two-column--dark">
             <div className="system-section__intro">
-              <SectionLabel light>The coding lane</SectionLabel>
+              <SectionLabel light>Technical details · code changes</SectionLabel>
               <h2 id="coding-heading" className="system-heading">
                 Code can change without losing the boundary.
               </h2>
               <p className="system-section__lead">
                 A coding task is not permission to modify the live product. It
-                is permission to make one bounded change in a designated
-                worktree, run the relevant checks, and return the evidence.
+                allows one bounded change in a designated worktree. We run the
+                relevant checks and return the evidence.
               </p>
               <div className="system-guardrail">
                 <Lock aria-hidden="true" />
@@ -666,12 +663,12 @@ export default function SystemPage() {
           <div className="system-section__intro">
             <SectionLabel>Where the project stands</SectionLabel>
             <h2 id="status-heading" className="system-heading system-heading--compact">
-              Build proof before making promises.
+              Show what exists before making promises.
             </h2>
             <p className="system-section__lead">
-              The repository already contains the control-plane foundation.
-              The coding lane is the next proof, so the public story stays
-              honest about what exists and what still needs to be demonstrated.
+              The repository contains the control-plane foundation. The next
+              proof is a bounded coding handoff. This page stays honest about
+              what exists and what still needs to be shown.
             </p>
           </div>
           <div className="system-status-grid">

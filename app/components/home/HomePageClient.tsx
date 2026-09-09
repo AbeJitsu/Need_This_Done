@@ -13,6 +13,7 @@ import {
   PUBLIC_OFFERS,
   type PublicOfferId,
 } from "@/lib/public-offers";
+import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
 type TeaserBeat = {
   number: string;
@@ -177,9 +178,7 @@ export default function HomePageClient() {
                 <span className="homepage-hero__title-line">to life.</span>
               </h1>
               <p className="homepage-hero__lead">
-                A clearer website. A smoother working day. More room for the idea you
-                want to bring to life. Tell us what you have in mind, and we will
-                help you find a useful place to start.
+                {PUBLIC_CORE_PROMISE} Tell us what you have in mind. We will help you find a useful place to start.
               </p>
               <div className="homepage-hero__actions">
                 <Link href="/contact" className="homepage-button homepage-button--gold">
@@ -211,7 +210,7 @@ export default function HomePageClient() {
               </h2>
             </div>
             <p className="homepage-section__lead">
-              Fix one part of your website or simplify one task you keep repeating.
+              Fix one website problem or simplify one repeated task.
             </p>
           </div>
 
@@ -264,8 +263,8 @@ export default function HomePageClient() {
               </h2>
             </div>
             <p className="homepage-section__lead">
-              Start with the messy version. We clarify the useful change, agree on the boundary,
-              and show you what moved.
+              Start with the messy version. We clarify the change, agree on the boundary,
+              and show what moved.
             </p>
           </div>
 
@@ -334,8 +333,8 @@ export default function HomePageClient() {
               Keep the goal, boundary, and result connected.
             </h2>
             <p>
-              A short public overview is enough to see the shape of the work. The deeper page
-              shows how goals stay clear, actions stay bounded, and results stay reviewable.
+              See how a clear goal becomes approved work. The deeper page explains
+              the private boundary and the reviewable result.
             </p>
             <div className="homepage-bridge__actions">
               <Link href="/system" className="homepage-button homepage-button--gold">
@@ -381,7 +380,7 @@ export default function HomePageClient() {
               What better can look like.
             </h2>
             <p className="homepage-section__lead">
-              Three short glimpses. Read the full stories on Examples.
+              Three short glimpses. Read the full examples on this page.
             </p>
           </div>
 
@@ -443,8 +442,8 @@ export default function HomePageClient() {
               A useful next move starts with listening.
             </h2>
             <p className="homepage-section__lead">
-              We keep the work bounded, make the decision visible, and return something you can
-              review. The full Why Us page explains the standards behind that approach.
+              We keep the work bounded. You see the decision and the result.
+              The Why Us page explains the standards behind that approach.
             </p>
           </div>
 
@@ -495,8 +494,8 @@ export default function HomePageClient() {
             You do not have to have it all figured out.
           </h2>
           <p>
-            Share what is getting in the way. We will hear you out and help you resolve the right
-            piece first.
+            Share what is getting in the way. We will help you choose the right
+            first piece.
           </p>
           <Link href="/contact" className="homepage-button homepage-button--green">
             Share Your Vision

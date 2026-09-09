@@ -11,6 +11,8 @@ import {
   PUBLIC_PRIMARY_ACTION,
 } from '@/lib/public-journey';
 import { contrastRatio } from '@/lib/wcag-contrast';
+import { PUBLIC_BRAND_TITLE } from '@/lib/public-copy';
+import { seoConfig } from '@/lib/seo-config';
 
 const appRoot = resolve(__dirname, '..');
 const repositoryRoot = resolve(appRoot, '..');
@@ -81,7 +83,7 @@ describe('vision-first public journey', () => {
   it('makes service choice optional and extends the projects contract compatibly', () => {
     const contact = source('app/contact/page.tsx');
     expect(contact).toContain('Step {step} of 4');
-    expect(contact).toContain('Do either of these sound like the place to start?');
+    expect(contact).toContain('Which starting point fits?');
     expect(contact).toMatch(/body\.append\(["']intakeContext["']/);
     for (const field of ['name', 'email', 'company']) expect(contact).toMatch(new RegExp(`body\\.append\\(["']${field}["']`));
     expect(source('app/api/projects/route.ts')).toContain("formData.get('message')");
@@ -160,9 +162,10 @@ describe('vision-first public journey', () => {
   });
 
   it('updates the social preview and root metadata to the new promise', () => {
-    expect(source('app/layout.tsx')).toContain('Your Vision, Brought to Life');
+    expect(PUBLIC_BRAND_TITLE).toBe('Your Vision, Brought to Life');
+    expect(source('app/layout.tsx')).toContain('PUBLIC_BRAND_TITLE');
     expect(source('public/og-image.svg')).toContain('Your vision,');
     expect(source('public/og-image.svg')).toContain('brought to life.');
-    expect(source('lib/seo-config.ts')).toContain('owners and founders');
+    expect(seoConfig.description).toContain('owners and founders');
   });
 });

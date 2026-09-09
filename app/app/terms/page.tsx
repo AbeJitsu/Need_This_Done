@@ -1,6 +1,7 @@
 import type { TermsPageContent } from '@/lib/page-content-types';
 import { defaultTermsContent } from '@/lib/default-page-content';
 import TermsPageClient from '@/components/terms/TermsPageClient';
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 
 // ============================================================================
 // Terms of Service Page
@@ -14,11 +15,11 @@ import TermsPageClient from '@/components/terms/TermsPageClient';
 
 export const metadata = {
   title: 'Terms of Service - NeedThisDone',
-  description: 'Terms for project requests, the $500 Website Fix, and proposal-based Managed Automation.',
+  description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/terms' },
   openGraph: {
     title: 'Terms of Service - NeedThisDone',
-    description: 'Terms for project requests, the $500 Website Fix, and proposal-based Managed Automation.',
+    description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
 };

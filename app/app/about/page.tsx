@@ -1,34 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
 const principles = [
   [
     "Bounded work, on purpose",
-    "We choose one meaningful piece to improve and name what stays outside it, so the work does not quietly become everything.",
+    "We choose one useful piece to improve. We name what stays outside it.",
   ],
   [
     "Context before convention",
-    "Your business, customers, and constraints shape the recommendation. We do not force a familiar solution onto an unfamiliar situation.",
+    "Your business, customers, and limits shape the recommendation. We do not force a familiar answer onto an unfamiliar situation.",
   ],
   [
     "Decisions stay yours",
-    "We make the recommendation and its tradeoffs visible, but you keep the call on scope, timing, and whether the work should begin.",
+    "We make tradeoffs visible. You decide the scope, timing, and whether work begins.",
   ],
   [
     "Proof over promises",
-    "We show the exact change, call out what remains, and avoid promising a business result we cannot support yet.",
+    "We show the change and call out what remains. We do not promise unsupported business results.",
   ],
 ] as const;
 
 export const metadata: Metadata = {
   title: "Why Us | NeedThisDone",
   description:
-    "A bounded partner for clear scope, visible decisions, and work you can review.",
+    PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/about" },
   openGraph: {
     title: "Why Us | NeedThisDone",
-    description: "Bounded work, visible decisions, and proof over promises.",
+    description: PUBLIC_CORE_PROMISE,
     type: "website",
   },
 };
@@ -46,8 +47,7 @@ export default function AboutPage() {
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
             You know your business. We bring structure without pretending to
-            know it better than you do. The work stays bounded, visible, and
-            easy to review.
+            know it better. The work stays bounded and easy to review.
           </p>
         </div>
       </section>

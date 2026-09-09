@@ -23,8 +23,8 @@ export default function WorkPageClient() {
             Explore what a useful change could look like.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd]">
-            These are illustrative before-and-after stories, not client results.
-            They show the shape a focused change can take.
+            These examples are illustrative. They show what one focused change
+            could look like.
           </p>
         </div>
       </section>

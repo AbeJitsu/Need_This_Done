@@ -41,12 +41,11 @@ export default function ServicesPageClient() {
             What we do
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            A clearer website. Less busywork.
+            Fix one problem. Free up attention.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            Two focused ways to make something important easier to move forward.
-            Start with the option that sounds closest, or bring the situation as
-            it is.
+            Choose a website fix or a repeated-task improvement. Bring the
+            situation as it is if you are unsure.
           </p>
         </div>
       </section>
@@ -63,7 +62,7 @@ export default function ServicesPageClient() {
             id="starting-points-heading"
             className="mt-5 font-playfair text-4xl font-black md:text-5xl"
           >
-            Choose the kind of change you want to make.
+            Choose the problem you want to solve first.
           </h2>
         </div>
 
@@ -138,8 +137,8 @@ export default function ServicesPageClient() {
             Not sure which path fits?
           </h2>
           <p className="mx-auto mt-5 max-w-xl leading-7 text-[var(--public-muted)]">
-            That is completely fine. Share what is happening, and we will help
-            you work out the right place to start.
+            Share what is happening. We will help you choose a useful starting
+            point.
           </p>
           <Link
             href="/contact"

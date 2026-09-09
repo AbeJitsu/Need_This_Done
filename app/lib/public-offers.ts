@@ -1,3 +1,5 @@
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
+
 export const PUBLIC_OFFER_IDS = ['website-improvement', 'ai-operator'] as const;
 
 export type PublicOfferId = (typeof PUBLIC_OFFER_IDS)[number];
@@ -24,7 +26,7 @@ export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
     name: 'Website Fix',
     serviceName: 'Website Fix',
     contactHref: '/contact?offer=website-fix',
-    summary: 'We review one website problem and agree on one correction. You receive the fix and a clear record of what changed.',
+    summary: `${PUBLIC_CORE_PROMISE} For Website Fix, we review the issue, agree on one correction, and show what changed.`,
     fit: 'One website problem getting in the way.',
     price: '$500 total',
   },
@@ -34,7 +36,7 @@ export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
     name: 'Managed Automation',
     serviceName: 'Managed Automation',
     contactHref: '/contact?offer=managed-automation',
-    summary: 'We look at one repeated task and agree on an improvement. A written proposal explains the work and how we will review it.',
+    summary: `${PUBLIC_CORE_PROMISE} For Managed Automation, we review one repeated task and outline the work in a written proposal.`,
     fit: 'One repeated task taking time.',
     price: 'Priced by proposal',
   },

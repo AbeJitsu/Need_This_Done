@@ -1,34 +1,35 @@
 import type { Metadata } from "next";
 import PublicClosing from "@/components/public/PublicClosing";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
+import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "How We Help | NeedThisDone",
   description:
-    "Tell us what keeps getting in the way. We listen, make sure we understand, and help you resolve it.",
+    PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/how-it-works" },
 };
 
 const steps = [
   [
     "Tell us what is going on",
-    "Bring the messy version. You do not need the right words, a finished plan, or a technical brief.",
+    "Bring the messy version. You do not need a finished plan or a technical brief.",
   ],
   [
     "We ask what you have tried",
-    "Tell us about any earlier attempts, what matters to you, and what you would like to avoid.",
+    "Tell us what you tried, what mattered, and what you want to avoid.",
   ],
   [
     "We agree on the result",
-    "We repeat the problem back in plain language and make sure we are aiming at the change that matters to you.",
+    "We repeat the problem in plain language. You confirm the change that matters.",
   ],
   [
     "You get a plan and a price",
-    "Before work starts, you see what we will take on, what it costs, and what is not included.",
+    "Before work starts, you see the scope, price, and limits.",
   ],
   [
     "You decide, then we do the agreed work",
-    "Nothing starts automatically. If you say yes, we resolve the agreed piece and show you what changed.",
+    "Nothing starts automatically. If you say yes, we complete the agreed piece and show what changed.",
   ],
 ] as const;
 
@@ -41,11 +42,11 @@ export default function HowItWorksPage() {
             How we help
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Tell us the problem. We’ll work out the next step.
+            Tell us the problem. We will work out the next step.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            You share the situation. We clarify the goal, agree on the work,
-            and show you the completed change.
+            You share the situation. We clarify the goal and agree on the work.
+            Then we show the completed change.
           </p>
         </div>
       </section>
@@ -62,11 +63,10 @@ export default function HowItWorksPage() {
             id="process-heading"
             className="mt-5 font-playfair text-4xl font-black md:text-5xl"
           >
-            A clear way from “this is not working” to a real change.
+            A clear way from “this is not working” to a useful change.
           </h2>
           <p className="mt-5 text-lg leading-8 text-[var(--public-muted)]">
-            We do not rush you into a service or pretend every problem has the
-            same answer. We start by hearing you out.
+            We do not rush you into a service. We start by hearing you out.
           </p>
         </div>
         <ol className="public-process mt-12">
@@ -90,7 +90,7 @@ export default function HowItWorksPage() {
       </section>
 
       <PublicClosing title="Start with what you know." secondary={PUBLIC_ROUTE_STAGES['/how-it-works'].secondary}>
-        <p>Share the result you want. We will clarify the first piece of work and what you can review before deciding.</p>
+        <p>Share the result you want. We will clarify the first piece and what you can review.</p>
       </PublicClosing>
     </main>
   );

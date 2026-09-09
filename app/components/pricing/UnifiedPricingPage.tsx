@@ -17,8 +17,8 @@ export default function UnifiedPricingPage() {
             Know what help costs before you say yes.
           </h1>
           <p className="mx-auto mt-6 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)]">
-            A clear price starts with a clear piece of work.
-            Tell us what keeps happening. We’ll listen and agree on what needs to change.
+            A clear price starts with a clear piece of work. Tell us what keeps
+            happening. We will agree on what needs to change.
           </p>
         </div>
       </section>
@@ -55,11 +55,11 @@ export default function UnifiedPricingPage() {
       <section className="bg-[var(--public-sand)]">
         <div className="mx-auto max-w-6xl px-5 py-16 text-center sm:px-8 md:py-24">
           <h2 className="font-playfair text-4xl font-black md:text-5xl">
-            You do not need to decide alone.
+            You can start with the problem.
           </h2>
           <p className="mx-auto mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-            Share what is getting in the way. We will help you decide what can
-            resolve it and tell you the price before work begins.
+            Share what is getting in the way. We will clarify the work and the
+            price before anything begins.
           </p>
           <Link
             href="/contact"

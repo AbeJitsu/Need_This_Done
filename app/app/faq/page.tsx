@@ -2,6 +2,7 @@ import type { FAQPageContent } from '@/lib/page-content-types';
 import { defaultFAQContent } from '@/lib/default-page-content';
 import FAQPageClient from '@/components/faq/FAQPageClient';
 import { FAQPageJsonLd } from '@/components/seo/JsonLd';
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 
 // ============================================================================
 // FAQ Page - Common Questions
@@ -15,17 +16,17 @@ import { FAQPageJsonLd } from '@/components/seo/JsonLd';
 
 export const metadata = {
   title: 'FAQ - NeedThisDone',
-  description: 'Answers about scope, cost, review, and what happens next.',
+  description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/faq' },
   openGraph: {
     title: 'FAQ - NeedThisDone',
-    description: 'Common questions about scope, payment, and what happens next.',
+    description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'FAQ - NeedThisDone',
-    description: 'Common questions about scope, payment, and what happens next.',
+    description: PUBLIC_CORE_PROMISE,
   },
 };
 

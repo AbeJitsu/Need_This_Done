@@ -56,7 +56,7 @@ export default function OfferPage({
             Before you say yes
           </p>
           <h2 className="mt-4 font-playfair text-4xl font-black">
-            Clear work. Clear price. Your say.
+            See the work before you decide.
           </h2>
         </div>
         <p className="max-w-[60ch] text-lg leading-8 text-[#40564e]">
@@ -83,7 +83,7 @@ export default function OfferPage({
           </div>
           <div className="border-t border-[var(--public-ink)]/10 pt-8 md:border-l md:border-t-0 md:pl-10 md:pt-0">
             <h2 className="font-playfair text-3xl font-black">
-              What this does not include
+              Outside this offer
             </h2>
             <ul className="mt-6 space-y-4">
               {excluded.map((item) => (
@@ -100,8 +100,8 @@ export default function OfferPage({
         <p className="mt-3">We agree on the work and price before you commit.</p>
         <Link href={`/work#${route.slice(1)}`} className="public-explore mt-4">Explore a {offer.name} example</Link>
       </div>
-      <PublicClosing title="Tell us what you would like to change." href={offer.contactHref} secondary={PUBLIC_ROUTE_STAGES[route].secondary}>
-        <p>Share the part that matters to you. We will clarify the work together before you decide.</p>
+      <PublicClosing title="Tell us what you want to change." href={offer.contactHref} secondary={PUBLIC_ROUTE_STAGES[route].secondary}>
+        <p>Share the part that matters to you. We will clarify the work before you decide.</p>
       </PublicClosing>
     </main>
   );

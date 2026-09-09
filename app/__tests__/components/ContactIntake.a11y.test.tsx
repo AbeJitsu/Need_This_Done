@@ -53,7 +53,7 @@ describe('discovery review and recovery', () => {
     answer(/what else should we know/i, 'This started last spring.');
     go(2);
     answer(/what have you tried/i, 'A shared inbox. It was confusing.');
-    answer(/hoping those attempts/i, 'Keep requests together.');
+    answer(/hope those attempts/i, 'Keep requests together.');
     answer(/how would you like/i, 'One quiet daily review.');
     answer(/what frustrates/i, 'Please avoid more alerts.');
     fireEvent.click(view.getByRole('radio', { name: 'stuck', exact: true }));
@@ -80,8 +80,8 @@ describe('discovery review and recovery', () => {
     expect(view.getByRole('textbox', { name: /change you want us/i })).toHaveValue('Help us agree on a daily review.');
     expect(view.getByRole('radio', { name: 'No service selected' })).toBeChecked();
     expect(await axe(view.container)).toHaveNoViolations();
-    answer(/^name$/i, 'Alex');
-    answer(/^email$/i, 'alex@example.com');
+    answer(/^your name$/i, 'Alex');
+    answer(/^your email$/i, 'alex@example.com');
     vi.mocked(fetch).mockImplementation(async (url) => {
       if (url === '/api/projects') throw new Error('offline');
       return new Response('{}', { status: 200 });
@@ -104,8 +104,8 @@ describe('discovery review and recovery', () => {
     const view = render(<ContactPage />);
     fireEvent.click(view.getByRole('button', { name: /^Step 4:/ }));
     fireEvent.change(view.getByRole('textbox', { name: /change you want us/i }), { target: { value: 'Keep every request visible.' } });
-    fireEvent.change(view.getByRole('textbox', { name: /^name$/i }), { target: { value: 'Alex' } });
-    fireEvent.change(view.getByRole('textbox', { name: /^email$/i }), { target: { value: 'alex@example.com' } });
+    fireEvent.change(view.getByRole('textbox', { name: /^your name$/i }), { target: { value: 'Alex' } });
+    fireEvent.change(view.getByRole('textbox', { name: /^your email$/i }), { target: { value: 'alex@example.com' } });
     fireEvent.click(view.getByRole('button', { name: 'Share Your Vision', exact: true }));
     expect(await view.findByRole('alert')).toHaveTextContent('Please check your answers');
     expect(view.getByText('Step 1 of 4')).toBeVisible();
@@ -124,10 +124,10 @@ it('explains the combined message limit and allows recovery without losing answe
   go(3);
   answer(/what needs to be different/i, 'd'.repeat(1200));
   go(4);
-  answer(/^name$/i, 'Alex');
-  answer(/^email$/i, 'alex@example.com');
+  answer(/^your name$/i, 'Alex');
+  answer(/^your email$/i, 'alex@example.com');
   fireEvent.click(view.getByRole('button', { name: 'Share Your Vision', exact: true }));
-  expect(await view.findByRole('alert')).toHaveTextContent('together are too long');
+  expect(await view.findByRole('alert')).toHaveTextContent('answers are too long');
   fireEvent.click(view.getByRole('button', { name: 'Edit The change you want', exact: true }));
   answer(/what needs to be different/i, 'A clear next step for each request.');
   go(2);

@@ -464,8 +464,8 @@ async function fillIntake(page: import('@playwright/test').Page) {
   await page.getByRole('button', { name: /^Step 3:/ }).click();
   await page.getByRole('textbox', { name: /what needs to be different/i }).fill('Every request has a clear next step.');
   await page.getByRole('button', { name: /^Step 4:/ }).click();
-  await page.getByRole('textbox', { name: /^name$/i }).fill('Jordan Owner');
-  await page.getByRole('textbox', { name: /^email$/i }).fill('jordan@example.com');
+  await page.getByRole('textbox', { name: /^your name$/i }).fill('Jordan Owner');
+  await page.getByRole('textbox', { name: /^your email$/i }).fill('jordan@example.com');
 }
 
 test('general intake preserves answers through failure and retry', async ({ page }) => {

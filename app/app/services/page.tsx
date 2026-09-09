@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { seoConfig } from '@/lib/seo-config';
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 import ServicesPageClient from '@/components/services/ServicesPageClient';
 
 // ============================================================================
@@ -10,20 +11,18 @@ import ServicesPageClient from '@/components/services/ServicesPageClient';
 export const metadata: Metadata = {
   title: 'What We Do | NeedThisDone',
   description:
-    'Bring the outcome you can see. NeedThisDone shapes a focused next step, with Website Fix and Managed Automation as concrete starting points.',
+    PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/services' },
   openGraph: {
     title: 'What We Do | NeedThisDone',
-    description:
-      'Better websites and better ways of working, shaped around the result you want.',
+    description: PUBLIC_CORE_PROMISE,
     url: `${seoConfig.baseUrl}/services`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'What We Do | NeedThisDone',
-    description:
-      'Better websites and better ways of working, shaped around the result you want.',
+    description: PUBLIC_CORE_PROMISE,
   },
 };
 

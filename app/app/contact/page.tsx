@@ -131,12 +131,12 @@ function ContactIntake() {
       const field = String(parsed.error.issues[0].path[0]);
       const target = reviewFields.find(([key]) => key === field)?.[2] || 4;
       setStep(target);
-      setErrorMessage("Please check your answers. Required answers need a little more detail; keep each answer within its character limit.");
+      setErrorMessage("Please check your answers. Required answers need more detail. Keep each answer within its limit.");
       setStatus("error");
       return;
     }
     if (visionIntakeMessage(parsed.data).trim().length > PROJECT_MESSAGE_MAX_LENGTH) {
-      setErrorMessage("Your answers together are too long to send. Please shorten a few answers using the edit links. Your answers are still here.");
+      setErrorMessage("Your answers are too long to send. Shorten a few answers. Your answers are still here.");
       setStatus("error");
       return;
     }
@@ -216,8 +216,8 @@ function ContactIntake() {
             We’ll listen before suggesting a path.
           </h1>
           <p className="mt-5 max-w-2xl text-[#dce8dd]">
-            You do not need a technical brief or a chosen service. Browse all
-            four steps first if you like; this starts a conversation only.
+            You do not need a technical brief or a chosen service. This form
+            starts a conversation only.
           </p>
         </div>
       </section>
@@ -274,11 +274,11 @@ function ContactIntake() {
           >
             {titles[step - 1]}
           </h2>
-          <p className="mt-4 leading-7 text-[var(--public-muted)]">{["Start with the part you can describe. A few sentences are enough.", "Any earlier attempts can help us understand your priorities. Skip what does not apply.", "Describe the change you hope for. There is room for both possibilities and concerns.", "These are your words. Edit any answer, then confirm the change you want us to discuss."][step - 1]}</p>
+          <p className="mt-4 leading-7 text-[var(--public-muted)]">{["Start with the part you can describe. A few sentences are enough.", "Tell us what you tried. Skip anything that does not apply.", "Describe the change you hope for. Possibilities and concerns are welcome.", "Review your answers. Confirm the change you want us to discuss."][step - 1]}</p>
           {step === 1 && (
             <div className="mt-8 grid gap-6">
               <p className="rounded-xl bg-[#e4eee6] p-4">
-                We’ll understand what is happening before suggesting a path.
+                Start with the part you can describe.
               </p>
               <label className="font-semibold">
                 The idea or situation
@@ -317,7 +317,7 @@ function ContactIntake() {
           {step === 2 && (
             <div className="mt-8 grid gap-6">
               <label className="font-semibold">
-                What have you tried? How did it go? (optional)
+                What have you tried? (optional)
                 <textarea
                   className={input}
                   maxLength={1000}
@@ -326,7 +326,7 @@ function ContactIntake() {
                 />
               </label>
               <label className="font-semibold">
-                What were you hoping those attempts would fix? (optional)
+                What did you hope those attempts would fix? (optional)
                 <textarea
                   className={input}
                   maxLength={800}
@@ -491,7 +491,7 @@ function ContactIntake() {
               </label>
               <fieldset>
                 <legend className="font-semibold">
-                  Do either of these sound like the place to start?{" "}
+                  Which starting point fits?{" "}
                   <span className="font-normal text-[#50675e]">(optional)</span>
                 </legend>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -515,7 +515,7 @@ function ContactIntake() {
               </fieldset>
               <div className="grid gap-5 sm:grid-cols-2">
                 <label className="font-semibold">
-                  Name
+                  Your name
                   <input
                     required
                     autoComplete="name"
@@ -525,7 +525,7 @@ function ContactIntake() {
                   />
                 </label>
                 <label className="font-semibold">
-                  Email
+                  Your email
                   <input
                     required
                     type="email"

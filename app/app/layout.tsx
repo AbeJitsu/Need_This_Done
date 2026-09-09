@@ -11,6 +11,7 @@ import { Suspense } from 'react';
 import HeroPreviewDetector from '@/components/HeroPreviewDetector';
 import { ProfessionalServiceJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
+import { PUBLIC_BRAND_PROMISE, PUBLIC_BRAND_TITLE, PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 import { validateEnvironmentVariables } from '@/lib/env-validation';
 
 // Validate all required environment variables on startup
@@ -69,7 +70,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   // Basic metadata
   title: {
-    default: `Your Vision, Brought to Life | ${seoConfig.siteName}`,
+    default: `${PUBLIC_BRAND_TITLE} | ${seoConfig.siteName}`,
     template: `%s | ${seoConfig.siteName}`,
   },
   description: seoConfig.description,
@@ -106,14 +107,14 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: seoConfig.baseUrl,
     siteName: seoConfig.siteName,
-    title: `Your Vision, Brought to Life | ${seoConfig.siteName}`,
+    title: `${PUBLIC_BRAND_TITLE} | ${seoConfig.siteName}`,
     description: seoConfig.description,
     images: [
       {
         url: `${seoConfig.baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: `${seoConfig.siteName} — Your vision, brought to life`,
+    alt: `${seoConfig.siteName} — ${PUBLIC_BRAND_PROMISE}`,
       },
     ],
   },
@@ -121,8 +122,8 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: 'summary_large_image',
-    title: `Your Vision, Brought to Life | ${seoConfig.siteName}`,
-    description: 'Outcome-led help for owners and founders, with Website Fix and Managed Automation as focused starting points.',
+    title: `${PUBLIC_BRAND_TITLE} | ${seoConfig.siteName}`,
+    description: PUBLIC_CORE_PROMISE,
     images: [`${seoConfig.baseUrl}/og-image.png`],
   },
 

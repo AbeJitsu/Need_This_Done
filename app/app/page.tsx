@@ -1,4 +1,5 @@
 import HomePageClient from '@/components/home/HomePageClient';
+import { PUBLIC_BRAND_TITLE, PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
@@ -15,18 +16,18 @@ import HomePageClient from '@/components/home/HomePageClient';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'Your Vision, Brought to Life | Need This Done',
-  description: 'NeedThisDone helps owners and founders turn a vision for something better into a clear, focused result.',
+  title: `${PUBLIC_BRAND_TITLE} | Need This Done`,
+  description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Your Vision, Brought to Life | Need This Done',
-    description: 'Turn your vision for something better into a clear, focused result.',
+    title: `${PUBLIC_BRAND_TITLE} | Need This Done`,
+    description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'Your Vision, Brought to Life | Need This Done',
-    description: 'Turn your vision for something better into a clear, focused result.',
+    title: `${PUBLIC_BRAND_TITLE} | Need This Done`,
+    description: PUBLIC_CORE_PROMISE,
   },
 };
 

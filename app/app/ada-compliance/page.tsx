@@ -2,51 +2,50 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Check, FileSearch, ShieldCheck } from "lucide-react";
 import { seoConfig } from "@/lib/seo-config";
+import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "Website Accessibility Checks | NeedThisDone",
   description:
-    "Learn what a focused website accessibility review can check, what it cannot certify, and how a contained improvement engagement works.",
+    `${PUBLIC_CORE_PROMISE} See common website accessibility signals.`,
   alternates: { canonical: "/ada-compliance" },
   openGraph: {
     title: "Website Accessibility Checks | NeedThisDone",
-    description:
-      "Practical accessibility signals, a clear scope, and no compliance guarantees.",
+    description: PUBLIC_CORE_PROMISE,
     url: `${seoConfig.baseUrl}/ada-compliance`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Website Accessibility Checks | NeedThisDone",
-    description:
-      "Practical accessibility signals, a clear scope, and no compliance guarantees.",
+    description: PUBLIC_CORE_PROMISE,
   },
 };
 
 const commonChecks = [
   [
     "Text alternatives",
-    "Meaningful images need useful text alternatives; decorative images should not create noise for screen-reader users.",
+    "Meaningful images need useful text alternatives. Decorative images should stay quiet for screen-reader users.",
   ],
   [
     "Form labels",
-    "Inputs need visible, connected labels so people know what information is being requested.",
+    "Inputs need visible labels. People should know what information each field requests.",
   ],
   [
     "Keyboard access",
-    "Links, controls, menus, and forms should be reachable and usable without a mouse.",
+    "Links, controls, menus, and forms should work without a mouse.",
   ],
   [
     "Heading structure",
-    "A clear heading order helps people scan a page and navigate it with assistive technology.",
+    "A clear heading order helps people scan and navigate with assistive technology.",
   ],
   [
     "Color contrast",
-    "Text and essential controls need enough contrast to remain readable in real use.",
+    "Text and essential controls need enough contrast to stay readable.",
   ],
   [
     "Clear links and errors",
-    "Link text and form feedback should explain what happens next instead of relying only on visual context.",
+    "Links and form feedback should explain what happens next.",
   ],
 ];
 
@@ -63,10 +62,9 @@ export default function AdaCompliancePage() {
             Make your website easier for more people to use.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/75">
-            Our limited website snapshot checks for common barriers, how search
-            engines can understand a page, and basic speed clues. It can point
-            to a problem worth fixing, but it is not legal advice or a promise
-            of compliance.
+            Our limited website snapshot checks common barriers, search signals,
+            and basic speed clues. It points to a problem worth reviewing.
+            It is not legal advice.
           </p>
           <div className="mt-9">
             <Link
@@ -98,10 +96,9 @@ export default function AdaCompliancePage() {
           </div>
           <div>
             <p className="text-lg leading-8 text-[var(--public-muted)]">
-              Automatic checks can spot things worth looking at, such as missing
-              labels, unclear page structure, or controls that may be hard to
-              use. They cannot judge every interaction, every person’s
-              experience, or every legal requirement.
+              Automatic checks can flag missing labels, unclear structure, or
+              controls that may be hard to use. They do not review every
+              interaction or legal requirement.
             </p>
             <p className="mt-5 rounded-2xl border border-[var(--public-ink)]/10 bg-white p-5 text-sm leading-6 text-[#40564e]">
               <strong className="text-[var(--public-ink)]">

@@ -1,6 +1,7 @@
 import type { PrivacyPageContent } from '@/lib/page-content-types';
 import { defaultPrivacyContent } from '@/lib/default-page-content';
 import PrivacyPageClient from '@/components/privacy/PrivacyPageClient';
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 
 // ============================================================================
 // Privacy Policy Page
@@ -14,11 +15,11 @@ import PrivacyPageClient from '@/components/privacy/PrivacyPageClient';
 
 export const metadata = {
   title: 'Privacy Policy - NeedThisDone',
-  description: 'How NeedThisDone handles project requests, technical information, and authenticated private-workspace records.',
+  description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/privacy' },
   openGraph: {
     title: 'Privacy Policy - NeedThisDone',
-    description: 'How NeedThisDone handles project requests, technical information, and authenticated private-workspace records.',
+    description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
 };

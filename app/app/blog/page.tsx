@@ -3,6 +3,7 @@ import { getDefaultContent } from '@/lib/default-page-content';
 import type { BlogPageContent } from '@/lib/page-content-types';
 import BlogPageClient from '@/components/blog/BlogPageClient';
 import { listBlogPosts } from '@/lib/blog-content';
+import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 
 export const dynamic = 'force-static';
 
@@ -19,17 +20,17 @@ export const dynamic = 'force-static';
 export const metadata = {
   title: 'Insights | NeedThisDone',
   description:
-    'Insights for owners and founders turning a vision for something better into a clear next move.',
+    PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Insights | NeedThisDone',
-    description: 'Insights for owners and founders turning a vision for something better into a clear next move.',
+    description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'Insights | NeedThisDone',
-    description: 'Insights for owners and founders turning a vision for something better into a clear next move.',
+    description: PUBLIC_CORE_PROMISE,
   },
 };
 

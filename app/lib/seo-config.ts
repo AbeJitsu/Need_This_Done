@@ -1,4 +1,5 @@
 import { PUBLIC_OFFERS } from "./public-offers";
+import { PUBLIC_CORE_PROMISE, PUBLIC_SITE_DESCRIPTION } from "./public-copy";
 
 // ============================================================================
 // Centralized SEO Configuration
@@ -12,8 +13,8 @@ export const seoConfig = {
 
   // Site identity
   siteName: 'Need This Done',
-  description:
-    'Your vision, brought to life. NeedThisDone helps owners and founders turn an idea for something better into a clear, focused result.',
+  description: PUBLIC_SITE_DESCRIPTION,
+  corePromise: PUBLIC_CORE_PROMISE,
 
   // Business information for structured data
   business: {
