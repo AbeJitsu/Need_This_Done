@@ -112,6 +112,24 @@
   not installed. Lint and type-check passed. No deployment or hosted action
   occurred.
 
+- On 2026-09-10, the `/system` progress section became code-owned through
+  `app/lib/system-progress.ts`. It now presents four proof gates—Contract,
+  Local control plane, Hosted control plane, and Worker execution—with the
+  evidence target for each gate. A focused unit test protects the order and
+  requires every gate to name evidence. This gives the visual page a durable,
+  test-backed progress source without claiming that hosted services or either
+  Mac is live.
+
+- On 2026-09-09, the `/system` page gained a dedicated six-card visual operating
+  path: ChatGPT Work → hosted NeedThisDone MCP → Supabase and Redis → Hermes on
+  the active Mac → OpenClaw with its Codex runtime → the durable result returned
+  to ChatGPT. Each card explains the component in plain English, including why
+  Redis is temporary coordination and why Upstash Vector is selected searchable
+  memory rather than business truth. The page also states that the hosted MCP
+  connection does not require opening the dashboard; `/system` is an optional
+  visual explanation and evidence view. The route contract now asserts the new
+  six-card lane and result-back labels.
+
 - On 2026-09-09, the public promise was broadened to “NeedThisDone helps
   teams and individuals solve technology problems and simplify repeated work
   with clear, focused solutions.” The homepage no longer uses a demographic

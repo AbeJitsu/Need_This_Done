@@ -21,28 +21,32 @@ those proofs hold.
 ## How the system works
 
 ```text
- AUTHENTICATED BROWSER
- request | plan preview | approve / stop | review results and assets
+ CHATGPT WORK (your conversation)
+ request | approve | ask for status / summary
+             |
+             v  authenticated HTTPS MCP
+ NEEDTHISDONE ON VERCEL                  SUPABASE + REDIS
+ three workflow tools  <------------->   durable record + short-lived signals
+             |                                      |
+             | Hermes claims approved work         |
+             v                                      v
+       ACTIVE PRIVATE MAC  ---------------->  RESULT + EVIDENCE
+ MacBook Pro while testing;                 Supabase stores the result;
+ Mac mini when always-on                    ChatGPT reads it via status
              |
              v
- NEXT.JS ON VERCEL                         SUPABASE
- browser control plane  <-------------->   durable plans | approvals
- auth and policy checks                     costs | results | private assets
-             ^                                        |
-             | signed HTTPS, Mac starts the connection |
-             |                                        v
-             +-----------------------  ALWAYS-ON MAC MINI  -----------+
-                                      private outbound worker           |
-                            Hermes: plans and chooses approved route    |
-                            OpenClaw: coding worker via Codex runtime    |
-                            OpenRouter: free route first; paid needs    |
-                                        browser approval                 |
+ OpenClaw: coding worker via Codex runtime
+ GitHub: branch, commit, and review source of truth
+ Upstash Vector: selected searchable memory, never durable truth
 ```
 
-Vercel is the internet-facing browser control plane, not a permanent worker.
-Supabase is durable product truth. The Mac mini is the always-on private
-runtime: it polls outward, exposes no public listener, and may act only on a
-recorded, frozen approval.
+ChatGPT Work is the interface and reasoning layer. Vercel is the stable,
+internet-facing MCP/control-plane doorway, not a permanent worker; you do not
+need to open the NeedThisDone app for ChatGPT to reach it. Supabase is durable
+product truth. Redis is only temporary coordination for queues, leases, locks,
+heartbeats, and deduplication. The Mac mini is the always-on private runtime:
+it polls outward, exposes no public listener, and may act only on a recorded,
+frozen approval.
 
 The MacBook is the first separately approved rehearsal host for this seam. The
 Mac mini remains a later always-on target after the MacBook proof is accepted.
@@ -98,9 +102,9 @@ OpenClaw runtime in this design, not a separately operated Codex CLI worker.
 OpenAI API-key billing and ChatGPT/Codex subscription authentication remain
 separate credential paths and must not be treated as interchangeable.
 
-The normal request path is: ChatGPT understands the request from the MacBook Pro,
-Mac mini, or another approved client → the stable MCP facade authenticates and
-validates it → Hermes creates the durable Supabase record →
+The normal request path is: ChatGPT Work understands the request → the stable
+MCP facade authenticates and validates it → Hermes creates the durable Supabase
+record →
 Redis carries only transient coordination → the Mac mini claims and runs the
 approved job → OpenClaw's Codex runtime returns structured evidence → Hermes persists
 the result → ChatGPT reports the status and next decision. Upstash Vector may
@@ -112,6 +116,10 @@ The reviewer-facing [test strategy and suite inventory](docs/TEST_STRATEGY.md)
 defines the TDD gate, explains what each test layer proves and does not prove,
 and records the rules for consolidating tests without losing a safety or
 product invariant.
+
+The [build progress map](docs/BUILD_PROGRESS_MAP.md) is the companion checklist
+for the `/system` page. It distinguishes a tested contract from a live local,
+hosted, or worker connection and records the order of proof.
 
 The opt-in `npm run test:hermes-mcp:local` Playwright diagnostic first runs the
 real local-Supabase database/RLS gate, then walks the local application
@@ -148,9 +156,9 @@ automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
 The public [`/system` case study](app/app/system/page.tsx) remains a complete,
-discoverable technical-details page. It starts with a plain-English card flow
-that explains how this differs from prompting ChatGPT alone, then follows with
-the four-stage system map, the named technology stack, and reviewable evidence
+discoverable technical-details page. It starts with plain-English cards, then
+shows the real ChatGPT Work → hosted MCP → Supabase/Redis → Hermes → OpenClaw
+→ result-back visual flow, followed by the named technology stack and proof
 rails. It is optional detail for curious or technical visitors, available from
 the footer Explore links and the direct `/system` URL; it is not required for
 conversion or part of the primary homepage path. Keep its route contract,

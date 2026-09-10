@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
+import { SYSTEM_PROOF_LANES } from "@/lib/system-progress";
 import {
   ArrowRight,
   Check,
@@ -175,6 +176,63 @@ const plainLanguageSteps: readonly RailStep[] = [
       "Supabase keeps durable workflow truth, GitHub keeps code truth, Redis handles temporary coordination, and vector memory helps retrieve selected findings.",
     icon: "git",
     status: "Connections still being proven",
+  },
+];
+
+const remoteFlowSteps: readonly RailStep[] = [
+  {
+    number: "01",
+    label: "Your conversation",
+    title: "ChatGPT Work",
+    description:
+      "You describe the outcome in ChatGPT Work. ChatGPT reasons about the request and calls a small tool when the work needs to leave the conversation.",
+    icon: "message",
+    status: "Interface · reasoning · summary",
+  },
+  {
+    number: "02",
+    label: "The public doorway",
+    title: "NeedThisDone MCP on Vercel",
+    description:
+      "The hosted app exposes one stable, authenticated HTTPS doorway. You do not need to open the NeedThisDone website for ChatGPT to reach it.",
+    icon: "lock",
+    status: "Three tools · device-independent",
+  },
+  {
+    number: "03",
+    label: "Record and signal",
+    title: "Supabase + Redis",
+    description:
+      "Supabase records the durable workflow, approval, status, and result. Redis carries temporary queue signals, leases, locks, heartbeats, and deduplication so workers can coordinate safely.",
+    icon: "database",
+    status: "Durable truth + temporary coordination",
+  },
+  {
+    number: "04",
+    label: "Choose the active machine",
+    title: "Hermes on the MacBook or Mac mini",
+    description:
+      "Hermes, authenticated separately on the active device, claims approved work through an outbound connection. The MacBook is the first rehearsal host; the Mac mini is the always-on target.",
+    icon: "workflow",
+    status: "MacBook first · Mac mini production target",
+  },
+  {
+    number: "05",
+    label: "Do the bounded work",
+    title: "OpenClaw with its Codex runtime",
+    description:
+      "OpenClaw is the replaceable coding worker. It uses its configured Codex agent runtime in an isolated worktree, runs checks, and returns changed files, a commit, and evidence.",
+    icon: "code",
+    status: "Separate worker authentication",
+  },
+  {
+    number: "06",
+    label: "Bring back proof",
+    title: "Result to Supabase, then ChatGPT",
+    description:
+      "Hermes stores the structured result in Supabase. ChatGPT calls get_workflow_status and receives a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual dashboard.",
+    icon: "git",
+    status: "Evidence path · dashboard optional",
   },
 ];
 
@@ -626,6 +684,29 @@ export default function SystemPage() {
       </section>
 
       <section
+        id="remote-flow"
+        className="system-section system-section--sand"
+        aria-labelledby="remote-flow-heading"
+      >
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
+            <SectionLabel>The real operating path</SectionLabel>
+            <h2 id="remote-flow-heading" className="system-heading">
+              One conversation, many private pieces, one answer back.
+            </h2>
+            <p className="system-section__lead">
+              This is the path to keep in mind when explaining the system. You
+              stay in ChatGPT Work. The hosted MCP doorway coordinates the
+              private services, and the result comes back into the same
+              conversation. The web app can show the evidence, but it is not a
+              required second chatbot.
+            </p>
+          </div>
+          <SystemRail steps={remoteFlowSteps} className="system-remote-flow" />
+        </div>
+      </section>
+
+      <section
         id="difference"
         className="system-section system-section--light"
         aria-labelledby="difference-heading"
@@ -822,6 +903,19 @@ export default function SystemPage() {
               about what is built, what has only been contract-tested, and what
               still needs a local, hosted, or Mac proof.
             </p>
+          </div>
+          <div className="system-proof-lanes" aria-label="System proof progress">
+            {SYSTEM_PROOF_LANES.map((lane) => (
+              <article key={lane.number} className="system-proof-lane">
+                <div className="system-proof-lane__topline">
+                  <span className="system-proof-lane__number">{lane.number}</span>
+                  <span className="system-proof-lane__status">{lane.status}</span>
+                </div>
+                <h3>{lane.title}</h3>
+                <p>{lane.description}</p>
+                <p className="system-proof-lane__evidence">Evidence: {lane.evidence}</p>
+              </article>
+            ))}
           </div>
           <div className="system-status-grid">
             <article className="system-status-card">

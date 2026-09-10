@@ -139,10 +139,13 @@ What We Do → How We Work → Examples → Why Us, and the page ends with Share
 Vision. How We Work remains part of the primary reassurance path. The page
 keeps the work understandable without requiring technical detail.
 The public [system case study](app/app/system/page.tsx) remains the complete
-technical-details page for curious or technical visitors. It starts with a
-plain-English five-card explanation of how the system differs from prompting
-ChatGPT alone, then names the technology stack, why each piece exists, and
-which connections are built or still pending.
+technical-details page for curious or technical visitors. It starts with
+plain-English cards, then shows the visual operating path: ChatGPT Work calls
+the hosted MCP doorway; Supabase records durable truth; Redis carries short-lived
+coordination; Hermes on the active Mac claims the approved work; OpenClaw runs
+the coding task; and the result returns through Supabase to ChatGPT. It then
+names the technology stack, why each piece exists, and which connections are
+built or still pending.
 
 Keep `/system` available as optional detail from the footer Explore links and
 its direct URL, while keeping it out of the primary homepage navigation and
@@ -172,4 +175,6 @@ the new validation in [Project status](docs/PROJECT_STATUS.md) and [Release evid
 
 The current factual state and validation record live in
 [Project Status](docs/PROJECT_STATUS.md) and
-[Release Evidence](docs/RELEASE_EVIDENCE.md).
+[Release Evidence](docs/RELEASE_EVIDENCE.md). The four-gate implementation
+checklist lives in [Build Progress Map](docs/BUILD_PROGRESS_MAP.md), and the
+`/system` page presents the same gates visually.

@@ -4,6 +4,7 @@
 **Last audited:** 2026-09-09  
 **Progress:** [ROADMAP.md](../ROADMAP.md)  
 **Evidence:** [PROJECT_STATUS.md](PROJECT_STATUS.md) and [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
+**Build map:** [BUILD_PROGRESS_MAP.md](BUILD_PROGRESS_MAP.md)
 
 This is the reviewer-facing test map. For every suite it explains what is
 protected, why it matters, what evidence it provides, and what it deliberately
