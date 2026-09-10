@@ -82,7 +82,7 @@ Each capability must carry the narrowest useful evidence at each layer:
 | Unit | Pure validation, redaction, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
 | Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
 | Integration | Disposable local Supabase/RLS, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
-| Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote ChatGPT connector |
+| Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote compatible-LLM connector |
 | Live rehearsal | Not available in this environment | MacBook Pro/Mac mini, Vercel, Supabase, Redis/vector, provider, and durable result |
 
 Passing local tests never changes a capability to “live” or “hosted.”
@@ -140,10 +140,10 @@ Vision. How We Work remains part of the primary reassurance path. The page
 keeps the work understandable without requiring technical detail.
 The public [system case study](app/app/system/page.tsx) remains the complete
 technical-details page for curious or technical visitors. It starts with
-plain-English cards, then shows the visual operating path: ChatGPT Work calls
+plain-English cards, then shows the visual operating path: a compatible LLM client calls
 the hosted MCP doorway; Supabase records durable truth; Redis carries short-lived
 coordination; Hermes on the active Mac claims the approved work; OpenClaw runs
-the coding task; and the result returns through Supabase to ChatGPT. It then
+the coding task; and the result returns through Supabase to the initiating client. It then
 names the technology stack, why each piece exists, and which connections are
 built or still pending.
 

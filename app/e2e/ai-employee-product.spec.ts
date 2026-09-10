@@ -565,7 +565,7 @@ test('interior public pages hand off to the next journey step', async ({ page },
   }
 });
 
-test('/system keeps its actions purposeful and its four stages connected', async ({ page }, testInfo) => {
+test('/system explains one model-agnostic operating path and its four controls', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'The dedicated system-page contract runs in the desktop public project.');
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -581,18 +581,15 @@ test('/system keeps its actions purposeful and its four stages connected', async
   await expect(main.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
   await expect(main.getByRole('link', { name: 'Inspect the implementation', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done/tree/dev');
   await expect(main.locator('.system-map__stage')).toHaveCount(4);
-  await expect(main.locator('.system-plain-flow > .system-rail__item')).toHaveCount(5);
   await expect(main.locator('.system-remote-flow > .system-rail__item')).toHaveCount(6);
   await expect(main.locator('.system-proof-lane')).toHaveCount(4);
-  await expect(main.getByRole('heading', { name: 'You explain the outcome. NeedThisDone keeps the work moving.', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'One conversation, many private pieces, one answer back.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'One request, one controlled workflow, one answer back.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Any compatible LLM', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Supabase + Redis', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Result to Supabase, then ChatGPT', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Result to the LLM client', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Local control plane', exact: true })).toBeVisible();
   await expect(main.getByText('Evidence: npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Prompting ChatGPT by itself', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'NeedThisDone around ChatGPT', exact: true })).toBeVisible();
-  await expect(main.getByText('Local MCP built · Hermes wiring next', { exact: true })).toBeVisible();
+  await expect(main.getByText('Model-agnostic contract · connection pending', { exact: true })).toBeVisible();
   await expect(main.getByText('Connections still being proven', { exact: true })).toBeVisible();
   for (const title of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
     await expect(main.getByRole('heading', { name: title, exact: true })).toBeVisible();
@@ -626,10 +623,10 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         && first.top < second.bottom - 0.5
         && first.bottom > second.top + 0.5;
       const allCards = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__card, .system-rail__card, .system-difference-card, .system-beat, .system-status-card',
+        '.system-map__card, .system-rail__card, .system-status-card',
       ));
       const allConnectors = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__connector, .system-rail__connector, .system-difference-card__connector, .system-beat__connector, .system-status-card__connector',
+        '.system-map__connector, .system-rail__connector, .system-status-card__connector',
       ));
       const textEscapeDetails = allCards.flatMap((card) => {
         const cardRect = card.getBoundingClientRect();
@@ -678,8 +675,6 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         ...stackContractForElement(rail, '.system-rail__item', '.system-rail__card', '.system-rail__connector'),
       }));
       const extraStacks = [
-        stackContract('.system-difference-grid', '.system-difference-card', '.system-difference-card', '.system-difference-card__connector'),
-        stackContract('.system-beats', '.system-beat', '.system-beat', '.system-beat__connector'),
         stackContract('.system-status-grid', '.system-status-card', '.system-status-card', '.system-status-card__connector'),
       ];
       const columnCount = (selector: string) => {
@@ -701,13 +696,10 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         editorialColumns: [
           columnCount('.system-map__card'),
           columnCount('.system-rail__card'),
-          columnCount('.system-difference-card'),
-          columnCount('.system-beat'),
           columnCount('.system-status-card'),
         ],
         heroColumns: columnCount('.system-hero__grid'),
         architectureColumns: columnCount('.system-two-column--architecture'),
-        codingColumns: columnCount('.system-two-column--dark'),
         identityDetailComplete: allCards.every((card) => Boolean(
           card.querySelector(':scope > .system-card-identity') && card.querySelector(':scope > .system-card-detail'),
         )),
@@ -737,7 +729,6 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
     expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
     expect(layout.heroColumns).toBe(viewport.width >= 1200 ? 2 : 1);
     expect(layout.architectureColumns).toBe(viewport.width >= 768 ? 2 : 1);
-    expect(layout.codingColumns).toBe(viewport.width >= 768 ? 2 : 1);
     expect(layout.hiddenConnectors).toBe(0);
     expect(layout.architectureRows).toBe(11);
     expect(layout.heroMapVisible).toBe(true);

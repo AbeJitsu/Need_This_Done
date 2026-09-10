@@ -130,62 +130,13 @@ const systemStages = [
   },
 ] as const;
 
-const plainLanguageSteps: readonly RailStep[] = [
-  {
-    number: "01",
-    label: "You talk normally",
-    title: "Tell ChatGPT what you want done",
-    description:
-      "You describe the outcome in everyday language. ChatGPT helps clarify the request; you do not need to choose a prompt, model, or worker.",
-    icon: "message",
-    status: "Reasoning layer",
-  },
-  {
-    number: "02",
-    label: "The system makes it durable",
-    title: "A small doorway turns talk into work",
-    description:
-      "NeedThisDone gives ChatGPT one authenticated MCP doorway. Hermes is meant to turn the request into a trackable workflow instead of leaving it as a loose answer.",
-    icon: "workflow",
-    status: "Local MCP built · Hermes wiring next",
-  },
-  {
-    number: "03",
-    label: "You decide",
-    title: "Nothing important runs by surprise",
-    description:
-      "Before work that sends, publishes, spends, changes a system, or hands off code, you see the scope and decide whether to approve it.",
-    icon: "shield",
-    highlighted: true,
-    status: "Approval boundary",
-  },
-  {
-    number: "04",
-    label: "A private machine helps",
-    title: "Approved work goes to the right worker",
-    description:
-      "The always-on Mac mini is the intended worker. OpenClaw handles approved coding tasks through its configured Codex agent runtime in an isolated worktree.",
-    icon: "code",
-    status: "Mac mini connection pending",
-  },
-  {
-    number: "05",
-    label: "You get proof",
-    title: "The result comes back with a trail",
-    description:
-      "Supabase keeps durable workflow truth, GitHub keeps code truth, Redis handles temporary coordination, and vector memory helps retrieve selected findings.",
-    icon: "git",
-    status: "Connections still being proven",
-  },
-];
-
 const remoteFlowSteps: readonly RailStep[] = [
   {
     number: "01",
     label: "Your conversation",
-    title: "ChatGPT Work",
+    title: "Any compatible LLM",
     description:
-      "You describe the outcome in ChatGPT Work. ChatGPT reasons about the request and calls a small tool when the work needs to leave the conversation.",
+      "You describe the outcome in ChatGPT, another LLM, or a custom interface. The client reasons about the request and calls a small tool when the work needs to leave the conversation.",
     icon: "message",
     status: "Interface · reasoning · summary",
   },
@@ -194,7 +145,7 @@ const remoteFlowSteps: readonly RailStep[] = [
     label: "The public doorway",
     title: "NeedThisDone MCP on Vercel",
     description:
-      "The hosted app exposes one stable, authenticated HTTPS doorway. You do not need to open the NeedThisDone website for ChatGPT to reach it.",
+      "The hosted app exposes one stable, authenticated HTTPS doorway. The client does not need to open the NeedThisDone website to reach it.",
     icon: "lock",
     status: "Three tools · device-independent",
   },
@@ -228,55 +179,11 @@ const remoteFlowSteps: readonly RailStep[] = [
   {
     number: "06",
     label: "Bring back proof",
-    title: "Result to Supabase, then ChatGPT",
+    title: "Result to the LLM client",
     description:
-      "Hermes stores the structured result in Supabase. ChatGPT calls get_workflow_status and receives a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual dashboard.",
+      "Hermes stores the structured result in Supabase. The LLM client calls get_workflow_status and receives a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual dashboard.",
     icon: "git",
     status: "Evidence path · dashboard optional",
-  },
-];
-
-const executionSteps: readonly RailStep[] = [
-  {
-    number: "01",
-    label: "Start with the outcome",
-    title: "Name what better looks like",
-    description:
-      "Start with the better state. Keep the next piece connected to why it matters.",
-    icon: "target",
-  },
-  {
-    number: "02",
-    label: "Shape the work",
-    title: "Turn context into a clear plan",
-    description:
-      "We turn the goal into a bounded plan with a visible next step. The owner reviews it before deciding.",
-    icon: "workflow",
-  },
-  {
-    number: "03",
-    label: "Cross the boundary",
-    title: "Approve the move",
-    description:
-      "The owner sees the scope, cost, and expected result before anything runs. Approval sets the next move.",
-    icon: "shield",
-    highlighted: true,
-  },
-  {
-    number: "04",
-    label: "Do one useful piece",
-    title: "Execute privately",
-    description:
-      "The private machine completes the approved task. The public browser never runs private work.",
-    icon: "code",
-  },
-  {
-    number: "05",
-    label: "Make it legible",
-    title: "Review the proof",
-    description:
-      "The result comes back with evidence, blockers, and a clear next decision. Work can resume without guesswork.",
-    icon: "git",
   },
 ];
 
@@ -284,18 +191,18 @@ const architectureSteps: readonly RailStep[] = [
   {
     number: "01",
     label: "Reasoning and conversation",
-    title: "ChatGPT",
+    title: "LLM client",
     description:
-      "The reasoning engine and conversational interface. It is meant to work from the MacBook Pro, Mac mini, or another approved client. The remote ChatGPT-to-MCP connection is designed but not yet verified.",
+      "The replaceable reasoning and conversational layer. ChatGPT is the current client, but another LLM or custom application can use the same MCP/API contract. Remote client access is designed but not yet verified.",
     icon: "message",
-    status: "Interface designed · connection pending",
+    status: "Model-agnostic contract · connection pending",
   },
   {
     number: "02",
     label: "Small authenticated doorway",
     title: "MCP facade",
     description:
-      "The Model Context Protocol endpoint exposes only start_workflow, get_workflow_status, and list_workflows. The local route, handshake, authentication seam, and discovery contract are built; a secure hosted ChatGPT connection is still pending.",
+      "The Model Context Protocol/API endpoint exposes only start_workflow, get_workflow_status, and list_workflows. The local route, handshake, authentication seam, and discovery contract are built; secure hosted client access is still pending.",
     icon: "lock",
     status: "Built locally · hosted reachability pending",
   },
@@ -380,95 +287,6 @@ const architectureSteps: readonly RailStep[] = [
       "Provides the application-side planner/model route. An allowed free route is preferred; a paid route remains a separate owner approval.",
     icon: "workflow",
     status: "Policy boundary built · live route proof pending",
-  },
-];
-
-const codingSteps: readonly RailStep[] = [
-  {
-    number: "01",
-    label: "Start from the boundary",
-    title: "Base commit",
-    description: "Start from the exact approved repository state. The boundary is known before a file changes.",
-    icon: "git",
-  },
-  {
-    number: "02",
-    label: "Keep the change isolated",
-    title: "Dedicated worktree",
-    description: "Keep the change isolated from other work. The resulting diff is easier to review.",
-    icon: "lock",
-  },
-  {
-    number: "03",
-    label: "Inspect, edit, verify",
-    title: "OpenClaw coding execution",
-    description:
-      "OpenClaw uses its configured Codex runtime to inspect, edit, test, and explain the result. The evidence travels with the change.",
-    icon: "code",
-  },
-  {
-    number: "04",
-    label: "Return the evidence",
-    title: "Reviewable handoff",
-    description:
-      "Return the branch, diff, tests, and blockers before merge. A reviewer can decide from the handoff.",
-    icon: "shield",
-    highlighted: true,
-  },
-];
-
-const differencePoints = [
-  {
-    number: "01",
-    icon: "message",
-    title: "Prompting ChatGPT by itself",
-    description:
-      "A prompt can produce an answer, draft, or plan. It usually leaves you to remember what should happen next.",
-    points: [
-      "The useful output stays in the conversation",
-      "A worker is not automatically assigned",
-      "Status, approvals, and evidence are not one durable workflow record",
-    ],
-  },
-  {
-    number: "02",
-    icon: "target",
-    title: "NeedThisDone around ChatGPT",
-    description:
-      "NeedThisDone is the coordination layer around the conversation. ChatGPT remains the reasoning and interface layer; the platform keeps approved work legible.",
-    points: [
-      "The goal and constraints become a durable work record",
-      "MCP exposes a small set of workflow actions instead of arbitrary control",
-      "A human approval and reviewable result sit around execution",
-    ],
-  },
-] as const;
-
-const dailyBeats: readonly RailStep[] = [
-  {
-    number: "01",
-    label: "Check in",
-    title: "See the current mission.",
-    description:
-      "Review what moved and what is blocked. See the one decision that would clarify the next step.",
-    icon: "target",
-  },
-  {
-    number: "02",
-    label: "Approve",
-    title: "Authorize one useful move.",
-    description:
-      "The owner decides what may happen and what result should come back. The approval remains bounded.",
-    icon: "shield",
-    highlighted: true,
-  },
-  {
-    number: "03",
-    label: "Review",
-    title: "Pick up from evidence.",
-    description:
-      "Return to the result or blocker. The next decision stays visible.",
-    icon: "git",
   },
 ];
 
@@ -621,10 +439,10 @@ export default function SystemPage() {
                 Important work, kept moving.
               </h1>
               <p className="system-hero__lead">
-                We are building a private assistant that turns a goal into a clear plan, asks for approval, and brings back the result.
+                We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.
               </p>
               <p className="system-hero__support">
-                ChatGPT helps you think and talk. NeedThisDone keeps an approved piece of work, its status, and its proof together after the conversation ends.
+                Any compatible LLM can be the conversation layer. NeedThisDone keeps an approved piece of work, its status, and its proof together after the conversation ends.
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
@@ -664,125 +482,24 @@ export default function SystemPage() {
       <section
         id="plain-language"
         className="system-section system-section--light"
-        aria-labelledby="plain-language-heading"
-      >
-        <div className="system-section__inner system-section__inner--narrow">
-          <div className="system-section__intro">
-            <SectionLabel>In plain English</SectionLabel>
-            <h2 id="plain-language-heading" className="system-heading">
-              You explain the outcome. NeedThisDone keeps the work moving.
-            </h2>
-            <p className="system-section__lead">
-              Think of it as a dependable work trail around a conversation. You
-              talk naturally, the system keeps the request and decisions clear,
-              and you can see what happened next. The labels below separate the
-              intended design from the connections we still need to prove.
-            </p>
-          </div>
-          <SystemRail steps={plainLanguageSteps} className="system-plain-flow" />
-        </div>
-      </section>
-
-      <section
-        id="remote-flow"
-        className="system-section system-section--sand"
         aria-labelledby="remote-flow-heading"
       >
         <div className="system-section__inner system-section__inner--narrow">
           <div className="system-section__intro">
-            <SectionLabel>The real operating path</SectionLabel>
+            <SectionLabel>In plain English · the real operating path</SectionLabel>
             <h2 id="remote-flow-heading" className="system-heading">
-              One conversation, many private pieces, one answer back.
+              One request, one controlled workflow, one answer back.
             </h2>
             <p className="system-section__lead">
-              This is the path to keep in mind when explaining the system. You
-              stay in ChatGPT Work. The hosted MCP doorway coordinates the
-              private services, and the result comes back into the same
-              conversation. The web app can show the evidence, but it is not a
-              required second chatbot.
+              Any compatible LLM can be the conversation layer. It sends a
+              request to the same authenticated MCP/API contract; NeedThisDone
+              keeps the workflow, approval, execution, and evidence together.
+              The chat is the front door; the coordinated services and workers
+              are the team doing the follow-through. ChatGPT is the current
+              client, not a permanent dependency.
             </p>
           </div>
           <SystemRail steps={remoteFlowSteps} className="system-remote-flow" />
-        </div>
-      </section>
-
-      <section
-        id="difference"
-        className="system-section system-section--light"
-        aria-labelledby="difference-heading"
-      >
-        <div className="system-section__inner system-section__inner--narrow">
-          <div className="system-section__intro">
-            <SectionLabel>The reason to build it</SectionLabel>
-            <h2 id="difference-heading" className="system-heading">
-              ChatGPT can answer. NeedThisDone is designed to carry the work forward.
-            </h2>
-            <p className="system-section__lead">
-              The difference is not another chatbot. It is the durable trail
-              around the conversation: what you asked for, what was approved,
-              what happened, and what should happen next.
-            </p>
-          </div>
-          <div className="system-difference-grid">
-            {differencePoints.map((item, index) => (
-              <article
-                key={item.title}
-                className={cx(
-                  "system-difference-card",
-                  index === 1 && "system-difference-card--dark",
-                )}
-              >
-                <div className="system-card-identity system-difference-card__identity">
-                  <div className="system-difference-card__topline">
-                    <span className="system-difference-card__number">{item.number}</span>
-                    <span className="system-difference-card__icon">
-                      <StepIcon name={item.icon} />
-                    </span>
-                  </div>
-                  <p className="system-card-kicker">
-                    {index === 0 ? "Starting point" : "System outcome"}
-                  </p>
-                  <h3>{item.title}</h3>
-                </div>
-                <div className="system-card-detail system-difference-card__detail">
-                  <p className="system-difference-card__description">{item.description}</p>
-                  <ul>
-                    {item.points.map((point) => (
-                      <li key={point}>
-                        <Check aria-hidden="true" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                {index < differencePoints.length - 1 && (
-                  <span className="system-difference-card__connector" aria-hidden="true">
-                    <ArrowRight />
-                  </span>
-                )}
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="execution-loop"
-        className="system-section system-section--sand"
-        aria-labelledby="execution-heading"
-      >
-        <div className="system-section__inner">
-          <div className="system-section__intro">
-            <SectionLabel>How the loop works</SectionLabel>
-            <h2 id="execution-heading" className="system-heading">
-              Keep the mission visible as the next piece moves.
-            </h2>
-            <p className="system-section__lead">
-              Every run has a beginning, a boundary, and a handoff. That makes
-              long-range work easier to resume and easier to trust.
-            </p>
-          </div>
-          <SystemRail steps={executionSteps} />
         </div>
       </section>
 
@@ -796,11 +513,14 @@ export default function SystemPage() {
             <div className="system-section__intro">
             <SectionLabel>{technicalSectionLabel}</SectionLabel>
               <h2 id="architecture-heading" className="system-heading system-heading--compact">
-                How the private pieces fit together.
+                Why each private piece has a job.
               </h2>
               <p className="system-section__lead">
-                Each named layer owns one responsibility. This keeps authority
-                clear and limits where a failure can spread.
+                A chat alone can discuss work. This stack gives that
+                conversation a coordinator, records, signals, workers, and
+                evidence. Each named layer owns one responsibility, so the
+                system can do real work without turning one tool into the
+                whole team.
               </p>
             </div>
             <figure>
@@ -810,78 +530,6 @@ export default function SystemPage() {
                 Mac performs approved work. GitHub holds code changes for review.
               </figcaption>
             </figure>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="coding-lane"
-        className="system-section system-section--dark"
-        aria-labelledby="coding-heading"
-      >
-        <div className="system-section__inner">
-          <div className="system-two-column system-two-column--dark">
-            <div className="system-section__intro">
-              <SectionLabel light>Technical details · code changes</SectionLabel>
-              <h2 id="coding-heading" className="system-heading">
-                Code can change without losing the boundary.
-              </h2>
-              <p className="system-section__lead">
-                A coding task is not permission to modify the live product. It
-                allows one bounded change in a designated worktree. We run the
-                relevant checks and return the evidence.
-              </p>
-              <div className="system-guardrail">
-                <Lock aria-hidden="true" />
-                No merge or deployment by default
-              </div>
-            </div>
-            <figure>
-              <figcaption className="system-rail-caption">A reviewable code change</figcaption>
-              <SystemRail steps={codingSteps} dark />
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="daily-loop"
-        className="system-section system-section--light"
-        aria-labelledby="daily-heading"
-      >
-        <div className="system-section__inner system-section__inner--narrow">
-          <div className="system-section__intro">
-            <SectionLabel>The intended rhythm</SectionLabel>
-            <h2 id="daily-heading" className="system-heading system-heading--compact">
-              Short check-ins. Clear next moves.
-            </h2>
-          </div>
-          <div className="system-beats">
-            {dailyBeats.map((beat, index) => (
-              <article
-                key={beat.number}
-                className={cx("system-beat", beat.highlighted && "system-beat--highlighted")}
-              >
-                <div className="system-card-identity system-beat__identity">
-                  <div className="system-beat__topline">
-                    <span className="system-beat__number">{beat.number}</span>
-                    <span className="system-beat__icon">
-                      <StepIcon name={beat.icon} />
-                    </span>
-                  </div>
-                  <p className="system-card-kicker">{beat.label}</p>
-                  <h3>{beat.title}</h3>
-                </div>
-                <div className="system-card-detail system-beat__detail">
-                  <p>{beat.description}</p>
-                </div>
-                {index < dailyBeats.length - 1 && (
-                  <span className="system-beat__connector" aria-hidden="true">
-                    <ArrowRight />
-                  </span>
-                )}
-              </article>
-            ))}
           </div>
         </div>
       </section>

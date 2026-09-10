@@ -6,7 +6,7 @@
 This is the implementation checklist behind the visual progress map on
 [`/system`](../app/app/system/page.tsx). It separates a code contract from a
 working connection. A green-looking contract does not mean the corresponding
-Supabase, Vercel, Mac, or ChatGPT service has been proven live.
+ Supabase, Vercel, Mac, or LLM-client service has been proven live.
 
 The four displayed gates are code-owned in
 [`app/lib/system-progress.ts`](../app/lib/system-progress.ts). The page and
@@ -17,7 +17,7 @@ targets cannot drift silently.
 
 | Gate | What must be true | Current state | Evidence required to advance |
 |---|---|---|---|
-| Contract | ChatGPT has one small, validated MCP surface; safety and result shapes are tested | Built | Unit/contract tests and route-level protocol checks |
+| Contract | A compatible LLM client has one small, validated MCP surface; safety and result shapes are tested | Built | Unit/contract tests and route-level protocol checks |
 | Local control plane | Local Supabase is real and reachable; MCP creates and reads an approval-gated workflow | Next proof | `npm run test:hermes-mcp:local` with the real local Supabase gate passing |
 | Hosted control plane | Vercel, hosted Supabase, Redis, and secure remote MCP access work together | Pending | `npm run test:hermes-mcp:hosted` against an explicit deployed `BASE_URL`; remote writes remain separately approved |
 | Worker execution | Hermes claims approved work on the MacBook, OpenClaw completes it, and evidence returns through status | Pending | Approved MacBook rehearsal with signed bridge, isolated worktree, tests, commit SHA, and durable result |
@@ -37,7 +37,7 @@ targets cannot drift silently.
 
 ## What cannot be honestly completed from this environment
 
-- Authenticate ChatGPT Work to the deployed MCP endpoint.
+- Authenticate an approved LLM client to the deployed MCP endpoint.
 - Prove Vercel environment variables and hosted Supabase parity.
 - Prove live Upstash Redis or Upstash Vector connectivity.
 - Run Hermes and OpenClaw on the MacBook or Mac mini.
@@ -66,6 +66,6 @@ The required order remains:
 |---|---|---|
 | Unit/contract | Deterministic rules and payload boundaries | A network service or worker is reachable |
 | Database/RLS | Local schema, policies, and lifecycle behavior | Hosted Supabase parity |
-| Integration/route | Next.js, auth, MCP protocol, and controlled adapters fit together | ChatGPT connector reachability or Mac execution |
+| Integration/route | Next.js, auth, MCP protocol, and controlled adapters fit together | LLM-client reachability or Mac execution |
 | Browser/E2E diagnostic | The selected local or hosted stages and their first failure | A passing hosted read-only check does not prove a write or worker run |
-| Live rehearsal | The real ChatGPT/MCP/Hermes/worker/result chain | Future hosts or providers not included in that rehearsal |
+| Live rehearsal | The real LLM-client/MCP/Hermes/worker/result chain | Future hosts or providers not included in that rehearsal |

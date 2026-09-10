@@ -1,7 +1,19 @@
 # NeedThisDone — Project Status
 
 **Branch:** `codex/ai-operating-system-foundation` (branched from `dev`)
-**Last updated:** 2026-09-09
+**Last updated:** 2026-09-10
+
+## Latest change
+
+- On 2026-09-10, `/system` was simplified to one canonical six-step operating
+  path. The page now explains, in plain English, how any compatible LLM client
+  calls the authenticated MCP/API contract, how NeedThisDone coordinates the
+  approved work, and how the result returns to that initiating client. ChatGPT
+  is identified as the current client rather than a platform dependency.
+  Repeated comparison, execution-loop, coding-lane, and daily-loop sections
+  were removed; the technical architecture rail and four proof lanes remain.
+  Route assertions and documentation were updated together. Browser recheck is
+  pending because Playwright Chromium is not installed in this environment.
 
 ## Current facts
 
