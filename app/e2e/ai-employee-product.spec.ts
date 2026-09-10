@@ -588,6 +588,9 @@ test('/system explains one model-agnostic operating path and its four controls',
   await expect(main.getByRole('heading', { name: 'Supabase + Redis', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Result to the LLM client', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Local control plane', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Chat can answer. NeedThisDone carries the work forward.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A useful conversation', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A coordinated system that carries the work forward', exact: true })).toBeVisible();
   await expect(main.getByText('Evidence: npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
   await expect(main.getByText('Model-agnostic contract · connection pending', { exact: true })).toBeVisible();
   await expect(main.getByText('Connections still being proven', { exact: true })).toBeVisible();
@@ -623,10 +626,10 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         && first.top < second.bottom - 0.5
         && first.bottom > second.top + 0.5;
       const allCards = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__card, .system-rail__card, .system-status-card',
+        '.system-map__card, .system-rail__card, .system-difference-card, .system-status-card',
       ));
       const allConnectors = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__connector, .system-rail__connector, .system-status-card__connector',
+        '.system-map__connector, .system-rail__connector, .system-difference-card__connector, .system-status-card__connector',
       ));
       const textEscapeDetails = allCards.flatMap((card) => {
         const cardRect = card.getBoundingClientRect();
@@ -675,6 +678,7 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         ...stackContractForElement(rail, '.system-rail__item', '.system-rail__card', '.system-rail__connector'),
       }));
       const extraStacks = [
+        stackContract('.system-difference-grid', '.system-difference-card', '.system-difference-card', '.system-difference-card__connector'),
         stackContract('.system-status-grid', '.system-status-card', '.system-status-card', '.system-status-card__connector'),
       ];
       const columnCount = (selector: string) => {
@@ -696,6 +700,7 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         editorialColumns: [
           columnCount('.system-map__card'),
           columnCount('.system-rail__card'),
+          columnCount('.system-difference-card'),
           columnCount('.system-status-card'),
         ],
         heroColumns: columnCount('.system-hero__grid'),

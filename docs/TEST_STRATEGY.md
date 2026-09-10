@@ -36,7 +36,7 @@ contract—for example, “do not touch the database before signature validation
 | Accessibility | `npm run test:a11y` | Semantic roles, keyboard behavior, focus, and axe-level regressions | Every browser, device, or screen reader |
 | Browser/E2E | `app/e2e` Playwright suites; `npm run test:hermes-mcp:local`; `npm run test:hermes-mcp:hosted` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice against an explicitly selected environment | Real Mac execution, live provider calls, or customer outcomes unless stated |
 | Bridge/worker | `bridge/test` | HMAC, frozen-plan enforcement, loopback RPC, artifact safety, and no-delivery defaults | macOS launchd behavior on Linux, live Gateway credentials, or external effects |
-| Live rehearsal | MacBook Pro first, Mac mini later | Configured hardware, network, providers, durable result, and operator handoff | Lower-level regression coverage; this is expensive environment-specific evidence |
+| Live rehearsal | Any correctly configured local or cloud worker host; MacBook Pro first and Mac mini later are current examples | Configured host, network, providers, durable result, and operator handoff | Lower-level regression coverage; this is expensive environment-specific evidence |
 
 ## Standard gates
 
@@ -205,7 +205,7 @@ These suites are intentionally excluded from the fast unit command and run via
 | File | What it protects | Why important | Not tested |
 |---|---|---|---|
 | `bridge/test/bridge.test.mjs` | Signed requests, URL safety, rehearsal config, launchd rendering | Protects private outbound boundary | macOS launchd on Linux |
-| `bridge/test/mac-worker.test.mjs` | Env parsing, activation confirmation, local/HTTPS modes | Prevents accidental activation/shell evaluation | Running Mac mini |
+| `bridge/test/mac-worker.test.mjs` | Env parsing, activation confirmation, local/HTTPS modes | Prevents accidental activation/shell evaluation | Running the selected worker host |
 | `bridge/test/openclaw-proof.test.mjs` | Gateway handshake, task evidence, model usage, frozen-plan/no-delivery behavior | Proves replaceable non-sender worker | Live credentials/external effects |
 
 ## Consolidation rules
@@ -237,7 +237,7 @@ target operating-system path still does not pass end to end:
 - semantic-memory configuration is observable through health, but no workflow
   currently exposes a safe end-to-end vector projection probe;
 - no coding worker has completed an isolated task and returned a GitHub commit;
-- MacBook Pro rehearsal and Mac mini activation have not occurred;
+- No approved local or cloud worker-host rehearsal has occurred;
 - no live Upstash Vector index or Vercel environment configuration is verified;
 - no hosted, provider, paid-action, external-message, or customer-result proof
   is implied by local tests.

@@ -54,7 +54,8 @@ describe('vision-first public journey', () => {
     expect(system).toContain('A private system for follow-through');
     expect(system).toContain('Important work, kept moving.');
     expect(system).toContain('We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.');
-    expect(system).toContain('Any compatible LLM can be the conversation layer. NeedThisDone keeps an approved piece of work, its status, and its proof together after the conversation ends.');
+    expect(system).toContain('ChatGPT, Claude, or any compatible LLM can be the conversation layer.');
+    expect(system).toContain('This page first explains the system in plain English');
     expect(system).toContain('One request, one controlled workflow, one answer back.');
     expect(system).toContain('The chat is the front door; the coordinated services and workers');
     expect(system).toContain('are the team doing the follow-through.');
@@ -63,6 +64,8 @@ describe('vision-first public journey', () => {
     expect(system).toContain('client, not a permanent dependency.');
     expect(system).toContain('Why each private piece has a job.');
     expect(system).toContain('title: "Upstash Vector"');
+    expect(system).toContain('Chat can answer. NeedThisDone carries the work forward.');
+    expect(system).toContain('Supabase keeps the goal, approval, status, result, and ownership durable');
     expect(system).toContain('href="/contact"');
     expect(system).toContain('Inspect the implementation');
     expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');

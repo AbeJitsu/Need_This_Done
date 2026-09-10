@@ -117,7 +117,7 @@ const systemStages = [
     label: "Move one piece",
     title: "Private execution",
     description:
-      "A private machine picks up only approved work. This public website cannot send it commands.",
+      "A configured worker host picks up only approved work. This public website cannot send it commands.",
     icon: "lock",
   },
   {
@@ -136,7 +136,7 @@ const remoteFlowSteps: readonly RailStep[] = [
     label: "Your conversation",
     title: "Any compatible LLM",
     description:
-      "You describe the outcome in ChatGPT, another LLM, or a custom interface. The client reasons about the request and calls a small tool when the work needs to leave the conversation.",
+      "You describe the outcome in ChatGPT, Claude, another LLM, or a custom interface. The client reasons about the request and calls a small tool when the work needs to leave the conversation.",
     icon: "message",
     status: "Interface · reasoning · summary",
   },
@@ -160,19 +160,19 @@ const remoteFlowSteps: readonly RailStep[] = [
   },
   {
     number: "04",
-    label: "Choose the active machine",
-    title: "Hermes on the MacBook or Mac mini",
+    label: "Choose the worker host",
+    title: "Hermes on a configured computer",
     description:
-      "Hermes, authenticated separately on the active device, claims approved work through an outbound connection. The MacBook is the first rehearsal host; the Mac mini is the always-on target.",
+      "Hermes runs on the configured computer that owns its credentials and can reach the control plane. That can be a local workstation, a private server, or a cloud machine. Our MacBook Pro and Mac mini are current implementation examples, not requirements.",
     icon: "workflow",
-    status: "MacBook first · Mac mini production target",
+    status: "Local or cloud · configuration required",
   },
   {
     number: "05",
     label: "Do the bounded work",
-    title: "OpenClaw with its Codex runtime",
+    title: "OpenClaw on the selected computer",
     description:
-      "OpenClaw is the replaceable coding worker. It uses its configured Codex agent runtime in an isolated worktree, runs checks, and returns changed files, a commit, and evidence.",
+      "OpenClaw is the replaceable coding worker. It can run locally or in the cloud through its configured Codex runtime, uses an isolated worktree, runs checks, and returns changed files, a commit, and evidence.",
     icon: "code",
     status: "Separate worker authentication",
   },
@@ -193,7 +193,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Reasoning and conversation",
     title: "LLM client",
     description:
-      "The replaceable reasoning and conversational layer. ChatGPT is the current client, but another LLM or custom application can use the same MCP/API contract. Remote client access is designed but not yet verified.",
+      "The replaceable reasoning and conversational layer. ChatGPT, Claude, another LLM, or a custom application can use the same MCP/API contract. Remote client access is designed but not yet verified.",
     icon: "message",
     status: "Model-agnostic contract · connection pending",
   },
@@ -255,18 +255,18 @@ const architectureSteps: readonly RailStep[] = [
   {
     number: "08",
     label: "Always-on private host",
-    title: "Mac mini",
+    title: "Worker host",
     description:
-      "The intended worker machine. It should poll outward, expose no public listener, and act only on a frozen approval. The MacBook Pro is the interactive coding and first rehearsal machine; neither live worker connection is complete here.",
+      "The worker host can be a local computer, a private server, or a cloud machine. It should poll outward, expose no public listener, and act only on a frozen approval. The MacBook Pro and Mac mini are current examples; neither live worker connection is complete here.",
     icon: "server",
-    status: "Target host · activation pending",
+    status: "Local or cloud · activation pending",
   },
   {
     number: "09",
     label: "Replaceable coding worker",
     title: "OpenClaw with Codex runtime",
     description:
-      "OpenClaw is the coding worker. Its Codex agent runtime inspects, edits, tests, and explains changes through the loopback Gateway, then returns files, a commit, and review evidence. The intended login is the supported ChatGPT/Codex OAuth path; standalone Codex CLI operation is not part of this design.",
+      "OpenClaw is the coding worker. Its Codex agent runtime can inspect, edit, test, and explain changes through a correctly configured local or cloud Gateway, then return files, a commit, and review evidence. The intended login is the supported ChatGPT/Codex OAuth path; standalone Codex CLI operation is not part of this design.",
     icon: "code",
     status: "Safety contracts built · live task pending",
   },
@@ -303,8 +303,38 @@ const nextItems = [
   "Pass the hosted read-only Supabase preflight",
   "Connect MCP to durable Hermes workflow records",
   "Wire Redis into workflow queue, lease, and heartbeat coordination",
-  "Run the approved MacBook Pro, then Mac mini, worker proof",
+  "Run the approved worker-host proof, using the MacBook Pro or Mac mini as current examples",
   "Add a safe end-to-end vector projection probe",
+] as const;
+
+const summaryComparison = [
+  {
+    number: "01",
+    icon: "message",
+    kicker: "ChatGPT, Claude, or another LLM alone",
+    title: "A useful conversation",
+    description:
+      "The model can reason, answer questions, call available tools, and produce a plan or result. The conversation remains the main place to follow the work.",
+    points: [
+      "The model or its tools may not keep one durable workflow record",
+      "Approvals, queues, long-running execution, and evidence remain separate concerns",
+      "You still have to coordinate what happens next",
+    ],
+  },
+  {
+    number: "02",
+    icon: "workflow",
+    kicker: "The same LLM with NeedThisDone",
+    title: "A coordinated system that carries the work forward",
+    description:
+      "NeedThisDone puts a small authenticated control plane around the conversation so the work can continue after the message ends.",
+    points: [
+      "Supabase keeps the goal, approval, status, result, and ownership durable",
+      "Redis coordinates short-lived queues, leases, locks, heartbeats, and deduplication",
+      "Vector memory retrieves selected context without replacing durable truth",
+      "Hermes and configured local or cloud workers execute the approved work and return evidence",
+    ],
+  },
 ] as const;
 
 function SectionLabel({
@@ -442,7 +472,7 @@ export default function SystemPage() {
                 We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.
               </p>
               <p className="system-hero__support">
-                Any compatible LLM can be the conversation layer. NeedThisDone keeps an approved piece of work, its status, and its proof together after the conversation ends.
+                ChatGPT, Claude, or any compatible LLM can be the conversation layer. This page first explains the system in plain English, then shows why each technical layer matters, and ends with a direct comparison with ordinary chat.
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
@@ -491,12 +521,13 @@ export default function SystemPage() {
               One request, one controlled workflow, one answer back.
             </h2>
             <p className="system-section__lead">
-              Any compatible LLM can be the conversation layer. It sends a
+              ChatGPT, Claude, or any compatible LLM can be the conversation layer. It sends a
               request to the same authenticated MCP/API contract; NeedThisDone
               keeps the workflow, approval, execution, and evidence together.
               The chat is the front door; the coordinated services and workers
               are the team doing the follow-through. ChatGPT is the current
-              client, not a permanent dependency.
+              client, not a permanent dependency. The worker can be a local
+              computer or a cloud machine when it is configured correctly.
             </p>
           </div>
           <SystemRail steps={remoteFlowSteps} className="system-remote-flow" />
@@ -511,7 +542,7 @@ export default function SystemPage() {
         <div className="system-section__inner">
           <div className="system-two-column system-two-column--architecture">
             <div className="system-section__intro">
-            <SectionLabel>{technicalSectionLabel}</SectionLabel>
+              <SectionLabel>{technicalSectionLabel}</SectionLabel>
               <h2 id="architecture-heading" className="system-heading system-heading--compact">
                 Why each private piece has a job.
               </h2>
@@ -527,7 +558,7 @@ export default function SystemPage() {
               <SystemRail steps={architectureSteps} className="system-rail--architecture" />
               <figcaption className="system-figure-caption">
                 NeedThisDone and Supabase hold the durable record. The private
-                Mac performs approved work. GitHub holds code changes for review.
+                worker host performs approved work. GitHub holds code changes for review.
               </figcaption>
             </figure>
           </div>
@@ -549,7 +580,7 @@ export default function SystemPage() {
               The repository contains a meaningful control-plane foundation,
               but the connections are not all live yet. This page stays honest
               about what is built, what has only been contract-tested, and what
-              still needs a local, hosted, or Mac proof.
+              still needs a local, hosted, or worker-host proof.
             </p>
           </div>
           <div className="system-proof-lanes" aria-label="System proof progress">
@@ -619,13 +650,56 @@ export default function SystemPage() {
 
       <section className="system-closing" aria-labelledby="closing-heading">
         <div className="system-closing__inner">
-          <SectionLabel>Take the next real-world step</SectionLabel>
+          <SectionLabel>In summary · why this is different</SectionLabel>
           <h2 id="closing-heading" className="system-heading">
-            More useful follow-through starts with one clear outcome.
+            Chat can answer. NeedThisDone carries the work forward.
           </h2>
           <p>
-            Share the situation in your own words. We will help clarify the
-            first piece of work and what you can review before deciding.
+            Even when an LLM can use tools, it does not automatically become a
+            durable, approval-gated operating system. NeedThisDone adds the
+            records, coordination, memory, workers, and evidence around it.
+          </p>
+          <div className="system-difference-grid system-closing__comparison">
+            {summaryComparison.map((item, index) => (
+              <article
+                key={item.title}
+                className={cx(
+                  "system-difference-card",
+                  index === 1 && "system-difference-card--dark",
+                )}
+              >
+                <div className="system-card-identity system-difference-card__identity">
+                  <div className="system-difference-card__topline">
+                    <span className="system-difference-card__number">{item.number}</span>
+                    <span className="system-difference-card__icon">
+                      <StepIcon name={item.icon} />
+                    </span>
+                  </div>
+                  <p className="system-card-kicker">{item.kicker}</p>
+                  <h3>{item.title}</h3>
+                </div>
+                <div className="system-card-detail system-difference-card__detail">
+                  <p className="system-difference-card__description">{item.description}</p>
+                  <ul>
+                    {item.points.map((point) => (
+                      <li key={point}>
+                        <Check aria-hidden="true" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {index < summaryComparison.length - 1 && (
+                  <span className="system-difference-card__connector" aria-hidden="true">
+                    <ArrowRight />
+                  </span>
+                )}
+              </article>
+            ))}
+          </div>
+          <p>
+            Share one clear outcome when you are ready, and the first bounded
+            piece of work can be defined before anything runs.
           </p>
           <div className="system-closing__actions">
             <Link href="/contact" className="system-button system-button--green">

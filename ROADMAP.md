@@ -6,8 +6,8 @@ before adding work here.
 
 ## Assistant-first finish line
 
-The first release-worthy proof is one real, controlled browser → Supabase → Mac
-mini assistant workflow. Local tests alone do not meet this finish line.
+The first release-worthy proof is one real, controlled LLM client → Supabase →
+configured worker-host workflow. Local tests alone do not meet this finish line.
 
 ```text
 [ Owner requests work in the browser ]
@@ -19,7 +19,7 @@ mini assistant workflow. Local tests alone do not meet this finish line.
 [ Owner approves the frozen plan in the browser ]
                  |
                  v
-[ Private Mac claims it outward and returns result, cost, and private assets ]
+[ Configured local or cloud worker claims it outward and returns result, cost, and private assets ]
                  |
                  v
 [ Owner reviews the evidence in the authenticated browser ]
@@ -42,11 +42,11 @@ It is complete only when all of these are true:
 1. Keep one durable browser approval and private-asset lifecycle in Next.js and
    Supabase; remove or avoid duplicate queues, dashboards, memory stores, and
    control planes.
-2. Treat the MacBook Pro as Abe's interactive coding machine and connect the
-   signed private bridge to a real loopback OpenClaw gateway there first, while
-   preserving the outbound-only boundary and frozen-plan checks. The Mac mini
-   is the always-on private worker host and remains a later separately approved
-   activation target.
+2. Connect the signed private bridge to a real loopback OpenClaw Gateway on a
+   correctly configured local computer or cloud machine, while preserving the
+   outbound-only boundary and frozen-plan checks. The MacBook Pro is the first
+   rehearsal example and the Mac mini is the intended always-on example; neither
+   is a permanent architecture requirement.
 3. Use Hermes to return the bounded plan and approved model route. Prefer an
    allowed OpenRouter free route; surface a paid route for separate browser
    approval instead of silently falling back.
@@ -65,12 +65,13 @@ It is complete only when all of these are true:
 | Capability | Current state | Next proof |
 | --- | --- | --- |
 | Vision and operating boundaries | Canonical in `README.md` and this roadmap | Keep implementation aligned with the approval and source-of-truth rules |
-| Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only MacBook rehearsal |
+| Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only worker-host rehearsal |
 | Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
 | Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
 | MCP facade | Device-independent schemas, a local Streamable HTTP handler, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production OAuth/remote access and Hermes persistence wiring remain pending | Pass the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
-| MacBook Pro | Interactive coding and first bridge-rehearsal host | Configure the private bridge environment and validate the loopback Gateway |
-| Mac mini | Intended always-on worker host; not activated | Repeat the approved worker proof after the MacBook proof |
+| Worker host | Any correctly configured local computer, private server, or cloud machine; not activated | Configure the private bridge environment and validate the loopback Gateway |
+| MacBook Pro (example) | Abe's interactive coding and first bridge-rehearsal host | Use for the first rehearsal if selected |
+| Mac mini (example) | Intended always-on worker-host example; not activated | Repeat the approved worker proof if selected |
 | OpenClaw/GitHub coding worker | Coding worker contract remains future; OpenClaw is the worker and its Codex agent runtime is the coding engine | Add isolated worktree, branch, checks, commit SHA, and review evidence |
 
 ## Test evidence map
@@ -83,7 +84,7 @@ Each capability must carry the narrowest useful evidence at each layer:
 | Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
 | Integration | Disposable local Supabase/RLS, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
 | Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote compatible-LLM connector |
-| Live rehearsal | Not available in this environment | MacBook Pro/Mac mini, Vercel, Supabase, Redis/vector, provider, and durable result |
+| Live rehearsal | Not available in this environment | Selected local/cloud worker host, Vercel, Supabase, Redis/vector, provider, and durable result |
 
 Passing local tests never changes a capability to “live” or “hosted.”
 
@@ -139,13 +140,15 @@ What We Do → How We Work → Examples → Why Us, and the page ends with Share
 Vision. How We Work remains part of the primary reassurance path. The page
 keeps the work understandable without requiring technical detail.
 The public [system case study](app/app/system/page.tsx) remains the complete
-technical-details page for curious or technical visitors. It starts with
-plain-English cards, then shows the visual operating path: a compatible LLM client calls
-the hosted MCP doorway; Supabase records durable truth; Redis carries short-lived
-coordination; Hermes on the active Mac claims the approved work; OpenClaw runs
-the coding task; and the result returns through Supabase to the initiating client. It then
-names the technology stack, why each piece exists, and which connections are
-built or still pending.
+technical-details page for curious or technical visitors. It begins by
+explaining what the page will cover, shows one plain-English operating path,
+explains why each technical layer exists, and ends with a direct comparison:
+ordinary chat can answer and call tools, while NeedThisDone adds durable state,
+temporary coordination, selected semantic memory, controlled workers, and
+reviewable evidence. The path is compatible with any LLM client and any
+correctly configured local or cloud worker host; the MacBook Pro and Mac mini
+are current examples only. The page also identifies which connections are built
+or still pending.
 
 Keep `/system` available as optional detail from the footer Explore links and
 its direct URL, while keeping it out of the primary homepage navigation and

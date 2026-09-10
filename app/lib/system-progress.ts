@@ -38,7 +38,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Hosted control plane',
     state: 'pending',
     status: 'Pending',
-    description: 'Vercel, hosted Supabase, Redis, and secure remote ChatGPT access must pass a separate read-only preflight.',
+    description: 'Vercel, hosted Supabase, Redis, and secure remote LLM-client access must pass a separate read-only preflight.',
     evidence: 'npm run test:hermes-mcp:hosted',
   },
   {
@@ -46,8 +46,8 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Worker execution',
     state: 'pending',
     status: 'Pending',
-    description: 'The MacBook rehearsal must prove Hermes can claim work and OpenClaw can return a reviewable GitHub result before Mac mini activation.',
-    evidence: 'Approved MacBook rehearsal with signed bridge and commit evidence',
+    description: 'A correctly configured local or cloud worker host must prove Hermes can claim work and OpenClaw can return a reviewable GitHub result.',
+    evidence: 'Approved worker-host rehearsal with signed bridge and commit evidence',
   },
 ] as const;
 

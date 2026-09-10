@@ -15,6 +15,18 @@
   Route assertions and documentation were updated together. Browser recheck is
   pending because Playwright Chromium is not installed in this environment.
 
+- On 2026-09-10, the architecture language was broadened from named machines
+  to a platform-neutral worker-host contract. ChatGPT, Claude, another LLM, or
+  a custom client may use the same MCP/API surface, and Hermes/OpenClaw may run
+  on any correctly configured local computer, private server, or cloud machine.
+  The MacBook Pro and Mac mini remain documented as current examples only.
+
+- On 2026-09-10, `/system` gained a short closing comparison so the page ends
+  with the benefit in plain English: an LLM can answer and call tools, while
+  NeedThisDone adds durable Supabase state, Redis coordination, selected vector
+  retrieval, Hermes/workers, and reviewable evidence around that conversation.
+  This comparison is intentionally a summary, not a second operating path.
+
 ## Current facts
 
 - The reviewer-facing [test strategy and suite inventory](TEST_STRATEGY.md)
@@ -68,9 +80,11 @@
   recorded dummy-value run is diagnostic evidence only, not local-Supabase
   proof.
 
-- On 2026-09-09, the assistant infrastructure audit confirmed the hardware
-  split: the MacBook Pro is Abe's interactive development and coding machine;
-  the Mac mini is the intended always-on private worker. Existing Redis is
+- On 2026-09-09, the assistant infrastructure audit confirmed the current
+  rehearsal examples: the MacBook Pro is Abe's interactive development and
+  coding machine, and the Mac mini is the intended always-on private worker.
+  The architecture remains host-neutral: a correctly configured local computer,
+  private server, or cloud machine can fill the worker-host role. Existing Redis is
   wired through `REDIS_URL` and the Node Redis client for cache, rate limiting,
   request deduplication, and health checks; it is not currently the agent task
   queue. No live Upstash Vector or Qdrant connection is verified, and the
@@ -79,8 +93,8 @@
   `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional
   `VECTOR_MEMORY_NAMESPACE`; it uses derived semantic memory only and does not
   restore public chat or page indexing. The values must be configured only in
-  the MacBook/Mac-mini server-side environments and the intended Vercel server
-  environment, never in browser variables, Git, prompts, logs, Redis, or
+  the selected worker-host and intended Vercel server-side environments, never
+  in browser variables, Git, prompts, logs, Redis, or
   durable business rows. The adapter request/response contract has six passing
   unit tests, and the application code gate passed lint, type-check, 70 unit
   files/370 tests, 6 accessibility files/60 tests, and production build. Live
@@ -113,7 +127,7 @@
   explaining the difference between prompting ChatGPT alone and using
   NeedThisDone as the durable coordination layer. Its technical section names
   ChatGPT, MCP, Next.js/Vercel, Hermes, Supabase, Redis, Upstash Vector, the
-  MacBook Pro/Mac mini split, OpenClaw with its Codex runtime, GitHub, and
+  local/cloud worker-host model (with MacBook Pro/Mac mini examples), OpenClaw with its Codex runtime, GitHub, and
   OpenRouter, and each
   card explains its job and current proof state. The page explicitly marks
   hosted reachability, Hermes persistence, live vector projection, and worker
@@ -133,9 +147,9 @@
   Mac is live.
 
 - On 2026-09-09, the `/system` page gained a dedicated six-card visual operating
-  path: ChatGPT Work → hosted NeedThisDone MCP → Supabase and Redis → Hermes on
-  the active Mac → OpenClaw with its Codex runtime → the durable result returned
-  to ChatGPT. Each card explains the component in plain English, including why
+  path: a compatible LLM client → hosted NeedThisDone MCP → Supabase and Redis
+  → Hermes on the configured worker host → OpenClaw with its Codex runtime →
+  the durable result returned to the initiating client. Each card explains the component in plain English, including why
   Redis is temporary coordination and why Upstash Vector is selected searchable
   memory rather than business truth. The page also states that the hosted MCP
   connection does not require opening the dashboard; `/system` is an optional
@@ -482,8 +496,10 @@
   separate approvals.
 
 - NeedThisDone's canonical direction is now a private authenticated assistant:
-  the browser is the control plane, Supabase is durable truth, and the Mac mini
-  is an outbound-only private runtime. The canonical source is `README.md`.
+  the browser is the control plane, Supabase is durable truth, and a correctly
+  configured local or cloud worker host is an outbound-only private runtime.
+  The Mac mini is the intended always-on example, not a requirement. The
+  canonical source is `README.md`.
 - Hermes plans bounded work and proposes an approved model route; OpenClaw is
   the approved coding worker and uses its Codex agent runtime in the worktree.
   Standalone Codex CLI operation is not part of the target model. An allowed

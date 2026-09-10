@@ -30,9 +30,9 @@ those proofs hold.
              |                                      |
              | Hermes claims approved work         |
              v                                      v
-       ACTIVE PRIVATE MAC  ---------------->  RESULT + EVIDENCE
- MacBook Pro while testing;                 Supabase stores the result;
- Mac mini when always-on                    initiating client reads it via status
+       CONFIGURED WORKER HOST  ----------->  RESULT + EVIDENCE
+ Local computer or cloud machine            Supabase stores the result;
+ Hermes coordinates; OpenClaw executes      initiating client reads it via status
              |
              v
  OpenClaw: coding worker via Codex runtime
@@ -40,16 +40,17 @@ those proofs hold.
  Upstash Vector: selected searchable memory, never durable truth
 ```
 
-ChatGPT is the current interface and reasoning layer, but the contract is model-agnostic: any compatible LLM or custom app can use it. Vercel is the stable,
+ChatGPT is the current interface and reasoning layer, but the contract is model-agnostic: you can use ChatGPT, Claude, or any compatible LLM or custom app. Vercel is the stable,
 internet-facing MCP/control-plane doorway, not a permanent worker; you do not
-need to open the NeedThisDone app for ChatGPT to reach it. Supabase is durable
+need to open the NeedThisDone app for the LLM client to reach it. Supabase is durable
 product truth. Redis is only temporary coordination for queues, leases, locks,
-heartbeats, and deduplication. The Mac mini is the always-on private runtime:
-it polls outward, exposes no public listener, and may act only on a recorded,
-frozen approval.
+heartbeats, and deduplication. A correctly configured local computer, private
+server, or cloud machine can be the worker host: it polls outward, exposes no
+public listener, and may act only on a recorded, frozen approval.
 
-The MacBook is the first separately approved rehearsal host for this seam. The
-Mac mini remains a later always-on target after the MacBook proof is accepted.
+The MacBook Pro and Mac mini are current implementation examples: the MacBook
+Pro is the first rehearsal host, and the Mac mini is the intended always-on
+example. The architecture does not require either device.
 
 - Hermes proposes a bounded plan and records the allowed model route.
 - OpenClaw carries out an approved coding task through its configured Codex
@@ -90,8 +91,9 @@ work.
 | Supabase/Postgres/Storage | Auth, RLS, durable plans, approvals, tasks, results, costs, and private assets | Canonical source for durable workflow and business truth |
 | Redis/Upstash Redis | Short-lived queues, locks, leases, heartbeats, deduplication, and wake-up signals | Rebuildable coordination only; `REDIS_URL` is the current connection variable |
 | Upstash Vector | Private semantic-memory projection of selected durable decisions and findings | Retrieval aid only; configured with `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional `VECTOR_MEMORY_NAMESPACE` |
-| MacBook Pro | Abe's interactive coding and first controlled rehearsal machine | Not the always-on worker |
-| Mac mini | Always-on private worker host | Outbound-only execution node; activation remains separately approved |
+| Worker host | Correctly configured local computer, private server, or cloud machine that runs Hermes/OpenClaw | Outbound-only execution node; activation remains separately approved |
+| MacBook Pro (example) | Abe's interactive coding and first controlled rehearsal machine | One possible local host; not required |
+| Mac mini (example) | Intended always-on private worker example | One possible always-on host; not required |
 | OpenClaw | Approved coding worker through its loopback Gateway and configured Codex agent runtime | Returns tests, changed files, commit SHA, and review evidence; no automatic merge/deploy |
 | GitHub | Code, branch, commit, and pull-request source of truth | Production branches remain protected and review-gated |
 | OpenRouter | Current application-side planner/model route | Free route first; paid route requires separate approval |
@@ -105,7 +107,7 @@ separate credential paths and must not be treated as interchangeable.
 The normal request path is: an LLM client understands the request → the stable
 MCP facade authenticates and validates it → Hermes creates the durable Supabase
 record →
-Redis carries only transient coordination → the Mac mini claims and runs the
+Redis carries only transient coordination → the configured worker host claims and runs the
 approved job → OpenClaw's Codex runtime returns structured evidence → Hermes persists
 the result → the initiating client reports the status and next decision. Upstash Vector may
 receive a provenance-bearing projection after durable state exists, but it
@@ -156,15 +158,20 @@ automatic purchase, send an external message beyond the existing submission
 flow, approve work, activate a provider, or expose the private Mac runtime.
 
 The public [`/system` case study](app/app/system/page.tsx) remains a complete,
-discoverable technical-details page. It starts with plain-English cards, then
-shows the real compatible-LLM client → hosted MCP → Supabase/Redis → Hermes → OpenClaw
-→ result-back visual flow, followed by the named technology stack and proof
-rails. It is optional detail for curious or technical visitors, available from
-the footer Explore links and the direct `/system` URL; it is not required for
-conversion or part of the primary homepage path. Keep its route contract,
-sitemap entry, metadata, responsive presentation, and direct contact/action
-links aligned with [Project status](docs/PROJECT_STATUS.md) and [Release
-evidence](docs/RELEASE_EVIDENCE.md) when the page changes.
+discoverable technical-details page. It begins by explaining what the page will
+cover, shows one plain-English operating path, explains why each technical
+layer exists, and ends with a direct comparison: ordinary chat can answer and
+call tools, while NeedThisDone adds durable state, temporary coordination,
+selected semantic memory, controlled workers, and reviewable evidence. The path
+is compatible with any LLM client and any correctly configured local or cloud
+worker host; the MacBook Pro and Mac mini are current examples only. The page
+also identifies which connections are built or still pending. It is optional
+detail for curious or technical visitors, available from the footer Explore
+links and the direct `/system` URL; it is not required for conversion or part
+of the primary homepage path. Keep its route contract, sitemap entry, metadata,
+responsive presentation, and direct contact/action links aligned with [Project
+status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md)
+when the page changes.
 
 Internal public-service writing guidance lives in
 [Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).

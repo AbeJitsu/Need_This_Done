@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 // Transport-neutral contract for the stable MCP control-plane surface.
 //
-// ChatGPT must be able to call this contract from the MacBook Pro, Mac mini,
-// or another approved client. Device selection belongs to Hermes/worker
-// scheduling, not to the MCP caller and not to the durable workflow identity.
+// Any compatible LLM client must be able to call this contract from any
+// approved device. Worker-host selection belongs to Hermes scheduling, not to
+// the MCP caller and not to the durable workflow identity.
 
 export const MCP_TOOL_NAMES = [
   'start_workflow',
