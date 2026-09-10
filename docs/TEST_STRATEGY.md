@@ -151,7 +151,7 @@ The Hermes vertical slice has an intentional environment order:
 | `lib/site-analyzer.test.ts` | Analyzer/report normalization and fallback | Protects retained analyzer contract | Scan quality |
 | `lib/transactional-email-service.test.ts` | Event keys/provider construction | Prevents email side effects duplicating | Provider delivery |
 | `lib/vector-memory.test.ts` | Optional vector status, namespaced upsert/query, bounds, timeout, redaction | Proves semantic memory cannot leak or become durable truth | Live index/embedding quality |
-| `lib/hermes-mcp-contract.test.ts` | Exact three-tool surface, bounded start requests, approval-gated results, status states, and cursor-bounded listings | Proves ChatGPT can use one stable device-independent contract without receiving internal records or bypassing approval | MCP transport, Hermes persistence, worker dispatch, or live device connectivity |
+| `lib/hermes-mcp-contract.test.ts` | Exact three-tool surface, bounded start requests, approval-gated results, status states, and cursor-bounded listings | Proves any compatible LLM client can use one stable device-independent contract without receiving internal records or bypassing approval | MCP transport, Hermes persistence, worker dispatch, or live device connectivity |
 | `lib/vision-intake.test.ts` | Intake answers, limits, aliases | Protects public intake behavior | Browser rendering |
 | `lib/wcag-contrast.test.ts` | Contrast calculations | Protects design-token readability | Full axe coverage |
 | `lib/website-fix-invoice-service.test.ts` | Invoice creation/retry semantics | Keeps billing durable/idempotent | Stripe |
@@ -196,7 +196,7 @@ These suites are intentionally excluded from the fast unit command and run via
 | `e2e/browser-harness.spec.ts` | Browser startup/route load | Isolates harness failures | Full workflow |
 | `e2e/daily-cockpit.spec.ts` | Daily operator cockpit | Protects review flow | Worker completion |
 | `e2e/hermes-plan-preview.spec.ts` | Draft preview/approval UI | Protects review before dispatch | Provider/Redis/Mac |
-| `e2e/hermes-mcp-vertical-slice.spec.ts` | Real application diagnostic for health, MCP auth/handshake/discovery, Hermes start/list/status, and optional signed-worker/full-execution checkpoints; attaches a redacted stage report | Shows the first missing connected boundary when the operating-system path is run | Production OAuth, remote ChatGPT reachability, workflow persistence until the dispatcher is wired, live vector projection, or external effects |
+| `e2e/hermes-mcp-vertical-slice.spec.ts` | Real application diagnostic for health, MCP auth/handshake/discovery, Hermes start/list/status, and optional signed-worker/full-execution checkpoints; attaches a redacted stage report | Shows the first missing connected boundary when the operating-system path is run | Production OAuth, remote LLM-client reachability, workflow persistence until the dispatcher is wired, live vector projection, or external effects |
 | `e2e/prospecting-workspace.spec.ts` | Prospect review/suppression UI | Protects operator controls | Outreach |
 | `e2e/retained-core-smoke.spec.ts` | Public/mobile smoke matrix | Catches route/overflow/recovery regressions | Hosted/customer results |
 

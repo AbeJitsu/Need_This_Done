@@ -21,7 +21,7 @@ those proofs hold.
 ## How the system works
 
 ```text
- CHATGPT WORK (your conversation)
+ LLM CLIENT (ChatGPT today; others supported)
  request | approve | ask for status / summary
              |
              v  authenticated HTTPS MCP
@@ -32,7 +32,7 @@ those proofs hold.
              v                                      v
        ACTIVE PRIVATE MAC  ---------------->  RESULT + EVIDENCE
  MacBook Pro while testing;                 Supabase stores the result;
- Mac mini when always-on                    ChatGPT reads it via status
+ Mac mini when always-on                    initiating client reads it via status
              |
              v
  OpenClaw: coding worker via Codex runtime
@@ -40,7 +40,7 @@ those proofs hold.
  Upstash Vector: selected searchable memory, never durable truth
 ```
 
-ChatGPT Work is the interface and reasoning layer. Vercel is the stable,
+ChatGPT is the current interface and reasoning layer, but the contract is model-agnostic: any compatible LLM or custom app can use it. Vercel is the stable,
 internet-facing MCP/control-plane doorway, not a permanent worker; you do not
 need to open the NeedThisDone app for ChatGPT to reach it. Supabase is durable
 product truth. Redis is only temporary coordination for queues, leases, locks,
@@ -83,7 +83,7 @@ work.
 
 | Component | Responsibility | Boundary |
 |---|---|---|
-| ChatGPT | Conversational interface, reasoning, clarification, planning, status interpretation, and summaries | Does not run long-lived workers, queues, or arbitrary shell commands |
+| LLM client | Conversational interface, reasoning, clarification, planning, status interpretation, and summaries; ChatGPT is the current client | Does not run long-lived workers, queues, or arbitrary shell commands |
 | MCP facade | Stable authenticated control-plane adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` from any approved device | Device-independent; does not become a second workflow engine or database |
 | Hermes | Validates requests, creates and tracks workflows, assigns workers, handles leases/retries/events, and persists outcomes | Coordinates execution; it does not replace ChatGPT's conversation layer |
 | Next.js/Vercel | Internet-facing authenticated control plane and server-side API boundary | Not the permanent worker and never exposes private credentials to the browser |
@@ -102,12 +102,12 @@ OpenClaw runtime in this design, not a separately operated Codex CLI worker.
 OpenAI API-key billing and ChatGPT/Codex subscription authentication remain
 separate credential paths and must not be treated as interchangeable.
 
-The normal request path is: ChatGPT Work understands the request → the stable
+The normal request path is: an LLM client understands the request → the stable
 MCP facade authenticates and validates it → Hermes creates the durable Supabase
 record →
 Redis carries only transient coordination → the Mac mini claims and runs the
 approved job → OpenClaw's Codex runtime returns structured evidence → Hermes persists
-the result → ChatGPT reports the status and next decision. Upstash Vector may
+the result → the initiating client reports the status and next decision. Upstash Vector may
 receive a provenance-bearing projection after durable state exists, but it
 never overrides current Supabase or GitHub facts and does not restore the
 retired public chatbot or page-indexing system.
@@ -157,7 +157,7 @@ flow, approve work, activate a provider, or expose the private Mac runtime.
 
 The public [`/system` case study](app/app/system/page.tsx) remains a complete,
 discoverable technical-details page. It starts with plain-English cards, then
-shows the real ChatGPT Work → hosted MCP → Supabase/Redis → Hermes → OpenClaw
+shows the real compatible-LLM client → hosted MCP → Supabase/Redis → Hermes → OpenClaw
 → result-back visual flow, followed by the named technology stack and proof
 rails. It is optional detail for curious or technical visitors, available from
 the footer Explore links and the direct `/system` URL; it is not required for
