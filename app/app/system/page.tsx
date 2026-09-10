@@ -145,16 +145,16 @@ const remoteFlowSteps: readonly RailStep[] = [
     label: "The public doorway",
     title: "NeedThisDone MCP on Vercel",
     description:
-      "The hosted app exposes one stable, authenticated HTTPS doorway. The client does not need to open the NeedThisDone website to reach it.",
+      "Your NeedThisDone site login identifies the owner, and Account Settings creates an owner-scoped MCP credential for the client. The client sends that bearer credential to one stable HTTPS doorway; the raw token is shown only once. The site login and MCP credential are separate layers, and the client does not need to open the website for each call.",
     icon: "lock",
-    status: "Three tools · device-independent",
+    status: "Owner-scoped bearer · three tools",
   },
   {
     number: "03",
     label: "Record and signal",
     title: "Supabase + Redis",
     description:
-      "Supabase records the durable workflow, approval, status, and result. Redis carries temporary queue signals, leases, locks, heartbeats, and deduplication so workers can coordinate safely.",
+      "Supabase stores the owner-scoped credential hash, durable workflow, approval, status, and result under RLS. Redis carries temporary queue signals, leases, locks, heartbeats, and deduplication; it is not part of MCP authentication and is never durable truth.",
     icon: "database",
     status: "Durable truth + temporary coordination",
   },
@@ -193,7 +193,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Reasoning and conversation",
     title: "LLM client",
     description:
-      "The replaceable reasoning and conversational layer. ChatGPT, Claude, another LLM, or a custom application can use the same MCP/API contract. Remote client access is designed but not yet verified.",
+      "The replaceable reasoning and conversational layer. After the owner signs in to NeedThisDone and creates a credential, ChatGPT, Claude, another LLM, or a custom application can use the same owner-scoped MCP/API contract. Remote client access is designed but not yet verified.",
     icon: "message",
     status: "Model-agnostic contract · connection pending",
   },
@@ -202,9 +202,9 @@ const architectureSteps: readonly RailStep[] = [
     label: "Small authenticated doorway",
     title: "MCP facade",
     description:
-      "The Model Context Protocol/API endpoint exposes only start_workflow, get_workflow_status, and list_workflows. The local route, handshake, authentication seam, and discovery contract are built; secure hosted client access is still pending.",
+      "The Model Context Protocol/API endpoint requires a bearer credential, resolves the owner and credential record, and exposes only start_workflow, get_workflow_status, and list_workflows. Raw tokens are shown once from Account Settings; the local route, handshake, authentication seam, owner-context propagation, and discovery contract are built, while secure hosted client access is still pending.",
     icon: "lock",
-    status: "Built locally · hosted reachability pending",
+    status: "Owner boundary built · hosted reachability pending",
   },
   {
     number: "03",
@@ -230,7 +230,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Durable source of truth",
     title: "Supabase",
     description:
-      "Stores authentication, plans, approvals, tasks, costs, results, and private assets with RLS. The local real-Supabase gate must pass before the hosted Supabase proof.",
+      "Stores authentication, owner-scoped MCP token hashes, plans, approvals, tasks, costs, results, and private assets with RLS. Raw MCP tokens never enter durable storage. The local real-Supabase gate must pass before the hosted Supabase proof.",
     icon: "database",
     status: "Application boundary exists · local-first proof next",
   },
@@ -239,7 +239,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Temporary coordination",
     title: "Redis",
     description:
-      "Carries short-lived cache, locks, deduplication, leases, heartbeats, and wake-up signals. It is not durable workflow truth and is not yet wired as the task queue.",
+      "Carries short-lived cache, locks, deduplication, leases, heartbeats, and wake-up signals. It is not durable workflow truth, is not an authentication store, and is not yet wired as the task queue.",
     icon: "server",
     status: "Client active · workflow coordination pending",
   },
@@ -248,7 +248,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Semantic retrieval aid",
     title: "Upstash Vector",
     description:
-      "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it never overrides Supabase or GitHub and does not restore the retired public chatbot.",
+      "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it is not an authentication boundary, never overrides Supabase or GitHub, and does not restore the retired public chatbot.",
     icon: "database",
     status: "Adapter built · live index and projection pending",
   },
@@ -291,7 +291,8 @@ const architectureSteps: readonly RailStep[] = [
 ];
 
 const proofItems = [
-  "Local MCP route, handshake, authentication, and tool contract",
+  "Local MCP route, handshake, owner-scoped authentication, and tool contract",
+  "One-time raw-token display with redacted account credential management",
   "Supabase-backed plans, approvals, costs, results, and RLS boundaries",
   "Redis client for cache, rate limits, deduplication, and health checks",
   "Server-only vector-memory adapter with namespaced provenance metadata",
@@ -299,9 +300,10 @@ const proofItems = [
 ] as const;
 
 const nextItems = [
+  "Run the local migration 113/RLS and account-credential proof",
   "Pass the real local-Supabase-first diagnostic",
   "Pass the hosted read-only Supabase preflight",
-  "Connect MCP to durable Hermes workflow records",
+  "Connect the authenticated MCP owner context to durable Hermes workflow records",
   "Wire Redis into workflow queue, lease, and heartbeat coordination",
   "Run the approved worker-host proof, using the MacBook Pro or Mac mini as current examples",
   "Add a safe end-to-end vector projection probe",

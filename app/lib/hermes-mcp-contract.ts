@@ -130,8 +130,19 @@ export type StartWorkflowResult = z.infer<typeof startWorkflowResultSchema>;
 export type WorkflowStatusResult = z.infer<typeof workflowStatusResultSchema>;
 export type ListWorkflowsResult = z.infer<typeof listWorkflowsResultSchema>;
 
+/**
+ * The site-account credential is the MCP caller's identity. It is separate
+ * from Hermes/OpenClaw worker authentication and is passed explicitly so a
+ * future durable dispatcher cannot accidentally use a global owner.
+ */
+export type HermesMcpAuthContext = {
+  ownerId: string;
+  credentialId: string | null;
+  authMethod: 'database' | 'bootstrap';
+};
+
 export type HermesMcpDispatcher = {
-  startWorkflow(input: StartWorkflowInput): Promise<StartWorkflowResult>;
-  getWorkflowStatus(input: GetWorkflowStatusInput): Promise<WorkflowStatusResult>;
-  listWorkflows(input: ListWorkflowsInput): Promise<ListWorkflowsResult>;
+  startWorkflow(input: StartWorkflowInput, context: HermesMcpAuthContext): Promise<StartWorkflowResult>;
+  getWorkflowStatus(input: GetWorkflowStatusInput, context: HermesMcpAuthContext): Promise<WorkflowStatusResult>;
+  listWorkflows(input: ListWorkflowsInput, context: HermesMcpAuthContext): Promise<ListWorkflowsResult>;
 };

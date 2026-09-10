@@ -1,7 +1,7 @@
 # NeedThisDone build progress map
 
 **Last updated:** 2026-09-10  
-**Branch:** `codex/ai-operating-system-foundation`
+**Branch:** `codex/mcp-account-auth-rebuild`
 
 This is the implementation checklist behind the visual progress map on
 [`/system`](../app/app/system/page.tsx). It separates a code contract from a
@@ -17,14 +17,17 @@ targets cannot drift silently.
 
 | Gate | What must be true | Current state | Evidence required to advance |
 |---|---|---|---|
-| Contract | A compatible LLM client has one small, validated MCP surface; safety and result shapes are tested | Built | Unit/contract tests and route-level protocol checks |
-| Local control plane | Local Supabase is real and reachable; MCP creates and reads an approval-gated workflow | Next proof | `npm run test:hermes-mcp:local` with the real local Supabase gate passing |
+| Contract | A compatible LLM client has one small, validated MCP surface; site login identifies the owner, an owner-scoped bearer credential authorizes MCP, and safety/result shapes are tested | Built locally | Token/auth/API/contract tests and route-level protocol checks; local RLS proof is next |
+| Local control plane | Disposable local Supabase has migration 113/RLS proof, and MCP creates and reads an approval-gated workflow | Next proof | `npm run verify:database` plus `npm run test:hermes-mcp:local` with the real local Supabase gate passing |
 | Hosted control plane | Vercel, hosted Supabase, Redis, and secure remote MCP access work together | Pending | `npm run test:hermes-mcp:hosted` against an explicit deployed `BASE_URL`; remote writes remain separately approved |
 | Worker execution | Hermes claims approved work on a correctly configured local or cloud worker host, OpenClaw completes it, and evidence returns through status | Pending | Approved worker-host rehearsal with signed bridge, isolated worktree, tests, commit SHA, and durable result |
 
 ## What can be built without the Macs or live credentials
 
 - Keep the three-tool MCP contract narrow and versioned.
+- Keep site-account login, owner-scoped MCP credentials, and separate
+  Hermes/OpenClaw worker authentication as distinct boundaries.
+- Show raw MCP tokens once; persist only hashes and redacted metadata.
 - Add deterministic tests for authorization, idempotency, status envelopes,
   redaction, and fail-closed behavior.
 - Keep Supabase as durable workflow truth and Redis as temporary coordination.
@@ -37,7 +40,8 @@ targets cannot drift silently.
 
 ## What cannot be honestly completed from this environment
 
-- Authenticate an approved LLM client to the deployed MCP endpoint.
+- Authenticate an approved LLM client to the deployed MCP endpoint with a
+  hosted owner credential and verify the hosted migration separately.
 - Prove Vercel environment variables and hosted Supabase parity.
 - Prove live Upstash Redis or Upstash Vector connectivity.
 - Run Hermes and OpenClaw on a correctly configured local or cloud worker host.
@@ -45,8 +49,8 @@ targets cannot drift silently.
 
 ## Current implementation summary
 
-The repository contains the MCP transport, three-tool contract, authentication
-seam, vector adapter, Redis client, Supabase lifecycle schema, signed worker
+The repository contains the MCP transport, three-tool contract, account-scoped
+credential/API boundary, authentication seam, vector adapter, Redis client, Supabase lifecycle schema, signed worker
 bridge contracts, OpenClaw safety constraints, and the visible system map. The
 default MCP dispatcher still fails closed because the durable Hermes adapter is
 not connected. That is the most important code-to-runtime gap before a real
@@ -54,11 +58,12 @@ local workflow can pass.
 
 The required order remains:
 
-1. Local Supabase and local MCP control-plane proof.
-2. Hosted read-only control-plane proof.
-3. Approved worker-host rehearsal, using the MacBook Pro or Mac mini as current examples if selected.
-4. Always-on activation on the selected local or cloud host.
-5. Optional vector projection/retrieval proof alongside durable results.
+1. Local migration 113/RLS, account API, and owner-context proof on disposable Supabase.
+2. Local MCP control-plane proof.
+3. Hosted read-only control-plane proof.
+4. Approved worker-host rehearsal, using the MacBook Pro or Mac mini as current examples if selected.
+5. Always-on activation on the selected local or cloud host.
+6. Optional vector projection/retrieval proof alongside durable results.
 
 ## Test interpretation
 

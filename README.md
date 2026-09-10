@@ -85,7 +85,7 @@ work.
 | Component | Responsibility | Boundary |
 |---|---|---|
 | LLM client | Conversational interface, reasoning, clarification, planning, status interpretation, and summaries; ChatGPT is the current client | Does not run long-lived workers, queues, or arbitrary shell commands |
-| MCP facade | Stable authenticated control-plane adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` from any approved device | Device-independent; does not become a second workflow engine or database |
+| MCP facade | Stable owner-authenticated control-plane adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` from any approved device | Device-independent; stores only hashed account credentials and does not become a second workflow engine or database |
 | Hermes | Validates requests, creates and tracks workflows, assigns workers, handles leases/retries/events, and persists outcomes | Coordinates execution; it does not replace ChatGPT's conversation layer |
 | Next.js/Vercel | Internet-facing authenticated control plane and server-side API boundary | Not the permanent worker and never exposes private credentials to the browser |
 | Supabase/Postgres/Storage | Auth, RLS, durable plans, approvals, tasks, results, costs, and private assets | Canonical source for durable workflow and business truth |
@@ -104,8 +104,17 @@ OpenClaw runtime in this design, not a separately operated Codex CLI worker.
 OpenAI API-key billing and ChatGPT/Codex subscription authentication remain
 separate credential paths and must not be treated as interchangeable.
 
+The site login authenticates the NeedThisDone owner in the browser. From Account
+Settings, that owner may create a named, owner-scoped MCP credential; the
+credential authorizes bearer calls to `/api/mcp` but is not the browser session
+and does not authenticate Hermes or OpenClaw. Only a SHA-256 hash and a short
+display prefix are stored, and the raw MCP token is shown once after creation.
+The temporary static bearer bootstrap, if configured, must also be bound to one
+owner UUID. Redis and Upstash Vector are coordination and retrieval layers,
+not part of this authentication boundary.
+
 The normal request path is: an LLM client understands the request → the stable
-MCP facade authenticates and validates it → Hermes creates the durable Supabase
+MCP facade authenticates the owner-scoped bearer credential and validates it → Hermes creates the durable Supabase
 record →
 Redis carries only transient coordination → the configured worker host claims and runs the
 approved job → OpenClaw's Codex runtime returns structured evidence → Hermes persists
@@ -113,6 +122,11 @@ the result → the initiating client reports the status and next decision. Upsta
 receive a provenance-bearing projection after durable state exists, but it
 never overrides current Supabase or GitHub facts and does not restore the
 retired public chatbot or page-indexing system.
+
+Local Supabase migration/RLS and account-credential proof must pass before any
+hosted MCP proof. Durable MCP-to-Hermes dispatch remains a later phase until
+the existing Hermes persistence adapter is wired; this boundary does not
+rebuild the retired chatbot.
 
 The reviewer-facing [test strategy and suite inventory](docs/TEST_STRATEGY.md)
 defines the TDD gate, explains what each test layer proves and does not prove,

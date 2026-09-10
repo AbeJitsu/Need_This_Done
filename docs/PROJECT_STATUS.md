@@ -1,9 +1,47 @@
 # NeedThisDone — Project Status
 
-**Branch:** `codex/ai-operating-system-foundation` (branched from `dev`)
+**Branch:** `codex/mcp-account-auth-rebuild` (branched from `origin/dev` at `a3f90dba8b00452942baeedc4ec2cb691d561ca6`)
 **Last updated:** 2026-09-10
 
 ## Latest change
+
+- On 2026-09-10, the MCP account-authentication boundary was rebuilt directly
+  from clean `origin/dev`: migration `113_mcp_access_tokens.sql` stores only a
+  SHA-256 token hash and short prefix with service-role-only table access and
+  RLS; server-only utilities generate and validate `ntd_mcp_` credentials; and
+  `/api/mcp` now requires a bearer credential, rejects malformed/revoked/
+  expired/origin/storage failures, records `last_used_at`, and passes the
+  resolved owner and credential context into the Hermes contract. The existing
+  static bearer is retained only as a temporary owner-bound bootstrap when both
+  `MCP_BEARER_TOKEN` and `MCP_BEARER_TOKEN_OWNER_ID` are configured.
+  Authenticated admin/operator routes list redacted credentials, create a raw
+  token only in the one-time creation response, and revoke only within the
+  current owner; Account Settings exposes the same lifecycle. Focused tests
+  cover token utilities, authentication, API redaction/scoping, MCP context
+  propagation, and local RLS constraints. Local validation results are being
+  recorded below as they run; no hosted migration, deployment, secret
+  provisioning, provider activation, worker activation, external message,
+  publication, or spend occurred.
+
+- On 2026-09-10, the local validation boundary completed on the disposable
+  Supabase instance. `npm run verify:code` passed lint, type-check, 74 required
+  unit files / 395 tests, 6 accessibility files / 60 tests, and the production
+  build. `npm run verify:database` passed local schema lint, the retained schema
+  manifest (9 tests), security (14), assistant RLS (10), agent-operations RLS
+  (3), Hermes lifecycle (2), MCP credential RLS (4), prospecting RLS (2),
+  provider recovery (7), and consultation integration (1); migration 113 was
+  applied by the disposable local reset. `npm run test:hermes-mcp:local` reran
+  that database gate and attached the redacted report at
+  `app/test-results/hermes-mcp-vertical-slice--5ee1b-mes-→-worker-vertical-slice-mcp-control-plane/hermes-mcp-vertical-slice.json`.
+  The diagnostic passed local target/application health and unauthenticated
+  MCP rejection, but intentionally failed at `vector-memory.configuration`
+  (`not_configured`) and `mcp.credentials` (no disposable account credential
+  or owner-bound bootstrap value), leaving MCP initialization, tool discovery,
+  and Hermes workflow stages blocked. Vector-memory runtime and durable
+  MCP-to-Hermes dispatch remain pending. `git diff --check` passed at the
+  validation boundary. This is local-only evidence; no hosted migration,
+  deployment, secret provisioning, provider activation, worker activation,
+  external message, publication, or spend occurred.
 
 - On 2026-09-10, `/system` was simplified to one canonical six-step operating
   path. The page now explains, in plain English, how any compatible LLM client

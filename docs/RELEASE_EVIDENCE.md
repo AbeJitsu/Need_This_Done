@@ -146,3 +146,39 @@ specified):
 
 No database/API contract, deployment, hosted migration, provider activation,
 external message, or customer result is included in this review.
+
+## 2026-09-10 — MCP account-authentication boundary
+
+The implementation on `codex/mcp-account-auth-rebuild` adds migration
+`113_mcp_access_tokens.sql`, server-only token generation/hashing, owner-bound
+MCP authentication, redacted account list/create/revoke routes, Account
+Settings controls, and explicit owner-context propagation into the Hermes MCP
+contract. The disposable local reset applied migration 113; only token hashes
+and short prefixes are stored. The raw token is returned only in the creation
+response and is not included in subsequent list/revoke responses. Site login
+and MCP authorization are separate; Hermes/OpenClaw worker authentication,
+Redis coordination, and vector memory are not part of this account boundary.
+
+Validation run:
+
+- `cd app && npm run verify:code` — passed lint, type-check, 74 required unit
+  files / 395 tests, 6 accessibility files / 60 tests, and production build.
+- `cd app && npm run verify:database` — passed local schema lint and all
+  database/RLS/recovery/integration suites, including the new 4-test MCP
+  credential RLS proof.
+- `cd app && npm run test:hermes-mcp:local` — ran the local database gate and
+  retained the redacted Playwright report at
+  `app/test-results/hermes-mcp-vertical-slice--5ee1b-mes-→-worker-vertical-slice-mcp-control-plane/hermes-mcp-vertical-slice.json`.
+  The diagnostic passed target, application health, and unauthenticated MCP
+  rejection, then reported `vector-memory.configuration=not_configured` and
+  `mcp.credentials` unavailable; initialization, discovery, and Hermes stages
+  remained blocked. This is diagnostic evidence, not a passing end-to-end
+  claim.
+- `git diff --check` — passed.
+
+Hosted migration 113, hosted secrets, deployment, provider activation, worker
+activation, vector runtime, durable MCP-to-Hermes dispatch, external messages,
+publication, customer outcomes, and spend remain unverified and unclaimable.
+The rollback owner is the repository maintainer through a reviewed forward Git
+revert on `dev`; hosted rollback must remain forward-only and separately
+approved.

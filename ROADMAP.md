@@ -42,23 +42,44 @@ It is complete only when all of these are true:
 1. Keep one durable browser approval and private-asset lifecycle in Next.js and
    Supabase; remove or avoid duplicate queues, dashboards, memory stores, and
    control planes.
-2. Connect the signed private bridge to a real loopback OpenClaw Gateway on a
+2. Keep the site-account-to-MCP boundary separate from worker authentication:
+   site login identifies the owner, an owner-scoped bearer credential authorizes
+   `/api/mcp`, and Hermes/OpenClaw retain their private worker-host credentials.
+   Store only token hashes and show raw MCP tokens once; prove migration 113 and
+   RLS locally before any hosted migration or endpoint proof.
+3. Connect the signed private bridge to a real loopback OpenClaw Gateway on a
    correctly configured local computer or cloud machine, while preserving the
    outbound-only boundary and frozen-plan checks. The MacBook Pro is the first
    rehearsal example and the Mac mini is the intended always-on example; neither
    is a permanent architecture requirement.
-3. Use Hermes to return the bounded plan and approved model route. Prefer an
+4. Use Hermes to return the bounded plan and approved model route. Prefer an
    allowed OpenRouter free route; surface a paid route for separate browser
    approval instead of silently falling back.
-4. Keep the existing `REDIS_URL` integration for transient acceleration and
+5. Keep the existing `REDIS_URL` integration for transient acceleration and
    coordination only. Add no second durable queue or database.
-5. Configure the private vector-memory projection with
+6. Configure the private vector-memory projection with
    `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and the optional
    `VECTOR_MEMORY_NAMESPACE`. The vector index must have a hosted embedding
    model; vector memory must never restore the retired chatbot or page
    indexing.
-6. Rehearse and record the read-only workflow. Then separately approve and
+7. Rehearse and record the read-only workflow. Then separately approve and
    rehearse one tiny Codex worktree task.
+
+## MCP account boundary — 2026-09-10
+
+The account-authentication increment establishes one narrow boundary: an
+authenticated NeedThisDone owner creates and revokes owner-scoped credentials
+from Account Settings, and a compatible LLM presents that bearer credential to
+`/api/mcp`. The server resolves the owner and credential, rejects missing,
+malformed, revoked, expired, cross-origin, or unavailable-storage requests,
+records last use, and passes the owner context into the Hermes contract. Raw
+tokens are never persisted and are returned only in the creation response.
+
+This does not authenticate or activate Hermes/OpenClaw on a worker host, wire
+durable MCP-to-Hermes dispatch, activate Redis or vector memory, prove hosted
+Supabase/Vercel, or rebuild the chatbot. The required next proof is disposable
+local Supabase migration 113/RLS plus the local account/API/MCP checks; hosted
+promotion remains a separately approved later stage.
 
 ## Foundation progress map — 2026-09-09
 
@@ -68,7 +89,7 @@ It is complete only when all of these are true:
 | Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only worker-host rehearsal |
 | Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
 | Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
-| MCP facade | Device-independent schemas, a local Streamable HTTP handler, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production OAuth/remote access and Hermes persistence wiring remain pending | Pass the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
+| MCP facade | Device-independent schemas, owner-scoped account credentials, a local Streamable HTTP handler, owner-context propagation, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production remote access and Hermes persistence wiring remain pending | Pass migration 113/RLS and the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
 | Worker host | Any correctly configured local computer, private server, or cloud machine; not activated | Configure the private bridge environment and validate the loopback Gateway |
 | MacBook Pro (example) | Abe's interactive coding and first bridge-rehearsal host | Use for the first rehearsal if selected |
 | Mac mini (example) | Intended always-on worker-host example; not activated | Repeat the approved worker proof if selected |
@@ -80,9 +101,9 @@ Each capability must carry the narrowest useful evidence at each layer:
 
 | Layer | Evidence we can build now | What remains later |
 | --- | --- | --- |
-| Unit | Pure validation, redaction, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
+| Unit | Pure validation, credential hashing/redaction, MCP auth outcomes, owner-scoped API behavior, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
 | Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
-| Integration | Disposable local Supabase/RLS, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
+| Integration | Disposable local Supabase/RLS including migration 113, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
 | Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote compatible-LLM connector |
 | Live rehearsal | Not available in this environment | Selected local/cloud worker host, Vercel, Supabase, Redis/vector, provider, and durable result |
 

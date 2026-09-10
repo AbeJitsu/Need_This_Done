@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-react';
+import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle, Copy, KeyRound, ShieldCheck, Trash2 } from 'lucide-react';
 import Button from '@/components/Button';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
@@ -20,6 +20,24 @@ interface UserProfile {
   image?: string;
 }
 
+interface McpCredential {
+  id: string;
+  name: string;
+  tokenPrefix: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+  revokedAt: string | null;
+  expiresAt: string | null;
+}
+
+function formatCredentialDate(value: string | null) {
+  if (!value) return 'Never';
+  const date = new Date(value);
+  return Number.isFinite(date.getTime())
+    ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(date)
+    : 'Unknown';
+}
+
 export default function AccountSettingsClient() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -28,6 +46,16 @@ export default function AccountSettingsClient() {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [mcpTokens, setMcpTokens] = useState<McpCredential[]>([]);
+  const [mcpName, setMcpName] = useState('');
+  const [mcpExpiresAt, setMcpExpiresAt] = useState('');
+  const [mcpLoading, setMcpLoading] = useState(false);
+  const [mcpSaving, setMcpSaving] = useState(false);
+  const [mcpRevokingId, setMcpRevokingId] = useState<string | null>(null);
+  const [mcpError, setMcpError] = useState('');
+  const [mcpStatus, setMcpStatus] = useState('');
+  const [mcpRawToken, setMcpRawToken] = useState<string | null>(null);
+  const [mcpCopied, setMcpCopied] = useState(false);
 
   // Load profile data
   useEffect(() => {
@@ -41,6 +69,34 @@ export default function AccountSettingsClient() {
     }
     setIsLoading(false);
   }, [user]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!user?.id) {
+      setMcpTokens([]);
+      setMcpLoading(false);
+      setMcpRawToken(null);
+      setMcpStatus('');
+      return () => { cancelled = true; };
+    }
+
+    setMcpLoading(true);
+    setMcpError('');
+    fetch('/api/mcp/tokens', { cache: 'no-store' })
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'MCP credentials could not be loaded.');
+        if (!cancelled) setMcpTokens(Array.isArray(data.tokens) ? data.tokens : []);
+      })
+      .catch((error) => {
+        if (!cancelled) setMcpError(error instanceof Error ? error.message : 'MCP credentials could not be loaded.');
+      })
+      .finally(() => {
+        if (!cancelled) setMcpLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   // Handle save profile
   const handleSaveProfile = async () => {
@@ -83,6 +139,73 @@ export default function AccountSettingsClient() {
   const handleSignOut = async () => {
     await signOut();
     window.location.assign('/');
+  };
+
+  const handleCreateMcpToken = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!mcpName.trim()) {
+      setMcpError('Give the credential a name before creating it.');
+      return;
+    }
+
+    setMcpSaving(true);
+    setMcpError('');
+    setMcpStatus('');
+    setMcpRawToken(null);
+    setMcpCopied(false);
+    try {
+      const expiresAt = mcpExpiresAt
+        ? new Date(`${mcpExpiresAt}T23:59:59`).toISOString()
+        : null;
+      const response = await fetch('/api/mcp/tokens', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: mcpName.trim(), expiresAt }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'MCP credential could not be created.');
+      setMcpTokens((current) => [data.credential as McpCredential, ...current]);
+      setMcpRawToken(data.token as string);
+      setMcpName('');
+      setMcpExpiresAt('');
+      setMcpStatus('Credential created. Copy the token now; it will not be shown again.');
+    } catch (error) {
+      setMcpError(error instanceof Error ? error.message : 'MCP credential could not be created.');
+    } finally {
+      setMcpSaving(false);
+    }
+  };
+
+  const handleCopyMcpToken = async () => {
+    if (!mcpRawToken) return;
+    try {
+      await navigator.clipboard.writeText(mcpRawToken);
+      setMcpCopied(true);
+      setMcpStatus('Token copied. Store it in the MCP client before hiding it.');
+    } catch {
+      setMcpError('The token could not be copied. Select it and copy it manually.');
+    }
+  };
+
+  const handleRevokeMcpToken = async (id: string) => {
+    setMcpRevokingId(id);
+    setMcpError('');
+    setMcpStatus('');
+    try {
+      const response = await fetch(`/api/mcp/tokens/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'MCP credential could not be revoked.');
+      if (data.credential) {
+        setMcpTokens((current) => current.map((token) => (
+          token.id === id ? data.credential as McpCredential : token
+        )));
+      }
+      setMcpStatus('Credential revoked. Existing MCP calls using it will be rejected.');
+    } catch (error) {
+      setMcpError(error instanceof Error ? error.message : 'MCP credential could not be revoked.');
+    } finally {
+      setMcpRevokingId(null);
+    }
   };
 
   if (isLoading) {
@@ -230,6 +353,149 @@ export default function AccountSettingsClient() {
                 </button>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* MCP Connection Card */}
+        <div className={`${cardBgColors.base} rounded-xl border-2 ${cardBorderColors.light} p-8 mb-8`}>
+          <div className="flex items-start gap-4 mb-6">
+            <div className="flex-shrink-0 rounded-xl bg-emerald-100 p-3 text-emerald-700">
+              <KeyRound className="w-6 h-6" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className={`text-2xl font-semibold ${headingColors.primary} mb-1`}>MCP connection</h2>
+              <p className={`${mutedTextColors.normal} text-sm leading-6`}>
+                Your site login identifies you here. An MCP credential authorizes a compatible LLM client to call
+                the NeedThisDone endpoint for your account. Hermes and OpenClaw remain separately authenticated on
+                the private worker host.
+              </p>
+            </div>
+          </div>
+
+          <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+            <div className="flex items-start gap-2">
+              <ShieldCheck className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
+              <p>Only a SHA-256 hash is stored. The raw token appears once after creation and is never shown in this list.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleCreateMcpToken} className="border-t border-gray-200 pt-6">
+            <h3 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>Create a credential</h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Credential name
+                <input
+                  required
+                  maxLength={120}
+                  value={mcpName}
+                  onChange={(event) => setMcpName(event.target.value)}
+                  className="mt-2 w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="ChatGPT desktop"
+                />
+              </label>
+              <label className="block text-sm font-medium text-gray-700">
+                Optional expiration
+                <input
+                  type="date"
+                  min={new Date().toISOString().slice(0, 10)}
+                  value={mcpExpiresAt}
+                  onChange={(event) => setMcpExpiresAt(event.target.value)}
+                  className="mt-2 w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </label>
+            </div>
+            <Button
+              type="submit"
+              variant="green"
+              size="md"
+              disabled={mcpSaving}
+              isLoading={mcpSaving}
+              loadingText="Creating..."
+              className="mt-5"
+            >
+              Create MCP credential
+            </Button>
+          </form>
+
+          {mcpRawToken && (
+            <div className="mt-6 rounded-lg border-2 border-amber-300 bg-amber-50 p-5" role="status" aria-live="polite">
+              <h3 className="font-semibold text-amber-950">Copy this token now</h3>
+              <p className="mt-1 text-sm text-amber-900">For your security, it will disappear when you hide it or leave this page.</p>
+              <code className="mt-3 block overflow-x-auto rounded-lg bg-white p-3 text-xs text-gray-900" aria-label="New MCP token">
+                {mcpRawToken}
+              </code>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button type="button" variant="gold" size="sm" onClick={handleCopyMcpToken}>
+                  <Copy className="h-4 w-4" aria-hidden="true" />
+                  {mcpCopied ? 'Copied' : 'Copy token'}
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => setMcpRawToken(null)}
+                  className="rounded-xl px-4 py-2 text-sm font-semibold text-amber-950 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+                >
+                  I stored it — hide token
+                </button>
+              </div>
+            </div>
+          )}
+
+          {(mcpError || mcpStatus) && (
+            <div
+              role={mcpError ? 'alert' : 'status'}
+              aria-live="polite"
+              className={`mt-6 flex items-start gap-3 rounded-lg border-2 p-4 ${mcpError ? 'border-red-200 bg-red-50 text-red-700' : 'border-emerald-200 bg-emerald-50 text-emerald-700'}`}
+            >
+              {mcpError ? <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" /> : <Check className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />}
+              <p className="text-sm">{mcpError || mcpStatus}</p>
+            </div>
+          )}
+
+          <div className="mt-8 border-t border-gray-200 pt-6">
+            <h3 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>Your credentials</h3>
+            {mcpLoading ? (
+              <div className="flex items-center gap-2 text-sm text-gray-600" role="status">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                Loading credentials...
+              </div>
+            ) : mcpTokens.length === 0 ? (
+              <p className="text-sm text-gray-600">No MCP credentials have been created.</p>
+            ) : (
+              <div className="space-y-3">
+                {mcpTokens.map((token) => {
+                  const expired = Boolean(token.expiresAt && Date.parse(token.expiresAt) <= Date.now());
+                  const status = token.revokedAt ? 'Revoked' : expired ? 'Expired' : 'Active';
+                  return (
+                    <div key={token.id} className="rounded-lg border border-gray-200 p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-gray-900">{token.name}</p>
+                          <p className="mt-1 font-mono text-xs text-gray-600">{token.tokenPrefix}</p>
+                        </div>
+                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700'}`}>
+                          {status}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-xs text-gray-600">
+                        Created {formatCredentialDate(token.createdAt)} · Last used {formatCredentialDate(token.lastUsedAt)}
+                        {token.expiresAt && ` · Expires ${formatCredentialDate(token.expiresAt)}`}
+                      </p>
+                      {!token.revokedAt && (
+                        <button
+                          type="button"
+                          onClick={() => handleRevokeMcpToken(token.id)}
+                          disabled={mcpRevokingId === token.id}
+                          className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-xl border-2 border-red-200 px-3 py-2 text-sm font-semibold text-red-700 transition-colors hover:border-red-300 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                        >
+                          {mcpRevokingId === token.id ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Trash2 className="h-4 w-4" aria-hidden="true" />}
+                          {mcpRevokingId === token.id ? 'Revoking...' : 'Revoke'}
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 

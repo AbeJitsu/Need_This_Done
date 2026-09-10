@@ -25,3 +25,16 @@ changed. For each of `110_harden_hermes_frozen_plan_claims.sql` and
 fresh protected backup, exact reviewed-commit dry run, named hosted-write
 approval, one-time application, migration-history and narrow contract check,
 and forward-only rollback owner before proceeding to the next migration.
+
+Current account-authentication record (2026-09-10): migration
+`113_mcp_access_tokens.sql` and the site-account MCP boundary are implemented
+on `codex/mcp-account-auth-rebuild`, but hosted migration 113, hosted secrets,
+deployment, and remote MCP reachability remain pending. The owner signs in to
+NeedThisDone, creates an owner-scoped credential in Account Settings, and uses
+its bearer value for `/api/mcp`; Hermes/OpenClaw credentials remain separate on
+the worker host. Raw values are shown once and only hashes are stored. Before
+any hosted action, run the disposable local Supabase/RLS proof, review a
+recoverable backup and dry run, obtain separate approval for migration 113 and
+secrets/deployment, and record a reviewed forward-revert owner. Do not mark
+hosted migration 113, deployment, worker activation, vector runtime, durable
+Hermes dispatch, or any hosted checklist control complete from local tests.

@@ -1,10 +1,12 @@
 import { createHmac, randomUUID } from 'node:crypto';
+import { writeFile } from 'node:fs/promises';
 import { expect, test, type APIRequestContext, type APIResponse } from '@playwright/test';
 
 // Keep the external client independent from server-only application modules.
 const MCP_PROTOCOL_VERSION = '2025-06-18';
 
 const expectedTools = ['start_workflow', 'get_workflow_status', 'list_workflows'];
+const accountTokenPattern = /^ntd_mcp_[A-Za-z0-9_-]{43}$/;
 const localOnlyHosts = new Set(['127.0.0.1', 'localhost']);
 const controlPlaneRequiredStages = new Set([
   'environment.target',
@@ -144,7 +146,11 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   test.setTimeout(Number(process.env.HERMES_MCP_E2E_TIMEOUT_MS || 180_000));
 
   const stages: StageRecord[] = [];
-  const token = process.env.MCP_BEARER_TOKEN?.trim();
+  // The raw account token may be supplied to a disposable local diagnostic
+  // outside Git. MCP_BEARER_TOKEN remains the temporary static bootstrap and
+  // must be paired with MCP_BEARER_TOKEN_OWNER_ID.
+  const token = process.env.MCP_E2E_MCP_TOKEN?.trim() || process.env.MCP_BEARER_TOKEN?.trim();
+  const bootstrapOwnerId = process.env.MCP_BEARER_TOKEN_OWNER_ID?.trim();
   const requireExecution = process.env.HERMES_MCP_E2E_REQUIRE_EXECUTION === 'true';
   const allowDraft = process.env.HERMES_MCP_E2E_ALLOW_DRAFT === 'true';
   const target = process.env.HERMES_MCP_E2E_TARGET?.trim() || 'local';
@@ -269,12 +275,16 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   });
 
   await runStage(stages, 'mcp.credentials', async () => {
-    const configured = Boolean(token && token.length >= 32);
+    const accountCredential = Boolean(token && accountTokenPattern.test(token));
+    const bootstrapCredential = Boolean(token && token.length >= 32 && isUuid(bootstrapOwnerId));
+    const configured = accountCredential || bootstrapCredential;
     return {
       state: configured ? 'passed' : 'failed',
       detail: configured
-        ? 'The test process has a server-side MCP bearer token without recording its value.'
-        : 'MCP_BEARER_TOKEN is missing or shorter than the 32-character minimum; no credential was printed.',
+        ? accountCredential
+          ? 'The test process has an account-scoped MCP credential without recording its value.'
+          : 'The test process has an owner-bound bootstrap credential without recording its value.'
+        : 'An account-scoped MCP credential or owner-bound MCP_BEARER_TOKEN is missing; no credential was printed.',
     };
   });
 
@@ -535,6 +545,9 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
     body: JSON.stringify(report, null, 2),
     contentType: 'application/json',
   });
+  // Keep a filesystem copy beside the Playwright report as well as the
+  // attachment so a blocked diagnostic remains reviewable after the run.
+  await writeFile(testInfo.outputPath('hermes-mcp-vertical-slice.json'), JSON.stringify(report, null, 2), 'utf8');
   console.info(`[hermes-mcp-e2e] ${stages.map((stage) => `${stage.name}=${stage.state}`).join(' | ')}`);
 
   const actionable = stages.filter((stage) => stage.state === 'failed' || (stage.state === 'blocked' && (requireExecution || requiredStages.has(stage.name))));

@@ -30,6 +30,7 @@ const retainedTables = [
   'google_calendar_tokens',
   'growth_profiles',
   'health_check',
+  'mcp_access_tokens',
   'media_usage_reservations',
   'model_benchmark_candidates',
   'model_evaluation_records',
@@ -476,6 +477,10 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       'project_github_handoffs_notification_operation_id_fkey',
       'project_github_handoffs_notification_operation_id_key',
       'website_improvement_invoice_references_amount_cents_check',
+      'mcp_access_tokens_expiration_check',
+      'mcp_access_tokens_name_check',
+      'mcp_access_tokens_token_hash_check',
+      'mcp_access_tokens_token_prefix_check',
     ];
     const constraints = await getPool().query<{ conname: string }>(
       `select conname from pg_constraint where conname = any($1::text[]) order by conname`,

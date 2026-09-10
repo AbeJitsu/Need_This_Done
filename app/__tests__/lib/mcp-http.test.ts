@@ -4,7 +4,12 @@ vi.mock('server-only', () => ({}));
 
 import { createMcpRequestHandler, MCP_PROTOCOL_VERSION } from '@/lib/mcp-http';
 
-const auth = () => ({ ok: true as const });
+const authContext = {
+  ownerId: '00000000-0000-4000-8000-000000000001',
+  credentialId: '00000000-0000-4000-8000-000000000002',
+  authMethod: 'database' as const,
+};
+const auth = () => ({ ok: true as const, context: authContext });
 const workflowId = '11111111-1111-4111-8111-111111111111';
 
 function mcpRequest(message: unknown, headers: Record<string, string> = {}) {
@@ -47,12 +52,17 @@ describe('MCP Streamable HTTP request boundary', () => {
   });
 
   it('dispatches a validated start request while preserving approval gating', async () => {
-    const startWorkflow = vi.fn(async () => ({
+    // This proves the authenticated site owner reaches Hermes explicitly;
+    // it does not prove that the durable Hermes dispatcher or worker is live.
+    const startWorkflow = vi.fn(async (_input, context) => {
+      expect(context).toEqual(authContext);
+      return {
       workflowId,
       status: 'draft' as const,
       approvalRequired: true as const,
       nextAction: 'review' as const,
-    }));
+      };
+    });
     const handle = createMcpRequestHandler({
       startWorkflow,
       getWorkflowStatus: vi.fn(),
@@ -65,7 +75,7 @@ describe('MCP Streamable HTTP request boundary', () => {
       params: { name: 'start_workflow', arguments: { request: 'Fix the failing check.' } },
     }));
     const body = await response.json();
-    expect(startWorkflow).toHaveBeenCalledWith({ request: 'Fix the failing check.' });
+    expect(startWorkflow).toHaveBeenCalledWith({ request: 'Fix the failing check.' }, authContext);
     expect(body.result.isError).toBe(false);
     expect(body.result.structuredContent).toEqual({
       workflowId,
@@ -73,6 +83,48 @@ describe('MCP Streamable HTTP request boundary', () => {
       approvalRequired: true,
       nextAction: 'review',
     });
+  });
+
+  it('passes the same authenticated owner context to status and list operations', async () => {
+    const getWorkflowStatus = vi.fn(async (_input, context) => {
+      expect(context).toEqual(authContext);
+      return {
+        workflowId,
+        status: 'running' as const,
+        updatedAt: '2026-09-10T12:00:00.000Z',
+        approvalRequired: false,
+        worker: null,
+        summary: 'Still running.',
+        resultRef: null,
+      };
+    });
+    const listWorkflows = vi.fn(async (_input, context) => {
+      expect(context).toEqual(authContext);
+      return { workflows: [], nextCursor: null };
+    });
+    const handle = createMcpRequestHandler({
+      startWorkflow: vi.fn(),
+      getWorkflowStatus,
+      listWorkflows,
+    }, auth);
+
+    const statusResponse = await handle(mcpRequest({
+      jsonrpc: '2.0',
+      id: 31,
+      method: 'tools/call',
+      params: { name: 'get_workflow_status', arguments: { workflowId } },
+    }));
+    const listResponse = await handle(mcpRequest({
+      jsonrpc: '2.0',
+      id: 32,
+      method: 'tools/call',
+      params: { name: 'list_workflows', arguments: {} },
+    }));
+
+    expect(statusResponse.status).toBe(200);
+    expect(listResponse.status).toBe(200);
+    expect(getWorkflowStatus).toHaveBeenCalledWith({ workflowId }, authContext);
+    expect(listWorkflows).toHaveBeenCalledWith({ limit: 20, cursor: undefined }, authContext);
   });
 
   it('rejects unknown tools and invalid arguments as protocol errors', async () => {
@@ -99,45 +151,23 @@ describe('MCP Streamable HTTP request boundary', () => {
   });
 
   it('rejects an invalid origin before protocol handling', async () => {
-    const previousToken = process.env.MCP_BEARER_TOKEN;
-    const previousOrigins = process.env.MCP_ALLOWED_ORIGINS;
-    process.env.MCP_BEARER_TOKEN = 'x'.repeat(32);
-    process.env.MCP_ALLOWED_ORIGINS = 'https://chatgpt.com';
-    try {
-      const handle = createMcpRequestHandler();
-      const response = await handle(mcpRequest({ jsonrpc: '2.0', id: 7, method: 'tools/list' }, {
-        authorization: `Bearer ${'y'.repeat(32)}`,
-        origin: 'https://evil.example',
-      }));
-      expect(response.status).toBe(403);
-      expect((await response.json()).error).toBe('MCP origin is not allowed.');
-    } finally {
-      if (previousToken === undefined) delete process.env.MCP_BEARER_TOKEN;
-      else process.env.MCP_BEARER_TOKEN = previousToken;
-      if (previousOrigins === undefined) delete process.env.MCP_ALLOWED_ORIGINS;
-      else process.env.MCP_ALLOWED_ORIGINS = previousOrigins;
-    }
+    const handle = createMcpRequestHandler(undefined, () => ({
+      ok: false as const,
+      response: Response.json({ error: 'MCP origin is not allowed.' }, { status: 403 }),
+    }));
+    const response = await handle(mcpRequest({ jsonrpc: '2.0', id: 7, method: 'tools/list' }, {
+      origin: 'https://evil.example',
+    }));
+    expect(response.status).toBe(403);
+    expect((await response.json()).error).toBe('MCP origin is not allowed.');
   });
 
-  it('rejects an unconfigured transport and accepts the configured bearer seam', async () => {
-    const previousToken = process.env.MCP_BEARER_TOKEN;
-    const previousOrigins = process.env.MCP_ALLOWED_ORIGINS;
-    delete process.env.MCP_BEARER_TOKEN;
-    delete process.env.MCP_ALLOWED_ORIGINS;
-    try {
-      const unconfigured = await createMcpRequestHandler()(mcpRequest({ jsonrpc: '2.0', id: 8, method: 'tools/list' }));
-      expect(unconfigured.status).toBe(503);
-
-      process.env.MCP_BEARER_TOKEN = 'x'.repeat(32);
-      const configured = await createMcpRequestHandler()(mcpRequest({ jsonrpc: '2.0', id: 9, method: 'tools/list' }, {
-        authorization: `Bearer ${'x'.repeat(32)}`,
-      }));
-      expect(configured.status).toBe(200);
-    } finally {
-      if (previousToken === undefined) delete process.env.MCP_BEARER_TOKEN;
-      else process.env.MCP_BEARER_TOKEN = previousToken;
-      if (previousOrigins === undefined) delete process.env.MCP_ALLOWED_ORIGINS;
-      else process.env.MCP_ALLOWED_ORIGINS = previousOrigins;
-    }
+  it('stops before protocol handling when authentication is unavailable', async () => {
+    const handle = createMcpRequestHandler(undefined, () => ({
+      ok: false as const,
+      response: Response.json({ error: 'MCP authentication is unavailable.' }, { status: 503 }),
+    }));
+    const response = await handle(mcpRequest({ jsonrpc: '2.0', id: 8, method: 'tools/list' }));
+    expect(response.status).toBe(503);
   });
 });

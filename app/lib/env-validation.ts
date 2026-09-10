@@ -48,8 +48,11 @@ function validateEnvVar(name: string, rule: EnvValidationRule): boolean {
   if (rule.validate) {
     const isValid = rule.validate(value);
     if (!isValid) {
+      const safeValue = /TOKEN|KEY|SECRET|PASSWORD/i.test(name)
+        ? '[redacted]'
+        : `${value.substring(0, 20)}...`;
       console.error(
-        `[EnvValidation] INVALID VALUE: ${name} = ${value.substring(0, 20)}...` +
+        `[EnvValidation] INVALID VALUE: ${name} = ${safeValue}` +
         (rule.errorMessage ? ` (${rule.errorMessage})` : '')
       );
       return false;
@@ -168,6 +171,12 @@ export function validateEnvironmentVariables(): void {
       required: false,
       validate: (v) => v.length >= 32,
       errorMessage: 'Must be at least 32 characters',
+    },
+    MCP_BEARER_TOKEN_OWNER_ID: {
+      name: 'MCP_BEARER_TOKEN_OWNER_ID',
+      required: false,
+      validate: (v) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v),
+      errorMessage: 'Must be a UUID for the temporary bootstrap owner',
     },
     MCP_ALLOWED_ORIGINS: {
       name: 'MCP_ALLOWED_ORIGINS',
@@ -290,6 +299,14 @@ export function validateEnvironmentVariables(): void {
     hasErrors = true;
     errors.push('UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN');
     console.error('[EnvValidation] Upstash Vector requires both REST URL and REST token when enabled.');
+  }
+
+  const bootstrapTokenConfigured = Boolean(process.env.MCP_BEARER_TOKEN?.trim());
+  const bootstrapOwnerConfigured = Boolean(process.env.MCP_BEARER_TOKEN_OWNER_ID?.trim());
+  if (bootstrapTokenConfigured !== bootstrapOwnerConfigured) {
+    hasErrors = true;
+    errors.push('MCP_BEARER_TOKEN and MCP_BEARER_TOKEN_OWNER_ID');
+    console.error('[EnvValidation] MCP_BEARER_TOKEN and MCP_BEARER_TOKEN_OWNER_ID must be configured together.');
   }
 
   if (hasErrors) {

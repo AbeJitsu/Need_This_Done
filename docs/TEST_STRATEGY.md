@@ -1,7 +1,7 @@
 # NeedThisDone — Test Strategy and Suite Inventory
 
 **Status:** working test contract for the private assistant foundation  
-**Last audited:** 2026-09-09  
+**Last audited:** 2026-09-10
 **Progress:** [ROADMAP.md](../ROADMAP.md)  
 **Evidence:** [PROJECT_STATUS.md](PROJECT_STATUS.md) and [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
 **Build map:** [BUILD_PROGRESS_MAP.md](BUILD_PROGRESS_MAP.md)
@@ -37,6 +37,27 @@ contract—for example, “do not touch the database before signature validation
 | Browser/E2E | `app/e2e` Playwright suites; `npm run test:hermes-mcp:local`; `npm run test:hermes-mcp:hosted` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice against an explicitly selected environment | Real Mac execution, live provider calls, or customer outcomes unless stated |
 | Bridge/worker | `bridge/test` | HMAC, frozen-plan enforcement, loopback RPC, artifact safety, and no-delivery defaults | macOS launchd behavior on Linux, live Gateway credentials, or external effects |
 | Live rehearsal | Any correctly configured local or cloud worker host; MacBook Pro first and Mac mini later are current examples | Configured host, network, providers, durable result, and operator handoff | Lower-level regression coverage; this is expensive environment-specific evidence |
+
+### MCP account-authentication contract
+
+The site session and MCP bearer credential are deliberately tested as separate
+identities. A site login authorizes Account Settings through the existing
+server-side admin/operator guard; a named `ntd_mcp_` credential authorizes
+`/api/mcp` and carries an explicit owner context into the Hermes contract.
+
+| Evidence | Proves | Does not prove |
+|---|---|---|
+| `lib/mcp-token.test.ts` | Cryptographic generation, exact format, SHA-256 hashing, and non-usable display prefixes | A token was stored or accepted by hosted Supabase |
+| `lib/mcp-auth.test.ts` | Valid, missing, malformed, revoked, expired, owner-bound, origin, last-use, storage-failure, and bootstrap fail-closed outcomes | Hosted endpoint reachability, real credentials, or Hermes execution |
+| `api/mcp-tokens.test.ts` | Authenticated owner-scoped list/create/revoke behavior, one-time raw-token response, redaction, cache headers, and cross-origin rejection | Browser rendering, Supabase RLS, or a real account session |
+| `lib/mcp-http.test.ts` | Authenticated owner context reaches each MCP tool dispatcher without widening the three-tool contract | Durable Hermes dispatch or worker authentication |
+| `lib/mcp-access-tokens-rls.test.ts` | Disposable local migration 113 enables RLS, denies anon/authenticated table access, grants service-role lifecycle access, and enforces hash/prefix/name/expiration/uniqueness constraints | Hosted migration application or production data |
+
+Raw MCP values are not placed in fixtures, logs, reports, browser storage, or
+the credential list. The local Supabase/RLS proof must pass before a hosted MCP
+profile is considered. Redis and vector memory are not authentication stores;
+durable MCP-to-Hermes dispatch remains a later integration proof when its
+adapter is wired.
 
 ## Standard gates
 

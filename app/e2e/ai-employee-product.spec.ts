@@ -591,7 +591,7 @@ test('/system explains one model-agnostic operating path and its four controls',
   await expect(main.getByRole('heading', { name: 'Chat can answer. NeedThisDone carries the work forward.', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'A useful conversation', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'A coordinated system that carries the work forward', exact: true })).toBeVisible();
-  await expect(main.getByText('Evidence: npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
+  await expect(main.getByText('Evidence: npm run verify:database; npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
   await expect(main.getByText('Model-agnostic contract · connection pending', { exact: true })).toBeVisible();
   await expect(main.getByText('Connections still being proven', { exact: true })).toBeVisible();
   for (const title of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {

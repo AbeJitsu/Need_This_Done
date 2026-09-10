@@ -4,6 +4,7 @@ import {
   MCP_TOOL_DEFINITIONS,
   MCP_TOOL_NAMES,
   startWorkflowInputSchema,
+  type HermesMcpAuthContext,
   type HermesMcpDispatcher,
 } from '@/lib/hermes-mcp-contract';
 import { authenticateMcpRequest, type McpAuthResult } from '@/lib/mcp-auth';
@@ -68,7 +69,7 @@ function parseJsonRpc(body: string): JsonRpcRequest | null {
 }
 
 function unavailableDispatcher(): HermesMcpDispatcher {
-  const unavailable = async (): Promise<never> => {
+  const unavailable = async (_input: unknown, _context: HermesMcpAuthContext): Promise<never> => {
     throw new Error('Hermes workflow service is unavailable.');
   };
   return {
@@ -97,6 +98,7 @@ async function callTool(
   name: string,
   args: unknown,
   dispatcher: HermesMcpDispatcher,
+  context: HermesMcpAuthContext,
 ) {
   if (!MCP_TOOL_NAMES.includes(name as typeof MCP_TOOL_NAMES[number])) {
     return { protocolError: errorResponse(null, -32602, 'Unknown MCP tool.') };
@@ -106,16 +108,16 @@ async function callTool(
     if (name === 'start_workflow') {
       const parsed = startWorkflowInputSchema.safeParse(args);
       if (!parsed.success) return { protocolError: errorResponse(null, -32602, 'Invalid tool arguments.') };
-      return { result: toolResult(await dispatcher.startWorkflow(parsed.data)) };
+      return { result: toolResult(await dispatcher.startWorkflow(parsed.data, context)) };
     }
     if (name === 'get_workflow_status') {
       const parsed = getWorkflowStatusInputSchema.safeParse(args);
       if (!parsed.success) return { protocolError: errorResponse(null, -32602, 'Invalid tool arguments.') };
-      return { result: toolResult(await dispatcher.getWorkflowStatus(parsed.data)) };
+      return { result: toolResult(await dispatcher.getWorkflowStatus(parsed.data, context)) };
     }
     const parsed = listWorkflowsInputSchema.safeParse(args);
     if (!parsed.success) return { protocolError: errorResponse(null, -32602, 'Invalid tool arguments.') };
-    const result = await dispatcher.listWorkflows(parsed.data);
+    const result = await dispatcher.listWorkflows(parsed.data, context);
     return { result: toolResult(result) };
   } catch {
     return { result: toolError('Hermes could not complete the workflow request.') };
@@ -124,10 +126,10 @@ async function callTool(
 
 export function createMcpRequestHandler(
   dispatcher: HermesMcpDispatcher = unavailableDispatcher(),
-  authenticate: (request: Request) => McpAuthResult = authenticateMcpRequest,
+  authenticate: (request: Request) => McpAuthResult | Promise<McpAuthResult> = authenticateMcpRequest,
 ) {
   return async function handleMcpRequest(request: Request): Promise<Response> {
-    const auth = authenticate(request);
+    const auth = await authenticate(request);
     if (!auth.ok) return auth.response;
 
     if (request.method === 'GET') {
@@ -179,7 +181,7 @@ export function createMcpRequestHandler(
       if (!params || typeof params.name !== 'string') {
         return jsonResponse(errorResponse(message.id, -32602, 'Tool name is required.'), 400);
       }
-      const called = await callTool(params.name, params.arguments ?? {}, dispatcher);
+      const called = await callTool(params.name, params.arguments ?? {}, dispatcher, auth.context);
       if (called.protocolError) return jsonResponse({ ...called.protocolError, id: message.id }, 400);
       return jsonResponse({ jsonrpc: '2.0', id: message.id, result: called.result });
     }
