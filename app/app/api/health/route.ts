@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
+import { getVectorMemoryStatus } from '@/lib/vector-memory';
 // eslint-disable-next-line no-restricted-imports -- health check only tests connectivity, no auth required
 import { supabase } from '@/lib/supabase';
 
@@ -73,6 +74,10 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       services: {
         redis: redisStatus,
+        // This is configuration evidence only. The optional semantic-memory
+        // projection must never make the durable application health check
+        // fail, and no credential is returned.
+        vectorMemory: getVectorMemoryStatus().state,
         supabase: supabaseStatus,
         app: 'up',
       },

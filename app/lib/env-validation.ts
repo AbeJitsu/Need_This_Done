@@ -139,6 +139,49 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must be an integer between 1 and 99',
     },
 
+    // Private semantic memory is an optional projection of durable records.
+    // Both Upstash Vector values are required together when enabled.
+    UPSTASH_VECTOR_REST_URL: {
+      name: 'UPSTASH_VECTOR_REST_URL',
+      required: false,
+      validate: (v) => v.startsWith('https://'),
+      errorMessage: 'Must be an HTTPS Upstash Vector REST URL',
+    },
+    UPSTASH_VECTOR_REST_TOKEN: {
+      name: 'UPSTASH_VECTOR_REST_TOKEN',
+      required: false,
+      validate: (v) => v.trim().length > 0,
+      errorMessage: 'Must not be empty',
+    },
+    VECTOR_MEMORY_NAMESPACE: {
+      name: 'VECTOR_MEMORY_NAMESPACE',
+      required: false,
+      validate: (v) => /^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$/.test(v),
+      errorMessage: 'Must be 1–64 characters: letters, numbers, dot, underscore, colon, or hyphen',
+    },
+
+    // The bearer value is a controlled transport bootstrap only. The
+    // production ChatGPT connection still requires a reviewed OAuth/connector
+    // decision; this value must never reach browser code or worker payloads.
+    MCP_BEARER_TOKEN: {
+      name: 'MCP_BEARER_TOKEN',
+      required: false,
+      validate: (v) => v.length >= 32,
+      errorMessage: 'Must be at least 32 characters',
+    },
+    MCP_ALLOWED_ORIGINS: {
+      name: 'MCP_ALLOWED_ORIGINS',
+      required: false,
+      validate: (v) => v.split(',').every((origin) => {
+        try {
+          return new URL(origin.trim()).protocol === 'https:';
+        } catch {
+          return false;
+        }
+      }),
+      errorMessage: 'Must be a comma-separated list of HTTPS origins',
+    },
+
     // Redis is optional acceleration/protection. Retained caches and rate
     // limiting already degrade safely when it is unavailable.
     REDIS_URL: {
@@ -239,6 +282,14 @@ export function validateEnvironmentVariables(): void {
       hasErrors = true;
       errors.push(varName);
     }
+  }
+
+  const vectorUrlConfigured = Boolean(process.env.UPSTASH_VECTOR_REST_URL?.trim());
+  const vectorTokenConfigured = Boolean(process.env.UPSTASH_VECTOR_REST_TOKEN?.trim());
+  if (vectorUrlConfigured !== vectorTokenConfigured) {
+    hasErrors = true;
+    errors.push('UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN');
+    console.error('[EnvValidation] Upstash Vector requires both REST URL and REST token when enabled.');
   }
 
   if (hasErrors) {

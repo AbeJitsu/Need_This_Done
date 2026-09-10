@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-type Exposure = 'public' | 'operator' | 'signed_worker' | 'signed_webhook' | 'retired';
+type Exposure = 'public' | 'operator' | 'mcp_client' | 'signed_worker' | 'signed_webhook' | 'retired';
 type Capability = {
   route: string;
   methods: string[];
@@ -16,7 +16,7 @@ const repositoryRoot = resolve(appRoot, '..');
 const manifestPath = resolve(appRoot, 'config/capability-manifest.json');
 const routeRoot = resolve(appRoot, 'app');
 const allowedMethods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
-const allowedExposure: Exposure[] = ['public', 'operator', 'signed_worker', 'signed_webhook', 'retired'];
+const allowedExposure: Exposure[] = ['public', 'operator', 'mcp_client', 'signed_worker', 'signed_webhook', 'retired'];
 
 function routeFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -65,6 +65,9 @@ describe('HTTP capability manifest', () => {
       if (entry.exposure === 'operator') {
         expect(source).toMatch(/verifyAdmin(?:Auth)?\s*\(/);
         expect(source).not.toMatch(/verifyProjectAccess\s*\(|verifyAuth\s*\(/);
+      }
+      if (entry.exposure === 'mcp_client') {
+        expect(source).toMatch(/handleMcpRequest/);
       }
       if (entry.exposure === 'retired') {
         expect(source).toMatch(/status:\s*410/);

@@ -1,9 +1,79 @@
 # NeedThisDone — Project Status
 
-**Branch:** `dev`
+**Branch:** `codex/ai-operating-system-foundation` (branched from `dev`)
 **Last updated:** 2026-09-09
 
 ## Current facts
+
+- The reviewer-facing [test strategy and suite inventory](TEST_STRATEGY.md)
+  now records the purpose, value, limitations, commands, and file-level scope
+  of the unit, contract, database/RLS, integration, accessibility, browser,
+  bridge, and live-rehearsal layers. It also defines the TDD definition of done
+  and requires evidence before any test is consolidated or removed.
+
+- On 2026-09-09, the first MCP TDD increment defined and tested the exact
+  device-independent tool surface: `start_workflow`, `get_workflow_status`,
+  and `list_workflows`. The schemas bound request sizes, reject server-owned
+  fields, require approval-gated start results, validate reviewable status
+  envelopes, and bound list cursors. This remains the transport-neutral
+  contract underneath the endpoint; Hermes persistence, worker dispatch, and
+  Mac connectivity are still separate proof items.
+
+- On 2026-09-09, the MCP transport increment added a single Next.js
+  `/api/mcp` Streamable HTTP boundary with JSON-RPC initialization, tool
+  discovery, tool calls, protocol validation, body bounds, origin checks, and
+  a constant-time bearer-token seam. The route is classified in the capability
+  manifest and the opt-in `npm run test:hermes-mcp` Playwright diagnostic now
+  exercises the real route from health through MCP discovery and workflow
+  calls. Seven focused transport tests pass. The handler currently uses an
+  unavailable Hermes adapter by default, so no workflow is persisted or
+  dispatched yet. Production OAuth/connector setup, secure remote reachability,
+  and live Hermes wiring remain separate proof items.
+
+- On 2026-09-09, the MCP vertical-slice diagnostic was run against a disposable
+  local test environment with dummy, non-secret values. It reported the exact
+  current gaps: Supabase and Redis were unavailable, vector memory was
+  `not_configured`, and the default MCP dispatcher returned the deliberate
+  `Hermes workflow service is unavailable` tool error; the test attached a
+  redacted stage report and failed rather than treating those gaps as a pass.
+  A run without even the private local environment failed earlier at the
+  Playwright web-server boot because required Supabase variables were absent.
+  The normal diagnostic remains draft/control-plane scoped; the `:full` mode
+  additionally requires an explicitly approved workflow fixture and signed
+  worker. No hosted writes, worker claims, external actions, or credentials
+  were made.
+
+- On 2026-09-09, the MCP diagnostic was split into explicit environment
+  profiles so the evidence cannot mix local and hosted state. The default
+  `test:hermes-mcp:local` (also `test:hermes-mcp`) runs `verify:database` first
+  against the real local Supabase instance, then requires a localhost app and
+  `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321` before running the live
+  application health/MCP stages. `test:hermes-mcp:hosted` requires an explicit
+  non-local `BASE_URL`, checks the deployed app's server-side Supabase and
+  Redis health, and remains read-only: it does not call `start_workflow`.
+  Hosted workflow creation and worker execution remain separately approved
+  and require explicit remote-write credentials outside Git. The previously
+  recorded dummy-value run is diagnostic evidence only, not local-Supabase
+  proof.
+
+- On 2026-09-09, the assistant infrastructure audit confirmed the hardware
+  split: the MacBook Pro is Abe's interactive development and coding machine;
+  the Mac mini is the intended always-on private worker. Existing Redis is
+  wired through `REDIS_URL` and the Node Redis client for cache, rate limiting,
+  request deduplication, and health checks; it is not currently the agent task
+  queue. No live Upstash Vector or Qdrant connection is verified, and the
+  legacy chatbot/page-embedding system was retired in `c5989bd8`. The build now
+  includes a private, optional Upstash Vector adapter using
+  `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional
+  `VECTOR_MEMORY_NAMESPACE`; it uses derived semantic memory only and does not
+  restore public chat or page indexing. The values must be configured only in
+  the MacBook/Mac-mini server-side environments and the intended Vercel server
+  environment, never in browser variables, Git, prompts, logs, Redis, or
+  durable business rows. The adapter request/response contract has six passing
+  unit tests, and the application code gate passed lint, type-check, 70 unit
+  files/370 tests, 6 accessibility files/60 tests, and production build. Live
+  vector connectivity, Vercel configuration, and Mac-mini activation remain
+  unverified and separately approved.
 
 - On 2026-09-09, the public homepage journey was simplified so the primary
   navigation and homepage sections stay focused on What We Do, How We Work,
@@ -25,6 +95,40 @@
   publication. No API, schema, billing, deployment, hosted write, provider
   activation, Mac activation, external message, customer result, or spend
   occurred. Rollback is a reviewed Git revert on `dev`.
+
+- On 2026-09-09, the public `/system` page was aligned with the current
+  assistant architecture. It now opens with a plain-English five-card flow
+  explaining the difference between prompting ChatGPT alone and using
+  NeedThisDone as the durable coordination layer. Its technical section names
+  ChatGPT, MCP, Next.js/Vercel, Hermes, Supabase, Redis, Upstash Vector, the
+  MacBook Pro/Mac mini split, OpenClaw with its Codex runtime, GitHub, and
+  OpenRouter, and each
+  card explains its job and current proof state. The page explicitly marks
+  hosted reachability, Hermes persistence, live vector projection, and worker
+  activation as pending rather than implying they are live. The existing
+  `/system` responsive/accessibility contract was expanded to cover the new
+  flow and the architecture rail now has 11 named layers; browser execution
+  is pending in this environment because the Playwright Chromium executable is
+  not installed. Lint and type-check passed. No deployment or hosted action
+  occurred.
+
+- On 2026-09-10, the `/system` progress section became code-owned through
+  `app/lib/system-progress.ts`. It now presents four proof gates—Contract,
+  Local control plane, Hosted control plane, and Worker execution—with the
+  evidence target for each gate. A focused unit test protects the order and
+  requires every gate to name evidence. This gives the visual page a durable,
+  test-backed progress source without claiming that hosted services or either
+  Mac is live.
+
+- On 2026-09-09, the `/system` page gained a dedicated six-card visual operating
+  path: ChatGPT Work → hosted NeedThisDone MCP → Supabase and Redis → Hermes on
+  the active Mac → OpenClaw with its Codex runtime → the durable result returned
+  to ChatGPT. Each card explains the component in plain English, including why
+  Redis is temporary coordination and why Upstash Vector is selected searchable
+  memory rather than business truth. The page also states that the hosted MCP
+  connection does not require opening the dashboard; `/system` is an optional
+  visual explanation and evidence view. The route contract now asserts the new
+  six-card lane and result-back labels.
 
 - On 2026-09-09, the public promise was broadened to “NeedThisDone helps
   teams and individuals solve technology problems and simplify repeated work
@@ -369,8 +473,9 @@
   the browser is the control plane, Supabase is durable truth, and the Mac mini
   is an outbound-only private runtime. The canonical source is `README.md`.
 - Hermes plans bounded work and proposes an approved model route; OpenClaw is
-  the approved local non-code executor; Codex is the approved worktree coding
-  executor. An allowed OpenRouter free route is preferred; paid routing needs a
+  the approved coding worker and uses its Codex agent runtime in the worktree.
+  Standalone Codex CLI operation is not part of the target model. An allowed
+  OpenRouter free route is preferred; paid routing needs a
   separate browser approval. This is the target operating contract, not proof
   that a live provider or Mac runtime has been activated.
 - Hermes is now the code-facing application role layered on the retained

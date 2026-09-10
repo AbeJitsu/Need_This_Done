@@ -54,7 +54,11 @@ describe('vision-first public journey', () => {
     expect(system).toContain('A private system for follow-through');
     expect(system).toContain('Important work, kept moving.');
     expect(system).toContain('We are building a private assistant that turns a goal into a clear plan, asks for approval, and brings back the result.');
-    expect(system).toContain('It remembers what matters, asks before it acts, and shows what changed.');
+    expect(system).toContain('ChatGPT helps you think and talk. NeedThisDone keeps an approved piece of work, its status, and its proof together after the conversation ends.');
+    expect(system).toContain('You explain the outcome. NeedThisDone keeps the work moving.');
+    expect(system).toContain('Prompting ChatGPT by itself');
+    expect(system).toContain('How the private pieces fit together.');
+    expect(system).toContain('title: "Upstash Vector"');
     expect(system).toContain('href="/contact"');
     expect(system).toContain('Inspect the implementation');
     expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');
