@@ -1,205 +1,118 @@
 # NeedThisDone
 
-## The assistant vision — start here
+NeedThisDone is a private assistant and control system for turning a person's plain-language request into controlled, reviewable work.
 
-This is the canonical assistant and operating vision for NeedThisDone. Read it
-before proposing a page, workflow, automation, integration, or internal tool.
-`ROADMAP.md` says what happens next; it does not redefine this vision.
+In simple terms:
 
-### The outcome
+1. You explain the outcome you want.
+2. The system records the request and prepares a bounded plan.
+3. You review and approve what may happen.
+4. A configured worker can perform only that approved work.
+5. The result, evidence, cost, and any unfinished work come back for review.
 
-NeedThisDone is a private, authenticated assistant for running the owner's
-life and business more effectively. From any authenticated browser, the owner
-can request work, inspect its plan and cost, approve or stop it, and review the
-result and every private asset it creates.
+The goal is not an uncontrolled autonomous agent. The goal is a durable record of what was requested, what was approved, what actually happened, and what should happen next.
 
-The first proof is a small read-only workflow that makes this whole lifecycle
-visible and reliable. The next proof is one separately approved coding task in
-a dedicated worktree. Features, providers, and tool authority grow only after
-those proofs hold.
+## Current status
 
-## How the system works
+The repository contains a substantial local implementation, but the complete live workflow is still being proven. The table below is the authoritative high-level status as of September 10, 2026.
 
-```text
- LLM CLIENT (ChatGPT today; others supported)
- request | approve | ask for status / summary
-             |
-             v  authenticated HTTPS MCP
- NEEDTHISDONE ON VERCEL                  SUPABASE + REDIS
- three workflow tools  <------------->   durable record + short-lived signals
-             |                                      |
-             | Hermes claims approved work         |
-             v                                      v
-       CONFIGURED WORKER HOST  ----------->  RESULT + EVIDENCE
- Local computer or cloud machine            Supabase stores the result;
- Hermes coordinates; OpenClaw executes      initiating client reads it via status
-             |
-             v
- OpenClaw: coding worker via Codex runtime
- GitHub: branch, commit, and review source of truth
- Upstash Vector: selected searchable memory, never durable truth
-```
-
-ChatGPT is the current interface and reasoning layer, but the contract is model-agnostic: you can use ChatGPT, Claude, or any compatible LLM or custom app. Vercel is the stable,
-internet-facing MCP/control-plane doorway, not a permanent worker; you do not
-need to open the NeedThisDone app for the LLM client to reach it. Supabase is durable
-product truth. Redis is only temporary coordination for queues, leases, locks,
-heartbeats, and deduplication. A correctly configured local computer, private
-server, or cloud machine can be the worker host: it polls outward, exposes no
-public listener, and may act only on a recorded, frozen approval.
-
-The MacBook Pro and Mac mini are current implementation examples: the MacBook
-Pro is the first rehearsal host, and the Mac mini is the intended always-on
-example. The architecture does not require either device.
-
-- Hermes proposes a bounded plan and records the allowed model route.
-- OpenClaw carries out an approved coding task through its configured Codex
-  agent runtime in a designated worktree.
-- OpenRouter uses an allowed free route first. A paid route is a separate
-  browser approval, not an automatic fallback.
-
-## Approval and private asset boundary
-
-```text
-[ Owner request ] -> [ Hermes plan ] -> [ browser approval ]
-                                              |
-                                              v
-      [ authenticated review ] <- [ Supabase result, cost, private asset ]
-                                              ^
-                                              |
-                              [ Mac claims and runs frozen work ]
-```
-
-The browser is where the owner sees the proposed action, the expected result,
-the cost and route, progress, stop state, reviewable diff, and created assets.
-Private assets stay in Supabase private Storage and receive a short-lived
-signed view URL only after a server-side authentication and ownership check.
-
-Every external message, publication, spend, system change, or coding handoff
-requires a human approval. An expired, altered, unapproved, or stopped task
-must fail closed. A completed result never grants permission for follow-on
-work.
-
-### Stack responsibilities
-
-| Component | Responsibility | Boundary |
+| Proof gate | Status | What that means |
 |---|---|---|
-| LLM client | Conversational interface, reasoning, clarification, planning, status interpretation, and summaries; ChatGPT is the current client | Does not run long-lived workers, queues, or arbitrary shell commands |
-| MCP facade | Stable owner-authenticated control-plane adapter exposing `start_workflow`, `get_workflow_status`, and `list_workflows` from any approved device | Device-independent; stores only hashed account credentials and does not become a second workflow engine or database |
-| Hermes | Validates requests, creates and tracks workflows, assigns workers, handles leases/retries/events, and persists outcomes | Coordinates execution; it does not replace ChatGPT's conversation layer |
-| Next.js/Vercel | Internet-facing authenticated control plane and server-side API boundary | Not the permanent worker and never exposes private credentials to the browser |
-| Supabase/Postgres/Storage | Auth, RLS, durable plans, approvals, tasks, results, costs, and private assets | Canonical source for durable workflow and business truth |
-| Redis/Upstash Redis | Short-lived queues, locks, leases, heartbeats, deduplication, and wake-up signals | Rebuildable coordination only; `REDIS_URL` is the current connection variable |
-| Upstash Vector | Private semantic-memory projection of selected durable decisions and findings | Retrieval aid only; configured with `UPSTASH_VECTOR_REST_URL`, `UPSTASH_VECTOR_REST_TOKEN`, and optional `VECTOR_MEMORY_NAMESPACE` |
-| Worker host | Correctly configured local computer, private server, or cloud machine that runs Hermes/OpenClaw | Outbound-only execution node; activation remains separately approved |
-| MacBook Pro (example) | Abe's interactive coding and first controlled rehearsal machine | One possible local host; not required |
-| Mac mini (example) | Intended always-on private worker example | One possible always-on host; not required |
-| OpenClaw | Approved coding worker through its loopback Gateway and configured Codex agent runtime | Returns tests, changed files, commit SHA, and review evidence; no automatic merge/deploy |
-| GitHub | Code, branch, commit, and pull-request source of truth | Production branches remain protected and review-gated |
-| OpenRouter | Current application-side planner/model route | Free route first; paid route requires separate approval |
+| Contract | Built locally | The MCP/API shapes, owner-scoped credentials, authentication seam, safety rules, and focused tests exist. |
+| Local control plane | Next proof | Disposable local Supabase must pass migration 113/RLS checks, followed by a local MCP workflow diagnostic. |
+| Hosted control plane | Pending | Vercel, hosted Supabase, Redis, and secure remote LLM-client access have not been proven together. |
+| Worker execution | Pending | A configured local computer, private server, or cloud machine has not yet completed a real NeedThisDone workflow end to end. |
 
-OpenClaw is intended to authenticate through its supported ChatGPT/Codex OAuth
-path and use the Codex agent runtime for coding. That makes Codex an internal
-OpenClaw runtime in this design, not a separately operated Codex CLI worker.
-OpenAI API-key billing and ChatGPT/Codex subscription authentication remain
-separate credential paths and must not be treated as interchangeable.
+A green-looking contract or passing local test does not mean that a hosted service, live worker, provider, or customer workflow is active.
 
-The site login authenticates the NeedThisDone owner in the browser. From Account
-Settings, that owner may create a named, owner-scoped MCP credential; the
-credential authorizes bearer calls to `/api/mcp` but is not the browser session
-and does not authenticate Hermes or OpenClaw. Only a SHA-256 hash and a short
-display prefix are stored, and the raw MCP token is shown once after creation.
-The temporary static bearer bootstrap, if configured, must also be bound to one
-owner UUID. Redis and Upstash Vector are coordination and retrieval layers,
-not part of this authentication boundary.
+## What is actually built
 
-The normal request path is: an LLM client understands the request → the stable
-MCP facade authenticates the owner-scoped bearer credential and validates it → Hermes creates the durable Supabase
-record →
-Redis carries only transient coordination → the configured worker host claims and runs the
-approved job → OpenClaw's Codex runtime returns structured evidence → Hermes persists
-the result → the initiating client reports the status and next decision. Upstash Vector may
-receive a provenance-bearing projection after durable state exists, but it
-never overrides current Supabase or GitHub facts and does not restore the
-retired public chatbot or page-indexing system.
+The codebase currently includes:
 
-Local Supabase migration/RLS and account-credential proof must pass before any
-hosted MCP proof. Durable MCP-to-Hermes dispatch remains a later phase until
-the existing Hermes persistence adapter is wired; this boundary does not
-rebuild the retired chatbot.
+- A Next.js application with authenticated account, planning, approval, status, and private-asset surfaces.
+- An authenticated `/api/mcp` endpoint using the Model Context Protocol transport.
+- A deliberately small MCP contract with three tools:
+  - `start_workflow`
+  - `get_workflow_status`
+  - `list_workflows`
+- Owner-scoped `ntd_mcp_` credentials that can be created and revoked from Account Settings. Only a SHA-256 hash and redacted metadata are stored; the raw token is shown once.
+- Supabase migrations, Postgres/RLS rules, and durable records for authentication, plans, approvals, tasks, costs, results, and private assets.
+- A Redis client for temporary coordination such as locks, leases, heartbeats, caching, and deduplication.
+- An Upstash Vector adapter for optional, provenance-bearing semantic retrieval.
+- Signed worker-bridge contracts and OpenClaw safety rules for frozen plans, isolated worktrees, tests, commits, and evidence.
+- Unit, contract, database/RLS, route, accessibility, and browser diagnostic tests.
 
-The reviewer-facing [test strategy and suite inventory](docs/TEST_STRATEGY.md)
-defines the TDD gate, explains what each test layer proves and does not prove,
-and records the rules for consolidating tests without losing a safety or
-product invariant.
+## What is not yet proven
 
-The [build progress map](docs/BUILD_PROGRESS_MAP.md) is the companion checklist
-for the `/system` page. It distinguishes a tested contract from a live local,
-hosted, or worker connection and records the order of proof.
+These capabilities are designed and partially implemented, but should not be described as live:
 
-The opt-in `npm run test:hermes-mcp:local` Playwright diagnostic first runs the
-real local-Supabase database/RLS gate, then walks the local application
-boundary through health, vector configuration, MCP authentication and
-discovery, and Hermes start/list/status. After that passes,
-`npm run test:hermes-mcp:hosted` repeats the safe read-only checks against an
-explicit deployed `BASE_URL`, including the hosted server-side Supabase and
-Redis health path. Both commands attach a stage-by-stage JSON report and fail
-with the missing boundary; `test:hermes-mcp:full` is reserved for a separately
-approved local worker rehearsal. Hosted workflow writes require a separate
-explicit remote-write approval and are never part of the safe preflight.
+- A remote LLM client completing a secure hosted connection to NeedThisDone MCP.
+- The default MCP dispatcher creating durable Hermes workflows; it currently fails closed until the durable Hermes persistence adapter is connected.
+- Hosted Supabase migration 113, hosted secrets, hosted Redis, or remote MCP reachability.
+- A live Upstash Vector index and memory projection.
+- A NeedThisDone-controlled worker run on the MacBook Pro, Mac mini, private server, or cloud host.
+- A real worker-generated GitHub change completed through the full NeedThisDone workflow.
+- Automatic merging, deployment, external messaging, spending, or customer actions.
 
-## Product boundary
+Local tests and deterministic provider doubles prove code behavior and safety boundaries. They do not prove hosted connectivity, live provider use, worker execution, or customer outcomes.
 
-This is the owner's private assistant, not a public worker service or an
-autonomous system. The authenticated assistant remains the canonical internal
-product and the only active product roadmap.
+## How the intended system works
 
-## Public service front door
+```text
+You describe an outcome
+        |
+        v
+NeedThisDone records the request and creates a bounded plan
+        |
+        v
+You review and approve the plan
+        |
+        v
+A configured private worker performs only the frozen approval
+        |
+        v
+The system stores the result, cost, evidence, and next decision
+        |
+        v
+You review everything through the authenticated browser or LLM client
+```
 
-The separately approved public website presents NeedThisDone as a practical
-partner for teams and individuals: “Your vision, brought to life.” The homepage
-sections explain what NeedThisDone does, how it works in practical terms, and
-why visitors should share their vision. Its primary path is What We Do → How We
-Work → Examples → Why Us, with Share Your Vision as the dominant hero and
-closing action. How We Work remains part of that primary reassurance path.
-Visitors can share the better state they want without preparing a technical
-brief. Website Fix ($500) and proposal-based Managed Automation remain bounded
-secondary starting points; choosing either one is optional in the public intake.
+The LLM client is the conversation and reasoning layer. It may be ChatGPT, Claude, another compatible LLM, or a custom application. The client does not become the worker, database, queue, or merge authority.
 
-This public positioning does not expand the assistant roadmap or grant action
-authority. A public request starts a conversation only. It does not create an
-automatic purchase, send an external message beyond the existing submission
-flow, approve work, activate a provider, or expose the private Mac runtime.
+Hermes is the planned workflow coordinator. It validates requests, tracks workflow state, assigns approved work, and returns reviewable results. OpenClaw is the replaceable coding worker that runs through its configured Codex runtime on a correctly configured private host.
 
-The public [`/system` case study](app/app/system/page.tsx) remains a complete,
-discoverable technical-details page. It begins by explaining what the page will
-cover, shows one plain-English operating path, explains why each technical
-layer exists, and ends with a direct comparison: ordinary chat can answer and
-call tools, while NeedThisDone adds durable state, temporary coordination,
-selected semantic memory, controlled workers, and reviewable evidence. The path
-is compatible with any LLM client and any correctly configured local or cloud
-worker host; the MacBook Pro and Mac mini are current examples only. The page
-also identifies which connections are built or still pending. It is optional
-detail for curious or technical visitors, available from the footer Explore
-links and the direct `/system` URL; it is not required for conversion or part
-of the primary homepage path. Keep its route contract, sitemap entry, metadata,
-responsive presentation, and direct contact/action links aligned with [Project
-status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md)
-when the page changes.
+## Stack in plain English
 
-Internal public-service writing guidance lives in
-[Communication frameworks](docs/COMMUNICATION_FRAMEWORKS.md).
+| Component | Purpose |
+|---|---|
+| Next.js and Vercel | The web application and internet-facing control-plane boundary. |
+| Supabase/Postgres/Storage | Durable product truth: users, plans, approvals, tasks, results, costs, and private assets. |
+| Redis | Temporary coordination only; it is not the permanent database. |
+| Upstash Vector | Optional semantic retrieval of selected, provenance-bearing findings. |
+| Hermes | Workflow planning, approval, coordination, and result tracking. Durable dispatch is still pending. |
+| OpenClaw and Codex runtime | The private coding worker on a configured local or cloud host. Live NeedThisDone execution is still pending. |
+| GitHub | The source of truth for code, branches, commits, and pull requests. Merges and production promotion remain manual, reviewed decisions. |
 
-## Current records
+The MacBook Pro and Mac mini are implementation examples, not architectural requirements. Any correctly configured private local, server, or cloud worker host may eventually be used.
 
-- [Roadmap](ROADMAP.md) — the next proof and its acceptance criteria.
-- [Project status](docs/PROJECT_STATUS.md) — factual implementation state,
-  validation, blockers, and rollback notes.
-- [Release evidence](docs/RELEASE_EVIDENCE.md) — what is verified, pending, or
-  not claimable.
-- [Launch checklist](docs/launch/LAUNCH_CHECKLIST.md) — separately approved
-  hosted-promotion controls.
-- [Supabase](supabase/README.md) — schema and durable-data boundary.
+## Public website and private assistant
+
+NeedThisDone has two related but separate boundaries:
+
+- The public website explains the service and lets visitors share what they want improved. A public submission starts a conversation; it does not approve work or expose the private worker.
+- The private assistant is the authenticated system described above. It owns the planning, approval, execution, and evidence lifecycle.
+
+The public `/system` page is a visual case study for curious or technical readers. Its four proof lanes are code-owned in [`app/lib/system-progress.ts`](app/lib/system-progress.ts), so the page uses the same built, next-proof, and pending vocabulary as the implementation record.
+
+## Documentation and evidence
+
+- [Roadmap](ROADMAP.md) — the required proof sequence and acceptance criteria.
+- [Project status](docs/PROJECT_STATUS.md) — implementation state, validation results, blockers, and rollback notes.
+- [Release evidence](docs/RELEASE_EVIDENCE.md) — what is verified, pending, or not claimable.
+- [Build progress map](docs/BUILD_PROGRESS_MAP.md) — the checklist behind the `/system` page.
+- [Test strategy](docs/TEST_STRATEGY.md) — what each test layer proves and does not prove.
+- [Launch checklist](docs/launch/LAUNCH_CHECKLIST.md) — separately approved hosted-promotion controls.
+- [Supabase guide](supabase/README.md) — schema and durable-data boundaries.
 
 ## Local development
 
@@ -209,6 +122,12 @@ npm install
 npm run dev
 ```
 
-Run the narrowest relevant check while working. Hosted migration, deployment,
-secret provisioning, provider activation, Mac activation, and external actions
-always require their own approval.
+Useful checks include:
+
+```bash
+npm run verify:code
+npm run verify:database
+npm run test:hermes-mcp:local
+```
+
+The local MCP diagnostic is intentionally local-first and reports the first missing boundary. The hosted diagnostic is read-only by default. Hosted migration, deployment, secret provisioning, provider activation, worker activation, external actions, and production promotion each require separate review and approval.
