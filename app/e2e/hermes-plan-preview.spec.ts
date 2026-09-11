@@ -88,7 +88,7 @@ test('an authenticated browser reviews route, cost, and approval before frozen-p
     data: { email, password },
   });
   expect(login.ok()).toBe(true);
-  await page.goto('/dashboard');
+  await page.goto('/admin/operations');
 
   await expect(page.getByRole('heading', { name: 'Review a Hermes plan before OpenClaw runs' })).toBeVisible();
   await expect(page.getByText('Route: selected-free.')).toBeVisible();

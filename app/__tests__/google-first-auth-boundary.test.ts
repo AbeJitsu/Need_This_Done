@@ -37,6 +37,7 @@ describe('Google-first authentication boundary', () => {
     const dashboard = source('app/dashboard/page.tsx');
     expect(dashboard).not.toContain('NEXT_PUBLIC_DASHBOARD_PREVIEW');
     expect(dashboard).not.toContain('localPreview');
-    expect(dashboard).toContain('await requireOperator()');
+    expect(dashboard).toContain('await requireAuthenticatedUser()');
+    expect(source('app/admin/operations/page.tsx')).toContain('await requireOperator()');
   });
 });

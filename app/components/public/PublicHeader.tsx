@@ -38,12 +38,14 @@ export default function PublicHeader() {
           {links.map((link) => <Link key={link.href} href={isHome ? getPublicHomeHref(link.href) : link.href} aria-current={isPublicRouteCurrent(pathname, link.href) ? 'page' : undefined} className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${isPublicRouteCurrent(pathname, link.href) ? 'bg-[var(--public-soft)] text-[var(--public-ink)]' : 'text-[#40564e] hover:text-[var(--public-green)]'}`}>{link.label}</Link>)}
         </nav>
         <div className="flex items-center gap-2">
+          <Link href="/login" className="hidden items-center rounded-full border border-[var(--public-ink)]/20 px-4 py-2.5 text-sm font-bold text-[var(--public-ink)] transition hover:bg-[var(--public-soft)] focus-visible:ring-[#d0a94f] sm:inline-flex">Sign in</Link>
           <Link href={PUBLIC_PRIMARY_ACTION.href} className="hidden items-center rounded-full bg-[var(--public-green)] px-6 py-2.5 text-sm font-bold text-white transition hover:bg-[#0c563e] focus-visible:ring-[#d0a94f] sm:inline-flex">{PUBLIC_PRIMARY_ACTION.label}</Link>
           <button ref={trigger} type="button" className="grid h-11 w-11 place-items-center rounded-lg transition hover:bg-[var(--public-sand)] focus-visible:ring-[#d0a94f] lg:hidden" aria-label={open ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={open} aria-controls="public-mobile-navigation" onClick={() => setOpen((value) => !value)}>{open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button>
         </div>
       </div>
       {open && <nav id="public-mobile-navigation" aria-label="Mobile navigation" className="border-t border-[var(--public-ink)]/10 bg-[var(--public-cream)] px-5 py-3 lg:hidden">
         {links.map((link) => <Link key={link.href} href={isHome ? getPublicHomeHref(link.href) : link.href} onClick={() => setOpen(false)} aria-current={isPublicRouteCurrent(pathname, link.href) ? "page" : undefined} className={`block rounded-lg px-3 py-3 font-semibold text-[var(--public-ink)] hover:bg-[var(--public-soft)] ${isPublicRouteCurrent(pathname, link.href) ? "bg-[var(--public-soft)]" : ""}`}>{link.label}</Link>)}
+        <Link href="/login" onClick={() => setOpen(false)} className="mt-2 block rounded-lg border border-[var(--public-ink)]/20 px-3 py-3 text-center font-bold text-[var(--public-ink)] hover:bg-[var(--public-soft)]">Sign in</Link>
         <Link href={PUBLIC_PRIMARY_ACTION.href} onClick={() => setOpen(false)} className="mt-2 block rounded-lg bg-[var(--public-green)] px-3 py-3 text-center font-bold text-white">{PUBLIC_PRIMARY_ACTION.label}</Link>
       </nav>}
     </header>

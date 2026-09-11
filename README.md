@@ -14,7 +14,7 @@ The goal is not an uncontrolled autonomous agent. The goal is a durable record o
 
 ## Current status
 
-The repository contains a substantial local implementation, but the complete live workflow is still being proven. The table below is the authoritative high-level status as of September 10, 2026.
+The repository contains a substantial local implementation, but the complete live workflow is still being proven. The table below is the authoritative high-level status as of September 11, 2026.
 
 | Proof gate | Status | What that means |
 |---|---|---|
@@ -30,6 +30,7 @@ A green-looking contract or passing local test does not mean that a hosted servi
 The codebase currently includes:
 
 - A Next.js application with authenticated account, planning, approval, status, and private-asset surfaces.
+- An authenticated `/dashboard` owner workspace for request status, updates, checks, references, and results; the operator cockpit remains at `/admin/operations`.
 - An authenticated `/api/mcp` endpoint using the Model Context Protocol transport.
 - A deliberately small MCP contract with three tools:
   - `start_workflow`
@@ -102,7 +103,7 @@ NeedThisDone has two related but separate boundaries:
 - The public website explains the service and lets visitors share what they want improved. A public submission starts a conversation; it does not approve work or expose the private worker.
 - The private assistant is the authenticated system described above. It owns the planning, approval, execution, and evidence lifecycle.
 
-The public `/system` page is a visual case study for curious or technical readers. Its four proof lanes are code-owned in [`app/lib/system-progress.ts`](app/lib/system-progress.ts), so the page uses the same built, next-proof, and pending vocabulary as the implementation record.
+The public [`/system` case study](app/app/system/page.tsx) is a visual explanation for curious or technical readers. Its four proof lanes are code-owned in [`app/lib/system-progress.ts`](app/lib/system-progress.ts), so the page uses the same built, next-proof, and pending vocabulary as the implementation record.
 
 ## Documentation and evidence
 

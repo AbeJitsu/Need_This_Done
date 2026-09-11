@@ -38,7 +38,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Hosted control plane',
     state: 'pending',
     status: 'Pending',
-    description: 'Vercel, hosted Supabase, Redis, and secure remote LLM-client access must pass a separate read-only preflight.',
+    description: 'Vercel, hosted Supabase, Redis, and secure remote request access must pass a separate read-only preflight.',
     evidence: 'npm run test:hermes-mcp:hosted',
   },
   {

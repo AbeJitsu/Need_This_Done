@@ -49,12 +49,27 @@ describe('operator-only private boundary', () => {
   });
 
   it.each([
-    'app/dashboard/page.tsx',
     'app/employee/page.tsx',
     'app/prospecting/page.tsx',
+    'app/admin/operations/page.tsx',
   ])('%s applies the server operator guard before its workspace renders', (path) => {
     const page = source(path);
     expect(page).toContain("@/lib/operator-access");
     expect(page).toMatch(/await\s+requireOperator\s*\(\s*\)/);
+  });
+
+  it('keeps the owner workspace authenticated without granting operator controls', () => {
+    const page = source('app/dashboard/page.tsx');
+    expect(page).toContain("@/lib/authenticated-access");
+    expect(page).toMatch(/await\s+requireAuthenticatedUser\s*\(\s*\)/);
+    expect(page).not.toContain('requireOperator');
+  });
+
+  it('gives the owner workspace a read-only authenticated API boundary', () => {
+    const route = source('app/api/workspace/route.ts');
+    expect(route).toContain('verifyAuth');
+    expect(route).not.toContain('verifyAdmin');
+    expect(route).toContain('loadWorkspace(supabase, auth.user.id)');
+    expect(route).not.toContain('export async function POST');
   });
 });

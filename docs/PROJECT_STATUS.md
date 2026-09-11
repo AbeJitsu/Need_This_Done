@@ -1,9 +1,27 @@
 # NeedThisDone — Project Status
 
-**Branch:** `codex/mcp-account-auth-rebuild` (branched from `origin/dev` at `a3f90dba8b00452942baeedc4ec2cb691d561ca6`)
-**Last updated:** 2026-09-10
+**Branch:** `feature/authenticated-results-status-2026-09-11` (branched from `origin/dev` at `b8bde59ec12fe0a850efa3db887657e030381580`)
+**Last updated:** 2026-09-11
 
 ## Latest change
+
+- On 2026-09-11, the authenticated owner-results slice was added on the
+  feature branch. `/dashboard` now requires a Supabase session and presents a
+  simple request/status/results workspace with a chat-style update thread;
+  the former operator cockpit is preserved at `/admin/operations` behind the
+  existing database-backed operator guard. `GET /api/workspace` reads only the
+  current owner's durable `agent_plans`, runs, events, artifacts, and immutable
+  artifact versions. Migration `114_authenticated_workspace_read_surface.sql`
+  adds read-only `auth.uid() = owner_id` policies for those records; it grants
+  no create, approval, dispatch, worker-control, credential, or merge authority.
+  Focused route, manifest, auth-boundary, public-language, lint, type-check,
+  required unit suite (75 files / 400 tests passed; 1 skipped file and 4
+  expected skips), and production build checks pass. Local Supabase/RLS
+  application and browser recheck remain pending in this environment; no hosted
+  migration, deployment, customer workflow, worker activation, external message,
+  publication, or spend occurred. The existing unauthenticated contact intake
+  is not yet linked to an owner record; accepted-work provisioning remains a
+  separate next slice.
 
 - On 2026-09-10, the MCP account-authentication boundary was rebuilt directly
   from clean `origin/dev`: migration `113_mcp_access_tokens.sql` stores only a

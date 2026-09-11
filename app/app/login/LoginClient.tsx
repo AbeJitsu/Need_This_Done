@@ -175,17 +175,17 @@ export default function LoginClient({ googleEnabled }: { googleEnabled: boolean 
             </div>
 
             <h1 className="max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl sm:leading-[1.05]">
-              Private team <span className="text-emerald-600">sign-in.</span>
+              Your private <span className="text-emerald-600">workspace.</span>
             </h1>
             <p className="mt-5 max-w-lg text-lg leading-8 text-gray-600">
-              This route is for authorized NeedThisDone operators. Customer updates are delivered through agreed handoffs and weekly briefs.
+              Sign in to see what is happening with your requests, follow progress, and review results when they are ready.
             </p>
 
             <ul className="mt-8 space-y-4 text-sm text-gray-700" aria-label="Workspace features">
               {[
-                'Review active work and its handoffs',
-                'See evidence alongside each team decision',
-                'Keep important actions behind a clear human yes',
+                'See each request and its current status',
+                'Review results with their supporting evidence',
+                'Keep important decisions clear and human-led',
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
@@ -198,9 +198,9 @@ export default function LoginClient({ googleEnabled }: { googleEnabled: boolean 
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" aria-hidden="true" />
                 <div>
-                  <p className="text-sm font-semibold">Private team access</p>
+                  <p className="text-sm font-semibold">Account-protected results</p>
                   <p className="mt-1 text-sm leading-6 text-gray-300">
-                    A valid sign-in is not enough on its own; the operator role is checked before private work is shown.
+                    Your sign-in identifies the account that owns the durable request record. Operator controls remain separate.
                   </p>
                 </div>
               </div>

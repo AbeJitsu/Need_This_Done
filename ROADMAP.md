@@ -1,7 +1,7 @@
 # NeedThisDone Roadmap
 
 This is an execution list, not a second vision document. Start with the
-[canonical assistant and operating vision](README.md#the-assistant-vision--start-here)
+[canonical assistant and operating vision](README.md)
 before adding work here.
 
 ## Assistant-first finish line
@@ -80,6 +80,23 @@ durable MCP-to-Hermes dispatch, activate Redis or vector memory, prove hosted
 Supabase/Vercel, or rebuild the chatbot. The required next proof is disposable
 local Supabase migration 113/RLS plus the local account/API/MCP checks; hosted
 promotion remains a separately approved later stage.
+
+## Authenticated owner workspace — 2026-09-11
+
+The feature branch now makes `/dashboard` the authenticated owner-facing place
+to review durable requests, current status, updates, checks, references, and
+results. It uses the existing Supabase session and owner ID, with migration 114
+adding read-only owner policies for workflow records and immutable artifact
+versions. The previous operator cockpit is preserved at `/admin/operations`;
+operator planning, approvals, dispatch, worker controls, and internal health
+remain behind the existing operator boundary.
+
+This first slice is read-only. It does not claim that a public contact request
+is linked to an owner, that the Hermes dispatcher is live, or that a worker has
+completed a customer workflow. The next implementation slice is to connect an
+accepted request to an authenticated owner record, then add the approved
+request-creation path and a private-file preview once the local RLS proof is
+green.
 
 ## Foundation progress map — 2026-09-09
 

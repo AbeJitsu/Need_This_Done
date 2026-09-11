@@ -702,10 +702,10 @@ export default function AdminUsersPage() {
           )}
         </Card>
 
-        {/* Back to Dashboard */}
+        {/* Back to Operations */}
         <div className="mt-8 text-center">
-          <Button variant="gray" href="/dashboard">
-            Back to Dashboard
+          <Button variant="gray" href="/admin/operations">
+            Back to Operations
           </Button>
         </div>
     </div>

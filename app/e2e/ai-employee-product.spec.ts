@@ -584,15 +584,16 @@ test('/system explains one model-agnostic operating path and its four controls',
   await expect(main.locator('.system-remote-flow > .system-rail__item')).toHaveCount(6);
   await expect(main.locator('.system-proof-lane')).toHaveCount(4);
   await expect(main.getByRole('heading', { name: 'One request, one controlled workflow, one answer back.', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Any compatible LLM', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A clear request', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Supabase + Redis', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Result to the LLM client', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Result in your workspace', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Local control plane', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Chat can answer. NeedThisDone carries the work forward.', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A useful conversation', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'An answer can start the work. NeedThisDone carries it forward.', exact: true })).toBeVisible();
+  await expect(main.getByText(/ChatGPT|Claude|chatbot/i)).toHaveCount(0);
+  await expect(main.getByRole('heading', { name: 'A useful answer', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'A coordinated system that carries the work forward', exact: true })).toBeVisible();
   await expect(main.getByText('Evidence: npm run verify:database; npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
-  await expect(main.getByText('Model-agnostic contract · connection pending', { exact: true })).toBeVisible();
+  await expect(main.getByText('Owner-scoped contract · connection pending', { exact: true })).toBeVisible();
   await expect(main.getByText('Connections still being proven', { exact: true })).toBeVisible();
   for (const title of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
     await expect(main.getByRole('heading', { name: title, exact: true })).toBeVisible();

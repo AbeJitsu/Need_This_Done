@@ -19,6 +19,7 @@ const retainedMarkdown = [
   'docs/PUBLIC_LANGUAGE_AUDIT.md',
   'docs/RELEASE_EVIDENCE.md',
   'docs/TEST_STRATEGY.md',
+  'docs/github-push-test.md',
   'docs/launch/LAUNCH_CHECKLIST.md',
   'docs/plans/2026-09-04-emotion-first-public-journey.md',
   'supabase/AGENTS.md',
@@ -43,10 +44,10 @@ describe('current repository documentation', () => {
 
   it('keeps the README as the single assistant and operating vision', () => {
     expect(source('README.md')).toContain(
-      'This is the canonical assistant and operating vision for NeedThisDone.',
+      'NeedThisDone is a private assistant and control system for turning a person\'s plain-language request into controlled, reviewable work.',
     );
     expect(source('ROADMAP.md')).toContain(
-      '[canonical assistant and operating vision](README.md#the-assistant-vision--start-here)',
+      '[canonical assistant and operating vision](README.md)',
     );
     expect(source('ROADMAP.md')).not.toContain('## The assistant vision');
   });

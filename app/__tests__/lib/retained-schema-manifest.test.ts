@@ -300,6 +300,12 @@ const requiredPolicies = [
     ['sender_events', 'admins read sender events', 'SELECT'],
     ['agent_plans', 'operators own agent plans', 'SELECT'],
     ['agent_plan_events', 'operators read agent plan events', 'SELECT'],
+    ['agent_plans', 'authenticated owners read agent plans', 'SELECT'],
+    ['agent_runs', 'authenticated owners read agent runs', 'SELECT'],
+    ['agent_plan_events', 'authenticated owners read agent plan events', 'SELECT'],
+    ['agent_run_events', 'authenticated owners read agent run events', 'SELECT'],
+    ['agent_artifacts', 'authenticated owners read agent artifacts', 'SELECT'],
+    ['agent_artifact_versions', 'authenticated owners read artifact versions', 'SELECT'],
     ['openclaw_model_usage_reservations', 'operators read OpenClaw usage', 'SELECT'],
     ['prospecting_artifact_provenance', 'operators read prospecting provenance', 'SELECT'],
 ] as const;

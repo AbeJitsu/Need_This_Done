@@ -54,22 +54,20 @@ describe('vision-first public journey', () => {
     expect(system).toContain('A private system for follow-through');
     expect(system).toContain('Important work, kept moving.');
     expect(system).toContain('We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.');
-    expect(system).toContain('ChatGPT, Claude, or any compatible LLM can be the conversation layer.');
+    expect(system).toContain('NeedThisDone keeps requests, approvals, execution, and results together.');
     expect(system).toContain('This page first explains the system in plain English');
     expect(system).toContain('One request, one controlled workflow, one answer back.');
-    expect(system).toContain('The chat is the front door; the coordinated services and workers');
-    expect(system).toContain('are the team doing the follow-through.');
+    expect(system).toContain('The authenticated workspace is where you see the current');
     expect(system).toContain('Why each private piece has a job.');
-    expect(system).toContain('ChatGPT is the current');
-    expect(system).toContain('client, not a permanent dependency.');
     expect(system).toContain('Why each private piece has a job.');
     expect(system).toContain('title: "Upstash Vector"');
-    expect(system).toContain('Chat can answer. NeedThisDone carries the work forward.');
+    expect(system).toContain('An answer can start the work. NeedThisDone carries it forward.');
     expect(system).toContain('Supabase keeps the goal, approval, status, result, and ownership durable');
     expect(system).toContain('href="/contact"');
     expect(system).toContain('Inspect the implementation');
     expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');
     expect(system).not.toMatch(/href=["']#/);
+    expect(system).not.toMatch(/ChatGPT|Claude|chatbot|\bchat\b/i);
     expect(system).toContain('alternates: { canonical: "/system" }');
     expect(sitemap).toContain("{ path: '/system'");
     for (const stage of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
@@ -151,6 +149,8 @@ describe('vision-first public journey', () => {
     expect(source('lib/page-config.ts')).toContain("{ href: '/managed-automation', label: 'Managed Automation' }");
     expect(source('components/public/PublicChrome.tsx')).not.toContain('HomeJourneyProgress');
     expect(source('app/globals.css')).not.toContain('homepage-journey-progress');
+    expect(source('components/public/PublicHeader.tsx')).toContain('href="/login"');
+    expect(source('components/public/PublicHeader.tsx')).toContain('>Sign in</Link>');
   });
 
   it('keeps the editorial palette readable and honors reduced motion', () => {
@@ -169,11 +169,11 @@ describe('vision-first public journey', () => {
   it('keeps the public front door separate from the assistant roadmap', () => {
     const readme = readFileSync(resolve(repositoryRoot, 'README.md'), 'utf8');
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
-    expect(readme).toContain('## The assistant vision — start here');
-    expect(readme).toContain('## Public service front door');
-    expect(readme).toContain('This public positioning does not expand the assistant roadmap');
+    expect(readme).toContain('# NeedThisDone');
+    expect(readme).toContain('## Public website and private assistant');
+    expect(readme).toContain('The public [`/system` case study](app/app/system/page.tsx) is a visual explanation');
     expect(roadmap).toContain('Assistant-first finish line');
-    expect(roadmap).toContain('separately approved public outcome-partner front door');
+    expect(roadmap).toContain('## Public homepage and optional `/system` proof');
   });
 
   it('updates the social preview and root metadata to the new promise', () => {

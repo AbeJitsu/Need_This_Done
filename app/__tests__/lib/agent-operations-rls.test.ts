@@ -153,6 +153,25 @@ localDescribe.sequential('agent operations authenticated boundaries', () => {
     `, [first.run.id, '10000000-4860-4000-8000-0000000000a4']);
   });
 
+  it('lets an authenticated account read its own durable run without exposing another owner', async () => {
+    const memberRunId = '40000000-4860-4000-8000-0000000000c1';
+    await asWorker(`
+      insert into public.agent_runs (
+        owner_id, workflow_type, title, input, idempotency_key, request_hash, requested_by
+      ) values ($1, 'research_outreach', 'Member workspace result', '{}', $2::uuid, 'member-workspace-proof', $1)
+    `, [member, memberRunId]);
+
+    const ownRuns = await asAdmin<{ id: string }>(member, `
+      select id from public.agent_runs where owner_id = $1
+    `, [member]);
+    expect(ownRuns.map((run) => run.id)).toContain(memberRunId);
+
+    const otherOwnerRuns = await asAdmin<{ id: string }>(member, `
+      select id from public.agent_runs where owner_id = $1
+    `, [operatorA]);
+    expect(otherOwnerRuns).toEqual([]);
+  });
+
   it('enforces worker-only leases, approval idempotency, and append-only history', async () => {
     const run = await createRun(operatorA, '20000000-4860-4000-8000-0000000000a1');
     const workerId = 'local-agent-worker-086';

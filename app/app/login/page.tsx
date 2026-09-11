@@ -9,8 +9,8 @@ import LoginClient from './LoginClient';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Private Team Sign-In | NeedThisDone',
-  description: 'Authorized NeedThisDone team access only.',
+  title: 'Private Workspace Sign-In | NeedThisDone',
+  description: 'Sign in to review your NeedThisDone requests, status, and results.',
   robots: { index: false, follow: false },
 };
 

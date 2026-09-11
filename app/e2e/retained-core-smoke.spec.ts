@@ -34,7 +34,7 @@ test.describe('Retained core smoke checks', () => {
 
   test('project dashboard requires an authenticated session', async ({ page }) => {
     await page.goto('/dashboard');
-    const dashboardHeading = page.getByRole('heading', { name: /agent operations/i });
+    const dashboardHeading = page.getByRole('heading', { name: /what's happening with your work|agent operations/i });
     const loginBoundary = page.getByLabel('Email Address');
     await expect(dashboardHeading.or(loginBoundary)).toBeVisible();
 

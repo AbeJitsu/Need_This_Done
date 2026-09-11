@@ -195,9 +195,10 @@ export default function Navigation() {
                           {user?.email}
                         </p>
                       </div>
+                      <Link href="/dashboard" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My workspace</Link>
                       {isAdmin && (
                         <>
-                          <Link href="/dashboard" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Team Dashboard</Link>
+                          <Link href="/admin/operations" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Operations</Link>
                           <Link href="/employee" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Managed Work</Link>
                           <Link
                             href="/prospecting"
@@ -284,9 +285,10 @@ export default function Navigation() {
                 <div className="px-3 py-2 text-xs text-gray-500">
                   Signed in as {user?.email}
                 </div>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">My workspace</Link>
                 {isAdmin && (
                   <>
-                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Team Dashboard</Link>
+                    <Link href="/admin/operations" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Operations</Link>
                     <Link href="/employee" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Managed Work</Link>
                     <Link href="/prospecting" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Prospecting & Outreach</Link>
                     <Link href="/admin/users" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Manage Users</Link>

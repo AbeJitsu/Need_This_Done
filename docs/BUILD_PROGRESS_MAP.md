@@ -1,7 +1,7 @@
 # NeedThisDone build progress map
 
-**Last updated:** 2026-09-10  
-**Branch:** `codex/mcp-account-auth-rebuild`
+**Last updated:** 2026-09-11
+**Branch:** `feature/authenticated-results-status-2026-09-11`
 
 This is the implementation checklist behind the visual progress map on
 [`/system`](../app/app/system/page.tsx). It separates a code contract from a
@@ -48,6 +48,15 @@ targets cannot drift silently.
 - Claim a real worker-generated GitHub commit through the NeedThisDone flow.
 
 ## Current implementation summary
+
+The authenticated owner workspace is now the `/dashboard` destination after
+sign-in. It reads a bounded, owner-scoped view of durable workflow status,
+updates, checks, references, and results. The previous operator cockpit is
+available at `/admin/operations`; the new workspace does not expose queues,
+worker health, credentials, or control actions. Migration 114 adds the
+read-only owner policies required for this browser surface. The public contact
+intake is still intentionally separate from owner provisioning, so a real
+customer workflow is not claimed yet.
 
 The repository contains the MCP transport, three-tool contract, account-scoped
 credential/API boundary, authentication seam, vector adapter, Redis client, Supabase lifecycle schema, signed worker

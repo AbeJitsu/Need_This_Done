@@ -1,7 +1,7 @@
 # NeedThisDone — Test Strategy and Suite Inventory
 
 **Status:** working test contract for the private assistant foundation  
-**Last audited:** 2026-09-10
+**Last audited:** 2026-09-11
 **Progress:** [ROADMAP.md](../ROADMAP.md)  
 **Evidence:** [PROJECT_STATUS.md](PROJECT_STATUS.md) and [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
 **Build map:** [BUILD_PROGRESS_MAP.md](BUILD_PROGRESS_MAP.md)
@@ -105,6 +105,7 @@ The Hermes vertical slice has an intentional environment order:
 | `feature-inventory.test.ts` | Supported feature inventory and retired entries | Detects stale features returning | Browser behavior |
 | `google-first-auth-boundary.test.ts` | Single approved identity boundary | Prevents stale/second auth paths | Hosted OAuth |
 | `private-operator-boundary.test.ts` | Operator-only access and draft-only handoffs | Protects private data and approval-before-send | GitHub delivery |
+| `api/workspace.test.ts` | Authenticated owner workspace auth, owner handoff, no-store response, and missing-schema state | Protects the browser status/result boundary | Live Supabase or browser rendering |
 | `route-hygiene.test.ts` | Public routes, sitemap, redirects, private indexing | Prevents accidental public exposure | Search-engine crawling |
 | `transactional-email-boundary.test.ts` | Durable keys and provider boundary | Prevents duplicate/unaudited email effects | Provider delivery |
 | `repository-documentation.test.ts` | Canonical docs and links | Keeps architecture/proof discoverable | Whether a human followed docs |
@@ -184,7 +185,7 @@ These suites are intentionally excluded from the fast unit command and run via
 
 | File | What it protects | Why important | Not tested |
 |---|---|---|---|
-| `lib/agent-operations-rls.test.ts` | Agent-operation RLS/lifecycle access | Protects durable worker state | Hosted RLS |
+| `lib/agent-operations-rls.test.ts` | Agent-operation RLS/lifecycle access, including authenticated owner reads | Protects durable worker state and cross-owner isolation | Hosted RLS |
 | `lib/ai-employee-rls.test.ts` | Private assistant table policies | Prevents cross-owner access | Production data |
 | `lib/hermes-lifecycle-rls.test.ts` | Hermes plan/run/task RLS/transitions | Protects durable orchestration | Standalone Hermes |
 | `lib/prospecting-rls.test.ts` | Prospecting policies | Protects private prospects | Hosted RLS |

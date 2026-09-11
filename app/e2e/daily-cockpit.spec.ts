@@ -87,7 +87,7 @@ test('creates weekly rocks, works the next actions, reloads durable state, and r
   });
   expect(loginResponse.ok()).toBe(true);
 
-  await page.goto('/dashboard');
+  await page.goto('/admin/operations');
   await expect(page.getByRole('heading', { name: 'Daily cockpit' })).toBeVisible();
   await expect(page.getByText('Current growth profile')).toBeVisible();
   await expect(page.getByText('Reply from Browser Example Studio')).toBeVisible();

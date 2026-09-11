@@ -133,12 +133,12 @@ const systemStages = [
 const remoteFlowSteps: readonly RailStep[] = [
   {
     number: "01",
-    label: "Your conversation",
-    title: "Any compatible LLM",
+    label: "Your request",
+    title: "A clear request",
     description:
-      "You describe the outcome in ChatGPT, Claude, another LLM, or a custom interface. The client reasons about the request and calls a small tool when the work needs to leave the conversation.",
+      "You describe the outcome you want. NeedThisDone turns it into a bounded request and keeps the purpose visible before any work begins.",
     icon: "message",
-    status: "Interface · reasoning · summary",
+    status: "Request · scope · summary",
   },
   {
     number: "02",
@@ -179,23 +179,23 @@ const remoteFlowSteps: readonly RailStep[] = [
   {
     number: "06",
     label: "Bring back proof",
-    title: "Result to the LLM client",
+    title: "Result in your workspace",
     description:
-      "Hermes stores the structured result in Supabase. The LLM client calls get_workflow_status and receives a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual dashboard.",
+      "Hermes stores the structured result in Supabase. Your authenticated workspace shows a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual explanation.",
     icon: "git",
-    status: "Evidence path · dashboard optional",
+    status: "Evidence path · private workspace",
   },
 ];
 
 const architectureSteps: readonly RailStep[] = [
   {
     number: "01",
-    label: "Reasoning and conversation",
-    title: "LLM client",
+    label: "Request boundary",
+    title: "Request interface",
     description:
-      "The replaceable reasoning and conversational layer. After the owner signs in to NeedThisDone and creates a credential, ChatGPT, Claude, another LLM, or a custom application can use the same owner-scoped MCP/API contract. Remote client access is designed but not yet verified.",
+      "The replaceable entry point where an owner submits a request. It keeps the request separate from execution and approval, and can use the same owner-scoped MCP/API contract from an approved interface. Remote access is designed but not yet verified.",
     icon: "message",
-    status: "Model-agnostic contract · connection pending",
+    status: "Owner-scoped contract · connection pending",
   },
   {
     number: "02",
@@ -248,7 +248,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Semantic retrieval aid",
     title: "Upstash Vector",
     description:
-      "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it is not an authentication boundary, never overrides Supabase or GitHub, and does not restore the retired public chatbot.",
+      "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it is not an authentication boundary and never overrides Supabase or GitHub.",
     icon: "database",
     status: "Adapter built · live index and projection pending",
   },
@@ -266,7 +266,7 @@ const architectureSteps: readonly RailStep[] = [
     label: "Replaceable coding worker",
     title: "OpenClaw with Codex runtime",
     description:
-      "OpenClaw is the coding worker. Its Codex agent runtime can inspect, edit, test, and explain changes through a correctly configured local or cloud Gateway, then return files, a commit, and review evidence. The intended login is the supported ChatGPT/Codex OAuth path; standalone Codex CLI operation is not part of this design.",
+      "OpenClaw is the coding worker. Its Codex agent runtime can inspect, edit, test, and explain changes through a correctly configured local or cloud Gateway, then return files, a commit, and review evidence. Standalone Codex CLI operation is not part of this design.",
     icon: "code",
     status: "Safety contracts built · live task pending",
   },
@@ -313,12 +313,12 @@ const summaryComparison = [
   {
     number: "01",
     icon: "message",
-    kicker: "ChatGPT, Claude, or another LLM alone",
-    title: "A useful conversation",
+    kicker: "A one-off request",
+    title: "A useful answer",
     description:
-      "The model can reason, answer questions, call available tools, and produce a plan or result. The conversation remains the main place to follow the work.",
+      "A request can receive an answer, plan, or result. The request itself remains the main place to follow the work.",
     points: [
-      "The model or its tools may not keep one durable workflow record",
+      "A one-off request may not create one durable workflow record",
       "Approvals, queues, long-running execution, and evidence remain separate concerns",
       "You still have to coordinate what happens next",
     ],
@@ -326,10 +326,10 @@ const summaryComparison = [
   {
     number: "02",
     icon: "workflow",
-    kicker: "The same LLM with NeedThisDone",
+    kicker: "NeedThisDone with durable follow-through",
     title: "A coordinated system that carries the work forward",
     description:
-      "NeedThisDone puts a small authenticated control plane around the conversation so the work can continue after the message ends.",
+      "NeedThisDone puts a small authenticated control plane around the request so the work can continue after the initial exchange.",
     points: [
       "Supabase keeps the goal, approval, status, result, and ownership durable",
       "Redis coordinates short-lived queues, leases, locks, heartbeats, and deduplication",
@@ -474,7 +474,7 @@ export default function SystemPage() {
                 We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.
               </p>
               <p className="system-hero__support">
-                ChatGPT, Claude, or any compatible LLM can be the conversation layer. This page first explains the system in plain English, then shows why each technical layer matters, and ends with a direct comparison with ordinary chat.
+                NeedThisDone keeps requests, approvals, execution, and results together. This page first explains the system in plain English, then shows why each technical layer matters, and ends with a direct comparison with a one-off request.
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
@@ -523,13 +523,11 @@ export default function SystemPage() {
               One request, one controlled workflow, one answer back.
             </h2>
             <p className="system-section__lead">
-              ChatGPT, Claude, or any compatible LLM can be the conversation layer. It sends a
-              request to the same authenticated MCP/API contract; NeedThisDone
-              keeps the workflow, approval, execution, and evidence together.
-              The chat is the front door; the coordinated services and workers
-              are the team doing the follow-through. ChatGPT is the current
-              client, not a permanent dependency. The worker can be a local
-              computer or a cloud machine when it is configured correctly.
+              You send a request to the same authenticated MCP/API contract;
+              NeedThisDone keeps the workflow, approval, execution, and evidence
+              together. The authenticated workspace is where you see the current
+              status, supporting evidence, and next decision. The worker can be a
+              local computer or a cloud machine when it is configured correctly.
             </p>
           </div>
           <SystemRail steps={remoteFlowSteps} className="system-remote-flow" />
@@ -549,11 +547,10 @@ export default function SystemPage() {
                 Why each private piece has a job.
               </h2>
               <p className="system-section__lead">
-                A chat alone can discuss work. This stack gives that
-                conversation a coordinator, records, signals, workers, and
-                evidence. Each named layer owns one responsibility, so the
-                system can do real work without turning one tool into the
-                whole team.
+                A request alone does not carry durable follow-through. This stack
+                adds a coordinator, records, signals, workers, and evidence. Each
+                named layer owns one responsibility, so the system can do real work
+                without turning one tool into the whole team.
               </p>
             </div>
             <figure>
@@ -654,12 +651,12 @@ export default function SystemPage() {
         <div className="system-closing__inner">
           <SectionLabel>In summary · why this is different</SectionLabel>
           <h2 id="closing-heading" className="system-heading">
-            Chat can answer. NeedThisDone carries the work forward.
+            An answer can start the work. NeedThisDone carries it forward.
           </h2>
           <p>
-            Even when an LLM can use tools, it does not automatically become a
-            durable, approval-gated operating system. NeedThisDone adds the
-            records, coordination, memory, workers, and evidence around it.
+            Even when a tool can use other tools, it does not automatically become
+            a durable, approval-gated operating system. NeedThisDone adds the
+            records, coordination, memory, workers, and evidence around the work.
           </p>
           <div className="system-difference-grid system-closing__comparison">
             {summaryComparison.map((item, index) => (
