@@ -1,9 +1,21 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/authenticated-results-status-2026-09-11` (branched from `origin/dev` at `b8bde59ec12fe0a850efa3db887657e030381580`)
+**Branch:** `feature/system-page-plain-english-2026-09-11` (branched from `dev` at `c0d4cdedbe2162bb2c8e965ecda009d31eaf6394`)
 **Last updated:** 2026-09-11
 
 ## Latest change
+
+- On 2026-09-11, the public `/system` page was reorganized so its workflow
+  and technical-layer cards lead with a short plain-English explanation and
+  place the technical detail directly beneath it in the same card. The
+  operating path keeps its existing six steps, the architecture rail keeps
+  its 11 named layers, and the proof-state language, route boundaries, and
+  system-map controls are unchanged. This is a presentation and public-copy
+  change only; it adds no workflow, API, database, authentication, worker, or
+  deployment behavior. `npm run test:unit` passed 75 files / 400 tests, with
+  one skipped file and four expected skips; lint, type-check, production build,
+  and `git diff --check` passed. Browser rendering remains pending because
+  Chromium is unavailable here.
 
 - On 2026-09-11, the authenticated owner-results slice was added on the
   feature branch. `/dashboard` now requires a Supabase session and presents a

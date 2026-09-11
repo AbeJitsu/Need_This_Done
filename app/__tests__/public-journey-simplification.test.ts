@@ -55,11 +55,12 @@ describe('vision-first public journey', () => {
     expect(system).toContain('Important work, kept moving.');
     expect(system).toContain('We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.');
     expect(system).toContain('NeedThisDone keeps requests, approvals, execution, and results together.');
-    expect(system).toContain('This page first explains the system in plain English');
-    expect(system).toContain('One request, one controlled workflow, one answer back.');
-    expect(system).toContain('The authenticated workspace is where you see the current');
-    expect(system).toContain('Why each private piece has a job.');
-    expect(system).toContain('Why each private piece has a job.');
+    expect(system).toContain('Every card starts with a plain-English explanation');
+    expect(system).toContain('The simple version of how it works.');
+    expect(system).toContain('What is happening behind the scenes.');
+    expect(system).toContain('Plain English');
+    expect(system).toContain('Technical detail');
+    expect(system).toContain('Your authenticated workspace shows a compact summary');
     expect(system).toContain('title: "Upstash Vector"');
     expect(system).toContain('An answer can start the work. NeedThisDone carries it forward.');
     expect(system).toContain('Supabase keeps the goal, approval, status, result, and ownership durable');

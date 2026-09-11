@@ -583,10 +583,15 @@ test('/system explains one model-agnostic operating path and its four controls',
   await expect(main.locator('.system-map__stage')).toHaveCount(4);
   await expect(main.locator('.system-remote-flow > .system-rail__item')).toHaveCount(6);
   await expect(main.locator('.system-proof-lane')).toHaveCount(4);
-  await expect(main.getByRole('heading', { name: 'One request, one controlled workflow, one answer back.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'The simple version of how it works.', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'A clear request', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Supabase + Redis', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A secure doorway', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A trusted record', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A coordinator', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'A private worker', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Result in your workspace', exact: true })).toBeVisible();
+  await expect(main.getByText('Plain English', { exact: true })).toHaveCount(17);
+  await expect(main.getByText('Technical detail', { exact: true })).toHaveCount(17);
   await expect(main.getByRole('heading', { name: 'Local control plane', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'An answer can start the work. NeedThisDone carries it forward.', exact: true })).toBeVisible();
   await expect(main.getByText(/ChatGPT|Claude|chatbot/i)).toHaveCount(0);

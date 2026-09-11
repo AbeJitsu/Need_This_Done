@@ -53,6 +53,7 @@ type RailStep = {
   number: string;
   label: string;
   title: string;
+  plainEnglish: string;
   description: string;
   icon: IconName;
   highlighted?: boolean;
@@ -135,6 +136,8 @@ const remoteFlowSteps: readonly RailStep[] = [
     number: "01",
     label: "Your request",
     title: "A clear request",
+    plainEnglish:
+      "You tell us what you want to accomplish, in your own words.",
     description:
       "You describe the outcome you want. NeedThisDone turns it into a bounded request and keeps the purpose visible before any work begins.",
     icon: "message",
@@ -142,8 +145,10 @@ const remoteFlowSteps: readonly RailStep[] = [
   },
   {
     number: "02",
-    label: "The public doorway",
-    title: "NeedThisDone MCP on Vercel",
+    label: "Secure handoff",
+    title: "A secure doorway",
+    plainEnglish:
+      "You send the request through one protected connection without needing to understand the machinery behind it.",
     description:
       "Your NeedThisDone site login identifies the owner, and Account Settings creates an owner-scoped MCP credential for the client. The client sends that bearer credential to one stable HTTPS doorway; the raw token is shown only once. The site login and MCP credential are separate layers, and the client does not need to open the website for each call.",
     icon: "lock",
@@ -151,8 +156,10 @@ const remoteFlowSteps: readonly RailStep[] = [
   },
   {
     number: "03",
-    label: "Record and signal",
-    title: "Supabase + Redis",
+    label: "Durable record",
+    title: "A trusted record",
+    plainEnglish:
+      "One record keeps track of what you asked for, what was approved, and what happened.",
     description:
       "Supabase stores the owner-scoped credential hash, durable workflow, approval, status, and result under RLS. Redis carries temporary queue signals, leases, locks, heartbeats, and deduplication; it is not part of MCP authentication and is never durable truth.",
     icon: "database",
@@ -160,8 +167,10 @@ const remoteFlowSteps: readonly RailStep[] = [
   },
   {
     number: "04",
-    label: "Choose the worker host",
-    title: "Hermes on a configured computer",
+    label: "Workflow coordination",
+    title: "A coordinator",
+    plainEnglish:
+      "A coordinator keeps the work moving and passes along only what was approved.",
     description:
       "Hermes runs on the configured computer that owns its credentials and can reach the control plane. That can be a local workstation, a private server, or a cloud machine. Our MacBook Pro and Mac mini are current implementation examples, not requirements.",
     icon: "workflow",
@@ -169,8 +178,10 @@ const remoteFlowSteps: readonly RailStep[] = [
   },
   {
     number: "05",
-    label: "Do the bounded work",
-    title: "OpenClaw on the selected computer",
+    label: "Private execution",
+    title: "A private worker",
+    plainEnglish:
+      "A private worker does the agreed work in a contained workspace and brings back proof of what changed.",
     description:
       "OpenClaw is the replaceable coding worker. It can run locally or in the cloud through its configured Codex runtime, uses an isolated worktree, runs checks, and returns changed files, a commit, and evidence.",
     icon: "code",
@@ -178,8 +189,10 @@ const remoteFlowSteps: readonly RailStep[] = [
   },
   {
     number: "06",
-    label: "Bring back proof",
+    label: "Reviewable result",
     title: "Result in your workspace",
+    plainEnglish:
+      "You open your private workspace to see the status, evidence, result, and next decision.",
     description:
       "Hermes stores the structured result in Supabase. Your authenticated workspace shows a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual explanation.",
     icon: "git",
@@ -192,6 +205,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "01",
     label: "Request boundary",
     title: "Request interface",
+    plainEnglish:
+      "This is where your request enters the system.",
     description:
       "The replaceable entry point where an owner submits a request. It keeps the request separate from execution and approval, and can use the same owner-scoped MCP/API contract from an approved interface. Remote access is designed but not yet verified.",
     icon: "message",
@@ -201,6 +216,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "02",
     label: "Small authenticated doorway",
     title: "MCP facade",
+    plainEnglish:
+      "This is the locked front door that checks who is making the request.",
     description:
       "The Model Context Protocol/API endpoint requires a bearer credential, resolves the owner and credential record, and exposes only start_workflow, get_workflow_status, and list_workflows. Raw tokens are shown once from Account Settings; the local route, handshake, authentication seam, owner-context propagation, and discovery contract are built, while secure hosted client access is still pending.",
     icon: "lock",
@@ -210,6 +227,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "03",
     label: "Internet-facing control plane",
     title: "Next.js on Vercel",
+    plainEnglish:
+      "This is the website and server boundary that presents the private experience.",
     description:
       "Hosts the authenticated browser and server-side API boundary. It records policy decisions and never becomes the always-on worker. The hosted environment must be proven separately from local development.",
     icon: "server",
@@ -219,6 +238,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "04",
     label: "Workflow coordination",
     title: "Hermes",
+    plainEnglish:
+      "This is the coordinator that turns an approved request into trackable work.",
     description:
       "Validates the request, creates and tracks the workflow, assigns approved work, and returns a reviewable result. The three-tool contract is built, but the default MCP dispatcher is deliberately unavailable until durable Hermes persistence is connected.",
     icon: "workflow",
@@ -229,6 +250,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "05",
     label: "Durable source of truth",
     title: "Supabase",
+    plainEnglish:
+      "This is the durable record the system can rely on later.",
     description:
       "Stores authentication, owner-scoped MCP token hashes, plans, approvals, tasks, costs, results, and private assets with RLS. Raw MCP tokens never enter durable storage. The local real-Supabase gate must pass before the hosted Supabase proof.",
     icon: "database",
@@ -238,6 +261,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "06",
     label: "Temporary coordination",
     title: "Redis",
+    plainEnglish:
+      "This handles short-lived signals that help work move without becoming the official record.",
     description:
       "Carries short-lived cache, locks, deduplication, leases, heartbeats, and wake-up signals. It is not durable workflow truth, is not an authentication store, and is not yet wired as the task queue.",
     icon: "server",
@@ -247,6 +272,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "07",
     label: "Semantic retrieval aid",
     title: "Upstash Vector",
+    plainEnglish:
+      "This is an optional memory aid that helps find relevant context.",
     description:
       "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it is not an authentication boundary and never overrides Supabase or GitHub.",
     icon: "database",
@@ -256,6 +283,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "08",
     label: "Always-on private host",
     title: "Worker host",
+    plainEnglish:
+      "This is the private computer that can perform approved work without being exposed to the internet.",
     description:
       "The worker host can be a local computer, a private server, or a cloud machine. It should poll outward, expose no public listener, and act only on a frozen approval. The MacBook Pro and Mac mini are current examples; neither live worker connection is complete here.",
     icon: "server",
@@ -265,6 +294,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "09",
     label: "Replaceable coding worker",
     title: "OpenClaw with Codex runtime",
+    plainEnglish:
+      "This is the replaceable worker that does the actual coding work.",
     description:
       "OpenClaw is the coding worker. Its Codex agent runtime can inspect, edit, test, and explain changes through a correctly configured local or cloud Gateway, then return files, a commit, and review evidence. Standalone Codex CLI operation is not part of this design.",
     icon: "code",
@@ -274,6 +305,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "10",
     label: "Code source of truth",
     title: "GitHub",
+    plainEnglish:
+      "This is where code changes are recorded so a person can review them.",
     description:
       "Holds the branch, diff, commit, and pull request for code work. A worker never makes a merge or deployment decision by itself.",
     icon: "git",
@@ -283,6 +316,8 @@ const architectureSteps: readonly RailStep[] = [
     number: "11",
     label: "Model route",
     title: "OpenRouter",
+    plainEnglish:
+      "This chooses which model route helps plan the work.",
     description:
       "Provides the application-side planner/model route. An allowed free route is preferred; a paid route remains a separate owner approval.",
     icon: "workflow",
@@ -442,7 +477,14 @@ function SystemRail({
               {step.status && <p className="system-rail__status">{step.status}</p>}
             </div>
             <div className="system-card-detail system-rail__detail">
-              <p className="system-rail__description">{step.description}</p>
+              <div className="system-rail__plain">
+                <p className="system-rail__detail-label">Plain English</p>
+                <p className="system-rail__plain-description">{step.plainEnglish}</p>
+              </div>
+              <div className="system-rail__technical">
+                <p className="system-rail__detail-label">Technical detail</p>
+                <p className="system-rail__description">{step.description}</p>
+              </div>
             </div>
           </article>
           {index < steps.length - 1 && (
@@ -474,7 +516,7 @@ export default function SystemPage() {
                 We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.
               </p>
               <p className="system-hero__support">
-                NeedThisDone keeps requests, approvals, execution, and results together. This page first explains the system in plain English, then shows why each technical layer matters, and ends with a direct comparison with a one-off request.
+                NeedThisDone keeps requests, approvals, execution, and results together. Every card starts with a plain-English explanation, then puts the technical detail underneath so you can scan quickly or go deeper.
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
@@ -518,16 +560,15 @@ export default function SystemPage() {
       >
         <div className="system-section__inner system-section__inner--narrow">
           <div className="system-section__intro">
-            <SectionLabel>In plain English · the real operating path</SectionLabel>
+            <SectionLabel>Start here · plain English first</SectionLabel>
             <h2 id="remote-flow-heading" className="system-heading">
-              One request, one controlled workflow, one answer back.
+              The simple version of how it works.
             </h2>
             <p className="system-section__lead">
-              You send a request to the same authenticated MCP/API contract;
-              NeedThisDone keeps the workflow, approval, execution, and evidence
-              together. The authenticated workspace is where you see the current
-              status, supporting evidence, and next decision. The worker can be a
-              local computer or a cloud machine when it is configured correctly.
+              You describe the outcome. NeedThisDone gets agreement on the work,
+              moves only what was approved, and brings the result back to your
+              private workspace. The first sentence in each card is the quick
+              explanation; the technical detail follows in the same card.
             </p>
           </div>
           <SystemRail steps={remoteFlowSteps} className="system-remote-flow" />
@@ -544,13 +585,12 @@ export default function SystemPage() {
             <div className="system-section__intro">
               <SectionLabel>{technicalSectionLabel}</SectionLabel>
               <h2 id="architecture-heading" className="system-heading system-heading--compact">
-                Why each private piece has a job.
+                What is happening behind the scenes.
               </h2>
               <p className="system-section__lead">
-                A request alone does not carry durable follow-through. This stack
-                adds a coordinator, records, signals, workers, and evidence. Each
-                named layer owns one responsibility, so the system can do real work
-                without turning one tool into the whole team.
+                The cards below keep the plain-English explanation first and the
+                named technical layer second. You can stop after the first
+                sentence and still understand the path.
               </p>
             </div>
             <figure>

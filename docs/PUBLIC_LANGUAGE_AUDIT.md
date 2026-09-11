@@ -1,7 +1,7 @@
 # Public language audit
 
 **Reviewed:** 2026-09-11
-**Branch:** `feature/authenticated-results-status-2026-09-11`
+**Branch:** `feature/system-page-plain-english-2026-09-11`
 **Scope:** anonymous public routes, retained articles, report and analyzer
 states, recovery states, and legacy redirects.
 
@@ -27,7 +27,7 @@ report copy still needs owner review before publication.
 | `/website-fix` | “That page should be helping, not getting in the way.” The offer boundary needed a concrete outcome. | “We review one website problem. We agree on one correction and show what changed.” | 10 max | Implemented; owner review pending |
 | `/managed-automation` | “Make recurring work easier.” The proposal-based boundary needed earlier context. | “We review one task that keeps taking time. We outline a more dependable way to handle it.” | 10 max | Implemented; owner review pending |
 | `/how-it-works` | The introduction named a problem but not the wider technical-help scope. | “Tell us what is not working. We’ll find the next move.” The supporting copy names websites, workflows, tools, repeated work, the agreed work, and visible change. | 14 max | Implemented; owner review pending |
-| `/system` | The previous architecture copy centered a conversational client and named products that visitors did not need to understand. | Keep the public explanation on one request → approval → private execution → reviewable result path. Point the result step to the authenticated workspace, describe the request interface without naming a chatbot, and retain proof-state labels for live-connection limits. | Architecture note | Implemented; owner review pending |
+| `/system` | The previous architecture copy centered technical names before the visitor had a simple mental model. | Keep the public explanation on one request → approval → private execution → reviewable result path. Start each operating and technical card with a short plain-English explanation, then place the technical detail below it in the same card. Retain proof-state labels for live-connection limits. | Architecture note | Implemented; owner review pending |
 | `/work` | “Illustrative before-and-after stories” was accurate but abstract. | “These examples are illustrative. They show what one focused change could look like.” | 9 max | Implemented; owner review pending |
 | `/about` | The introduction did not sound like an effective technical partner. | “Clear help for problems that matter.” The supporting copy names technical know-how, focused work, and visible change. | 12 max | Implemented; owner review pending |
 | `/faq` | The FAQ began with fit and scope questions without sounding like a direct source of help. | “Answers about what we can help with, how we work, pricing, and what happens next.” A new answer explains that future work can be discussed separately. | 14 max | Implemented; owner review pending |

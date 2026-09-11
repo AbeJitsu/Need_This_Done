@@ -1769,6 +1769,46 @@ Blog Markdown Content — Reading Experience
   overflow-wrap: break-word;
 }
 
+.system-rail__detail {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.system-rail__detail-label {
+  margin: 0;
+  color: var(--system-green, #126b4e);
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.system-rail__plain {
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(18, 107, 78, 0.16);
+  border-radius: 0.9rem;
+  background: var(--system-soft);
+}
+
+.system-rail__plain-description {
+  margin: 0.35rem 0 0;
+  color: var(--system-ink);
+  font-size: 1.02rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.system-rail__technical {
+  padding-top: 0.95rem;
+  border-top: 1px solid rgba(24, 50, 41, 0.12);
+}
+
+.system-rail__technical .system-rail__detail-label {
+  color: var(--system-gold-deep);
+}
+
 .system-plain-flow {
   margin-top: 3rem;
 }
@@ -1778,7 +1818,7 @@ Blog Markdown Content — Reading Experience
 }
 
 .system-rail__description {
-  margin: 0.85rem 0 0;
+  margin: 0.35rem 0 0;
   color: var(--system-muted);
   line-height: 1.7;
 }
@@ -1787,6 +1827,11 @@ Blog Markdown Content — Reading Experience
   border-color: rgba(208, 169, 79, 0.75);
   background: #fff8e7;
   box-shadow: 0 1.25rem 3rem rgba(119, 93, 34, 0.1);
+}
+
+.system-rail__item--highlighted .system-rail__plain {
+  border-color: rgba(208, 169, 79, 0.35);
+  background: rgba(208, 169, 79, 0.12);
 }
 
 .system-rail__item--highlighted .system-rail__icon {
@@ -1882,6 +1927,27 @@ Blog Markdown Content — Reading Experience
 
 .system-rail--dark .system-rail__label {
   color: #c9dcca;
+}
+
+.system-rail--dark .system-rail__detail-label {
+  color: #c9dcca;
+}
+
+.system-rail--dark .system-rail__plain {
+  border-color: rgba(201, 220, 202, 0.18);
+  background: rgba(201, 220, 202, 0.1);
+}
+
+.system-rail--dark .system-rail__plain-description {
+  color: white;
+}
+
+.system-rail--dark .system-rail__technical {
+  border-top-color: rgba(255, 255, 255, 0.14);
+}
+
+.system-rail--dark .system-rail__technical .system-rail__detail-label {
+  color: #ead28f;
 }
 
 .system-rail--dark .system-rail__description {
