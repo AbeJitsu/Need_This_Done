@@ -8,7 +8,7 @@ export default function UnifiedPricingPage() {
       id="main-content"
       className="min-h-screen bg-[var(--public-cream)] text-[var(--public-ink)]"
     >
-      <section className="border-b border-[var(--public-ink)]/10">
+      <section className="public-page-hero border-b border-[var(--public-ink)]/10">
         <div className="mx-auto max-w-6xl px-5 py-16 text-center sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">
             Pricing
@@ -63,7 +63,7 @@ export default function UnifiedPricingPage() {
           </p>
           <Link
             href="/contact"
-            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
+            className="public-button mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
           >
             Share Your Vision{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

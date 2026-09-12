@@ -87,7 +87,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
         pagesCrawled={report.pages_crawled}
       />
 
-      <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12 py-12 space-y-12">
+      <div className="public-report-body max-w-5xl mx-auto px-6 sm:px-8 md:px-12 py-12 space-y-12">
         <ScoreBreakdown categories={categories} />
         <AccessibilityCallout accessibility={accessibility} />
         <PageMetricsTable metrics={metrics} />

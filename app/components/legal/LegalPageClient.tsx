@@ -100,7 +100,7 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
 
   return (
     <main id="main-content" className="min-h-screen bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section aria-labelledby="legal-page-title" className="bg-[var(--public-dark)] text-white">
+      <section aria-labelledby="legal-page-title" className="public-page-hero bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 md:py-20">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
             <ContentSection sectionKey="header" label="Page Header">
@@ -139,7 +139,7 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
           </div>
 
           <ContentSection sectionKey="lastUpdated" label="Last Updated">
-            <div className="mt-9 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-emerald-50/80">
+            <div className="public-button mt-9 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-emerald-50/80">
               <PageIcon className={`h-4 w-4 ${config.accent.heroIcon}`} aria-hidden="true" />
               <span>Last updated: {content.lastUpdated}</span>
             </div>
@@ -216,7 +216,7 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
               </div>
               <Link
                 href={config.cta.href}
-                className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-green)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--public-soft)]"
+                className="public-button inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-green)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--public-soft)]"
               >
                 {config.cta.button}
                 <ArrowRight className={`h-4 w-4 ${config.accent.ctaIcon}`} aria-hidden="true" />

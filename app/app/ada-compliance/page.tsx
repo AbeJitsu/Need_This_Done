@@ -52,7 +52,7 @@ const commonChecks = [
 export default function AdaCompliancePage() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="relative overflow-hidden bg-[var(--public-dark)] text-white">
+      <section className="public-page-hero relative overflow-hidden bg-[var(--public-dark)] text-white">
         <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
         <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8 md:py-28">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
@@ -69,7 +69,7 @@ export default function AdaCompliancePage() {
           <div className="mt-9">
             <Link
               href="/site-analyzer"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)]"
+              className="public-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)]"
             >
               Get a Website Snapshot{" "}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />

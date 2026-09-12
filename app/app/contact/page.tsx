@@ -207,7 +207,7 @@ function ContactIntake() {
   ];
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="bg-[#18372e] text-white">
+      <section className="public-page-hero bg-[#18372e] text-white">
         <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
             Share your vision
@@ -252,7 +252,7 @@ function ContactIntake() {
                     aria-label={`Step ${number}: ${title}`}
                     aria-current={step === number ? "step" : undefined}
                     onClick={() => setStep(number)}
-                    className={`block min-h-11 w-full whitespace-normal rounded-lg px-1 py-2 text-left text-xs leading-5 sm:text-sm ${step === number ? "font-bold text-[var(--public-ink)]" : "text-[#50675e] hover:text-[var(--public-green)]"}`}
+                    className={`public-intake-step block min-h-11 w-full whitespace-normal rounded-lg px-1 py-2 text-left text-xs leading-5 sm:text-sm ${step === number ? "font-bold text-[var(--public-ink)]" : "text-[#50675e] hover:text-[var(--public-green)]"}`}
                   >
                     <span
                       aria-hidden="true"
@@ -267,11 +267,11 @@ function ContactIntake() {
             })}
           </ol>
         </nav>
-        <form onSubmit={step === 4 ? submit : advance} className="mt-7">
+        <form onSubmit={step === 4 ? submit : advance} className="public-intake-form mt-7">
           <h2
             ref={heading}
             tabIndex={-1}
-            className="font-playfair text-4xl font-black outline-none"
+            className="font-playfair text-3xl font-black leading-tight outline-none sm:text-4xl"
           >
             {titles[step - 1]}
           </h2>
@@ -573,7 +573,7 @@ function ContactIntake() {
             )}
             <button
               disabled={status === "sending"}
-              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white disabled:opacity-60"
+              className="public-button inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white disabled:opacity-60"
             >
               {step === 4
                 ? status === "sending"

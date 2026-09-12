@@ -14,7 +14,7 @@ const nextStep = PUBLIC_ROUTE_STAGES["/work"].secondary;
 export default function WorkPageClient() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
+      <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
             Examples
@@ -150,7 +150,7 @@ export default function WorkPageClient() {
           </p>
           <Link
             href="/contact"
-            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
+            className="public-button mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
           >
             Share Your Vision
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

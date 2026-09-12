@@ -26,7 +26,7 @@ export default function OfferPage({
   const route = offerId === "website-improvement" ? "/website-fix" : "/managed-automation";
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-ink)] text-white">
+      <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-ink)] text-white">
         <div className="offer-hero mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <div>
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#b9d5bd]">
@@ -40,7 +40,7 @@ export default function OfferPage({
           </p>
           <Link
             href={offer.contactHref}
-            className="mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-soft)] px-7 py-3 font-bold text-[var(--public-ink)] hover:bg-white"
+            className="public-button mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-soft)] px-7 py-3 font-bold text-[var(--public-ink)] hover:bg-white"
           >
             Share Your Vision
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

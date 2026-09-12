@@ -125,7 +125,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* ================================================================
             Reading Hero
             ================================================================ */}
-        <section className="relative overflow-hidden border-b border-[#183229]/10 bg-[#18372e] text-white">
+        <section className="public-page-hero relative overflow-hidden border-b border-[#183229]/10 bg-[#18372e] text-white">
           <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
           <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
 
@@ -205,7 +205,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* ================================================================
             Article Content — narrower for reading comfort
             ================================================================ */}
-        <article className="mx-auto max-w-3xl bg-[#f7f4ed] px-4 py-14 sm:px-6 md:py-20">
+        <article className="public-article-body mx-auto max-w-3xl bg-[#f7f4ed] px-4 py-14 sm:px-6 md:py-20">
           <MarkdownContent content={post.content} />
 
           {/* Tags */}

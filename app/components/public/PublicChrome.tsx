@@ -13,7 +13,6 @@ const privatePrefixes = [
   "/prospecting",
   "/admin",
   "/account",
-  "/login",
 ];
 
 export default function PublicChrome({
@@ -34,7 +33,7 @@ export default function PublicChrome({
       </>
     );
   return (
-    <div className="public-shell">
+    <div className="public-shell" data-public-page={pathname}>
       <PublicEngagementTracker />
       <PublicHeader />
       {children}

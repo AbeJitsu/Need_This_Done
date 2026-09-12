@@ -5,7 +5,7 @@ import type { BlogPostSummary } from '@/lib/blog-types';
 
 export default function BlogPageClient({ initialContent, posts }: { initialContent: BlogPageContent; posts: BlogPostSummary[] }) {
   return <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-    <section className="bg-[var(--public-dark)] text-white">
+    <section className="public-page-hero bg-[var(--public-dark)] text-white">
       <div className="public-section">
         <p className="text-xs font-bold uppercase tracking-[.2em] text-[#b9d5bd]">Insights</p>
         <h1 className="mt-5 max-w-3xl font-playfair text-5xl font-black sm:text-6xl">Ideas you can put to use.</h1>

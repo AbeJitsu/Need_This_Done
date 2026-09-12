@@ -44,11 +44,11 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
 
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="relative overflow-hidden border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
+      <section className="public-page-hero relative overflow-hidden border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
 
-        <div className="relative mx-auto grid max-w-7xl items-end gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:gap-20 lg:px-12">
+        <div className="relative mx-auto grid max-w-6xl items-end gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:gap-20 lg:px-12">
           <ContentSection sectionKey="header" label="Page Header">
             <div className="max-w-3xl">
                 <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
@@ -92,7 +92,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:py-24 xl:grid-cols-[.72fr_1.28fr] xl:gap-20 lg:px-12">
+      <section className="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:px-8 md:py-24 xl:grid-cols-[.72fr_1.28fr] xl:gap-20 lg:px-12">
         <div>
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">The short version</p>
           <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-5xl">Keep the open questions small.</h2>
@@ -170,7 +170,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
         </ContentSection>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-16 sm:px-8 md:pb-24 lg:px-12">
+      <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 md:pb-24 lg:px-12">
         <ContentSection sectionKey="cta" label="Call to Action">
           <>
             <div className="overflow-hidden rounded-[2rem] bg-[var(--public-dark)] p-8 text-white sm:p-12">

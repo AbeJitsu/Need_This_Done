@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
+import './public-polish.css';
 import PublicChrome from '@/components/public/PublicChrome';
 import { AuthProvider } from '@/context/AuthContext';
 import SessionProvider from '@/components/providers/SessionProvider';

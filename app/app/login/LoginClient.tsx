@@ -161,7 +161,7 @@ export default function LoginClient({ googleEnabled }: { googleEnabled: boolean 
   const labelText = isForgotPassword ? 'Account Recovery' : 'Sign In';
 
   return (
-    <section className="relative isolate overflow-hidden bg-gray-50">
+    <section className="public-login relative isolate overflow-hidden bg-[var(--public-cream)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(16,185,129,0.14),transparent_32%),radial-gradient(circle_at_85%_85%,rgba(14,165,233,0.12),transparent_32%)]" aria-hidden="true" />
 
       <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 md:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(380px,440px)] lg:gap-20 lg:py-16">

@@ -31,11 +31,11 @@ export default function PublicHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--public-ink)]/10 bg-[var(--public-cream)]/95 text-[var(--public-ink)] backdrop-blur">
-      <div className="mx-auto flex min-h-18 max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]">
+    <header className="public-header sticky top-0 z-40 border-b border-[var(--public-ink)]/10 bg-[var(--public-cream)]/95 text-[var(--public-ink)] backdrop-blur">
+      <div className="mx-auto flex min-h-[72px] max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]">
         <Link href="/" className="font-playfair text-xl font-black tracking-tight" onClick={() => setOpen(false)}>Need This Done</Link>
         <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
-          {links.map((link) => <Link key={link.href} href={isHome ? getPublicHomeHref(link.href) : link.href} aria-current={isPublicRouteCurrent(pathname, link.href) ? 'page' : undefined} className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${isPublicRouteCurrent(pathname, link.href) ? 'bg-[var(--public-soft)] text-[var(--public-ink)]' : 'text-[#40564e] hover:text-[var(--public-green)]'}`}>{link.label}</Link>)}
+          {links.map((link) => <Link key={link.href} href={isHome ? getPublicHomeHref(link.href) : link.href} aria-current={isPublicRouteCurrent(pathname, link.href) ? 'page' : undefined} className={`inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold transition ${isPublicRouteCurrent(pathname, link.href) ? 'bg-[var(--public-soft)] text-[var(--public-ink)]' : 'text-[#40564e] hover:text-[var(--public-green)]'}`}>{link.label}</Link>)}
         </nav>
         <div className="flex items-center gap-2">
           <Link href="/login" className="hidden items-center rounded-full border border-[var(--public-ink)]/20 px-4 py-2.5 text-sm font-bold text-[var(--public-ink)] transition hover:bg-[var(--public-soft)] focus-visible:ring-[#d0a94f] sm:inline-flex">Sign in</Link>

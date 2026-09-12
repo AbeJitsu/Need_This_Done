@@ -39,6 +39,7 @@ export default function ScoreBreakdown({ categories }: { categories: Category[] 
       <h2 className="text-2xl font-bold text-slate-900 mb-2">Selected signals</h2><p className="mb-6 text-sm leading-6 text-slate-600">These checks show places worth a closer look. They are limited signals, not a complete review.</p>
 
       <div className="space-y-4">
+        {categories.length === 0 && <p className="text-sm leading-6 text-slate-600">No signal details are available in this snapshot.</p>}
         {categories.map((cat) => {
           const pct = Math.round((cat.earned / cat.possible) * 100);
           return (

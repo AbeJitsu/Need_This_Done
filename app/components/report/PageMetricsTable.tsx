@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 interface PageMetric {
   url: string;
@@ -18,14 +18,25 @@ interface PageMetric {
 
 export default function PageMetricsTable({ metrics }: { metrics: PageMetric[] }) {
   const [isOpen, setIsOpen] = useState(false);
+  const tableId = useId();
+
+  if (metrics.length === 0) {
+    return (
+      <section>
+        <h2 className="text-2xl font-bold text-slate-900">Pages reviewed</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-600">No page details are available in this snapshot.</p>
+      </section>
+    );
+  }
 
   return (
     <section>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full text-left group"
+        className="flex min-h-12 items-center justify-between gap-4 w-full text-left group"
         aria-expanded={isOpen}
+        aria-controls={tableId}
       >
         <h2 className="text-2xl font-bold text-slate-900">
           Pages reviewed
@@ -40,7 +51,7 @@ export default function PageMetricsTable({ metrics }: { metrics: PageMetric[] })
       </p>
 
       {isOpen && (
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
+        <div id={tableId} role="region" aria-label="Page metrics" tabIndex={0} className="overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 text-slate-600">

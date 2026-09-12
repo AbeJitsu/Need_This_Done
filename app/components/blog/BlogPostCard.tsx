@@ -69,7 +69,7 @@ export default function BlogPostCard({ post, featured = false }: BlogPostCardPro
 
   if (featured) {
     return (
-      <Link href={`/blog/${post.slug}`} aria-label={`Read note: ${post.title}`} className="group block focus-visible:outline-none">
+      <Link href={`/blog/${post.slug}`} aria-label={`Read note: ${post.title}`} className="public-article-card group block focus-visible:outline-none">
         <article className="grid overflow-hidden rounded-[2rem] border border-[#183229]/15 bg-white shadow-xl shadow-emerald-950/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-950/15 focus-within:ring-2 focus-within:ring-[#126b4e] focus-within:ring-offset-4 md:grid-cols-[.78fr_1.22fr]">
           <div className="relative min-h-[260px] overflow-hidden bg-[#18372e] p-7 text-white sm:p-10">
             {post.featured_image && (
@@ -107,7 +107,7 @@ export default function BlogPostCard({ post, featured = false }: BlogPostCardPro
   }
 
   return (
-    <Link href={`/blog/${post.slug}`} aria-label={`Read note: ${post.title}`} className="group block h-full focus-visible:outline-none">
+    <Link href={`/blog/${post.slug}`} aria-label={`Read note: ${post.title}`} className="public-article-card group block h-full focus-visible:outline-none">
       <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-[#183229]/15 bg-white transition duration-300 hover:-translate-y-1 hover:border-[#126b4e]/40 hover:shadow-xl hover:shadow-emerald-950/10 focus-within:ring-2 focus-within:ring-[#126b4e] focus-within:ring-offset-4">
         <div className={`h-1.5 w-full ${colors.accent}`} aria-hidden="true" />
         {post.featured_image && (
