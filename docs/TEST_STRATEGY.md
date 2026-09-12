@@ -1,7 +1,7 @@
 # NeedThisDone — Test Strategy and Suite Inventory
 
 **Status:** working test contract for the private assistant foundation  
-**Last audited:** 2026-09-11
+**Last audited:** 2026-09-12
 **Progress:** [ROADMAP.md](../ROADMAP.md)  
 **Evidence:** [PROJECT_STATUS.md](PROJECT_STATUS.md) and [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
 **Build map:** [BUILD_PROGRESS_MAP.md](BUILD_PROGRESS_MAP.md)
@@ -73,10 +73,22 @@ adapter is wired.
 | `npm run test:hermes-mcp:full` | Full local worker-rehearsal diagnostic | Runs the local database gate first, then adds signed worker status, terminal workflow polling, and the semantic-memory projection checkpoint; requires explicit approved-rehearsal environment values |
 | `npm test` in `bridge/` | Private bridge suite | Bridge logic and worker safety; macOS-only assertions need macOS evidence |
 
-The latest recorded application gate passed 70 deterministic unit/API files
-with 370 tests and 6 accessibility files with 60 tests. The database/RLS
-suites are intentionally excluded from the fast unit command and belong to
-`verify:database`; they are not missing.
+The 2026-09-12 audit verified the application gate from a clean checkout:
+`npm run test:unit` passes 400 tests across 75 files, and `npm run test:a11y`
+passes 60 tests across 6 files. The fast unit command explicitly excludes all
+database/RLS suites, including `lib/mcp-access-tokens-rls.test.ts`; those tests
+belong to `verify:database` and are not silently counted as passing unit tests.
+The unit suite does not contact Supabase. The MCP HTTP tests mock the
+authentication module so a clean checkout does not require unrelated Supabase
+configuration just to test the HTTP contract.
+
+The wider repository inventory contains 103 test files and 567 declared test
+cases when browser, database, and bridge files are included. These numbers are
+not a quality score: some tests protect the public website, some protect
+private security boundaries, some verify retired surfaces stay absent, and
+some are environment-specific diagnostics. Browser matrix skips and the
+local-only MCP diagnostic are intentional and do not count as proof when their
+required environment is unavailable.
 
 The Hermes vertical slice has an intentional environment order:
 
@@ -222,6 +234,10 @@ These suites are intentionally excluded from the fast unit command and run via
 | `e2e/prospecting-workspace.spec.ts` | Prospect review/suppression UI | Protects operator controls | Outreach |
 | `e2e/retained-core-smoke.spec.ts` | Public/mobile smoke matrix | Catches route/overflow/recovery regressions | Hosted/customer results |
 
+`lib/system-progress.test.ts` also protects the `/system` page's code-owned
+proof-gate ordering and evidence targets. It is a small contract test rather
+than a browser test, so it does not prove visual layout or visitor behavior.
+
 ## Bridge/worker inventory
 
 | File | What it protects | Why important | Not tested |
@@ -229,6 +245,10 @@ These suites are intentionally excluded from the fast unit command and run via
 | `bridge/test/bridge.test.mjs` | Signed requests, URL safety, rehearsal config, launchd rendering | Protects private outbound boundary | macOS launchd on Linux |
 | `bridge/test/mac-worker.test.mjs` | Env parsing, activation confirmation, local/HTTPS modes | Prevents accidental activation/shell evaluation | Running the selected worker host |
 | `bridge/test/openclaw-proof.test.mjs` | Gateway handshake, task evidence, model usage, frozen-plan/no-delivery behavior | Proves replaceable non-sender worker | Live credentials/external effects |
+
+`supabase/tests/security-hardening.test.ts` is the SQL-level companion to the
+application security tests. It verifies the disposable local Supabase schema
+and security posture directly and runs only through the database gate.
 
 ## Consolidation rules
 

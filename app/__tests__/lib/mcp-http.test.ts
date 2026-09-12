@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('server-only', () => ({}));
+vi.mock('@/lib/mcp-auth', () => ({
+  authenticateMcpRequest: vi.fn(),
+}));
 
 import { createMcpRequestHandler, MCP_PROTOCOL_VERSION } from '@/lib/mcp-http';
 

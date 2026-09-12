@@ -18,6 +18,7 @@ const retainedMarkdown = [
   'docs/PROJECT_STATUS.md',
   'docs/PUBLIC_LANGUAGE_AUDIT.md',
   'docs/RELEASE_EVIDENCE.md',
+  'docs/TEST_AUDIT_2026-09-12.md',
   'docs/TEST_STRATEGY.md',
   'docs/github-push-test.md',
   'docs/launch/LAUNCH_CHECKLIST.md',

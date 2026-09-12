@@ -112,6 +112,7 @@ The public [`/system` case study](app/app/system/page.tsx) is a visual explanati
 - [Release evidence](docs/RELEASE_EVIDENCE.md) — what is verified, pending, or not claimable.
 - [Build progress map](docs/BUILD_PROGRESS_MAP.md) — the checklist behind the `/system` page.
 - [Test strategy](docs/TEST_STRATEGY.md) — what each test layer proves and does not prove.
+- [Test audit](docs/TEST_AUDIT_2026-09-12.md) — the latest verified test inventory, results, and follow-up gaps.
 - [Launch checklist](docs/launch/LAUNCH_CHECKLIST.md) — separately approved hosted-promotion controls.
 - [Supabase guide](supabase/README.md) — schema and durable-data boundaries.
 
