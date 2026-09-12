@@ -1085,7 +1085,7 @@ Blog Markdown Content — Reading Experience
 }
 
 .system-hero__title {
-  max-width: 10ch;
+  max-width: 15ch;
   margin: 1.35rem 0 0;
   color: white;
   font-family: var(--font-playfair), Georgia, serif;
@@ -1775,6 +1775,12 @@ Blog Markdown Content — Reading Experience
   gap: 1rem;
 }
 
+.system-rail__problem-description {
+  margin: 0.35rem 0 0;
+  color: var(--system-muted);
+  line-height: 1.65;
+}
+
 .system-rail__detail-label {
   margin: 0;
   color: var(--system-green, #126b4e);
@@ -1815,6 +1821,10 @@ Blog Markdown Content — Reading Experience
 
 .system-plain-flow .system-rail__card {
   min-height: 11.5rem;
+}
+
+.system-technical-flow {
+  margin-top: 2.25rem;
 }
 
 .system-rail__description {

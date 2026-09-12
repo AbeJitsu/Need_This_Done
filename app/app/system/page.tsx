@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
-import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 import { SYSTEM_PROOF_LANES } from "@/lib/system-progress";
 import {
   ArrowRight,
@@ -19,22 +18,23 @@ import {
 } from "lucide-react";
 
 const nextStep = PUBLIC_ROUTE_STAGES["/system"].secondary;
-const technicalSectionLabel = "Technical details for curious readers";
+const technicalSectionLabel = "Technical map";
+const systemDescription =
+  "See how NeedThisDone turns a conversation into approved, trackable work with a reviewable result.";
 
 export const metadata: Metadata = {
   title: "The System Behind NeedThisDone | NeedThisDone",
-  description:
-    PUBLIC_CORE_PROMISE,
+  description: systemDescription,
   alternates: { canonical: "/system" },
   openGraph: {
     title: "The System Behind NeedThisDone | NeedThisDone",
-    description: PUBLIC_CORE_PROMISE,
+    description: systemDescription,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "The System Behind NeedThisDone | NeedThisDone",
-    description: PUBLIC_CORE_PROMISE,
+    description: systemDescription,
   },
 };
 
@@ -53,6 +53,7 @@ type RailStep = {
   number: string;
   label: string;
   title: string;
+  problem: string;
   plainEnglish: string;
   description: string;
   icon: IconName;
@@ -98,278 +99,172 @@ function cx(...classes: Array<string | false | undefined>) {
 const systemStages = [
   {
     number: "01",
-    label: "Name the outcome",
-    title: "Goal",
-    description:
-      "Start with a clear goal. Keep it with the task so the purpose stays visible.",
+    label: "Define",
+    title: "Goal and scope",
+    description: "Make the work clear.",
     icon: "target",
   },
   {
     number: "02",
-    label: "Decide the boundary",
-    title: "Owner approval",
-    description:
-      "The owner sees the scope, cost, and expected result. Work needs approval before it starts.",
+    label: "Approve",
+    title: "Owner decision",
+    description: "Keep the decision yours.",
     icon: "shield",
     highlighted: true,
   },
   {
     number: "03",
-    label: "Move one piece",
-    title: "Private execution",
-    description:
-      "A configured worker host picks up only approved work. This public website cannot send it commands.",
+    label: "Execute",
+    title: "Private worker",
+    description: "Run only what was approved.",
     icon: "lock",
   },
   {
     number: "04",
-    label: "Bring back evidence",
-    title: "Reviewable proof",
-    description:
-      "The owner can review the result, cost, and unfinished work in one private record.",
+    label: "Review",
+    title: "Evidence and next move",
+    description: "See what happened.",
     icon: "git",
   },
 ] as const;
 
-const remoteFlowSteps: readonly RailStep[] = [
+const coreSteps: readonly RailStep[] = [
   {
     number: "01",
-    label: "Your request",
-    title: "A clear request",
+    label: "Define",
+    title: "Make the work specific",
+    problem:
+      "A broad request can produce a broad answer, not a clear next action.",
     plainEnglish:
-      "You tell us what you want to accomplish, in your own words.",
+      "NeedThisDone turns the outcome into one bounded task.",
     description:
-      "You describe the outcome you want. NeedThisDone turns it into a bounded request and keeps the purpose visible before any work begins.",
+      "The request keeps its owner, goal, scope, and summary before execution.",
     icon: "message",
-    status: "Request · scope · summary",
   },
   {
     number: "02",
-    label: "Secure handoff",
-    title: "A secure doorway",
+    label: "Approve",
+    title: "Keep the decision yours",
+    problem: "A recommendation is not permission to act.",
     plainEnglish:
-      "You send the request through one protected connection without needing to understand the machinery behind it.",
+      "You review the plan and approve it before work starts.",
     description:
-      "Your NeedThisDone site login identifies the owner, and Account Settings creates an owner-scoped MCP credential for the client. The client sends that bearer credential to one stable HTTPS doorway; the raw token is shown only once. The site login and MCP credential are separate layers, and the client does not need to open the website for each call.",
+      "Owner-scoped authentication and a durable approval record gate the workflow.",
     icon: "lock",
-    status: "Owner-scoped bearer · three tools",
+    highlighted: true,
   },
   {
     number: "03",
-    label: "Durable record",
-    title: "A trusted record",
+    label: "Execute",
+    title: "Do the agreed work",
+    problem: "A chat has no private computer that can safely carry out the task.",
     plainEnglish:
-      "One record keeps track of what you asked for, what was approved, and what happened.",
+      "A configured worker handles only the approved task in an isolated workspace.",
     description:
-      "Supabase stores the owner-scoped credential hash, durable workflow, approval, status, and result under RLS. Redis carries temporary queue signals, leases, locks, heartbeats, and deduplication; it is not part of MCP authentication and is never durable truth.",
-    icon: "database",
-    status: "Durable truth + temporary coordination",
+      "Hermes coordinates the workflow; OpenClaw uses its configured Codex runtime and returns changed files and checks.",
+    icon: "code",
   },
   {
     number: "04",
-    label: "Workflow coordination",
-    title: "A coordinator",
+    label: "Review",
+    title: "Bring back a reviewable result",
+    problem: "When the conversation ends, it can be hard to tell what happened.",
     plainEnglish:
-      "A coordinator keeps the work moving and passes along only what was approved.",
+      "Your private workspace shows status, evidence, blockers, and the next decision.",
     description:
-      "Hermes runs on the configured computer that owns its credentials and can reach the control plane. That can be a local workstation, a private server, or a cloud machine. Our MacBook Pro and Mac mini are current implementation examples, not requirements.",
-    icon: "workflow",
-    status: "Local or cloud · configuration required",
-  },
-  {
-    number: "05",
-    label: "Private execution",
-    title: "A private worker",
-    plainEnglish:
-      "A private worker does the agreed work in a contained workspace and brings back proof of what changed.",
-    description:
-      "OpenClaw is the replaceable coding worker. It can run locally or in the cloud through its configured Codex runtime, uses an isolated worktree, runs checks, and returns changed files, a commit, and evidence.",
-    icon: "code",
-    status: "Separate worker authentication",
-  },
-  {
-    number: "06",
-    label: "Reviewable result",
-    title: "Result in your workspace",
-    plainEnglish:
-      "You open your private workspace to see the status, evidence, result, and next decision.",
-    description:
-      "Hermes stores the structured result in Supabase. Your authenticated workspace shows a compact summary, evidence, blockers, and the next decision. The /system page is an optional visual explanation.",
+      "Supabase keeps the durable record. GitHub holds code changes and commit evidence.",
     icon: "git",
-    status: "Evidence path · private workspace",
   },
 ];
 
-const architectureSteps: readonly RailStep[] = [
+const technicalSteps: readonly RailStep[] = [
   {
     number: "01",
-    label: "Request boundary",
-    title: "Request interface",
+    label: "Secure entry",
+    title: "MCP + Next.js",
+    problem: "A request needs a small, authenticated front door.",
     plainEnglish:
-      "This is where your request enters the system.",
+      "Only an identified owner should be able to start or check work.",
     description:
-      "The replaceable entry point where an owner submits a request. It keeps the request separate from execution and approval, and can use the same owner-scoped MCP/API contract from an approved interface. Remote access is designed but not yet verified.",
-    icon: "message",
-    status: "Owner-scoped contract · connection pending",
-  },
-  {
-    number: "02",
-    label: "Small authenticated doorway",
-    title: "MCP facade",
-    plainEnglish:
-      "This is the locked front door that checks who is making the request.",
-    description:
-      "The Model Context Protocol/API endpoint requires a bearer credential, resolves the owner and credential record, and exposes only start_workflow, get_workflow_status, and list_workflows. Raw tokens are shown once from Account Settings; the local route, handshake, authentication seam, owner-context propagation, and discovery contract are built, while secure hosted client access is still pending.",
+      "The MCP/API facade accepts an owner-scoped bearer credential and exposes three tools. The local route and authentication seam are built; hosted client access is pending.",
     icon: "lock",
     status: "Owner boundary built · hosted reachability pending",
   },
   {
-    number: "03",
-    label: "Internet-facing control plane",
-    title: "Next.js on Vercel",
-    plainEnglish:
-      "This is the website and server boundary that presents the private experience.",
-    description:
-      "Hosts the authenticated browser and server-side API boundary. It records policy decisions and never becomes the always-on worker. The hosted environment must be proven separately from local development.",
-    icon: "server",
-    status: "Application boundary exists · hosted proof pending",
-  },
-  {
-    number: "04",
-    label: "Workflow coordination",
-    title: "Hermes",
-    plainEnglish:
-      "This is the coordinator that turns an approved request into trackable work.",
-    description:
-      "Validates the request, creates and tracks the workflow, assigns approved work, and returns a reviewable result. The three-tool contract is built, but the default MCP dispatcher is deliberately unavailable until durable Hermes persistence is connected.",
-    icon: "workflow",
-    highlighted: true,
-    status: "Contract built · durable dispatcher pending",
-  },
-  {
-    number: "05",
-    label: "Durable source of truth",
+    number: "02",
+    label: "Durable truth",
     title: "Supabase",
+    problem: "A chat thread is not a reliable work record.",
     plainEnglish:
-      "This is the durable record the system can rely on later.",
+      "The request, decision, status, and result need to stay together.",
     description:
-      "Stores authentication, owner-scoped MCP token hashes, plans, approvals, tasks, costs, results, and private assets with RLS. Raw MCP tokens never enter durable storage. The local real-Supabase gate must pass before the hosted Supabase proof.",
+      "Supabase stores owner-scoped workflows, approvals, costs, results, and assets under RLS. Raw MCP tokens are never stored; local integration proof is next.",
     icon: "database",
     status: "Application boundary exists · local-first proof next",
   },
   {
-    number: "06",
-    label: "Temporary coordination",
-    title: "Redis",
+    number: "03",
+    label: "Coordination",
+    title: "Hermes + Redis",
+    problem: "Approved work needs to keep moving between steps.",
     plainEnglish:
-      "This handles short-lived signals that help work move without becoming the official record.",
+      "Hermes directs the workflow. Redis carries short-lived signals such as queues, locks, leases, and heartbeats.",
     description:
-      "Carries short-lived cache, locks, deduplication, leases, heartbeats, and wake-up signals. It is not durable workflow truth, is not an authentication store, and is not yet wired as the task queue.",
-    icon: "server",
-    status: "Client active · workflow coordination pending",
+      "Hermes owns workflow state and result return. Redis is coordination only, not authentication or durable truth. Durable Hermes persistence and queue wiring are pending.",
+    icon: "workflow",
+    status: "Dispatcher and queue wiring pending",
   },
   {
-    number: "07",
-    label: "Semantic retrieval aid",
-    title: "Upstash Vector",
+    number: "04",
+    label: "Private execution",
+    title: "Worker host + OpenClaw",
+    problem: "Real work needs a private place to run.",
     plainEnglish:
-      "This is an optional memory aid that helps find relevant context.",
+      "A configured local, private, or cloud machine performs only approved work.",
     description:
-      "Receives selected, provenance-bearing findings after durable state exists. It helps retrieve context; it is not an authentication boundary and never overrides Supabase or GitHub.",
-    icon: "database",
-    status: "Adapter built · live index and projection pending",
-  },
-  {
-    number: "08",
-    label: "Always-on private host",
-    title: "Worker host",
-    plainEnglish:
-      "This is the private computer that can perform approved work without being exposed to the internet.",
-    description:
-      "The worker host can be a local computer, a private server, or a cloud machine. It should poll outward, expose no public listener, and act only on a frozen approval. The MacBook Pro and Mac mini are current examples; neither live worker connection is complete here.",
-    icon: "server",
-    status: "Local or cloud · activation pending",
-  },
-  {
-    number: "09",
-    label: "Replaceable coding worker",
-    title: "OpenClaw with Codex runtime",
-    plainEnglish:
-      "This is the replaceable worker that does the actual coding work.",
-    description:
-      "OpenClaw is the coding worker. Its Codex agent runtime can inspect, edit, test, and explain changes through a correctly configured local or cloud Gateway, then return files, a commit, and review evidence. Standalone Codex CLI operation is not part of this design.",
+      "OpenClaw is the replaceable coding worker. It uses a configured Codex runtime, an isolated worktree, and safety checks, then returns files, a commit, and evidence. Live activation is pending.",
     icon: "code",
     status: "Safety contracts built · live task pending",
   },
   {
-    number: "10",
-    label: "Code source of truth",
-    title: "GitHub",
+    number: "05",
+    label: "Review and context",
+    title: "GitHub + Vector memory",
+    problem: "A result needs evidence and useful context without mixing up sources.",
     plainEnglish:
-      "This is where code changes are recorded so a person can review them.",
+      "GitHub records code changes for review. Optional vector memory helps find selected context.",
     description:
-      "Holds the branch, diff, commit, and pull request for code work. A worker never makes a merge or deployment decision by itself.",
+      "GitHub holds branches, diffs, commits, and pull requests. Upstash Vector receives selected provenance-bearing findings; it never replaces Supabase or GitHub. Live projection is pending.",
     icon: "git",
-    status: "Repository boundary active · coding rehearsal pending",
-  },
-  {
-    number: "11",
-    label: "Model route",
-    title: "OpenRouter",
-    plainEnglish:
-      "This chooses which model route helps plan the work.",
-    description:
-      "Provides the application-side planner/model route. An allowed free route is preferred; a paid route remains a separate owner approval.",
-    icon: "workflow",
-    status: "Policy boundary built · live route proof pending",
+    status: "Repository active · vector projection pending",
   },
 ];
-
-const proofItems = [
-  "Local MCP route, handshake, owner-scoped authentication, and tool contract",
-  "One-time raw-token display with redacted account credential management",
-  "Supabase-backed plans, approvals, costs, results, and RLS boundaries",
-  "Redis client for cache, rate limits, deduplication, and health checks",
-  "Server-only vector-memory adapter with namespaced provenance metadata",
-  "Signed worker bridge and fail-closed OpenClaw coding-worker safety contracts",
-] as const;
-
-const nextItems = [
-  "Run the local migration 113/RLS and account-credential proof",
-  "Pass the real local-Supabase-first diagnostic",
-  "Pass the hosted read-only Supabase preflight",
-  "Connect the authenticated MCP owner context to durable Hermes workflow records",
-  "Wire Redis into workflow queue, lease, and heartbeat coordination",
-  "Run the approved worker-host proof, using the MacBook Pro or Mac mini as current examples",
-  "Add a safe end-to-end vector projection probe",
-] as const;
 
 const summaryComparison = [
   {
     number: "01",
     icon: "message",
-    kicker: "A one-off request",
-    title: "A useful answer",
+    kicker: "The problem",
+    title: "Chat alone",
     description:
-      "A request can receive an answer, plan, or result. The request itself remains the main place to follow the work.",
+      "A conversation can be useful and still leave the follow-through to you.",
     points: [
-      "A one-off request may not create one durable workflow record",
-      "Approvals, queues, long-running execution, and evidence remain separate concerns",
-      "You still have to coordinate what happens next",
+      "The plan can remain inside a thread",
+      "Approval and execution happen somewhere else",
+      "Status and evidence are not in one work record",
     ],
   },
   {
     number: "02",
     icon: "workflow",
-    kicker: "NeedThisDone with durable follow-through",
-    title: "A coordinated system that carries the work forward",
+    kicker: "The answer",
+    title: "NeedThisDone",
     description:
-      "NeedThisDone puts a small authenticated control plane around the request so the work can continue after the initial exchange.",
+      "NeedThisDone adds a controlled work path around the conversation.",
     points: [
-      "Supabase keeps the goal, approval, status, result, and ownership durable",
-      "Redis coordinates short-lived queues, leases, locks, heartbeats, and deduplication",
-      "Vector memory retrieves selected context without replacing durable truth",
-      "Hermes and configured local or cloud workers execute the approved work and return evidence",
+      "One owner-scoped request keeps its goal and decision",
+      "Approved work moves through a private coordinator and worker",
+      "The result returns with evidence, blockers, and a next decision",
     ],
   },
 ] as const;
@@ -393,13 +288,13 @@ function SystemMap() {
     <figure className="system-map-shell">
       <div className="system-map-shell__header">
         <div>
-          <p className="system-map-shell__kicker">Four controls, one handoff</p>
+          <p className="system-map-shell__kicker">The path</p>
           <figcaption className="system-map-shell__caption">
-            What a controlled next move looks like
+            From request to proof
           </figcaption>
         </div>
         <span className="system-map-shell__status">
-          <span aria-hidden="true" /> guardrails on
+          <span aria-hidden="true" /> approval first
         </span>
       </div>
       <ol className="system-map" aria-label="The four stages of a NeedThisDone work move">
@@ -477,8 +372,12 @@ function SystemRail({
               {step.status && <p className="system-rail__status">{step.status}</p>}
             </div>
             <div className="system-card-detail system-rail__detail">
+              <div className="system-rail__problem">
+                <p className="system-rail__detail-label">Problem</p>
+                <p className="system-rail__problem-description">{step.problem}</p>
+              </div>
               <div className="system-rail__plain">
-                <p className="system-rail__detail-label">Plain English</p>
+                <p className="system-rail__detail-label">What changes</p>
                 <p className="system-rail__plain-description">{step.plainEnglish}</p>
               </div>
               <div className="system-rail__technical">
@@ -508,15 +407,13 @@ export default function SystemPage() {
         <div className="system-hero__inner">
           <div className="system-hero__grid">
             <div className="system-hero__copy">
-              <SectionLabel light>A private system for follow-through</SectionLabel>
+              <SectionLabel light>Why this exists</SectionLabel>
               <h1 id="system-hero-heading" className="system-hero__title">
-                Important work, kept moving.
+                Chat can start the work. NeedThisDone carries it through.
               </h1>
               <p className="system-hero__lead">
-                We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.
-              </p>
-              <p className="system-hero__support">
-                NeedThisDone keeps requests, approvals, execution, and results together. Every card starts with a plain-English explanation, then puts the technical detail underneath so you can scan quickly or go deeper.
+                A chat can help you think through a task. Important work also needs
+                a decision, a place to run, and proof.
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
@@ -533,20 +430,6 @@ export default function SystemPage() {
                   <ArrowRight aria-hidden="true" />
                 </a>
               </div>
-              <dl className="system-hero__stats">
-                <div>
-                  <dt>15–20 min</dt>
-                  <dd>owner check-in</dd>
-                </div>
-                <div>
-                  <dt>3 tools</dt>
-                  <dd>small MCP contract</dd>
-                </div>
-                <div>
-                  <dt>1 boundary</dt>
-                  <dd>owner approval first</dd>
-                </div>
-              </dl>
             </div>
             <SystemMap />
           </div>
@@ -554,150 +437,21 @@ export default function SystemPage() {
       </section>
 
       <section
-        id="plain-language"
+        id="difference"
         className="system-section system-section--light"
-        aria-labelledby="remote-flow-heading"
+        aria-labelledby="difference-heading"
       >
         <div className="system-section__inner system-section__inner--narrow">
           <div className="system-section__intro">
-            <SectionLabel>Start here · plain English first</SectionLabel>
-            <h2 id="remote-flow-heading" className="system-heading">
-              The simple version of how it works.
+            <SectionLabel>The problem</SectionLabel>
+            <h2 id="difference-heading" className="system-heading">
+              What chat alone leaves unresolved.
             </h2>
             <p className="system-section__lead">
-              You describe the outcome. NeedThisDone gets agreement on the work,
-              moves only what was approved, and brings the result back to your
-              private workspace. The first sentence in each card is the quick
-              explanation; the technical detail follows in the same card.
+              Chat is good at thinking with you. It is not a complete path for work
+              that needs ownership, follow-through, and proof.
             </p>
           </div>
-          <SystemRail steps={remoteFlowSteps} className="system-remote-flow" />
-        </div>
-      </section>
-
-      <section
-        id="architecture"
-        className="system-section system-section--light"
-        aria-labelledby="architecture-heading"
-      >
-        <div className="system-section__inner">
-          <div className="system-two-column system-two-column--architecture">
-            <div className="system-section__intro">
-              <SectionLabel>{technicalSectionLabel}</SectionLabel>
-              <h2 id="architecture-heading" className="system-heading system-heading--compact">
-                What is happening behind the scenes.
-              </h2>
-              <p className="system-section__lead">
-                The cards below keep the plain-English explanation first and the
-                named technical layer second. You can stop after the first
-                sentence and still understand the path.
-              </p>
-            </div>
-            <figure>
-              <SystemRail steps={architectureSteps} className="system-rail--architecture" />
-              <figcaption className="system-figure-caption">
-                NeedThisDone and Supabase hold the durable record. The private
-                worker host performs approved work. GitHub holds code changes for review.
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="status"
-        className="system-section system-section--sand"
-        aria-labelledby="status-heading"
-      >
-        <div className="system-section__inner system-section__inner--narrow">
-          <div className="system-section__intro">
-            <SectionLabel>Where the project stands</SectionLabel>
-            <h2 id="status-heading" className="system-heading system-heading--compact">
-              Show what exists before making promises.
-            </h2>
-            <p className="system-section__lead">
-              The repository contains a meaningful control-plane foundation,
-              but the connections are not all live yet. This page stays honest
-              about what is built, what has only been contract-tested, and what
-              still needs a local, hosted, or worker-host proof.
-            </p>
-          </div>
-          <div className="system-proof-lanes" aria-label="System proof progress">
-            {SYSTEM_PROOF_LANES.map((lane) => (
-              <article key={lane.number} className="system-proof-lane">
-                <div className="system-proof-lane__topline">
-                  <span className="system-proof-lane__number">{lane.number}</span>
-                  <span className="system-proof-lane__status">{lane.status}</span>
-                </div>
-                <h3>{lane.title}</h3>
-                <p>{lane.description}</p>
-                <p className="system-proof-lane__evidence">Evidence: {lane.evidence}</p>
-              </article>
-            ))}
-          </div>
-          <div className="system-status-grid">
-            <article className="system-status-card">
-              <div className="system-card-identity system-status-card__identity">
-                <div className="system-status-card__topline">
-                  <span className="system-status-card__number">01</span>
-                  <span className="system-status-card__icon">
-                    <StepIcon name="shield" />
-                  </span>
-                </div>
-                <p className="system-card-kicker">In the repository</p>
-                <h3>Control-plane foundation</h3>
-              </div>
-              <div className="system-card-detail system-status-card__detail">
-                <ul>
-                  {proofItems.map((item) => (
-                    <li key={item}>
-                      <Check aria-hidden="true" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <span className="system-status-card__connector" aria-hidden="true">
-                <ArrowRight />
-              </span>
-            </article>
-            <article className="system-status-card system-status-card--dark">
-              <div className="system-card-identity system-status-card__identity">
-                <div className="system-status-card__topline">
-                  <span className="system-status-card__number">02</span>
-                  <span className="system-status-card__icon">
-                    <StepIcon name="code" />
-                  </span>
-                </div>
-                <p className="system-card-kicker">Next proof</p>
-                <h3>A bounded coding handoff</h3>
-              </div>
-              <div className="system-card-detail system-status-card__detail">
-                <ul>
-                  {nextItems.map((item) => (
-                    <li key={item}>
-                      <span className="system-status-card__dot" aria-hidden="true" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="system-closing" aria-labelledby="closing-heading">
-        <div className="system-closing__inner">
-          <SectionLabel>In summary · why this is different</SectionLabel>
-          <h2 id="closing-heading" className="system-heading">
-            An answer can start the work. NeedThisDone carries it forward.
-          </h2>
-          <p>
-            Even when a tool can use other tools, it does not automatically become
-            a durable, approval-gated operating system. NeedThisDone adds the
-            records, coordination, memory, workers, and evidence around the work.
-          </p>
           <div className="system-difference-grid system-closing__comparison">
             {summaryComparison.map((item, index) => (
               <article
@@ -736,9 +490,90 @@ export default function SystemPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section
+        id="plain-language"
+        className="system-section system-section--light"
+        aria-labelledby="core-flow-heading"
+      >
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
+            <SectionLabel>How the gaps are closed</SectionLabel>
+            <h2 id="core-flow-heading" className="system-heading">
+              Four problems. One controlled path.
+            </h2>
+            <p className="system-section__lead">
+              Each card names the problem first, then shows what changes and how
+              the technical pieces support it.
+            </p>
+          </div>
+          <SystemRail steps={coreSteps} className="system-plain-flow system-core-flow" />
+        </div>
+      </section>
+
+      <section
+        id="architecture"
+        className="system-section system-section--light"
+        aria-labelledby="architecture-heading"
+      >
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
+            <SectionLabel>{technicalSectionLabel}</SectionLabel>
+            <h2 id="architecture-heading" className="system-heading">
+              The pieces have separate jobs.
+            </h2>
+            <p className="system-section__lead">
+              The model and worker can change. The owner boundary and durable
+              record stay explicit.
+            </p>
+          </div>
+          <SystemRail steps={technicalSteps} className="system-plain-flow system-technical-flow" />
+        </div>
+      </section>
+
+      <section
+        id="status"
+        className="system-section system-section--sand"
+        aria-labelledby="status-heading"
+      >
+        <div className="system-section__inner system-section__inner--narrow">
+          <div className="system-section__intro">
+            <SectionLabel>Proof, not promises</SectionLabel>
+            <h2 id="status-heading" className="system-heading system-heading--compact">
+              What is built, and what still needs proof.
+            </h2>
+            <p className="system-section__lead">
+              The foundation is in the repository. Local, hosted, and worker
+              connections advance only after their own checks pass.
+            </p>
+          </div>
+          <div className="system-proof-lanes" aria-label="System proof progress">
+            {SYSTEM_PROOF_LANES.map((lane) => (
+              <article key={lane.number} className="system-proof-lane">
+                <div className="system-proof-lane__topline">
+                  <span className="system-proof-lane__number">{lane.number}</span>
+                  <span className="system-proof-lane__status">{lane.status}</span>
+                </div>
+                <h3>{lane.title}</h3>
+                <p>{lane.description}</p>
+                <p className="system-proof-lane__evidence">Evidence: {lane.evidence}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="system-closing" aria-labelledby="closing-heading">
+        <div className="system-closing__inner">
+          <SectionLabel>Next step</SectionLabel>
+          <h2 id="closing-heading" className="system-heading">
+            Start with one outcome.
+          </h2>
           <p>
-            Share one clear outcome when you are ready, and the first bounded
-            piece of work can be defined before anything runs.
+            Bring one clear result you want. The first step is to define a
+            bounded piece of work.
           </p>
           <div className="system-closing__actions">
             <Link href="/contact" className="system-button system-button--green">

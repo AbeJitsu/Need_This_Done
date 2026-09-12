@@ -1,9 +1,19 @@
 # NeedThisDone — Project Status
 
 **Branch:** `feature/system-page-plain-english-2026-09-11` (branched from `dev` at `c0d4cdedbe2162bb2c8e965ecda009d31eaf6394`)
-**Last updated:** 2026-09-11
+**Last updated:** 2026-09-12
 
 ## Latest change
+
+- On 2026-09-12, the public `/system` page was rewritten around the problem
+  chat alone leaves unresolved. The page now uses one concise comparison, four
+  problem/solution cards, a five-card technical map, and the four proof lanes.
+  The duplicate status checklist, repeated closing comparison, and sentence
+  describing the page as part of the result path were removed. Each explanatory
+  card names the problem, what changes, and the technical detail. This remains a
+  presentation and public-copy change only; it adds no workflow, API, database,
+  authentication, worker, or deployment behavior. Focused copy, lint, and
+  type-check checks pass; the full code gate and browser recheck remain pending.
 
 - On 2026-09-11, the public `/system` page was reorganized so its workflow
   and technical-layer cards lead with a short plain-English explanation and

@@ -22,7 +22,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Contract',
     state: 'built',
     status: 'Built',
-    description: 'Schemas, owner-scoped MCP credentials, transport, authentication seam, safety rules, and tests agree on the small public boundary.',
+    description: 'The request boundary, authentication seam, safety rules, and tests agree on the small public contract.',
     evidence: 'Token, auth, API, contract, and route protocol tests',
   },
   {
@@ -30,7 +30,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Local control plane',
     state: 'next-proof',
     status: 'Next proof',
-    description: 'Disposable local Supabase must apply migration 113 and pass RLS first, then MCP must create and read an approval-gated durable workflow.',
+    description: 'Next, prove an approval-gated workflow against real local Supabase.',
     evidence: 'npm run verify:database; npm run test:hermes-mcp:local',
   },
   {
@@ -38,7 +38,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Hosted control plane',
     state: 'pending',
     status: 'Pending',
-    description: 'Vercel, hosted Supabase, Redis, and secure remote request access must pass a separate read-only preflight.',
+    description: 'Then prove Vercel, Supabase, Redis, and remote access together.',
     evidence: 'npm run test:hermes-mcp:hosted',
   },
   {
@@ -46,7 +46,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     title: 'Worker execution',
     state: 'pending',
     status: 'Pending',
-    description: 'A correctly configured local or cloud worker host must prove Hermes can claim work and OpenClaw can return a reviewable GitHub result.',
+    description: 'Finally, prove a private worker can complete approved work and return evidence.',
     evidence: 'Approved worker-host rehearsal with signed bridge and commit evidence',
   },
 ] as const;

@@ -51,27 +51,27 @@ describe('vision-first public journey', () => {
   it('keeps the system case study on purposeful route exits', () => {
     const system = source('app/system/page.tsx');
     const sitemap = source('app/sitemap.ts');
-    expect(system).toContain('A private system for follow-through');
-    expect(system).toContain('Important work, kept moving.');
-    expect(system).toContain('We are building a private coordination system that turns a goal into a clear plan, asks for approval, and brings back the result.');
-    expect(system).toContain('NeedThisDone keeps requests, approvals, execution, and results together.');
-    expect(system).toContain('Every card starts with a plain-English explanation');
-    expect(system).toContain('The simple version of how it works.');
-    expect(system).toContain('What is happening behind the scenes.');
-    expect(system).toContain('Plain English');
+    expect(system).toContain('Why this exists');
+    expect(system).toContain('Chat can start the work. NeedThisDone carries it through.');
+    expect(system).toContain('What chat alone leaves unresolved.');
+    expect(system).toContain('Four problems. One controlled path.');
+    expect(system).toContain('The pieces have separate jobs.');
+    expect(system).toContain('What is built, and what still needs proof.');
+    expect(system).toContain('Problem');
+    expect(system).toContain('What changes');
     expect(system).toContain('Technical detail');
-    expect(system).toContain('Your authenticated workspace shows a compact summary');
-    expect(system).toContain('title: "Upstash Vector"');
-    expect(system).toContain('An answer can start the work. NeedThisDone carries it forward.');
-    expect(system).toContain('Supabase keeps the goal, approval, status, result, and ownership durable');
+    expect(system).toContain('Your private workspace shows status, evidence, blockers, and the next decision.');
+    expect(system).toContain('title: "GitHub + Vector memory"');
+    expect(system).toContain('Start with one outcome.');
+    expect(system).not.toContain('optional visual explanation');
     expect(system).toContain('href="/contact"');
     expect(system).toContain('Inspect the implementation');
     expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');
     expect(system).not.toMatch(/href=["']#/);
-    expect(system).not.toMatch(/ChatGPT|Claude|chatbot|\bchat\b/i);
+    expect(system).not.toMatch(/ChatGPT|Claude|chatbot/i);
     expect(system).toContain('alternates: { canonical: "/system" }');
     expect(sitemap).toContain("{ path: '/system'");
-    for (const stage of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
+    for (const stage of ['Goal and scope', 'Owner decision', 'Private worker', 'Evidence and next move']) {
       expect(system).toContain(`title: "${stage}"`);
     }
   });

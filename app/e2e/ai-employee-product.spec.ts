@@ -565,7 +565,7 @@ test('interior public pages hand off to the next journey step', async ({ page },
   }
 });
 
-test('/system explains one model-agnostic operating path and its four controls', async ({ page }, testInfo) => {
+test('/system explains the problem chat leaves behind and the controlled path around it', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'The dedicated system-page contract runs in the desktop public project.');
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -577,30 +577,28 @@ test('/system explains one model-agnostic operating path and its four controls',
 
   expect(response?.ok()).toBe(true);
   const main = page.getByRole('main');
-  await expect(main.getByRole('heading', { level: 1, name: 'Important work, kept moving.' })).toBeVisible();
+  await expect(main.getByRole('heading', { level: 1, name: 'Chat can start the work. NeedThisDone carries it through.' })).toBeVisible();
   await expect(main.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
   await expect(main.getByRole('link', { name: 'Inspect the implementation', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done/tree/dev');
   await expect(main.locator('.system-map__stage')).toHaveCount(4);
-  await expect(main.locator('.system-remote-flow > .system-rail__item')).toHaveCount(6);
+  await expect(main.locator('.system-core-flow > .system-rail__item')).toHaveCount(4);
+  await expect(main.locator('.system-technical-flow > .system-rail__item')).toHaveCount(5);
   await expect(main.locator('.system-proof-lane')).toHaveCount(4);
-  await expect(main.getByRole('heading', { name: 'The simple version of how it works.', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A clear request', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A secure doorway', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A trusted record', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A coordinator', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A private worker', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Result in your workspace', exact: true })).toBeVisible();
-  await expect(main.getByText('Plain English', { exact: true })).toHaveCount(17);
-  await expect(main.getByText('Technical detail', { exact: true })).toHaveCount(17);
+  await expect(main.getByRole('heading', { name: 'What chat alone leaves unresolved.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Make the work specific', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Keep the decision yours', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Do the agreed work', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Bring back a reviewable result', exact: true })).toBeVisible();
+  await expect(main.getByText('Problem', { exact: true })).toHaveCount(9);
+  await expect(main.getByText('What changes', { exact: true })).toHaveCount(9);
+  await expect(main.getByText('Technical detail', { exact: true })).toHaveCount(9);
+  await expect(main.getByRole('heading', { name: 'The pieces have separate jobs.', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Local control plane', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'An answer can start the work. NeedThisDone carries it forward.', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'Start with one outcome.', exact: true })).toBeVisible();
   await expect(main.getByText(/ChatGPT|Claude|chatbot/i)).toHaveCount(0);
-  await expect(main.getByRole('heading', { name: 'A useful answer', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'A coordinated system that carries the work forward', exact: true })).toBeVisible();
   await expect(main.getByText('Evidence: npm run verify:database; npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
-  await expect(main.getByText('Owner-scoped contract · connection pending', { exact: true })).toBeVisible();
-  await expect(main.getByText('Connections still being proven', { exact: true })).toBeVisible();
-  for (const title of ['Goal', 'Owner approval', 'Private execution', 'Reviewable proof']) {
+  await expect(main.getByText('Owner boundary built · hosted reachability pending', { exact: true })).toBeVisible();
+  for (const title of ['Goal and scope', 'Owner decision', 'Private worker', 'Evidence and next move']) {
     await expect(main.getByRole('heading', { name: title, exact: true })).toBeVisible();
   }
 
@@ -632,10 +630,10 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
         && first.top < second.bottom - 0.5
         && first.bottom > second.top + 0.5;
       const allCards = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__card, .system-rail__card, .system-difference-card, .system-status-card',
+        '.system-map__card, .system-rail__card, .system-difference-card',
       ));
       const allConnectors = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__connector, .system-rail__connector, .system-difference-card__connector, .system-status-card__connector',
+        '.system-map__connector, .system-rail__connector, .system-difference-card__connector',
       ));
       const textEscapeDetails = allCards.flatMap((card) => {
         const cardRect = card.getBoundingClientRect();
@@ -685,7 +683,6 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
       }));
       const extraStacks = [
         stackContract('.system-difference-grid', '.system-difference-card', '.system-difference-card', '.system-difference-card__connector'),
-        stackContract('.system-status-grid', '.system-status-card', '.system-status-card', '.system-status-card__connector'),
       ];
       const columnCount = (selector: string) => {
         const element = document.querySelector<HTMLElement>(selector);
@@ -707,16 +704,14 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
           columnCount('.system-map__card'),
           columnCount('.system-rail__card'),
           columnCount('.system-difference-card'),
-          columnCount('.system-status-card'),
         ],
         heroColumns: columnCount('.system-hero__grid'),
-        architectureColumns: columnCount('.system-two-column--architecture'),
         identityDetailComplete: allCards.every((card) => Boolean(
           card.querySelector(':scope > .system-card-identity') && card.querySelector(':scope > .system-card-detail'),
         )),
         hiddenConnectors: allConnectors.filter((connector) => getComputedStyle(connector).display === 'none').length,
-        architectureRows: new Set(
-          Array.from(document.querySelectorAll<HTMLElement>('.system-rail--architecture .system-rail__item'))
+        technicalRows: new Set(
+          Array.from(document.querySelectorAll<HTMLElement>('.system-technical-flow .system-rail__item'))
             .map((item) => Math.round(item.getBoundingClientRect().top)),
         ).size,
         heroMapVisible: Boolean(document.querySelector('.system-map-shell')),
@@ -739,9 +734,8 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
     expect(layout.extraStacks.every((stack) => stack.connectorCount === stack.rowCounts.length - 1 && stack.vertical)).toBe(true);
     expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
     expect(layout.heroColumns).toBe(viewport.width >= 1200 ? 2 : 1);
-    expect(layout.architectureColumns).toBe(viewport.width >= 768 ? 2 : 1);
     expect(layout.hiddenConnectors).toBe(0);
-    expect(layout.architectureRows).toBe(11);
+    expect(layout.technicalRows).toBe(5);
     expect(layout.heroMapVisible).toBe(true);
     expect(layout.primaryVisible).toBe(true);
     expect(layout.reducedMapMotion).toBe('none');

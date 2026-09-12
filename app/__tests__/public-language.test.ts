@@ -156,12 +156,12 @@ describe('public language contract', () => {
     expect(contact).toContain('Your email');
   });
 
-  it('keeps technical system terms after the plain-language handoff', () => {
+  it('keeps technical system terms in the technical explanation', () => {
     const system = readApp('app/system/page.tsx');
-    const marker = system.indexOf('Technical details for curious readers');
+    const marker = system.indexOf('Technical map');
     expect(marker).toBeGreaterThan(-1);
-    for (const term of ['Hermes', 'OpenClaw', 'Codex', 'worktree']) {
-      expect(system.indexOf(term)).toBeGreaterThan(marker);
+    for (const term of ['Hermes', 'OpenClaw', 'Codex', 'worktree', 'MCP', 'Supabase', 'Redis', 'Upstash Vector']) {
+      expect(system).toContain(term);
     }
   });
 
