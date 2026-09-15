@@ -191,6 +191,7 @@ These suites are intentionally excluded from the fast unit command and run via
 | `lib/prospecting-rls.test.ts` | Prospecting policies | Protects private prospects | Hosted RLS |
 | `lib/provider-workflow-recovery.test.ts` | Provider failure/recovery state | Makes retries truthful | Live provider recovery |
 | `lib/retained-schema-manifest.test.ts` | Retained schema/migration manifest | Detects stale/missing objects | Hosted parity |
+| `lib/retired-public-schema-security.test.ts` | Forward lockdown migration contract for retired public relations | Prevents permissive policy/grant regressions in the hosted-drift correction | Hosted migration application |
 | `lib/security-hardening.test.ts` | Local schema security checks | Blocks RLS/exposure regressions | Hosted security |
 
 ## Accessibility/component inventory
