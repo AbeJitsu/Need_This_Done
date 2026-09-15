@@ -75,11 +75,26 @@ malformed, revoked, expired, cross-origin, or unavailable-storage requests,
 records last use, and passes the owner context into the Hermes contract. Raw
 tokens are never persisted and are returned only in the creation response.
 
-This does not authenticate or activate Hermes/OpenClaw on a worker host, wire
-durable MCP-to-Hermes dispatch, activate Redis or vector memory, prove hosted
+This does not authenticate or activate Hermes/OpenClaw on a worker host,
+create a plan or task, activate Redis or vector memory, prove hosted
 Supabase/Vercel, or rebuild the chatbot. The required next proof is disposable
-local Supabase migration 113/RLS plus the local account/API/MCP checks; hosted
+local Supabase migration 113/115 and the local account/API/MCP checks; hosted
 promotion remains a separately approved later stage.
+
+## MCP durable draft dispatcher — 2026-09-15
+
+`start_workflow` now persists a bounded, owner-scoped, approval-gated draft in
+`mcp_workflows`; `get_workflow_status` and `list_workflows` read the same
+durable record. This replaces the intentional unavailable dispatcher in the
+route. The draft is a request and review boundary, not a second task queue: it
+does not invoke Hermes, OpenClaw, a provider, or a worker host. A later,
+separately reviewed increment may turn an approved draft into a frozen plan.
+
+The new source and focused deterministic tests are ready for the disposable
+local Supabase proof. Migration 115, its owner-isolation/RLS test, an MCP
+credential, and the local vertical-slice diagnostic have not run in this
+environment. Hosted migration, deployment, remote Work/plugin connection, and
+Mac mini activation remain separate approvals.
 
 ## Authenticated owner workspace — 2026-09-11
 
@@ -106,7 +121,7 @@ green.
 | Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only worker-host rehearsal |
 | Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
 | Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
-| MCP facade | Device-independent schemas, owner-scoped account credentials, a local Streamable HTTP handler, owner-context propagation, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production remote access and Hermes persistence wiring remain pending | Pass migration 113/RLS and the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
+| MCP facade | Device-independent schemas, owner-scoped account credentials, a local Streamable HTTP handler, a durable approval-gated draft dispatcher, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production remote access remains pending | Apply migration 115 and pass its local owner-isolation/RLS proof, then pass the local profile, then the hosted profile |
 | Worker host | Any correctly configured local computer, private server, or cloud machine; not activated | Configure the private bridge environment and validate the loopback Gateway |
 | MacBook Pro (example) | Abe's interactive coding and first bridge-rehearsal host | Use for the first rehearsal if selected |
 | Mac mini (example) | Intended always-on worker-host example; not activated | Repeat the approved worker proof if selected |
@@ -120,7 +135,7 @@ Each capability must carry the narrowest useful evidence at each layer:
 | --- | --- | --- |
 | Unit | Pure validation, credential hashing/redaction, MCP auth outcomes, owner-scoped API behavior, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
 | Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
-| Integration | Disposable local Supabase/RLS including migration 113, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
+| Integration | Disposable local Supabase/RLS including migrations 113 and 115, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
 | Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote compatible-LLM connector |
 | Live rehearsal | Not available in this environment | Selected local/cloud worker host, Vercel, Supabase, Redis/vector, provider, and durable result |
 

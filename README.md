@@ -19,7 +19,7 @@ The repository contains a substantial local implementation, but the complete liv
 | Proof gate | Status | What that means |
 |---|---|---|
 | Contract | Built locally | The MCP/API shapes, owner-scoped credentials, authentication seam, safety rules, and focused tests exist. |
-| Local control plane | Next proof | Disposable local Supabase must pass migration 113/RLS checks, followed by a local MCP workflow diagnostic. |
+| Local control plane | Next proof | The source now includes durable MCP draft persistence. Disposable local Supabase must apply migration 115, pass its RLS proof, and complete the local MCP workflow diagnostic. |
 | Hosted control plane | Pending | Vercel, hosted Supabase, Redis, and secure remote LLM-client access have not been proven together. |
 | Worker execution | Pending | A configured local computer, private server, or cloud machine has not yet completed a real NeedThisDone workflow end to end. |
 
@@ -36,6 +36,9 @@ The codebase currently includes:
   - `start_workflow`
   - `get_workflow_status`
   - `list_workflows`
+- A server-side MCP dispatcher that persists an owner-scoped, approval-gated
+  workflow draft. It creates no plan, task, worker command, provider call, or
+  external action.
 - Owner-scoped `ntd_mcp_` credentials that can be created and revoked from Account Settings. Only a SHA-256 hash and redacted metadata are stored; the raw token is shown once.
 - Supabase migrations, Postgres/RLS rules, and durable records for authentication, plans, approvals, tasks, costs, results, and private assets.
 - A Redis client for temporary coordination such as locks, leases, heartbeats, caching, and deduplication.
@@ -48,8 +51,10 @@ The codebase currently includes:
 These capabilities are designed and partially implemented, but should not be described as live:
 
 - A remote LLM client completing a secure hosted connection to NeedThisDone MCP.
-- The default MCP dispatcher creating durable Hermes workflows; it currently fails closed until the durable Hermes persistence adapter is connected.
-- Hosted Supabase migration 113, hosted secrets, hosted Redis, or remote MCP reachability.
+- A live local or hosted MCP request creating and reading a durable workflow;
+  migration 115 and its RLS proof are pending on a disposable local Supabase
+  instance.
+- Hosted Supabase migrations 113/115, hosted secrets, hosted Redis, or remote MCP reachability.
 - A live Upstash Vector index and memory projection.
 - A NeedThisDone-controlled worker run on the MacBook Pro, Mac mini, private server, or cloud host.
 - A real worker-generated GitHub change completed through the full NeedThisDone workflow.

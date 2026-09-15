@@ -1,7 +1,7 @@
 # NeedThisDone build progress map
 
-**Last updated:** 2026-09-12
-**Branch:** `feature/system-page-plain-english-2026-09-11`
+**Last updated:** 2026-09-15
+**Branch:** `feature/mcp-draft-dispatcher-2026-09-15`
 
 This is the implementation checklist behind the visual progress map on
 [`/system`](../app/app/system/page.tsx). It separates a code contract from a
@@ -18,7 +18,7 @@ targets cannot drift silently.
 | Gate | What must be true | Current state | Evidence required to advance |
 |---|---|---|---|
 | Contract | A compatible LLM client has one small, validated MCP surface; site login identifies the owner, an owner-scoped bearer credential authorizes MCP, and safety/result shapes are tested | Built locally | Token/auth/API/contract tests and route-level protocol checks; local RLS proof is next |
-| Local control plane | Disposable local Supabase has migration 113/RLS proof, and MCP creates and reads an approval-gated workflow | Next proof | `npm run verify:database` plus `npm run test:hermes-mcp:local` with the real local Supabase gate passing |
+| Local control plane | Disposable local Supabase has migrations 113/115 and their RLS proof, and MCP creates and reads an approval-gated workflow draft | Next proof | `npm run verify:database` plus `npm run test:hermes-mcp:local` with the real local Supabase gate passing |
 | Hosted control plane | Vercel, hosted Supabase, Redis, and secure remote MCP access work together | Pending | `npm run test:hermes-mcp:hosted` against an explicit deployed `BASE_URL`; remote writes remain separately approved |
 | Worker execution | Hermes claims approved work on a correctly configured local or cloud worker host, OpenClaw completes it, and evidence returns through status | Pending | Approved worker-host rehearsal with signed bridge, isolated worktree, tests, commit SHA, and durable result |
 
@@ -59,15 +59,16 @@ intake is still intentionally separate from owner provisioning, so a real
 customer workflow is not claimed yet.
 
 The repository contains the MCP transport, three-tool contract, account-scoped
-credential/API boundary, authentication seam, vector adapter, Redis client, Supabase lifecycle schema, signed worker
-bridge contracts, OpenClaw safety constraints, and the visible system map. The
-default MCP dispatcher still fails closed because the durable Hermes adapter is
-not connected. That is the most important code-to-runtime gap before a real
-local workflow can pass.
+credential/API boundary, authentication seam, durable approval-gated draft
+dispatcher, vector adapter, Redis client, Supabase lifecycle schema, signed
+worker bridge contracts, OpenClaw safety constraints, and the visible system
+map. The new dispatcher needs migration 115 and its local owner-isolation proof
+before a real local workflow can pass. It does not create a plan, task, or
+worker command.
 
 The required order remains:
 
-1. Local migration 113/RLS, account API, and owner-context proof on disposable Supabase.
+1. Local migrations 113/115, account API, and owner-context proof on disposable Supabase.
 2. Local MCP control-plane proof.
 3. Hosted read-only control-plane proof.
 4. Approved worker-host rehearsal, using the MacBook Pro or Mac mini as current examples if selected.
