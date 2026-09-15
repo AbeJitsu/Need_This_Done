@@ -1,9 +1,24 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/system-page-plain-english-2026-09-11` (branched from `dev` at `c0d4cdedbe2162bb2c8e965ecda009d31eaf6394`)
-**Last updated:** 2026-09-12
+**Branch:** `feature/security-audit-2026-09-15` (branched from `dev` at `b515794ed21b9dfa499d7912902930d362708abc`)
+**Last updated:** 2026-09-15
 
 ## Latest change
+
+- On 2026-09-15, a read-only audit of the deployed Supabase REST boundary
+  found the retired `public.api_key` relation publicly queryable, including a
+  token-like column, while the repository's current migration chain contains
+  no retained table without an RLS enablement. The hosted project also does
+  not yet expose the repository's `mcp_access_tokens` table, confirming hosted
+  schema drift from `dev`. The historical Medusa policies in migrations 058
+  and 059 omitted `TO service_role`, so their “service role” policy was
+  effectively public. This branch adds forward migration
+  `115_lock_down_retired_public_tables.sql`, which preserves data but enables
+  RLS, removes existing policies, revokes `public`/`anon`/`authenticated`
+  table access, and retains `service_role` access for every listed retired
+  table. The migration has not been applied to hosted Supabase; backup, dry
+  run, approval, application, and post-apply Advisor verification remain
+  separate controls.
 
 - On 2026-09-12, the public `/system` page was rewritten around the problem
   chat alone leaves unresolved. The page now uses one concise comparison, four
