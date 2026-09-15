@@ -38,3 +38,14 @@ recoverable backup and dry run, obtain separate approval for migration 113 and
 secrets/deployment, and record a reviewed forward-revert owner. Do not mark
 hosted migration 113, deployment, worker activation, vector runtime, durable
 Hermes dispatch, or any hosted checklist control complete from local tests.
+
+Current Supabase security-audit record (2026-09-15): a read-only anonymous
+REST probe confirmed that the hosted project still exposes the retired
+`public.api_key` relation and a token-like column, while the repository's
+retained schema and migration 113 are not present there. The dated branch
+`feature/security-audit-2026-09-15` adds migration
+`115_lock_down_retired_public_tables.sql`; migrations 114 and 115 are mapped
+as separate pending stages. Before any hosted action, create a fresh protected
+backup, run the exact dry run, obtain named approval, apply once, and re-run
+Supabase Advisors plus anonymous access checks. Do not retrieve secret values,
+reset hosted Supabase, or mark the alerts resolved from local evidence alone.
