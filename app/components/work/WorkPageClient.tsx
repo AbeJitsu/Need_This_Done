@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 
 const nextStep = PUBLIC_ROUTE_STAGES["/work"].secondary;
