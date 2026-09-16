@@ -4,14 +4,7 @@ import {
   getPublicHomeNextStep,
   type PublicHomeSectionId,
 } from "@/lib/public-journey";
-import {
-  getPublicExampleHref,
-  PUBLIC_EXAMPLES,
-  PUBLIC_EXAMPLE_IDS,
-  PUBLIC_EXAMPLE_TITLES,
-  PUBLIC_OFFERS,
-  type PublicOfferId,
-} from "@/lib/public-offers";
+import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 
 type TeaserBeat = {
   number: string;
@@ -161,8 +154,8 @@ export default function HomePageClient() {
                   Share Your Vision
                   <ArrowRight aria-hidden="true" />
                 </Link>
-                <Link href="#what-we-do" className="homepage-button homepage-button--ghost">
-                  Follow the path
+                <Link href="#examples" className="homepage-button homepage-button--ghost">
+                  See what I can build
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </div>
@@ -180,14 +173,14 @@ export default function HomePageClient() {
         <div className="homepage-section__inner">
           <div className="homepage-section__intro homepage-section__intro--split">
             <div>
-              <p className="homepage-eyebrow">What we do</p>
+              <p className="homepage-eyebrow">Starting points</p>
               <h2 id="what-we-do-heading" className="homepage-heading homepage-heading--compact">
-                Technology problems. Repeated work. Let&apos;s get things working better.
+                Start with the problem you can see.
               </h2>
             </div>
             <p className="homepage-section__lead">
-              Websites, workflows, and tools are all good places to start.
-              Focus keeps the work clear. It does not limit what you can bring.
+              Website Fix and Managed Automation are two clear ways to begin.
+              If the right answer is a larger website, tool, or workflow, we scope it with you first.
             </p>
           </div>
 
@@ -305,55 +298,50 @@ export default function HomePageClient() {
       >
         <div className="homepage-section__inner">
           <div className="homepage-section__intro">
-            <p className="homepage-eyebrow">Illustrative examples</p>
+            <p className="homepage-eyebrow">What I can build</p>
             <h2 id="examples-heading" className="homepage-heading homepage-heading--compact">
-              What better can look like.
+              Some problems need more than a quick fix.
             </h2>
             <p className="homepage-section__lead">
-              Three short glimpses. Read the full examples on this page.
+              A clear starting point keeps the work manageable. When the problem
+              needs more, the Capabilities page shows the kinds of work I can take on.
             </p>
           </div>
 
-          <div className="homepage-example-grid">
-            {PUBLIC_EXAMPLE_IDS.map((exampleId, index) => {
-              const example = PUBLIC_EXAMPLES[exampleId];
-              const title = PUBLIC_EXAMPLE_TITLES[exampleId];
-              return (
-                <article key={exampleId} className="homepage-example-card">
-                  <div className="homepage-card-identity homepage-example-card__identity">
-                    <div className="homepage-example-card__topline">
-                      <span className="homepage-example-card__number">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="homepage-example-card__icon">
-                        <TeaserIcon
-                          name={index === 0 ? "eye" : index === 1 ? "target" : "sparkles"}
-                        />
-                      </span>
-                    </div>
-                    <p className="homepage-card-kicker">Example</p>
-                    <h3>{title}</h3>
-                  </div>
-                  <div className="homepage-card-detail homepage-example-card__detail">
-                    <p className="homepage-example-card__teaser">{example.before}</p>
-                    <Link href={getPublicExampleHref(exampleId)} className="homepage-link">
-                      Explore this example: {title}
-                      <ArrowRight aria-hidden="true" />
-                    </Link>
-                  </div>
-                  {index < PUBLIC_EXAMPLE_IDS.length - 1 && (
-                    <span className="homepage-example-card__connector" aria-hidden="true">
-                      <ArrowRight />
-                    </span>
-                  )}
-                </article>
-              );
-            })}
+          <div className="grid gap-5 md:grid-cols-3">
+            <article className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white/70 p-6 shadow-[0_1.25rem_3rem_rgba(24,55,46,.06)] sm:p-7">
+              <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
+                Clearer experiences
+              </p>
+              <h3 className="mt-4 font-playfair text-2xl font-black leading-tight">
+                A website people can understand and use.
+              </h3>
+            </article>
+            <article className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white/70 p-6 shadow-[0_1.25rem_3rem_rgba(24,55,46,.06)] sm:p-7">
+              <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
+                Useful tools
+              </p>
+              <h3 className="mt-4 font-playfair text-2xl font-black leading-tight">
+                One clear place for people to get work done.
+              </h3>
+            </article>
+            <article className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white/70 p-6 shadow-[0_1.25rem_3rem_rgba(24,55,46,.06)] sm:p-7">
+              <p className="text-xs font-bold uppercase tracking-[.18em] text-[var(--public-green)]">
+                Better flow
+              </p>
+              <h3 className="mt-4 font-playfair text-2xl font-black leading-tight">
+                A repeatable path that does not lose the next step.
+              </h3>
+            </article>
           </div>
           <div className="homepage-section__actions">
             <HomeNextStep sectionId="examples" />
+            <Link href="/services" className="homepage-link">
+              Explore what I can help with
+              <ArrowRight aria-hidden="true" />
+            </Link>
             <Link href="/work" className="homepage-link">
-              See more examples
+              See the real project behind this work
               <ArrowRight aria-hidden="true" />
             </Link>
           </div>

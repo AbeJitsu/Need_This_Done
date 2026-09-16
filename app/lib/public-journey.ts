@@ -3,17 +3,17 @@ import { PUBLIC_OFFERS } from './public-offers';
 export const PUBLIC_VARIANT = "match-crib-v1" as const;
 
 export const PUBLIC_NAVIGATION = [
-  { href: "/services", label: "What We Do" },
+  { href: "/services", label: "Capabilities" },
   { href: "/how-it-works", label: "How We Work" },
-  { href: "/work", label: "Examples" },
-  { href: "/about", label: "Why Us" },
+  { href: "/work", label: "What We Build" },
+  { href: "/about", label: "About" },
 ] as const;
 
 export const PUBLIC_HOME_JOURNEY = [
-  { id: "what-we-do", href: "/services", label: "What We Do" },
+  { id: "what-we-do", href: "/services", label: "Capabilities" },
   { id: "how-it-works", href: "/how-it-works", label: "How We Work" },
-  { id: "examples", href: "/work", label: "Examples" },
-  { id: "why-us", href: "/about", label: "Why Us" },
+  { id: "examples", href: "/work", label: "What We Build" },
+  { id: "why-us", href: "/about", label: "About" },
 ] as const;
 
 export function getPublicHomeHref(href: string) {
@@ -60,7 +60,7 @@ export const PUBLIC_ROUTE_STAGES = {
   "/how-it-works": {
     stage: "reassure",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/work", label: "Next: Examples" },
+    secondary: { href: "/work", label: "Next: What We Build" },
     event: "how_it_works",
   },
   "/system": {
@@ -72,7 +72,7 @@ export const PUBLIC_ROUTE_STAGES = {
   "/work": {
     stage: "recognize",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/about", label: "Next: Why Us" },
+    secondary: { href: "/about", label: "Next: About" },
     event: "work",
   },
   "/about": {
@@ -194,7 +194,7 @@ export const ENGAGEMENT_ROUTES = [
 
 
 export const PUBLIC_FOOTER_GROUPS = [
-  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/system', label: 'The System' }, { href: '/blog', label: 'Insights' }] },
+  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/blog', label: 'Insights' }] },
   { title: 'Starting points', links: [
     ...Object.values(PUBLIC_OFFERS).map(offer => ({ href: offer.detailHref, label: offer.name })),
     { href: '/pricing', label: 'Pricing' }, { href: '/site-analyzer', label: 'Website Snapshot' },
