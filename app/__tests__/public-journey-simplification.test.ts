@@ -25,15 +25,15 @@ describe('vision-first public journey', () => {
     expect(home).toContain('Bring us the problem');
     expect(home).toContain('href="/contact"');
     expect(home).toContain('Share Your Vision');
-    expect(home).toContain('href="#what-we-do"');
-    expect(home).toContain('Follow the path');
+    expect(home).toContain('href="#examples"');
+    expect(home).toContain('See what I can build');
     expect(home).not.toContain('homepage-bridge');
     expect(home).not.toContain('Inspect the system behind the work');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
   });
 
   it('uses the approved public navigation while retaining support links in the footer', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['What We Do', 'How We Work', 'Examples', 'Why Us']);
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Capabilities', 'How We Work', 'What We Build', 'About']);
     expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['what-we-do', 'how-it-works', 'examples', 'why-us']);
     for (const link of PUBLIC_NAVIGATION) expect(getPublicHomeHref(link.href)).toMatch(/^\/#/);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
@@ -42,8 +42,8 @@ describe('vision-first public journey', () => {
     expect(PUBLIC_FOOTER_GROUPS.find(group => group.title === 'Explore')?.links).toContainEqual({ href: '/system', label: 'The System' });
 
     expect(getPublicHomeNextStep('what-we-do')).toEqual({ href: '#how-it-works', label: 'Next: How We Work' });
-    expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#examples', label: 'Next: Examples' });
-    expect(getPublicHomeNextStep('examples')).toEqual({ href: '#why-us', label: 'Next: Why Us' });
+    expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#examples', label: 'Next: What We Build' });
+    expect(getPublicHomeNextStep('examples')).toEqual({ href: '#why-us', label: 'Next: About' });
     expect(getPublicHomeNextStep('why-us')).toEqual({ href: '#share-your-vision', label: 'Next: Share Your Vision' });
 
   });
@@ -109,10 +109,10 @@ describe('vision-first public journey', () => {
     const home = source('components/home/HomePageClient.tsx');
 
     expect(services).toContain('PUBLIC_OFFERS');
-    expect(services).toContain('offer.fit');
-    expect(services).toContain('offer.summary');
-    expect(services).toContain('offer.price');
-    expect(services).toContain('offer.detailHref');
+    expect(services).toContain('detail.fit');
+    expect(services).toContain('detail.summary');
+    expect(services).toContain('detail.price');
+    expect(services).toContain('detail.detailHref');
     expect(services).not.toContain('PUBLIC_CAPABILITIES');
     expect(services).not.toContain('ServiceIllustration');
     expect(services).not.toContain('Before');
@@ -139,9 +139,9 @@ describe('vision-first public journey', () => {
     const about = source('app/about/page.tsx');
     expect(howItWorks).toContain('Tell us what is going on');
     expect(howItWorks).toContain('You decide, then we do the agreed work');
-    expect(about).toContain('Bounded work, on purpose');
-    expect(about).toContain('Decisions stay yours');
-    expect(about).toContain('Proof over promises');
+    expect(about).toContain('Technical skill with a customer-facing mindset.');
+    expect(about).toContain('Clarity is part of the work.');
+    expect(about).toContain('Show the result');
     expect(about).not.toContain('Tell us what is going on');
     expect(about).not.toContain('You decide, then we do the agreed work');
   });
