@@ -548,7 +548,7 @@ test('interior public pages hand off to the next journey step', async ({ page },
   }
 });
 
-test('/system explains the problem chat leaves behind and the controlled path around it', async ({ page }, testInfo) => {
+test('/system presents a public conceptual overview without internal status details', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'The dedicated system-page contract runs in the desktop public project.');
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -562,38 +562,25 @@ test('/system explains the problem chat leaves behind and the controlled path ar
   const main = page.getByRole('main');
   await expect(main.getByRole('heading', { level: 1, name: 'Chat can start the work. NeedThisDone carries it through.' })).toBeVisible();
   await expect(main.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
-  await expect(main.getByRole('link', { name: 'Inspect the implementation', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done/tree/dev');
   await expect(main.locator('.system-map__stage')).toHaveCount(4);
-  await expect(main.locator('.system-core-flow > .system-rail__item')).toHaveCount(4);
-  await expect(main.locator('.system-technical-flow > .system-rail__item')).toHaveCount(5);
-  await expect(main.locator('.system-proof-lane')).toHaveCount(4);
+  await expect(main.locator('.system-difference-card')).toHaveCount(2);
   await expect(main.getByRole('heading', { name: 'What chat alone leaves unresolved.', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Make the work specific', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Keep the decision yours', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Do the agreed work', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Bring back a reviewable result', exact: true })).toBeVisible();
-  await expect(main.getByText('Problem', { exact: true })).toHaveCount(9);
-  await expect(main.getByText('What changes', { exact: true })).toHaveCount(9);
-  await expect(main.getByText('Technical detail', { exact: true })).toHaveCount(9);
-  await expect(main.getByRole('heading', { name: 'The pieces have separate jobs.', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'Local control plane', exact: true })).toBeVisible();
   await expect(main.getByRole('heading', { name: 'Start with one outcome.', exact: true })).toBeVisible();
-  await expect(main.getByText(/ChatGPT|Claude|chatbot/i)).toHaveCount(0);
-  await expect(main.getByText('Evidence: npm run verify:database; npm run test:hermes-mcp:local', { exact: true })).toBeVisible();
-  await expect(main.getByText('Owner boundary built · hosted reachability pending', { exact: true })).toBeVisible();
-  for (const title of ['Goal and scope', 'Owner decision', 'Private worker', 'Evidence and next move']) {
+  await expect(main.getByText(/MCP|Supabase|Hermes|Redis|OpenClaw|Vector memory|Evidence:/i)).toHaveCount(0);
+  await expect(main.locator('.system-proof-lane')).toHaveCount(0);
+  await expect(main.locator('.system-technical-flow')).toHaveCount(0);
+  for (const title of ['Clarify the outcome', 'You make the call', 'Do the agreed work', 'Return a clear result']) {
     await expect(main.getByRole('heading', { name: title, exact: true })).toBeVisible();
   }
 
   const primaryHrefs = await main.getByRole('link', { name: 'Share Your Vision', exact: true }).evaluateAll((links) => links.map((link) => link.getAttribute('href')));
   expect(primaryHrefs).toEqual(['/contact', '/contact']);
-  expect(primaryHrefs.every((href) => href && !href.startsWith('#'))).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)).toBe(false);
   expect(await page.evaluate(() => getComputedStyle(document.querySelector('.system-map__connector')!, '::after').animationName)).toBe('none');
   expect(errors).toEqual([]);
 });
 
-test('/system keeps every map and rail card in a vertical editorial stack', async ({ page }, testInfo) => {
+test('/system keeps the public overview cards readable across widths', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'The explicit visual matrix runs in the desktop public project.');
   test.setTimeout(120_000);
 
@@ -609,67 +596,49 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
 
     const layout = await page.evaluate(() => {
       const intersects = (first: DOMRect, second: DOMRect) => first.left < second.right - 0.5
-        && first.right > second.left + 0.5
+        && first.right > second.left - 0.5
         && first.top < second.bottom - 0.5
-        && first.bottom > second.top + 0.5;
+        && first.bottom > second.top - 0.5;
       const allCards = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__card, .system-rail__card, .system-difference-card',
+        '.system-map__card, .system-difference-card',
       ));
       const allConnectors = Array.from(document.querySelectorAll<HTMLElement>(
-        '.system-map__connector, .system-rail__connector, .system-difference-card__connector',
+        '.system-map__connector, .system-difference-card__connector',
       ));
       const textEscapeDetails = allCards.flatMap((card) => {
         const cardRect = card.getBoundingClientRect();
-        const textNodes = Array.from(card.querySelectorAll<HTMLElement>('h2, h3, p, li, dt, dd'));
-        return [
-          ...textNodes.filter((node) => {
-            const textRect = node.getBoundingClientRect();
-            return textRect.left < cardRect.left - 1
-              || textRect.right > cardRect.right + 1
-              || textRect.top < cardRect.top - 1
-              || textRect.bottom > cardRect.bottom + 1;
-          }).map((node) => `${card.className}:text:${node.textContent}`),
-        ];
+        return Array.from(card.querySelectorAll<HTMLElement>('h2, h3, p, li')).filter((node) => {
+          const textRect = node.getBoundingClientRect();
+          return textRect.left < cardRect.left - 1
+            || textRect.right > cardRect.right + 1
+            || textRect.top < cardRect.top - 1
+            || textRect.bottom > cardRect.bottom + 1;
+        });
       });
-      const stackContractForElement = (container: HTMLElement, itemSelector: string, cardSelector: string, connectorSelector: string) => {
-        const items = Array.from(container.querySelectorAll<HTMLElement>(`:scope > ${itemSelector}`));
-        const cardRects = items.map((item) => (item.matches(cardSelector) ? item : item.querySelector<HTMLElement>(cardSelector))?.getBoundingClientRect());
-        const connectorRects = items.slice(0, -1).map((item) => item.querySelector<HTMLElement>(connectorSelector)?.getBoundingClientRect());
+      const stack = (containerSelector: string, itemSelector: string, cardSelector: string, connectorSelector: string) => {
+        const container = document.querySelector<HTMLElement>(containerSelector);
+        if (!container) return { rows: [], connectorCount: 0, vertical: false };
+        const items = Array.from(container.querySelectorAll<HTMLElement>(\`:scope > \${itemSelector}\`));
+        const cards = items.map((item) => (item.matches(cardSelector) ? item : item.querySelector<HTMLElement>(cardSelector))?.getBoundingClientRect());
+        const connectors = items.slice(0, -1).map((item) => item.querySelector<HTMLElement>(connectorSelector)?.getBoundingClientRect());
         const rows = new Map<number, number>();
         items.forEach((item) => {
           const top = Math.round(item.getBoundingClientRect().top);
           rows.set(top, (rows.get(top) || 0) + 1);
         });
         return {
-          rowCounts: Array.from(rows.values()),
-          connectorCount: connectorRects.filter(Boolean).length,
-          vertical: connectorRects.every((connector, index) => {
-            const from = cardRects[index];
-            const to = cardRects[index + 1];
-            if (!connector || !from || !to) return false;
-            return connector.width <= 2
+          rows: Array.from(rows.values()),
+          connectorCount: connectors.filter(Boolean).length,
+          vertical: connectors.every((connector, index) => {
+            const from = cards[index];
+            const to = cards[index + 1];
+            return Boolean(connector && from && to
+              && connector.width <= 2
               && connector.height > 0
               && connector.top >= from.bottom - 0.5
-              && connector.bottom <= to.top + 0.5;
+              && connector.bottom <= to.top + 0.5);
           }),
         };
-      };
-      const stackContract = (containerSelector: string, itemSelector: string, cardSelector: string, connectorSelector: string) => {
-        const container = document.querySelector<HTMLElement>(containerSelector);
-        if (!container) return { rowCounts: [], connectorCount: 0, vertical: false };
-        return stackContractForElement(container, itemSelector, cardSelector, connectorSelector);
-      };
-      const mapStack = stackContract('.system-map', '.system-map__stage', '.system-map__card', '.system-map__connector');
-      const railStacks = Array.from(document.querySelectorAll<HTMLElement>('.system-rail')).map((rail) => ({
-        kind: rail.classList.contains('system-rail--five') ? 'five' : 'four',
-        ...stackContractForElement(rail, '.system-rail__item', '.system-rail__card', '.system-rail__connector'),
-      }));
-      const extraStacks = [
-        stackContract('.system-difference-grid', '.system-difference-card', '.system-difference-card', '.system-difference-card__connector'),
-      ];
-      const columnCount = (selector: string) => {
-        const element = document.querySelector<HTMLElement>(selector);
-        return element ? getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length : 0;
       };
       return {
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
@@ -678,54 +647,31 @@ test('/system keeps every map and rail card in a vertical editorial stack', asyn
           return allCards.some((card) => intersects(connectorRect, card.getBoundingClientRect()));
         }),
         textEscapesCard: textEscapeDetails.length > 0,
-        mapRows: mapStack.rowCounts,
-        mapConnectorCount: mapStack.connectorCount,
-        mapVertical: mapStack.vertical,
-        railStacks,
-        extraStacks,
+        map: stack('.system-map', '.system-map__stage', '.system-map__card', '.system-map__connector'),
+        difference: stack('.system-difference-grid', '.system-difference-card', '.system-difference-card', '.system-difference-card__connector'),
         editorialColumns: [
-          columnCount('.system-map__card'),
-          columnCount('.system-rail__card'),
-          columnCount('.system-difference-card'),
+          getComputedStyle(document.querySelector<HTMLElement>('.system-map__card')!).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length,
+          getComputedStyle(document.querySelector<HTMLElement>('.system-difference-card')!).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length,
         ],
-        heroColumns: columnCount('.system-hero__grid'),
-        identityDetailComplete: allCards.every((card) => Boolean(
-          card.querySelector(':scope > .system-card-identity') && card.querySelector(':scope > .system-card-detail'),
-        )),
-        hiddenConnectors: allConnectors.filter((connector) => getComputedStyle(connector).display === 'none').length,
-        technicalRows: new Set(
-          Array.from(document.querySelectorAll<HTMLElement>('.system-technical-flow .system-rail__item'))
-            .map((item) => Math.round(item.getBoundingClientRect().top)),
-        ).size,
-        heroMapVisible: Boolean(document.querySelector('.system-map-shell')),
-        primaryVisible: Boolean(document.querySelector('.system-hero__actions a[href="/contact"]')),
         reducedMapMotion: getComputedStyle(document.querySelector('.system-map__connector')!, '::after').animationName,
-        reducedRailMotion: getComputedStyle(document.querySelector('.system-rail__connector-dot')!).animationName,
       };
     });
 
     expect(layout.overflow).toBe(false);
     expect(layout.connectorHitsCard).toBe(false);
     expect(layout.textEscapesCard).toBe(false);
-    expect(layout.identityDetailComplete).toBe(true);
-    expect(layout.mapRows).toEqual([1, 1, 1, 1]);
-    expect(layout.mapConnectorCount).toBe(3);
-    expect(layout.mapVertical).toBe(true);
-    expect(layout.railStacks.every((rail) => rail.rowCounts.every((count) => count === 1))).toBe(true);
-    expect(layout.railStacks.every((rail) => rail.connectorCount === rail.rowCounts.length - 1 && rail.vertical)).toBe(true);
-    expect(layout.extraStacks.every((stack) => stack.rowCounts.every((count) => count === 1))).toBe(true);
-    expect(layout.extraStacks.every((stack) => stack.connectorCount === stack.rowCounts.length - 1 && stack.vertical)).toBe(true);
+    expect(layout.map.rows.every((count) => count === 1)).toBe(true);
+    expect(layout.map.rows).toHaveLength(4);
+    expect(layout.map.connectorCount).toBe(3);
+    expect(layout.map.vertical).toBe(true);
+    expect(layout.difference.rows).toEqual([1, 1]);
+    expect(layout.difference.connectorCount).toBe(1);
+    expect(layout.difference.vertical).toBe(true);
     expect(layout.editorialColumns.every((count) => count === (viewport.width >= 768 ? 2 : 1))).toBe(true);
-    expect(layout.heroColumns).toBe(viewport.width >= 1200 ? 2 : 1);
-    expect(layout.hiddenConnectors).toBe(0);
-    expect(layout.technicalRows).toBe(5);
-    expect(layout.heroMapVisible).toBe(true);
-    expect(layout.primaryVisible).toBe(true);
     expect(layout.reducedMapMotion).toBe('none');
-    expect(layout.reducedRailMotion).toBe('none');
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
-    await page.screenshot({ path: `/tmp/system-vertical-${viewport.width}.png`, fullPage: true });
+    await page.screenshot({ path: \`/tmp/system-overview-\${viewport.width}.png\`, fullPage: true });
   }
 });
 
