@@ -10,8 +10,8 @@ it('marks the current route, returns focus on Escape, and closes on route change
   const view = render(<PublicHeader />);
   const trigger = view.getByRole('button', { name: 'Open navigation menu' });
   fireEvent.click(trigger);
-  expect(view.getAllByRole('link', { name: 'What We Do' }).every(link => link.getAttribute('aria-current') === 'page')).toBe(true);
-  view.getAllByRole('link', { name: 'What We Do' })[1].focus();
+  expect(view.getAllByRole('link', { name: 'Capabilities' }).every(link => link.getAttribute('aria-current') === 'page')).toBe(true);
+  view.getAllByRole('link', { name: 'Capabilities' })[1].focus();
   fireEvent.keyDown(window, { key: 'Escape' });
   expect(trigger).toHaveFocus();
   expect(view.queryByRole('navigation', { name: 'Mobile navigation' })).toBeNull();
@@ -19,6 +19,6 @@ it('marks the current route, returns focus on Escape, and closes on route change
   route.pathname = '/work';
   view.rerender(<PublicHeader />);
   expect(view.queryByRole('navigation', { name: 'Mobile navigation' })).toBeNull();
-  expect(view.getByRole('link', { name: 'Examples' })).toHaveAttribute('aria-current', 'page');
+  expect(view.getByRole('link', { name: 'What We Build' })).toHaveAttribute('aria-current', 'page');
   expect(await axe(view.container)).toHaveNoViolations();
 });
