@@ -69,7 +69,7 @@ describe('vision-first public journey', () => {
     expect(system).toContain('alternates: { canonical: "/system" }');
     expect(sitemap).toContain("{ path: '/system'");
     for (const title of ['Clarify the outcome', 'You make the call', 'Do the agreed work', 'Return a clear result']) {
-      expect(system).toContain(\`title: "\${title}"\`);
+      expect(system).toContain(`title: "${title}"`);
     }
   });
 
