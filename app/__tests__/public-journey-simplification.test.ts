@@ -50,31 +50,26 @@ describe('vision-first public journey', () => {
 
   });
 
-  it('keeps the system case study on purposeful route exits', () => {
+  it('keeps the public system page conceptual and separate from internal status', () => {
     const system = source('app/system/page.tsx');
     const sitemap = source('app/sitemap.ts');
     expect(system).toContain('Why this exists');
     expect(system).toContain('Chat can start the work. NeedThisDone carries it through.');
     expect(system).toContain('What chat alone leaves unresolved.');
-    expect(system).toContain('Four problems. One controlled path.');
-    expect(system).toContain('The pieces have separate jobs.');
-    expect(system).toContain('What is built, and what still needs proof.');
-    expect(system).toContain('Problem');
-    expect(system).toContain('What changes');
-    expect(system).toContain('Technical detail');
-    expect(system).toContain('Your private workspace shows status, evidence, blockers, and the next decision.');
-    expect(system).toContain('title: "GitHub + Vector memory"');
+    expect(system).toContain('From request to result');
     expect(system).toContain('Start with one outcome.');
-    expect(system).not.toContain('optional visual explanation');
     expect(system).toContain('href="/contact"');
-    expect(system).toContain('Inspect the implementation');
-    expect(system).toContain('https://github.com/AbeJitsu/Need_This_Done/tree/dev');
+    expect(system).not.toContain('SYSTEM_PROOF_LANES');
+    expect(system).not.toContain('system-technical-flow');
+    expect(system).not.toContain('system-proof-lane');
+    expect(system).not.toContain('Technical detail');
+    expect(system).not.toMatch(/MCP|Supabase|Hermes|Redis|OpenClaw|Vector memory|Evidence:/i);
+    expect(system).not.toMatch(/href=["']https:\/\/github\.com/);
     expect(system).not.toMatch(/href=["']#/);
-    expect(system).not.toMatch(/ChatGPT|Claude|chatbot/i);
     expect(system).toContain('alternates: { canonical: "/system" }');
     expect(sitemap).toContain("{ path: '/system'");
-    for (const stage of ['Goal and scope', 'Owner decision', 'Private worker', 'Evidence and next move']) {
-      expect(system).toContain(`title: "${stage}"`);
+    for (const title of ['Clarify the outcome', 'You make the call', 'Do the agreed work', 'Return a clear result']) {
+      expect(system).toContain(\`title: "\${title}"\`);
     }
   });
 
@@ -127,6 +122,13 @@ describe('vision-first public journey', () => {
     expect(work).toContain('See how the system carries work from request to review');
     expect(work).toContain('data-public-capability-card');
     expect(work).toContain('Full-stack');
+    for (const phrase of [
+      'Supabase/PostgreSQL',
+      'schemas and migrations',
+      'role-scoped data',
+      'agent coordination',
+      'GitHub/Vercel delivery',
+    ]) expect(work).not.toContain(phrase);
     expect(work).not.toContain('PUBLIC_EXAMPLES');
     expect(work).not.toMatch(/\b(?:illustrative|hypothetical|case study|could look like)\b/i);
     expect(work).not.toMatch(/\$500|priced by proposal/i);
