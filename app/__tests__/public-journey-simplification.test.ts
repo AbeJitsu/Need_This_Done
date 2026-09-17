@@ -38,8 +38,9 @@ describe('vision-first public journey', () => {
     for (const link of PUBLIC_NAVIGATION) expect(getPublicHomeHref(link.href)).toMatch(/^\/#/);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
-    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms', '/system']) expect(destinations).toContain(route);
-    expect(PUBLIC_FOOTER_GROUPS.find(group => group.title === 'Explore')?.links).toContainEqual({ href: '/system', label: 'The System' });
+    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
+    expect(destinations).not.toContain('/system');
+    expect(PUBLIC_FOOTER_GROUPS.find(group => group.title === 'Explore')?.links).not.toContainEqual({ href: '/system', label: 'The System' });
 
     expect(getPublicHomeNextStep('what-we-do')).toEqual({ href: '#how-it-works', label: 'Next: How We Work' });
     expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#examples', label: 'Next: What We Build' });
@@ -121,6 +122,8 @@ describe('vision-first public journey', () => {
     expect(work).toContain('PUBLIC_CAPABILITIES');
     expect(work).toContain('PUBLIC_CAPABILITIES_INTRO');
     expect(work).toContain('Built in production');
+    expect(work).toContain('href="/system"');
+    expect(work).toContain('See how the system carries work from request to review');
     expect(work).toContain('data-public-capability-card');
     expect(work).toContain('Full-stack');
     expect(work).not.toContain('PUBLIC_EXAMPLES');
