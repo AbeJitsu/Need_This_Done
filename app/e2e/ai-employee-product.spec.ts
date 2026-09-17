@@ -48,7 +48,7 @@ test('homepage trailer preserves public routes while keeping system detail optio
   expect(await main.locator(':scope > section').evaluateAll((sections) => sections.map((section) => section.id))).toEqual(['', 'what-we-do', 'how-it-works', 'examples', 'why-us', 'share-your-vision']);
   await expect(main.getByRole('link', { name: 'Inspect the system behind the work', exact: true })).toHaveCount(0);
   await expect(main.locator('a[href="/system"]')).toHaveCount(0);
-  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/system');
+  await expect(page.getByRole('contentinfo').locator('a[href="/system"]')).toHaveCount(0);
   await expect(main.getByRole('link', { name: 'See how Website Fix works', exact: true })).toHaveAttribute('href', '/website-fix');
   await expect(main.getByRole('link', { name: 'See how Managed Automation works', exact: true })).toHaveAttribute('href', '/managed-automation');
   await expect(main.getByRole('link', { name: 'Explore what I can help with', exact: true })).toHaveAttribute('href', '/services');
@@ -80,6 +80,8 @@ test('services show starting offers while work maps full-stack capability', asyn
   await expect(work.getByRole('heading', { name: 'Testing, deployment, and evidence', exact: true })).toBeVisible();
   await expect(work.getByText('Built in production', { exact: true })).toBeVisible();
   await expect(work).toContainText('NeedThisDone shows the pieces working together.');
+  await expect(work.locator('[data-public-system-cta]')).toHaveCount(1);
+  await expect(work.getByRole('link', { name: 'See how the system carries work from request to review', exact: true })).toHaveAttribute('href', '/system');
   await expect(work).not.toContainText('illustrative');
   await expect(work).not.toContainText('case study');
   await expect(work).not.toContainText('could look like');
@@ -497,7 +499,7 @@ test('desktop public navigation follows the approved public journey', async ({ p
   await expect(navigation.getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/#why-us');
   await expect(page.getByRole('link', { name: 'Share Your Vision', exact: true }).first()).toHaveAttribute('href', '/contact');
   await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Why Us', exact: true })).toHaveAttribute('href', '/about');
-  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/system');
+  await expect(page.getByRole('contentinfo').locator('a[href="/system"]')).toHaveCount(0);
   await expect(navigation.getByRole('link', { name: 'The System', exact: true })).toHaveCount(0);
   await expect(navigation.getByRole('link', { name: /how it works/i })).toHaveCount(0);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
@@ -525,7 +527,7 @@ test('homepage navigation keeps the journey in one place', async ({ page }, test
 
   for (const [sectionId, label, href] of [
     ['what-we-do', 'Next: How We Work', '#how-it-works'],
-    ['how-it-works', 'Next: Examples', '#examples'],
+    ['how-it-works', 'Next: What We Build', '#examples'],
     ['examples', 'Next: Why Us', '#why-us'],
     ['why-us', 'Next: Share Your Vision', '#share-your-vision'],
   ]) {
@@ -537,8 +539,8 @@ test('interior public pages hand off to the next journey step', async ({ page },
   test.skip(testInfo.project.name !== 'public', 'The interior journey handoff runs in the desktop public project.');
   for (const [route, label, href] of [
     ['/services', 'Next: How We Work', '/how-it-works'],
-    ['/how-it-works', 'Next: Examples', '/work'],
-    ['/system', 'Next: Examples', '/work'],
+    ['/how-it-works', 'Next: What We Build', '/work'],
+    ['/system', 'Next: What We Build', '/work'],
     ['/work', 'Next: Why Us', '/about'],
   ]) {
     await page.goto(route);
