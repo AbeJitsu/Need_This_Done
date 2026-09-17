@@ -1,41 +1,41 @@
 export const PUBLIC_CAPABILITIES = [
   {
-    title: "Make a website easier to use",
+    title: "Frontends people can use",
     description:
-      "Clarify the message, simplify the path, and help people know what to do next.",
-    examples: ["Clear pages", "Helpful forms", "Mobile-ready paths"],
+      "Responsive pages, dashboards, forms, and clear paths that help people know what to do next.",
+    examples: ["Responsive interfaces", "Accessible forms", "Useful dashboards"],
   },
   {
-    title: "Give people one place to work",
+    title: "Backends and APIs that keep work moving",
     description:
-      "Turn scattered updates and tools into a simple space for people to see what matters.",
-    examples: ["Private workspaces", "Customer areas", "Useful dashboards"],
+      "Application logic, authentication, route handlers, and service boundaries that turn a request into a working result.",
+    examples: ["Business logic", "APIs and webhooks", "Account access"],
   },
   {
-    title: "Make repeated work easier to follow",
+    title: "Data that stays useful",
     description:
-      "Create a dependable path for requests, handoffs, reviews, and next steps.",
-    examples: ["Guided intake", "Visible ownership", "Repeatable flows"],
+      "Databases and permissions that keep records, decisions, and evidence available when the work needs them.",
+    examples: ["Supabase/PostgreSQL", "Schemas and migrations", "Role-scoped data"],
   },
   {
-    title: "Connect the tools you already use",
+    title: "Connected tools and services",
     description:
-      "Help information move between the right places without creating more busywork.",
-    examples: ["Forms and email", "Calendar handoffs", "Shared data"],
+      "Connect the tools a project already depends on so information moves without extra busywork.",
+    examples: ["Email and payments", "Calendar handoffs", "External APIs"],
   },
   {
-    title: "Turn an idea into a working tool",
+    title: "Agents and automations with a review point",
     description:
-      "Start with the screen, decision, or small system that will make the biggest difference.",
-    examples: ["Custom tools", "Internal apps", "Focused prototypes"],
+      "Build repeatable work with clear ownership, status, and human decisions where they belong.",
+    examples: ["Workflow automation", "Agent coordination", "Approval checkpoints"],
   },
   {
-    title: "Use AI with a person in control",
+    title: "Testing, deployment, and evidence",
     description:
-      "Design helpful AI-assisted work with clear review points and decisions that stay yours.",
-    examples: ["Assisted research", "Drafting support", "Approval-first workflows"],
+      "Check the experience, protect the important paths, and make delivery easier to review.",
+    examples: ["Browser and accessibility tests", "GitHub/Vercel delivery", "Release evidence"],
   },
 ] as const;
 
 export const PUBLIC_CAPABILITIES_INTRO =
-  "These are practical ways I can help. We start with the problem, then choose only the parts that fit.";
+  "From the first idea through the interface, logic, data, integrations, and handoff, we choose only the pieces that fit.";

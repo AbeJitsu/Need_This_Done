@@ -1,10 +1,10 @@
 import { ArrowDown, Check, MousePointer2 } from 'lucide-react';
 
-/** Illustrative service examples, not screenshots or customer results. */
+/** A compact visual for the selected service path. */
 export default function ServiceIllustration({ kind }: { kind: 'website' | 'work' }) {
   return (
     <figure className={`service-illustration service-illustration--${kind}`}>
-      <figcaption>What this could look like</figcaption>
+      <figcaption>How the work takes shape</figcaption>
       {kind === 'website' ? (
         <div className="service-illustration__browser">
           <div className="service-illustration__toolbar" aria-hidden="true"><i /><i /><i /><span>One clearer page</span></div>

@@ -34,9 +34,9 @@ test('homepage first viewport leads with the promise and action without mechanic
   await expect(page.locator('.homepage-offer-card')).toHaveCount(2);
   await expect(page.locator('.homepage-offer-card .service-illustration')).toHaveCount(0);
   const whatWeDo = page.locator('#what-we-do');
-  await expect(whatWeDo.getByRole('heading', { name: "Technology problems. Repeated work. Let's get things working better.", exact: true })).toBeVisible();
-  await expect(whatWeDo).toContainText('Websites, workflows, and tools are all good places to start.');
-  await expect(whatWeDo).toContainText('Focus keeps the work clear. It does not limit what you can bring.');
+  await expect(whatWeDo.getByRole('heading', { name: 'Start with the problem you can see.', exact: true })).toBeVisible();
+  await expect(whatWeDo).toContainText('Website Fix and Managed Automation are two clear ways to begin.');
+  await expect(whatWeDo).toContainText('larger website, tool, or workflow');
   await expect(firstSection).not.toContainText(/Hermes|OpenClaw|Codex|approval lifecycles?|API|database|automation system|technical implementation/i);
 });
 
@@ -51,20 +51,15 @@ test('homepage trailer preserves public routes while keeping system detail optio
   await expect(page.getByRole('contentinfo').getByRole('link', { name: 'The System', exact: true })).toHaveAttribute('href', '/system');
   await expect(main.getByRole('link', { name: 'See how Website Fix works', exact: true })).toHaveAttribute('href', '/website-fix');
   await expect(main.getByRole('link', { name: 'See how Managed Automation works', exact: true })).toHaveAttribute('href', '/managed-automation');
-  for (const [title, href] of [
-    ['A page people can act on', '/work#website-fix'],
-    ['A clearer path for repeated requests', '/work#managed-automation'],
-    ['An idea with a useful first step', '/work#first-step'],
-  ]) {
-    await expect(main.getByRole('link', { name: `Explore this example: ${title}`, exact: true })).toHaveAttribute('href', href);
-  }
+  await expect(main.getByRole('link', { name: 'Explore what I can help with', exact: true })).toHaveAttribute('href', '/services');
+  await expect(main.getByRole('link', { name: 'See the real project behind this work', exact: true })).toHaveAttribute('href', '/work');
 
   const primaryHrefs = await main.locator('.homepage-button').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
   expect(primaryHrefs).toEqual(['/contact', '#what-we-do', '/contact']);
   expect(primaryHrefs.filter((href) => href?.startsWith('/')).every((href) => href && !href.startsWith('#'))).toBe(true);
 });
 
-test('services explain offers while examples show illustrative changes', async ({ page }) => {
+test('services show starting offers while work maps full-stack capability', async ({ page }) => {
   await page.goto('/services');
   const services = page.getByRole('main');
   await expect(services.locator('[data-public-offer-card]')).toHaveCount(2);
@@ -74,25 +69,23 @@ test('services explain offers while examples show illustrative changes', async (
   await expect(services.getByText('One repeated task taking time.', { exact: true })).toBeVisible();
   await expect(services.getByText('$500 total', { exact: true })).toBeVisible();
   await expect(services.getByText('Priced by proposal', { exact: true })).toBeVisible();
-  await expect(services.getByText('Before', { exact: true })).toHaveCount(0);
+  await expect(services.getByRole('heading', { name: 'Start with the piece that needs attention.', exact: true })).toBeVisible();
   await expect(services.locator('.service-illustration')).toHaveCount(0);
 
   await page.goto('/work');
   const work = page.getByRole('main');
-  await expect(work.locator('[data-public-example-story]')).toHaveCount(3);
-  await expect(work.getByText('Before', { exact: true })).toHaveCount(3);
-  await expect(work.getByText('After', { exact: true })).toHaveCount(3);
-  await expect(work.getByText('What changed', { exact: true })).toHaveCount(3);
-  await expect(work).not.toContainText('$500');
-  await expect(work).not.toContainText('Priced by proposal');
-  await expect(work).not.toContainText('What is happening');
+  await expect(work.locator('[data-public-capability-card]')).toHaveCount(6);
+  await expect(work.getByRole('heading', { name: 'Frontends people can use', exact: true })).toBeVisible();
+  await expect(work.getByRole('heading', { name: 'Backends and APIs that keep work moving', exact: true })).toBeVisible();
+  await expect(work.getByRole('heading', { name: 'Testing, deployment, and evidence', exact: true })).toBeVisible();
+  await expect(work.getByText('Built in production', { exact: true })).toBeVisible();
+  await expect(work).toContainText('NeedThisDone shows the pieces working together.');
+  await expect(work).not.toContainText('illustrative');
+  await expect(work).not.toContainText('case study');
+  await expect(work).not.toContainText('could look like');
+  await expect(work).not.toContainText('not customer results');
   await expect(work.locator('.service-illustration')).toHaveCount(0);
-
-  await work.locator('#website-fix').getByRole('link', { name: 'Explore Website Fix', exact: true }).click();
-  await expect(page).toHaveURL(/\/website-fix$/);
-  await page.goBack();
-  await work.locator('#managed-automation').getByRole('link', { name: 'Explore Managed Automation', exact: true }).click();
-  await expect(page).toHaveURL(/\/managed-automation$/);
+  await expect(work.getByRole('link', { name: 'See starting points', exact: true })).toHaveAttribute('href', '/services');
 });
 
 test('service offer cards align their internal rows on desktop', async ({ page }, testInfo) => {
@@ -160,8 +153,8 @@ test('pricing cards align their internal rows on desktop', async ({ page }, test
   await page.screenshot({ path: '/tmp/pricing-aligned.png', fullPage: true });
 });
 
-test('examples use side-by-side comparisons on desktop and a visible transition on mobile', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'public', 'The explicit examples visual matrix runs in the desktop public project.');
+test('work capability map remains readable across widths', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'The explicit capability visual matrix runs in the desktop public project.');
   test.setTimeout(120_000);
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -173,32 +166,20 @@ test('examples use side-by-side comparisons on desktop and a visible transition 
     await page.goto('/work');
     await page.waitForLoadState('networkidle');
 
-    const layout = await page.evaluate(() => {
-      const comparisons = Array.from(document.querySelectorAll<HTMLElement>('.public-example-comparison'));
-      const transitions = Array.from(document.querySelectorAll<HTMLElement>('.public-example-transition'));
-      const gridColumnCount = (element: HTMLElement) => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length;
-      return {
-        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-        storyCount: document.querySelectorAll('[data-public-example-story]').length,
-        comparisonColumns: comparisons.map(gridColumnCount),
-        mobileArrows: transitions.map((transition) => getComputedStyle(transition.querySelector('.md\\:hidden') || transition).display),
-        desktopArrows: transitions.map((transition) => getComputedStyle(transition.querySelector('.hidden.md\\:block') || transition).display),
-      };
-    });
+    const layout = await page.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      capabilityCount: document.querySelectorAll('[data-public-capability-card]').length,
+      proofCount: document.querySelectorAll('[data-public-proof-card]').length,
+      hasCapabilityAnchor: Boolean(document.querySelector('#capabilities')),
+    }));
 
     expect(layout.overflow).toBe(false);
-    expect(layout.storyCount).toBe(3);
-    expect(layout.comparisonColumns).toEqual(layout.comparisonColumns.map(() => width < 768 ? 1 : 3));
-    if (width < 768) {
-      expect(layout.mobileArrows.every((display) => display !== 'none')).toBe(true);
-      expect(layout.desktopArrows.every((display) => display === 'none')).toBe(true);
-    } else {
-      expect(layout.mobileArrows.every((display) => display === 'none')).toBe(true);
-      expect(layout.desktopArrows.every((display) => display !== 'none')).toBe(true);
-    }
+    expect(layout.capabilityCount).toBe(6);
+    expect(layout.proofCount).toBe(4);
+    expect(layout.hasCapabilityAnchor).toBe(true);
     expect(errors).toEqual([]);
     await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
-    await page.screenshot({ path: `/tmp/public-examples-${width}.png`, fullPage: true });
+    await page.screenshot({ path: \`/tmp/public-capabilities-\${width}.png\`, fullPage: true });
     errors.length = 0;
   }
 });
@@ -783,13 +764,15 @@ test('public journey supports keyboard, reduced motion, and three target widths'
   }
 });
 
-test('examples, offer details, pricing, articles, and intake stay connected', async ({ page }) => {
+test('work, offer details, pricing, articles, and intake stay connected', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Explore this example: A page people can act on' }).click();
-  await expect(page).toHaveURL(/\/work#website-fix$/);
-  await page.locator('#website-fix').getByRole('link', { name: 'Explore Website Fix' }).click();
+  await page.getByRole('link', { name: 'See the real project behind this work', exact: true }).click();
+  await expect(page).toHaveURL(/\/work$/);
+  await page.getByRole('link', { name: 'See starting points', exact: true }).click();
+  await expect(page).toHaveURL(/\/services$/);
+  await page.getByRole('main').getByRole('link', { name: 'See Website Fix details', exact: true }).click();
   await expect(page).toHaveURL(/\/website-fix$/);
-  await page.getByRole('main').getByRole('link', { name: 'Share Your Vision', exact: true }).last().click();
+  await page.getByRole('main').getByRole('link', { name: 'Share Your Vision', exact: true }).first().click();
   await page.getByRole('button', { name: /^Step 4:/ }).click();
   await expect(page.getByRole('radio', { name: 'Website Fix', exact: true })).toBeChecked();
   await page.goBack();
@@ -801,7 +784,7 @@ test('examples, offer details, pricing, articles, and intake stay connected', as
   await expect(page.getByRole('link', { name: /^Read note:/ })).toHaveCount(3);
   await expect(page.getByRole('navigation', { name: 'Insight categories' })).toHaveCount(0);
   for (const [slug, destination] of [['ai-context-budget-tips', '/managed-automation'], ['loading-tricks-feel-instant', '/website-fix'], ['rewriting-copy-plain-language', '/website-fix']]) {
-    await page.goto(`/blog/${slug}`);
+    await page.goto(\`/blog/\${slug}\`);
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.locator('a[href*="?tag="]')).toHaveCount(0);

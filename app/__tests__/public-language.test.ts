@@ -10,7 +10,7 @@ import {
   PUBLIC_CORE_PROMISE,
   PUBLIC_REPORT_FALLBACK,
 } from '@/lib/public-copy';
-import { PUBLIC_EXAMPLES, PUBLIC_OFFERS } from '@/lib/public-offers';
+import { PUBLIC_OFFERS } from '@/lib/public-offers';
 import { RETAINED_ARTICLE_COPY } from '@/lib/public-article-copy';
 import { defaultFAQContent, defaultPrivacyContent, defaultTermsContent } from '@/lib/default-page-content';
 import { getRetiredBlogDestination, listBlogPosts } from '@/lib/blog-content';
@@ -54,6 +54,57 @@ describe('public language contract', () => {
     ].map(readApp).join('\n');
 
     expect(activePublicSources).not.toContain(retiredPromise);
+  });
+
+  it('rejects trust-undermining disclaimer copy on public-facing surfaces', () => {
+    const publicSurfacePaths = [
+      'components/home/HomePageClient.tsx',
+      'components/services/ServicesPageClient.tsx',
+      'components/work/WorkPageClient.tsx',
+      'components/public/OfferPage.tsx',
+      'components/public/ServiceIllustration.tsx',
+      'components/public/PublicClosing.tsx',
+      'components/public/PublicChrome.tsx',
+      'components/public/PublicHeader.tsx',
+      'app/about/page.tsx',
+      'app/ada-compliance/page.tsx',
+      'app/blog/page.tsx',
+      'app/blog/[slug]/page.tsx',
+      'app/contact/page.tsx',
+      'app/faq/page.tsx',
+      'app/how-it-works/page.tsx',
+      'app/managed-automation/page.tsx',
+      'app/pricing/page.tsx',
+      'app/privacy/page.tsx',
+      'app/services/page.tsx',
+      'app/site-analyzer/page.tsx',
+      'app/system/page.tsx',
+      'app/terms/page.tsx',
+      'app/website-fix/page.tsx',
+      'app/work/page.tsx',
+      'lib/public-capabilities.ts',
+      'lib/public-offers.ts',
+    ];
+    const publicCopy = publicSurfacePaths.map(readApp).join('\n');
+    const trustRiskPatterns = [
+      /\billustrative\b/i,
+      /\bhypothetical\b/i,
+      /\bnot\b[\s\S]{0,80}\bcase stud(?:y|ies)\b/i,
+      /\bnot\s+(?:customer|client)\s+results?\b/i,
+      /\bnot\s+screenshots?\b/i,
+      /\bwhat this could look like\b/i,
+      /\bcould look like\b/i,
+      /\b(?:does not|doesn't)\s+(?:represent|reflect)\s+(?:real|actual)\s+work\b/i,
+      /\bnot\s+(?:a|an)\s+(?:real|actual)\s+(?:project|example)\b/i,
+    ];
+    const matches = trustRiskPatterns
+      .filter((pattern) => pattern.test(publicCopy))
+      .map((pattern) => pattern.source);
+
+    expect(matches, 'Public copy must describe real capability and evidence directly.').toEqual([]);
+    expect(publicCopy).toContain(
+      'We build your vision, connect the tools you need, and solve the problem that matters most.',
+    );
   });
 
   it('keeps the future-work reassurance in the FAQ defaults', () => {

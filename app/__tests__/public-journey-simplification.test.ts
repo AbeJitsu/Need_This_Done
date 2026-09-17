@@ -103,30 +103,34 @@ describe('vision-first public journey', () => {
     expect(source('app/api/projects/route.ts')).toContain("formData.get('message')");
   });
 
-  it('gives services and examples separate jobs in the public journey', () => {
+  it('gives services, work, and home separate jobs in the public journey', () => {
     const services = source('components/services/ServicesPageClient.tsx');
     const work = source('components/work/WorkPageClient.tsx');
     const home = source('components/home/HomePageClient.tsx');
+
     expect(services).toContain('PUBLIC_OFFERS');
     expect(services).toContain('offer.fit');
     expect(services).toContain('offer.summary');
     expect(services).toContain('offer.price');
     expect(services).toContain('offer.detailHref');
-    expect(services).not.toContain('ThreeStepFlow');
+    expect(services).not.toContain('PUBLIC_CAPABILITIES');
     expect(services).not.toContain('ServiceIllustration');
     expect(services).not.toContain('Before');
-    expect(work).toContain('PUBLIC_EXAMPLES');
-    expect(work).toContain('Before');
-    expect(work).toContain('After');
-    expect(work).toContain('What changed');
-    expect(work).not.toContain('What is happening');
-    expect(work).not.toContain('What might be tried');
-    expect(work).not.toContain('How we help resolve it');
-    expect(work).not.toContain('ServiceIllustration');
+    expect(services).toContain('Starting points');
+
+    expect(work).toContain('PUBLIC_CAPABILITIES');
+    expect(work).toContain('PUBLIC_CAPABILITIES_INTRO');
+    expect(work).toContain('Built in production');
+    expect(work).toContain('data-public-capability-card');
+    expect(work).toContain('full-stack');
+    expect(work).not.toContain('PUBLIC_EXAMPLES');
+    expect(work).not.toMatch(/illustrative|hypothetical|case study|could look like|Before|After|What changed/i);
     expect(work).not.toMatch(/\$500|priced by proposal/i);
-    expect(home).toContain('PUBLIC_EXAMPLES');
-    expect(home).toContain('getPublicExampleHref');
+
     expect(home).toContain('offer.fit');
+    expect(home).toContain('href="/work"');
+    expect(home).not.toContain('PUBLIC_EXAMPLES');
+    expect(home).not.toContain('getPublicExampleHref');
     expect(home).not.toContain('What might be tried');
   });
 

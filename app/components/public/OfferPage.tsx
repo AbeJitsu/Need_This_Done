@@ -102,7 +102,7 @@ export default function OfferPage({
       <div className="public-section">
         <p className="text-3xl font-bold">{offer.price}</p>
         <p className="mt-3">We agree on the work and price before you commit.</p>
-        <Link href={`/work#${route.slice(1)}`} className="public-explore mt-4">Explore a {offer.name} example</Link>
+        <Link href="/work#capabilities" className="public-explore mt-4">Explore the full capability map</Link>
       </div>
       <PublicClosing title="Tell us what you want to change." href={offer.contactHref} secondary={PUBLIC_ROUTE_STAGES[route].secondary}>
         <p>Share the part that matters to you. We will clarify the work before you decide.</p>

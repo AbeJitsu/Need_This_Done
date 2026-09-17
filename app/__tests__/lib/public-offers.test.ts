@@ -1,14 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  getPublicExampleAnchor,
-  getPublicExampleHref,
-  PUBLIC_EXAMPLES,
-  PUBLIC_EXAMPLE_IDS,
-  PUBLIC_OFFERS,
-  PUBLIC_OFFER_IDS,
-} from "@/lib/public-offers";
+import { PUBLIC_CAPABILITIES } from "@/lib/public-capabilities";
+import { PUBLIC_OFFERS } from "@/lib/public-offers";
 
-describe("public offer and example records", () => {
+describe("public offer and capability records", () => {
   it("keeps the two public offer fits concise and distinct", () => {
     expect(PUBLIC_OFFERS["website-improvement"].fit).toBe(
       "One website problem getting in the way.",
@@ -18,33 +12,24 @@ describe("public offer and example records", () => {
     );
   });
 
-  it("contains exactly three complete illustrative stories", () => {
-    expect(PUBLIC_EXAMPLE_IDS).toHaveLength(3);
-    expect(Object.keys(PUBLIC_EXAMPLES)).toEqual([...PUBLIC_EXAMPLE_IDS]);
+  it("keeps the capability map complete and end to end", () => {
+    expect(PUBLIC_CAPABILITIES).toHaveLength(6);
+    expect(PUBLIC_CAPABILITIES.map(({ title }) => title)).toEqual([
+      "Frontends people can use",
+      "Backends and APIs that keep work moving",
+      "Data that stays useful",
+      "Connected tools and services",
+      "Agents and automations with a review point",
+      "Testing, deployment, and evidence",
+    ]);
 
-    for (const exampleId of PUBLIC_EXAMPLE_IDS) {
-      const example = PUBLIC_EXAMPLES[exampleId];
-      const keys = Object.keys(example).sort();
-      const expectedKeys = ["after", "before", "change"];
-      if (example.relatedOfferId) expectedKeys.push("relatedOfferId");
-
-      expect(keys).toEqual(expectedKeys.sort());
-      for (const copy of [example.before, example.after, example.change]) {
-        expect(copy.trim()).not.toBe("");
-        expect(copy).not.toMatch(/\$|\b(?:price|priced|total)\b|\b\d+\b/i);
-      }
-      if (example.relatedOfferId) {
-        expect(PUBLIC_OFFER_IDS).toContain(example.relatedOfferId);
+    for (const capability of PUBLIC_CAPABILITIES) {
+      expect(capability.description.trim()).not.toBe("");
+      expect(capability.examples).toHaveLength(3);
+      expect(new Set(capability.examples).size).toBe(3);
+      for (const copy of [capability.title, capability.description, ...capability.examples]) {
+        expect(copy).not.toMatch(/illustrative|hypothetical|case study|could look like|not customer results/i);
       }
     }
-  });
-
-  it("derives story anchors from related offer destinations", () => {
-    expect(getPublicExampleAnchor("website-fix")).toBe("website-fix");
-    expect(getPublicExampleAnchor("managed-automation")).toBe("managed-automation");
-    expect(getPublicExampleAnchor("first-step")).toBe("first-step");
-    expect(getPublicExampleHref("website-fix")).toBe("/work#website-fix");
-    expect(getPublicExampleHref("managed-automation")).toBe("/work#managed-automation");
-    expect(getPublicExampleHref("first-step")).toBe("/work#first-step");
   });
 });
