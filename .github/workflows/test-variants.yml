@@ -145,6 +145,10 @@ jobs:
         run: npm ci
 
       - name: Run required code gate
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-test-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: ci-test-service-role-key
         run: npm run verify:code
 
   release-metadata:
