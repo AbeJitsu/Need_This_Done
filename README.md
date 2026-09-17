@@ -103,14 +103,14 @@ NeedThisDone has two related but separate boundaries:
 - The public website explains the service and lets visitors share what they want improved. A public submission starts a conversation; it does not approve work or expose the private worker.
 - The private assistant is the authenticated system described above. It owns the planning, approval, execution, and evidence lifecycle.
 
-The public [`/system` case study](app/app/system/page.tsx) is a visual explanation for curious or technical readers. Its four proof lanes are code-owned in [`app/lib/system-progress.ts`](app/lib/system-progress.ts), so the page uses the same built, next-proof, and pending vocabulary as the implementation record.
+The public [`/system` overview](app/app/system/page.tsx) explains the difference between a conversation and a controlled path from request to result. Internal proof and operational status are rendered only in the authenticated operator workspace at `/admin/operations`, using [`app/lib/system-progress.ts`](app/lib/system-progress.ts).
 
 ## Documentation and evidence
 
 - [Roadmap](ROADMAP.md) — the required proof sequence and acceptance criteria.
 - [Project status](docs/PROJECT_STATUS.md) — implementation state, validation results, blockers, and rollback notes.
 - [Release evidence](docs/RELEASE_EVIDENCE.md) — what is verified, pending, or not claimable.
-- [Build progress map](docs/BUILD_PROGRESS_MAP.md) — the checklist behind the `/system` page.
+- [Build progress map](docs/BUILD_PROGRESS_MAP.md) — the private operator checklist for implementation proof.
 - [Test strategy](docs/TEST_STRATEGY.md) — what each test layer proves and does not prove.
 - [Launch checklist](docs/launch/LAUNCH_CHECKLIST.md) — separately approved hosted-promotion controls.
 - [Supabase guide](supabase/README.md) — schema and durable-data boundaries.
