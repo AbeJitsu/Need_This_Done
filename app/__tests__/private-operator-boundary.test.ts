@@ -58,6 +58,20 @@ describe('operator-only private boundary', () => {
     expect(page).toMatch(/await\s+requireOperator\s*\(\s*\)/);
   });
 
+
+  it('keeps internal system proof behind the operator workspace', () => {
+    const statusPanel = source('components/dashboard/SystemStatusPanel.tsx');
+    const operations = source('app/admin/operations/page.tsx');
+    const system = source('app/system/page.tsx');
+
+    expect(statusPanel).toContain('SYSTEM_PROOF_LANES');
+    expect(statusPanel).toContain('data-private-system-status');
+    expect(operations).toMatch(/await\s+requireOperator\s*\(\s*\)/);
+    expect(operations).toContain("robots: { index: false, follow: false }");
+    expect(system).not.toContain('SYSTEM_PROOF_LANES');
+    expect(system).not.toContain('system-proof-lane');
+  });
+
   it('keeps the owner workspace authenticated without granting operator controls', () => {
     const page = source('app/dashboard/page.tsx');
     expect(page).toContain("@/lib/authenticated-access");
