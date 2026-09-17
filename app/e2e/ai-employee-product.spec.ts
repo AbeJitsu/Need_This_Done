@@ -179,7 +179,7 @@ test('work capability map remains readable across widths', async ({ page }, test
     expect(layout.hasCapabilityAnchor).toBe(true);
     expect(errors).toEqual([]);
     await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
-    await page.screenshot({ path: \`/tmp/public-capabilities-\${width}.png\`, fullPage: true });
+    await page.screenshot({ path: `/tmp/public-capabilities-${width}.png`, fullPage: true });
     errors.length = 0;
   }
 });
@@ -784,7 +784,7 @@ test('work, offer details, pricing, articles, and intake stay connected', async 
   await expect(page.getByRole('link', { name: /^Read note:/ })).toHaveCount(3);
   await expect(page.getByRole('navigation', { name: 'Insight categories' })).toHaveCount(0);
   for (const [slug, destination] of [['ai-context-budget-tips', '/managed-automation'], ['loading-tricks-feel-instant', '/website-fix'], ['rewriting-copy-plain-language', '/website-fix']]) {
-    await page.goto(\`/blog/\${slug}\`);
+    await page.goto(`/blog/${slug}`);
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.locator('a[href*="?tag="]')).toHaveCount(0);
