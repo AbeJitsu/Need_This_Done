@@ -51,7 +51,7 @@ test('homepage trailer preserves public routes while keeping system detail optio
   await expect(page.getByRole('contentinfo').locator('a[href="/system"]')).toHaveCount(0);
   await expect(main.getByRole('link', { name: 'See how Website Fix works', exact: true })).toHaveAttribute('href', '/website-fix');
   await expect(main.getByRole('link', { name: 'See how Managed Automation works', exact: true })).toHaveAttribute('href', '/managed-automation');
-  await expect(main.getByRole('link', { name: 'Explore what I can help with', exact: true })).toHaveAttribute('href', '/services');
+  await expect(main.getByRole('link', { name: 'Explore what we can help with', exact: true })).toHaveAttribute('href', '/services');
   await expect(main.getByRole('link', { name: 'See the real project behind this work', exact: true })).toHaveAttribute('href', '/work');
 
   const primaryHrefs = await main.locator('.homepage-button').evaluateAll((links) => links.map((link) => link.getAttribute('href')));

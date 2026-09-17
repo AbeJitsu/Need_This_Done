@@ -62,7 +62,7 @@ describe('public route hygiene', () => {
       expect(readFileSync(resolve(appRoot, `app/${page}/page.tsx`), 'utf8')).toContain('permanentRedirect');
     }
     const about = readFileSync(resolve(appRoot, 'app/about/page.tsx'), 'utf8');
-    expect(about).toMatch(/title:\s*['\"]About Abe \| NeedThisDone['\"]/);
+    expect(about).toMatch(/title:\s*['\"]About Us \| NeedThisDone['\"]/);
     expect(about).not.toContain('permanentRedirect');
     expect(PUBLIC_OFFERS['website-improvement'].detailHref).toBe('/website-fix');
     const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');
