@@ -124,6 +124,17 @@ export default function WorkPageClient() {
               </article>
             ))}
           </div>
+
+          <div className="mt-10 border-t border-[var(--public-ink)]/10 pt-8 text-center">
+            <Link
+              href="/system"
+              data-public-system-cta
+              className="public-button inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--public-ink)]/20 px-5 py-2.5 font-bold text-[var(--public-ink)]"
+            >
+              See how the system carries work from request to review
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </section>
 
