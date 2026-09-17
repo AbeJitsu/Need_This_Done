@@ -243,13 +243,14 @@ describe('public language contract', () => {
     expect(contact).toContain('Your email');
   });
 
-  it('keeps technical system terms in the technical explanation', () => {
+  it('keeps internal system terms out of the public explanation', () => {
     const system = readApp('app/system/page.tsx');
-    const marker = system.indexOf('Technical map');
-    expect(marker).toBeGreaterThan(-1);
-    for (const term of ['Hermes', 'OpenClaw', 'Codex', 'worktree', 'MCP', 'Supabase', 'Redis', 'Upstash Vector']) {
-      expect(system).toContain(term);
-    }
+    const privateStatus = readApp('components/dashboard/SystemStatusPanel.tsx');
+
+    expect(system).not.toMatch(/Hermes|OpenClaw|Codex|worktree|MCP|Supabase|Redis|Upstash Vector|Technical map|Evidence:/i);
+    expect(system).not.toContain('SYSTEM_PROOF_LANES');
+    expect(privateStatus).toContain('SYSTEM_PROOF_LANES');
+    expect(privateStatus).toContain('Evidence:');
   });
 
   it('keeps legacy redirect destinations unchanged', () => {
