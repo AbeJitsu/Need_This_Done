@@ -3,15 +3,15 @@
 **Last updated:** 2026-09-12
 **Branch:** `feature/system-page-plain-english-2026-09-11`
 
-This is the implementation checklist behind the visual progress map on
-[`/system`](../app/app/system/page.tsx). It separates a code contract from a
-working connection. A green-looking contract does not mean the corresponding
-Supabase, Vercel, worker-host, or LLM-client service has been proven live.
+This is the private implementation checklist rendered in the authenticated
+operator workspace at [`/admin/operations`](../app/app/admin/operations/page.tsx).
+It separates a code contract from a working connection. A green-looking
+contract does not mean the corresponding Supabase, Vercel, worker-host, or
+LLM-client service has been proven live.
 
-The four displayed gates are code-owned in
-[`app/lib/system-progress.ts`](../app/lib/system-progress.ts). The page and
-unit tests consume that source so status labels, proof order, and evidence
-targets cannot drift silently.
+The four gates are code-owned in [`app/lib/system-progress.ts`](../app/lib/system-progress.ts).
+The private workspace and unit tests consume that source so status labels, proof
+order, and evidence targets cannot drift silently.
 
 ## The four proof gates
 
