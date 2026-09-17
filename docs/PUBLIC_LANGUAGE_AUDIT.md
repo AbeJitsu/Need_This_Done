@@ -50,7 +50,7 @@ on What We Do, How We Work, Examples, and Why Us. How We Work remains part of
 the primary reassurance path, and the homepage closes with Share Your Vision.
 
 The System is optional technical detail. The complete `/system` page remains
-available from the footer Explore links and its direct URL, with its sitemap
+available from a contextual Work-page link and its direct URL, with its sitemap
 entry, metadata, technical content, and direct contact/action links intact. It
 is useful for curious or technical visitors but is not required for conversion.
 
