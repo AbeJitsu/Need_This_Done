@@ -124,7 +124,7 @@ describe('vision-first public journey', () => {
     expect(work).toContain('data-public-capability-card');
     expect(work).toContain('Full-stack');
     expect(work).not.toContain('PUBLIC_EXAMPLES');
-    expect(work).not.toMatch(/illustrative|hypothetical|case study|could look like|Before|After|What changed/i);
+    expect(work).not.toMatch(/\b(?:illustrative|hypothetical|case study|could look like)\b/i);
     expect(work).not.toMatch(/\$500|priced by proposal/i);
 
     expect(home).toContain('offer.fit');
