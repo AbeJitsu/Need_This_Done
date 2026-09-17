@@ -177,16 +177,12 @@ terms, and why visitors should share their vision. Its primary navigation is
 What We Do → How We Work → Examples → Why Us, and the page ends with Share Your
 Vision. How We Work remains part of the primary reassurance path. The page
 keeps the work understandable without requiring technical detail.
-The public [system case study](app/app/system/page.tsx) remains the complete
-technical-details page for curious or technical visitors. It begins by
-explaining what the page will cover, shows one plain-English operating path,
-explains why each technical layer exists, and ends with a direct comparison:
-ordinary chat can answer and call tools, while NeedThisDone adds durable state,
-temporary coordination, selected semantic memory, controlled workers, and
-reviewable evidence. The path is compatible with any LLM client and any
-correctly configured local or cloud worker host; the MacBook Pro and Mac mini
-are current examples only. The page also identifies which connections are built
-or still pending.
+The public [system overview](app/app/system/page.tsx) stays focused on the
+plain-language difference between a conversation and a controlled path from
+request to result. It explains the four stages—define, approve, execute, and
+review—without exposing internal providers, evidence commands, or operational
+status. The private operator workspace at `/admin/operations` owns the detailed
+proof lanes, worker health, and implementation state.
 
 Keep `/system` available as optional detail from a contextual Work-page link and
 its direct URL, while keeping it out of the primary homepage navigation, global
