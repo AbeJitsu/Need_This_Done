@@ -188,7 +188,7 @@
   `/system` remains a complete, discoverable technical-details page with its
   direct contact and implementation links, canonical metadata, sitemap entry,
   and direct route contract; it is now available from the explicit footer
-  Explore link rather than required for conversion. The `/how-it-works` closing
+  Work-page link rather than a global footer link or required conversion step. The `/how-it-works` closing
   handoff now goes to `/work`. `npm run verify:code` passed lint, type-check,
   67 unit files/352 tests, 6 accessibility files/60 tests, and production
   build. `npm run test:retained-smoke` ran 96 public desktop/mobile checks:
