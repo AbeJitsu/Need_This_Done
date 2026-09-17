@@ -188,9 +188,9 @@ correctly configured local or cloud worker host; the MacBook Pro and Mac mini
 are current examples only. The page also identifies which connections are built
 or still pending.
 
-Keep `/system` available as optional detail from the footer Explore links and
-its direct URL, while keeping it out of the primary homepage navigation and
-conversion path. Changes to the homepage sections, CTA destinations, footer
+Keep `/system` available as optional detail from a contextual Work-page link and
+its direct URL, while keeping it out of the primary homepage navigation, global
+footer, and conversion path. Changes to the homepage sections, CTA destinations, footer
 link, card geometry, or motion must update the homepage assertions in
 `app/e2e/ai-employee-product.spec.ts` and the factual ledgers. Changes to the
 system stage model, metadata, direct CTAs, or responsive card geometry must
