@@ -194,7 +194,7 @@ export const ENGAGEMENT_ROUTES = [
 
 
 export const PUBLIC_FOOTER_GROUPS = [
-  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/system', label: 'The System' }, { href: '/blog', label: 'Insights' }] },
+  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/blog', label: 'Insights' }] },
   { title: 'Starting points', links: [
     ...Object.values(PUBLIC_OFFERS).map(offer => ({ href: offer.detailHref, label: offer.name })),
     { href: '/pricing', label: 'Pricing' }, { href: '/site-analyzer', label: 'Website Snapshot' },
