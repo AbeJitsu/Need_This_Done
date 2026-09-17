@@ -22,7 +22,7 @@ export default function robots(): MetadataRoute.Robots {
           '/account/',    // Authenticated account surfaces
           '/report/',     // Capability-linked audit reports are individually noindex
           '/auth/',       // Auth pages - private
-          '/login/',      // Login page - private
+          '/login',       // Login page - private
         ],
       },
     ],
