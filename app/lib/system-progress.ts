@@ -12,8 +12,8 @@ export type SystemProofLane = {
 /**
  * The durable, reviewer-facing proof order for the operating system.
  *
- * This is intentionally code-owned so the /system page and its tests use the
- * same current-state vocabulary. A state here describes repository evidence;
+ * This is intentionally code-owned so the private operator workspace and its
+ * tests use the same current-state vocabulary. A state here describes repository evidence;
  * it never claims that a hosted service or physical worker is live.
  */
 export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
