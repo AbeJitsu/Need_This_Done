@@ -120,7 +120,7 @@ async function callTool(
     const result = await dispatcher.listWorkflows(parsed.data, context);
     return { result: toolResult(result) };
   } catch {
-    return { result: toolError('Hermes could not complete the workflow request.') };
+    return { result: toolError('NeedThisDone could not complete the workflow request.') };
   }
 }
 

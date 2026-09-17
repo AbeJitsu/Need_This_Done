@@ -1,9 +1,24 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/system-page-plain-english-2026-09-11` (branched from `dev` at `c0d4cdedbe2162bb2c8e965ecda009d31eaf6394`)
-**Last updated:** 2026-09-12
+**Branch:** `feature/mcp-draft-dispatcher-2026-09-15` (branched from `dev` at `b515794ed21b9dfa499d7912902930d362708abc`)
+**Last updated:** 2026-09-15
 
 ## Latest change
+
+- On 2026-09-15, `/api/mcp` was connected to a server-side durable draft
+  dispatcher. `start_workflow` now creates an owner-scoped `mcp_workflows`
+  record; `get_workflow_status` and `list_workflows` read that same record.
+  Migration `115_mcp_workflows.sql` enforces bounded requests, idempotency,
+  approval-state consistency, owner-only authenticated reads, and service-role
+  writes. This creates no plan, task, provider call, worker command, Mac mini
+  connection, or external action. Focused MCP tests passed 17 tests with 2
+  expected local-database skips. The code gate passed lint, type-check, 76
+  required unit files / 404 tests, 6 accessibility files / 60 tests, and a
+  production build; `git diff --check` passed. Disposable local Supabase
+  validation is still pending because this environment has no Supabase CLI or
+  local environment profile. No hosted migration, deployment, remote MCP
+  connection, worker activation, external message, publication, or spend
+  occurred.
 
 - On 2026-09-12, the public `/system` page was rewritten around the problem
   chat alone leaves unresolved. The page now uses one concise comparison, four
