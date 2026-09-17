@@ -10,7 +10,7 @@ const principles = [
   ],
   [
     "Keep the work understandable",
-    "I explain the choices in plain language, so you can see what is changing and why it matters.",
+    "We explain the choices in plain language, so you can see what is changing and why it matters.",
   ],
   [
     "Build the useful piece first",
@@ -23,11 +23,11 @@ const principles = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: "About Abe | NeedThisDone",
+  title: "About Us | NeedThisDone",
   description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About Abe | NeedThisDone",
+    title: "About Us | NeedThisDone",
     description: PUBLIC_CORE_PROMISE,
     type: "website",
   },
@@ -39,14 +39,14 @@ export default function AboutPage() {
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
-            Meet the builder
+            Meet the team
           </p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
             Practical technology, built around people.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            I&apos;m Abe, a full-stack developer and technical operations specialist.
-            I build websites, tools, and workflows that make complicated work easier
+            We&apos;re the NeedThisDone team, led by Abe, a full-stack developer and technical operations specialist.
+            We build websites, tools, and workflows that make complicated work easier
             to understand and move forward.
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function AboutPage() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:items-start">
           <div>
             <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-              What I bring
+              What we bring
             </p>
             <h2 id="background-heading" className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl">
               Technical skill with a customer-facing mindset.
@@ -64,12 +64,12 @@ export default function AboutPage() {
           </div>
           <div className="max-w-[60ch] space-y-5 leading-7 text-[var(--public-muted)]">
             <p>
-              My work combines full-stack development, technical operations, and years
-              of customer-facing problem solving. That means I care about both the
+              Our work combines full-stack development, technical operations, and years
+              of customer-facing problem solving. That means we care about both the
               system behind the work and the person trying to use it.
             </p>
             <p>
-              I use modern tools to build and improve real products, while keeping the
+              We use modern tools to build and improve real products, while keeping the
               conversation direct, the scope clear, and the next step practical.
             </p>
           </div>

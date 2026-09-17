@@ -24,6 +24,37 @@ import {
 const appRoot = resolve(__dirname, '..');
 const readApp = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
+const publicCompanyVoicePaths = [
+  'components/home/HomePageClient.tsx',
+  'components/home/sections/Hero.tsx',
+  'components/services/ServicesPageClient.tsx',
+  'components/work/WorkPageClient.tsx',
+  'components/public/OfferPage.tsx',
+  'components/public/ServiceIllustration.tsx',
+  'components/public/PublicClosing.tsx',
+  'components/public/PublicChrome.tsx',
+  'components/public/PublicHeader.tsx',
+  'app/about/page.tsx',
+  'app/ada-compliance/page.tsx',
+  'app/blog/page.tsx',
+  'app/blog/[slug]/page.tsx',
+  'app/contact/page.tsx',
+  'app/faq/page.tsx',
+  'app/how-it-works/page.tsx',
+  'app/managed-automation/page.tsx',
+  'app/pricing/page.tsx',
+  'app/privacy/page.tsx',
+  'app/services/page.tsx',
+  'app/site-analyzer/page.tsx',
+  'app/system/page.tsx',
+  'app/terms/page.tsx',
+  'app/website-fix/page.tsx',
+  'app/work/page.tsx',
+  'lib/public-article-copy.ts',
+  'lib/public-capabilities.ts',
+  'lib/public-offers.ts',
+] as const;
+
 function textValues(value: unknown): string[] {
   if (typeof value === 'string') return [value];
   if (Array.isArray(value)) return value.flatMap(textValues);
@@ -54,6 +85,11 @@ describe('public language contract', () => {
     ].map(readApp).join('\n');
 
     expect(activePublicSources).not.toContain(retiredPromise);
+  });
+
+  it('keeps company-facing public copy in first-person plural', () => {
+    const publicCompanyCopy = publicCompanyVoicePaths.map(readApp).join('\n');
+    expect(publicCompanyCopy).not.toMatch(/\bI(?:['’](?:m|ve|ll|d))?\b/);
   });
 
   it('rejects trust-undermining disclaimer copy on public-facing surfaces', () => {

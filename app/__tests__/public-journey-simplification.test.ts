@@ -26,7 +26,8 @@ describe('vision-first public journey', () => {
     expect(home).toContain('href="/contact"');
     expect(home).toContain('Share Your Vision');
     expect(home).toContain('href="#examples"');
-    expect(home).toContain('See what I can build');
+    expect(home).toContain('See what we can build');
+    expect(home).not.toContain('See what I can build');
     expect(home).not.toContain('homepage-bridge');
     expect(home).not.toContain('Inspect the system behind the work');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);

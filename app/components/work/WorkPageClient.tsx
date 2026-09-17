@@ -101,7 +101,7 @@ export default function WorkPageClient() {
               NeedThisDone shows the pieces working together.
             </h2>
             <p className="mt-5 leading-7 text-[var(--public-muted)]">
-              NeedThisDone is a production platform I designed and built: a public site, private workspace, APIs, database-backed state, and delivery checks in one system.
+              NeedThisDone is a production platform we designed and built: a public site, private workspace, APIs, database-backed state, and delivery checks in one system.
             </p>
           </div>
 

@@ -146,7 +146,7 @@ const retainedArticleCopy: Record<string, RetainedArticleCopy> = {
     meta_title: 'Plain-Language Copy Helps People Understand Technical Work',
     meta_description: 'How to translate technical portfolio language into clear outcomes without losing accuracy.',
     content: [
-      'This sentence stopped me while I reviewed our portfolio:',
+      'This sentence stopped us while we reviewed our portfolio:',
       '*"Production-grade reliability: circuit breaker, retry logic, request deduplication."*',
       'It was accurate. It was not clear to a business reader.',
       'The site sounded like a resume for engineers. It needed to speak to the people who choose the work.',

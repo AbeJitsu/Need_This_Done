@@ -155,7 +155,7 @@ export default function HomePageClient() {
                   <ArrowRight aria-hidden="true" />
                 </Link>
                 <Link href="#examples" className="homepage-button homepage-button--ghost">
-                  See what I can build
+                  See what we can build
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </div>
@@ -298,13 +298,13 @@ export default function HomePageClient() {
       >
         <div className="homepage-section__inner">
           <div className="homepage-section__intro">
-            <p className="homepage-eyebrow">What I can build</p>
+            <p className="homepage-eyebrow">What we can build</p>
             <h2 id="examples-heading" className="homepage-heading homepage-heading--compact">
               Some problems need more than a quick fix.
             </h2>
             <p className="homepage-section__lead">
               A clear starting point keeps the work manageable. When the problem
-              needs more, the Capabilities page shows the kinds of work I can take on.
+              needs more, the Capabilities page shows the kinds of work we can take on.
             </p>
           </div>
 
@@ -337,7 +337,7 @@ export default function HomePageClient() {
           <div className="homepage-section__actions">
             <HomeNextStep sectionId="examples" />
             <Link href="/services" className="homepage-link">
-              Explore what I can help with
+              Explore what we can help with
               <ArrowRight aria-hidden="true" />
             </Link>
             <Link href="/work" className="homepage-link">

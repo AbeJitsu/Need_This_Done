@@ -79,7 +79,7 @@ export default function ServicesPageClient() {
             Not sure which path fits?
           </h2>
           <p className="mx-auto mt-5 max-w-xl leading-7 text-[var(--public-muted)]">
-            Share what is happening. I will help you choose a useful starting point.
+            Share what is happening. We will help you choose a useful starting point.
           </p>
           <Link href="/contact" className="public-button mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white">
             Share Your Vision
