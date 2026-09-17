@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { PUBLIC_NAVIGATION, PUBLIC_PRIMARY_ACTION } from '@/lib/public-journey';
 import { PUBLIC_OFFERS } from '@/lib/public-offers';
+import { listBlogPosts } from '@/lib/blog-content';
+import { seoConfig } from '@/lib/seo-config';
 import sitemap from '@/app/sitemap';
 import robots from '@/app/robots';
 
@@ -15,13 +17,36 @@ describe('public route hygiene', () => {
     expect(PUBLIC_PRIMARY_ACTION.label).toBe('Share Your Vision');
   });
 
-  it('does not publish retired route entries in the sitemap and keeps private surfaces out of indexing', async () => {
+  it('indexes every intended public route and keeps private surfaces out of indexing', async () => {
     const urls = (await sitemap()).map((entry) => new URL(entry.url).pathname);
-    expect(urls).toEqual(expect.arrayContaining(['/services', '/about', '/pricing', '/how-it-works', '/system', '/site-analyzer', '/work', '/blog']));
-    for (const retired of ['/resume', '/guide', '/build']) expect(urls).not.toContain(retired);
+    const expectedPublicStaticRoutes = [
+      '/',
+      '/work',
+      '/services',
+      '/about',
+      '/website-fix',
+      '/managed-automation',
+      '/pricing',
+      '/how-it-works',
+      '/system',
+      '/contact',
+      '/site-analyzer',
+      '/ada-compliance',
+      '/faq',
+      '/blog',
+      '/privacy',
+      '/terms',
+    ];
+    const expectedBlogRoutes = listBlogPosts().map((post) => `/blog/${post.slug}`);
+    expect(urls).toEqual(expect.arrayContaining([...expectedPublicStaticRoutes, ...expectedBlogRoutes]));
+    for (const nonIndexable of ['/login', '/dashboard', '/account', '/report', '/resume', '/guide', '/build']) {
+      expect(urls).not.toContain(nonIndexable);
+    }
 
-    const disallow = robots().rules?.[0]?.disallow || [];
-    expect(disallow).toEqual(expect.arrayContaining(['/dashboard/', '/employee/', '/prospecting/', '/admin/', '/report/']));
+    const robotsConfig = robots();
+    expect(robotsConfig.sitemap).toBe(`${seoConfig.baseUrl}/sitemap.xml`);
+    const disallow = robotsConfig.rules?.[0]?.disallow || [];
+    expect(disallow).toEqual(expect.arrayContaining(['/dashboard/', '/employee/', '/prospecting/', '/admin/', '/report/', '/login']));
   });
 
   it('keeps permanent redirects and the audit-to-intake handoff aligned', () => {
