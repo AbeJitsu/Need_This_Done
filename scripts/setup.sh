@@ -5,7 +5,7 @@
 # ============================================================================
 # What does this script do?
 # Initializes one ignored environment profile with all required environment variables.
-# It will ask for your API keys and auto-generate secure secrets.
+# It will ask for the provider keys used by the retained site and prepare one ignored environment profile.
 #
 # When to run it?
 # Once, when you first clone this project or need to regenerate your .env.local
@@ -18,8 +18,7 @@
 #
 # What it will generate:
 # - .env.local.profile or .env.cloud.profile with all required environment variables
-# - Auto-generated secrets for Medusa (DB password, JWT secrets, etc.)
-
+#
 set -e  # Exit if any command fails (safety first)
 
 echo "======================================================================="
@@ -89,32 +88,11 @@ done
 echo ""
 
 # ============================================================================
-# Collect User Input - Medusa (Railway)
-# ============================================================================
-
-echo "======================================================================="
-echo "3. Medusa Backend Configuration (Railway)"
-echo "======================================================================="
-echo ""
-echo "Get your Medusa backend URL from your Railway deployment."
-echo "It should look like: https://your-app.railway.app"
-echo ""
-
-read -p "Railway Medusa URL (https://...): " medusa_backend_url
-
-while [ -z "$medusa_backend_url" ]; do
-  echo "Medusa backend URL is required for e-commerce features."
-  read -p "Railway Medusa URL: " medusa_backend_url
-done
-
-echo ""
-
-# ============================================================================
 # Collect User Input - Stripe
 # ============================================================================
 
 echo "======================================================================="
-echo "4. Stripe Payment Configuration"
+echo "3. Stripe Payment Configuration"
 echo "======================================================================="
 echo ""
 echo "Get these from: https://dashboard.stripe.com/apikeys"
@@ -139,7 +117,7 @@ echo ""
 # ============================================================================
 
 echo "======================================================================="
-echo "5. Resend Email Configuration"
+echo "4. Resend Email Configuration"
 echo "======================================================================="
 echo ""
 echo "Get your API key from: https://resend.com/api-keys"
@@ -156,7 +134,7 @@ echo ""
 # ============================================================================
 
 echo "======================================================================="
-echo "6. OpenAI Configuration"
+echo "5. OpenAI Configuration"
 echo "======================================================================="
 echo ""
 echo "Get your API key from: https://platform.openai.com/api-keys"
@@ -173,33 +151,11 @@ done
 echo ""
 
 # ============================================================================
-# Generate Secrets
-# ============================================================================
-
-echo "======================================================================="
-echo "7. Generating Secure Secrets"
-echo "======================================================================="
-echo ""
-echo "Auto-generating secure passwords and secrets for Medusa backend..."
-echo ""
-
-# Generate all required secrets (32 bytes = strong encryption)
-medusa_db_password=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-40)
-medusa_jwt_secret=$(openssl rand -base64 32)
-medusa_admin_jwt_secret=$(openssl rand -base64 32)
-cookie_secret=$(openssl rand -base64 32)
-
-echo "✓ Database password generated"
-echo "✓ JWT secrets generated"
-echo "✓ Cookie secret generated"
-echo ""
-
-# ============================================================================
 # Create the selected environment profile
 # ============================================================================
 
 echo "======================================================================="
-echo "8. Creating $profile_path"
+echo "6. Creating $profile_path"
 echo "======================================================================="
 echo ""
 
@@ -233,16 +189,6 @@ NEXT_PUBLIC_SITE_URL=https://localhost
 # Node Environment (LOCAL DEVELOPMENT)
 # ============================================================================
 NODE_ENV=development
-
-# ============================================================================
-# Medusa E-commerce Backend (REQUIRED)
-# ============================================================================
-MEDUSA_DB_PASSWORD=$medusa_db_password
-MEDUSA_JWT_SECRET=$medusa_jwt_secret
-MEDUSA_ADMIN_JWT_SECRET=$medusa_admin_jwt_secret
-COOKIE_SECRET=$cookie_secret
-MEDUSA_BACKEND_URL=$medusa_backend_url
-ADMIN_CORS=https://localhost
 
 # ============================================================================
 # Stripe Payments (REQUIRED - UPDATE WITH YOUR KEYS)
