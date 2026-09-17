@@ -618,7 +618,7 @@ test('/system keeps the public overview cards readable across widths', async ({ 
       const stack = (containerSelector: string, itemSelector: string, cardSelector: string, connectorSelector: string) => {
         const container = document.querySelector<HTMLElement>(containerSelector);
         if (!container) return { rows: [], connectorCount: 0, vertical: false };
-        const items = Array.from(container.querySelectorAll<HTMLElement>(\`:scope > \${itemSelector}\`));
+        const items = Array.from(container.querySelectorAll<HTMLElement>(`:scope > ${itemSelector}`));
         const cards = items.map((item) => (item.matches(cardSelector) ? item : item.querySelector<HTMLElement>(cardSelector))?.getBoundingClientRect());
         const connectors = items.slice(0, -1).map((item) => item.querySelector<HTMLElement>(connectorSelector)?.getBoundingClientRect());
         const rows = new Map<number, number>();
@@ -671,7 +671,7 @@ test('/system keeps the public overview cards readable across widths', async ({ 
     expect(layout.reducedMapMotion).toBe('none');
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(new AxeBuilder({ page }).include('main').analyze()).resolves.toMatchObject({ violations: [] });
-    await page.screenshot({ path: \`/tmp/system-overview-\${viewport.width}.png\`, fullPage: true });
+    await page.screenshot({ path: `/tmp/system-overview-${viewport.width}.png`, fullPage: true });
   }
 });
 
