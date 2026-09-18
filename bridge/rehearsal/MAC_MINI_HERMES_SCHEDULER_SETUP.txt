@@ -1,0 +1,224 @@
+NeedThisDone Mac mini + Hermes scheduler setup
+
+Purpose
+
+Prepare the Mac mini to become the private NeedThisDone scheduler and
+read-only worker host. ChatGPT Work remains the conversation surface. It uses
+the public NeedThisDone MCP endpoint to create, inspect, pause, resume, and
+remove NeedThisDone schedules. Hermes on the Mac mini reconciles due schedules
+from durable server-side records and sends results back through the existing
+signed outbound bridge.
+
+The number of schedules is therefore governed by NeedThisDone's own durable
+records, quotas, and safety policies—not by the native ChatGPT Work scheduled
+task list. The Mac mini never accepts an inbound connection from ChatGPT Work.
+
+Target operating path (not yet live)
+
+  ChatGPT Work
+      -> public NeedThisDone MCP over HTTPS + OAuth
+      -> Supabase durable schedules, runs, approvals, and evidence
+      -> Mac mini outbound signed claim/reconciliation
+      -> Hermes scheduler/coordinator
+      -> loopback-only OpenClaw read-only worker
+      -> signed result and evidence back to Supabase and ChatGPT Work
+
+If the Mac mini is asleep or offline, the schedule remains durable and due.
+When it returns, Hermes must apply the stored missed-run policy. The initial
+policy to implement is "coalesce one read-only missed run"—never replay a
+backlog or perform an external action while recovering.
+
+What exists on this branch
+
+- The public Streamable HTTP MCP transport is at /api/mcp, with
+  start_workflow, get_workflow_status, and list_workflows.
+- The signed, outbound-only bridge and the Mac worker lifecycle command exist:
+  preflight, prepare, status, start, stop, and disposable-local test.
+- The read-only OpenClaw profile, fixed executor model, loopback Gateway, and
+  review-only launchd preparation are guarded by existing checks.
+
+What does not exist yet
+
+- A durable recurrence schema, scheduler loop, missed-run handling, or
+  schedule-specific MCP tools.
+- A working durable Hermes dispatcher behind the default MCP handler; it still
+  fails closed until the persistence adapter is connected.
+- ChatGPT Work OAuth authorization for NeedThisDone MCP. Existing ntd_mcp_
+  bearer credentials are a repository seam, not the ChatGPT Work connector.
+- A Mac mini activation, a hosted MCP connection, or a live worker rehearsal.
+
+Do not run the activating start command until every implementation and proof
+gate in this runbook has been accepted.
+
+ChatGPT Work connection gate
+
+ChatGPT Work must connect to a public HTTPS MCP endpoint that supports
+Streamable HTTP and authentication discovery. For authenticated MCP, ChatGPT
+expects OAuth 2.1; it cannot present a custom API key. The future MCP increment
+must therefore provide protected-resource metadata, authorization-server
+discovery, authorization-code + PKCE support, and server-side token validation
+for issuer, audience/resource, expiration, and scopes.
+
+Official references:
+
+  https://developers.openai.com/plugins/deploy/connect-chatgpt
+  https://developers.openai.com/plugins/build/auth
+
+Select and configure an established OAuth 2.1 identity provider before trying
+to connect Work. Do not expose an ntd_mcp_ token, a bridge secret, a gateway
+token, a provider key, or a Mac mini address to ChatGPT Work.
+
+Scheduler implementation contract
+
+Build and test these pieces before treating the Mac mini as a scheduler:
+
+1. Store schedules and schedule runs in Supabase, not Redis. Each schedule
+   needs an owner, enabled/paused state, IANA timezone, recurrence, next due
+   time, missed-run policy, bounded input template, approval reference, and
+   immutable run/evidence links.
+2. Give every materialized run an idempotency key based on schedule ID and
+   scheduled-for time. A retry must return the same run, never create a second
+   execution.
+3. Have Hermes on the Mac mini claim only a due, server-recorded run through
+   the signed outbound bridge. It must use a lease and leave the run available
+   for safe recovery if the Mac stops mid-run.
+4. Add narrow MCP tools: create_schedule, list_schedules, get_schedule,
+   pause_schedule, resume_schedule, delete_schedule, and list_schedule_runs.
+   Keep generic workflow tools separate until the durable Hermes adapter is
+   connected.
+5. Start with a draft-only schedule. It may create a reviewable proposed run,
+   but may not invoke a worker. A later read-only automatic pilot needs an
+   explicit, time-bounded standing approval tied to one exact template and
+   zero external actions. Coding, messages, publication, spend, deployment,
+   and merges always require their own later approval.
+6. Test recurrence, timezones, duplicate delivery, lease expiry, pause/resume,
+   deletion, and the one-run missed-run policy locally before any hosted
+   migration or Mac activation.
+
+First safe pilot to implement
+
+Use a daily "NeedThisDone evidence review" schedule: inspect durable workflow
+state, prior runs, known gaps, and only repository metadata exposed through an
+approved read-only retrieval path; write a private report; make no code change,
+network-side change, message, publication, purchase, or account change. The
+current OpenClaw proof profile deliberately has no local filesystem authority,
+so a codebase review needs its own narrowly approved read-only retrieval
+increment. The schedule must be owner-scoped and revocable from both the
+browser control plane and the future MCP tools.
+
+Mac mini preparation (safe; does not activate a worker)
+
+Run the following on the Mac mini after the branch is pushed. Substitute the
+actual macOS account name and private paths; do not place private values in the
+repository.
+
+1. Clone the branch and install only bridge dependencies:
+
+  git clone git@github.com:AbeJitsu/Need_This_Done.git /Users/YOUR_MAC_USER/Developer/Need_This_Done
+  cd /Users/YOUR_MAC_USER/Developer/Need_This_Done
+  git fetch origin
+  git switch --track origin/feature/work-hermes-scheduler-2026-09-18
+  git status --short --branch
+  cd bridge
+  npm ci
+  npm test
+  cd ..
+
+   If SSH is not configured, use the repository's HTTPS clone URL instead.
+   Require Node 22 or newer. Do not run bridge/npm start as the host lifecycle.
+
+2. Run the independent OpenClaw host proof before configuring the bridge:
+
+  bridge/openclaw-proof/RUNBOOK.txt
+
+   It creates a separate, read-only needthisdone profile with
+   openai/gpt-5.6-luna at max thinking. The browser OAuth approval in that
+   proof is per host; never copy another Mac's token store.
+
+3. Create the private runtime directory and a mode-600 bridge environment:
+
+  install -d -m 700 /Users/YOUR_MAC_USER/.needthisdone
+  install -d -m 700 /Users/YOUR_MAC_USER/.needthisdone/mac-worker
+  install -d -m 700 /Users/YOUR_MAC_USER/.needthisdone/mac-worker/artifacts
+  umask 077
+  nano /Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env
+  chmod 600 /Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env
+
+   The private file must contain placeholders replaced outside Git:
+
+  BRIDGE_MODE=approved
+  BRIDGE_API_URL=https://YOUR_DEPLOYED_NEEDTHISDONE_HOST
+  OPENCLAW_BRIDGE_SECRET=REPLACE_WITH_PRIVATE_SIGNING_SECRET
+  BRIDGE_OWNER_ID=REPLACE_WITH_OWNER_UUID
+  BRIDGE_WORKER_ID=mac-mini-hermes
+  OPENCLAW_GATEWAY_TOKEN=REPLACE_WITH_A_RANDOM_VALUE_AT_LEAST_32_CHARACTERS
+  BRIDGE_ARTIFACT_ROOT=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/artifacts
+  OPENCLAW_EXECUTOR_MODEL_ID=openai/gpt-5.6-luna
+  OPENCLAW_READ_ONLY_PROFILE=needthisdone
+  OPENCLAW_BUILDER_PROFILE=needthisdone-codex-builder
+
+   OPENCLAW_GATEWAY_URL may stay at its loopback default,
+   ws://127.0.0.1:18789. Set OPENCLAW_CONFIG_PATH only if the host cannot
+   discover the read-only profile itself. The private Mac never receives a
+   Supabase service-role key.
+
+4. Run non-activating validation and launchd preparation:
+
+  cd /Users/YOUR_MAC_USER/Developer/Need_This_Done
+  BRIDGE_ENV_FILE=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env \
+    npm run mac:worker -- preflight --json
+  BRIDGE_ENV_FILE=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env \
+    bridge/launchd/validate-runtime-config.sh
+  BRIDGE_ENV_FILE=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env \
+    npm run mac:worker -- prepare --json
+  BRIDGE_ENV_FILE=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env \
+    npm run mac:worker -- status --json
+
+   preflight and configuration validation do not start a Gateway, bridge, or
+   worker. prepare builds the bridge and renders review-only launchd files; it
+   does not call launchctl. status is read-only and redacts secrets, but it
+   sends a signed status request to BRIDGE_API_URL when private configuration
+   is present; treat that as the separate approved connection check rather than
+   a local-only validation.
+
+Activation gate (do not run as part of setup)
+
+The current command starts only the existing Gateway and bridge. It does not
+create recurring schedules. Do not run it until the scheduler implementation,
+OAuth connection, hosted control-plane proof, Mac mini host proof, and one
+read-only workflow rehearsal have all been separately approved.
+
+When that gate is accepted, the explicit operator command is:
+
+  BRIDGE_ENV_FILE=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env \
+    npm run mac:worker -- start --confirm START_NEEDTHISDONE_WORKER
+
+To stop a later approved activation without deleting the runtime data:
+
+  BRIDGE_ENV_FILE=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/bridge.env \
+    npm run mac:worker -- stop
+
+Required evidence before activation
+
+- Local tests prove the schedule lifecycle, RLS/ownership, idempotency,
+  missed-run behavior, and all new MCP tools.
+- A separately approved hosted migration and read-only hosted MCP connection
+  are recorded. No secret provisioning or migration occurs during this setup.
+- ChatGPT Work completes OAuth and can create, inspect, pause, and delete a
+  draft-only schedule against the public HTTPS endpoint.
+- The Mac mini passes its own OpenClaw proof, bridge preflight, and
+  configuration-only validation without cache or permission failures.
+- A browser-visible, owner-approved read-only run is claimed outbound by the
+  Mac mini and returns durable evidence. It must also prove that unapproved,
+  changed, expired, stopped, paid-route, and duplicate runs fail closed.
+- The owner explicitly accepts the launchd activation after reviewing the
+  prepared plists and logs. No automatic merge, deploy, messaging,
+  publication, spend, or account change is included.
+
+Rollback and recovery
+
+Pause or delete the server-side schedule first. If a host process has been
+approved and started, use the stop command above. Keep private evidence and
+runtime data according to the owner's retention policy; do not delete broad
+home-directory paths. Repository changes roll back through a reviewed Git
+revert, and any hosted correction remains forward-only.

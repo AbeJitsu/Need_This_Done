@@ -14,7 +14,7 @@ The goal is not an uncontrolled autonomous agent. The goal is a durable record o
 
 ## Current status
 
-The repository contains a substantial local implementation, but the complete live workflow is still being proven. The table below is the authoritative high-level status as of September 11, 2026.
+The repository contains a substantial local implementation, but the complete live workflow is still being proven. The table below is the authoritative high-level status as of September 18, 2026.
 
 | Proof gate | Status | What that means |
 |---|---|---|
@@ -49,6 +49,7 @@ These capabilities are designed and partially implemented, but should not be des
 
 - A remote LLM client completing a secure hosted connection to NeedThisDone MCP.
 - The default MCP dispatcher creating durable Hermes workflows; it currently fails closed until the durable Hermes persistence adapter is connected.
+- Durable recurring schedules, schedule-specific MCP tools, missed-run handling, or a ChatGPT Work OAuth connection to NeedThisDone MCP.
 - Hosted Supabase migration 113, hosted secrets, hosted Redis, or remote MCP reachability.
 - A live Upstash Vector index and memory projection.
 - A NeedThisDone-controlled worker run on the MacBook Pro, Mac mini, private server, or cloud host.
@@ -113,6 +114,7 @@ The public [`/system` overview](app/app/system/page.tsx) explains the difference
 - [Build progress map](docs/BUILD_PROGRESS_MAP.md) — the private operator checklist for implementation proof.
 - [Test strategy](docs/TEST_STRATEGY.md) — what each test layer proves and does not prove.
 - [Launch checklist](docs/launch/LAUNCH_CHECKLIST.md) — separately approved hosted-promotion controls.
+- [Mac mini Hermes scheduler runbook](bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt) — activation-gated host preparation and the implementation proof sequence for scheduled work.
 - [Supabase guide](supabase/README.md) — schema and durable-data boundaries.
 
 ## Local development

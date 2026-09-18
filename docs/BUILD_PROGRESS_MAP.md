@@ -1,7 +1,7 @@
 # NeedThisDone build progress map
 
-**Last updated:** 2026-09-12
-**Branch:** `feature/system-page-plain-english-2026-09-11`
+**Last updated:** 2026-09-18
+**Branch:** `feature/work-hermes-scheduler-2026-09-18`
 
 This is the private implementation checklist rendered in the authenticated
 operator workspace at [`/admin/operations`](../app/app/admin/operations/page.tsx).
@@ -64,6 +64,23 @@ bridge contracts, OpenClaw safety constraints, and the visible system map. The
 default MCP dispatcher still fails closed because the durable Hermes adapter is
 not connected. That is the most important code-to-runtime gap before a real
 local workflow can pass.
+
+## Scheduled-work target
+
+The Mac mini runbook at
+[`bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt`](../bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt)
+prepares a future scheduler host without activating it. The target keeps
+ChatGPT Work as the MCP client, Supabase as the durable schedule/run truth,
+and the Mac mini as an outbound-only Hermes reconciler. It is not a native
+ChatGPT Work task and it is not a second durable queue.
+
+Before this target can advance, the codebase needs owner-scoped schedule/run
+records, recurrence/timezone/missed-run policy, idempotent materialization,
+lease-based outward claims, schedule MCP tools, and a ChatGPT Work-compatible
+OAuth 2.1 resource-server path. The initial safe pilot is draft-only; a later
+read-only automatic run needs a separate standing approval. No Mac mini,
+hosted MCP connection, scheduler, or worker execution is claimed by this
+documentation increment.
 
 The required order remains:
 

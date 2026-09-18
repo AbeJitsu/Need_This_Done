@@ -1,9 +1,25 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/system-page-plain-english-2026-09-11` (branched from `dev` at `c0d4cdedbe2162bb2c8e965ecda009d31eaf6394`)
-**Last updated:** 2026-09-12
+**Branch:** `feature/work-hermes-scheduler-2026-09-18` (branched from `dev` at `26c2697eb0d61eef9f9d4cb95f5a7794ccb44dbd`)
+**Last updated:** 2026-09-18
 
 ## Latest change
+
+- On 2026-09-18, the dated branch added the activation-gated
+  `bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt` handoff runbook. It
+  records the target ChatGPT Work → public OAuth MCP → durable Supabase
+  schedule/run records → outbound Mac mini Hermes reconciliation → loopback
+  OpenClaw path, the exact private-host preparation commands, the future
+  schedule lifecycle contract, and the evidence required before activation.
+  This is documentation and implementation planning only. The current MCP
+  dispatcher still fails closed; OAuth, recurring schedule records/tools,
+  hosted connection, Mac mini host proof, and worker activation remain pending.
+  No credentials, deployment, migration, provider activation, launchd load,
+  worker start, external message, publication, spend, or account change
+  occurred. The bridge TypeScript build, 19 non-macOS bridge tests, launchd
+  shell syntax checks, and `git diff --check` passed. The one launchd-renderer
+  integration test remains to run on macOS because it invokes BSD `stat` and
+  `plutil`; it was not treated as a pass in this Linux checkout.
 
 - On 2026-09-12, the public `/system` page was rewritten around the problem
   chat alone leaves unresolved. The page now uses one concise comparison, four

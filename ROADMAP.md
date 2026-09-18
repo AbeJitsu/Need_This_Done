@@ -65,6 +65,24 @@ It is complete only when all of these are true:
 7. Rehearse and record the read-only workflow. Then separately approve and
    rehearse one tiny Codex worktree task.
 
+## Scheduled-work readiness — 2026-09-18
+
+The `feature/work-hermes-scheduler-2026-09-18` branch records the intended
+ChatGPT Work → NeedThisDone MCP → durable schedule → outbound Mac mini Hermes
+path in
+[`bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt`](bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt).
+It adds preparation documentation only; it does not activate a Mac, add a
+schedule table, connect ChatGPT Work, or make the current MCP dispatcher live.
+
+The next implementation slice is a durable owner-scoped schedule/run lifecycle
+in Supabase, with idempotency, leases, IANA timezones, pause/resume, and a
+coalesced read-only missed-run policy. Hermes on the Mac mini must reconcile
+and claim due work outward; the Mac must never accept an inbound connection.
+The corresponding MCP tools and a ChatGPT Work-compatible OAuth 2.1 resource
+server are separate code and hosted-proof increments. The first pilot remains
+draft-only, followed only by an explicit, time-bounded standing approval for a
+single read-only report. Coding and all external actions keep per-run approval.
+
 ## MCP account boundary — 2026-09-10
 
 The account-authentication increment establishes one narrow boundary: an

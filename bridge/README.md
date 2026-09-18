@@ -78,6 +78,11 @@ BRIDGE_ENV_FILE=/ABSOLUTE/PRIVATE/PATH/bridge.env \
 [`rehearsal/RUNBOOK.txt`](rehearsal/RUNBOOK.txt) records the exact preparation
 and the separate approval boundary for the future read-only rehearsal.
 
+[`rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt`](rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt)
+is the handoff runbook for the future Mac mini scheduler host. It distinguishes
+the existing signed bridge from the unbuilt durable recurrence and ChatGPT Work
+OAuth increments, and it must be followed before any activation request.
+
 The package's direct `npm start` entrypoint is not the host lifecycle command.
 Start the worker only after the server-side contract and the Mac runtime have
 each received their own approval, using the repository-level command above.
