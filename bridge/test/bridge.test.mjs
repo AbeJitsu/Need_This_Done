@@ -9,6 +9,7 @@ import { test } from 'node:test';
 import { BridgeApiClient, BridgeApiError } from '../dist/bridge-client.js';
 import { OpenClawGatewayClient } from '../dist/openclaw-gateway.js';
 import { AgentBridgeRunner } from '../dist/runner.js';
+import { HermesScheduler } from '../dist/hermes-scheduler.js';
 import { validateBridgeRehearsalConfiguration } from '../dist/validate-config.js';
 
 const ownerId = '00000000-0000-4000-8000-000000000001';
@@ -54,6 +55,10 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
     workerId: 'test-worker',
   });
 
+  await client.schedulerTick(7);
+  assert.equal(request.url, 'http://127.0.0.1:3000/api/agent-bridge/hermes-scheduler/tick');
+  assert.deepEqual(JSON.parse(request.init.body), { ownerId, workerId: 'test-worker', limit: 7 });
+
   await client.complete({ taskId, status: 'failed', providerInvoked: false, error: 'pre-provider validation failure' });
   assert.equal(JSON.parse(request.init.body).providerInvoked, false);
 
@@ -78,6 +83,19 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
     assert.equal(error.status, 409);
     return true;
   });
+});
+
+test('HermesScheduler only materializes durable approval-required runs', async () => {
+  const scheduler = new HermesScheduler({
+    schedulerTick: async () => ({
+      materialized: 1,
+      runs: [{ id: taskId, scheduleId: runId, scheduledFor: '2026-09-18T09:00:00.000Z', status: 'awaiting_approval' }],
+      checkedAt: '2026-09-18T09:00:01.000Z',
+    }),
+  });
+  const result = await scheduler.runOnce();
+  assert.equal(result.status, 'materialized');
+  assert.equal(result.tick.runs[0].status, 'awaiting_approval');
 });
 
 test('rehearsal configuration validation is local-only and refuses a non-HTTPS bridge URL', () => {
@@ -121,7 +139,7 @@ test('approved private-Mac rehearsal runbook remains configuration-only', async 
   assert.match(runbook, /unapproved, altered, stopped, expired, and paid-route tasks/);
 });
 
-test('launchd renderer is review-only, validates private files, and leaves no placeholders', async () => {
+test('launchd renderer is review-only, validates private files, and leaves no placeholders', { skip: process.platform !== 'darwin' ? 'launchd plist validation is macOS-only' : false }, async () => {
   const runtime = await mkdtemp(join(tmpdir(), 'needthisdone-launchd-runtime-'));
   const output = await mkdtemp(join(tmpdir(), 'needthisdone-launchd-output-'));
   await chmod(runtime, 0o700);

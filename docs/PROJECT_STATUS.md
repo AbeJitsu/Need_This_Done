@@ -5,6 +5,18 @@
 
 ## Latest change
 
+- On 2026-09-18, the dated scheduler branch added a draft-only Hermes
+  scheduler service: migration `115_hermes_scheduler_draft_runs.sql`, a signed
+  tick route, a separate Mac-side scheduler process, and a review-only launchd
+  template. The service persists owner-scoped daily schedules/runs in Supabase
+  and coalesces a due/missed occurrence into one immutable `awaiting_approval`
+  run. It never opens OpenClaw, claims an orchestration task, or performs an
+  external action. Schedule-creation MCP tools, ChatGPT Work OAuth, hosted
+  migration, Mac mini activation, and approval-to-worker dispatch remain
+  pending. Bridge tests passed 20 with the macOS-only launchd-render test
+  skipped; the signed route test passed 2 and app type-check passed. No hosted
+  action occurred.
+
 - On 2026-09-18, the dated branch added the activation-gated
   `bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt` handoff runbook. It
   records the target ChatGPT Work → public OAuth MCP → durable Supabase

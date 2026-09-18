@@ -3,12 +3,14 @@ import { fileURLToPath } from 'node:url';
 import { BridgeApiClient } from './bridge-client.js';
 import { OpenClawGatewayClient } from './openclaw-gateway.js';
 import { AgentBridgeRunner } from './runner.js';
+import { HermesScheduler } from './hermes-scheduler.js';
 
 const DEFAULT_VERSION = '0.1.0';
 const DEFAULT_GATEWAY_URL = 'ws://127.0.0.1:18789';
 const DEFAULT_ARTIFACT_ROOT = 'bridge-artifacts';
 const DEFAULT_POLL_INTERVAL_MS = 5_000;
 const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+const DEFAULT_HERMES_SCHEDULER_POLL_INTERVAL_MS = 60_000;
 const ALLOWED_EXECUTOR_MODEL_ID = 'openai/gpt-5.6-luna';
 const DEFAULT_RUNTIME_MODE = 'approved';
 const DEFAULT_CAPABILITIES = [
@@ -26,6 +28,11 @@ export type BridgeRuntimeMode = 'approved' | 'disposable-local';
 
 export type BridgeRuntime = {
   runner: AgentBridgeRunner;
+  pollIntervalMs: number;
+};
+
+export type HermesSchedulerRuntime = {
+  scheduler: HermesScheduler;
   pollIntervalMs: number;
 };
 
@@ -136,6 +143,38 @@ export function createBridgeRuntime(environment: RuntimeEnvironment = process.en
   return {
     runner,
     pollIntervalMs: parseBoundedNumber(environment, 'BRIDGE_POLL_INTERVAL_MS', DEFAULT_POLL_INTERVAL_MS, 1_000, 300_000),
+  };
+}
+
+/**
+ * The scheduler has no OpenClaw dependency. It signs an outbound call to
+ * materialize durable drafts, keeping a sleeping/offline Mac recoverable
+ * without exposing an inbound connection or running work automatically.
+ */
+export function createHermesSchedulerRuntime(environment: RuntimeEnvironment = process.env): HermesSchedulerRuntime {
+  const ownerId = required(environment, 'BRIDGE_OWNER_ID');
+  if (!isUuid(ownerId)) throw new Error('BRIDGE_OWNER_ID must be a UUID.');
+  const version = environment.BRIDGE_VERSION?.trim() || DEFAULT_VERSION;
+  const workerId = required(environment, 'BRIDGE_WORKER_ID');
+  const mode = bridgeRuntimeMode(environment);
+  const baseUrl = required(environment, 'BRIDGE_API_URL');
+  validateBridgeApiUrl(baseUrl, mode);
+  const api = new BridgeApiClient({
+    baseUrl,
+    secret: required(environment, 'OPENCLAW_BRIDGE_SECRET'),
+    ownerId,
+    workerId,
+    version,
+  });
+  return {
+    scheduler: new HermesScheduler(api, parseBoundedNumber(environment, 'HERMES_SCHEDULER_BATCH_SIZE', 20, 1, 50)),
+    pollIntervalMs: parseBoundedNumber(
+      environment,
+      'HERMES_SCHEDULER_POLL_INTERVAL_MS',
+      DEFAULT_HERMES_SCHEDULER_POLL_INTERVAL_MS,
+      1_000,
+      300_000,
+    ),
   };
 }
 

@@ -41,6 +41,17 @@ export type WorkerStatus = {
   currentTask: JsonObject | null;
 };
 
+export type HermesScheduleTick = {
+  materialized: number;
+  runs: Array<{
+    id: string;
+    scheduleId: string;
+    scheduledFor: string;
+    status: 'awaiting_approval';
+  }>;
+  checkedAt: string;
+};
+
 export type ProspectingPayload = {
   dossiers: unknown[];
   providerCitations: Array<{ url: string; title: string; excerpt: string }>;
@@ -183,6 +194,18 @@ export class BridgeApiClient {
 
   schedule(limit = 20) {
     return this.post<{ tasks: ClaimedTask[]; queued: number }>('/api/agent-bridge/schedule', {
+      ownerId: this.ownerId,
+      workerId: this.workerId,
+      limit,
+    });
+  }
+
+  /**
+   * Materializes due schedule records only. This endpoint intentionally cannot
+   * claim a worker task or invoke the local OpenClaw gateway.
+   */
+  schedulerTick(limit = 20) {
+    return this.post<HermesScheduleTick>('/api/agent-bridge/hermes-scheduler/tick', {
       ownerId: this.ownerId,
       workerId: this.workerId,
       limit,

@@ -37,10 +37,18 @@ What exists on this branch
 - The read-only OpenClaw profile, fixed executor model, loopback Gateway, and
   review-only launchd preparation are guarded by existing checks.
 
+What exists now
+
+- A durable, owner-scoped daily schedule/run schema and a signed outbound
+  Hermes scheduler loop. When a due schedule is observed, it coalesces missed
+  time into one immutable `awaiting_approval` run and advances the next due
+  time. This does not create an OpenClaw task or execute anything.
+- A review-only `com.needthisdone.hermes-scheduler` launchd template and
+  wrapper. `npm run mac:worker -- prepare` renders it but does not load it.
+
 What does not exist yet
 
-- A durable recurrence schema, scheduler loop, missed-run handling, or
-  schedule-specific MCP tools.
+- Schedule-specific MCP tools or a server-side schedule creation surface.
 - A working durable Hermes dispatcher behind the default MCP handler; it still
   fails closed until the persistence adapter is connected.
 - ChatGPT Work OAuth authorization for NeedThisDone MCP. Existing ntd_mcp_
@@ -72,16 +80,15 @@ Scheduler implementation contract
 
 Build and test these pieces before treating the Mac mini as a scheduler:
 
-1. Store schedules and schedule runs in Supabase, not Redis. Each schedule
-   needs an owner, enabled/paused state, IANA timezone, recurrence, next due
-   time, missed-run policy, bounded input template, approval reference, and
-   immutable run/evidence links.
-2. Give every materialized run an idempotency key based on schedule ID and
-   scheduled-for time. A retry must return the same run, never create a second
-   execution.
-3. Have Hermes on the Mac mini claim only a due, server-recorded run through
-   the signed outbound bridge. It must use a lease and leave the run available
-   for safe recovery if the Mac stops mid-run.
+1. Add the narrow schedule management surface. The current schema supports
+   owner, active/paused state, IANA timezone, daily recurrence, next due time,
+   bounded template, and immutable review-run snapshot. The future creator
+   must calculate the first due instant server-side.
+2. Add an explicit review/approval-to-plan transition. The scheduler itself
+   only creates `awaiting_approval` rows; it must never claim work or invoke a
+   worker.
+3. Add later run leases only after that approval transition exists. A stopped
+   Mac must leave the approved work recoverable without duplicating it.
 4. Add narrow MCP tools: create_schedule, list_schedules, get_schedule,
    pause_schedule, resume_schedule, delete_schedule, and list_schedule_runs.
    Keep generic workflow tools separate until the durable Hermes adapter is
