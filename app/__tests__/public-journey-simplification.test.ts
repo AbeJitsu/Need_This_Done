@@ -182,7 +182,7 @@ describe('vision-first public journey', () => {
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
     expect(readme).toContain('# NeedThisDone');
     expect(readme).toContain('## Public website and private assistant');
-    expect(readme).toContain('The public [`/system` case study](app/app/system/page.tsx) is a visual explanation');
+    expect(readme).toContain('The public [`/system` overview](app/app/system/page.tsx) explains the difference');
     expect(roadmap).toContain('Assistant-first finish line');
     expect(roadmap).toContain('## Public homepage and optional `/system` proof');
   });

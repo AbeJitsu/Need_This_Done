@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { POST } from '@/app/api/agent-bridge/hermes-scheduler/tick/route';
+import { POST } from '@/app/api/agent-bridge/workflow-scheduler/tick/route';
 
 const { consumeNonce, getSupabaseAdmin, verifySigned } = vi.hoisted(() => ({
   consumeNonce: vi.fn(),
@@ -14,11 +14,11 @@ vi.mock('@/lib/agent-bridge-auth', () => ({
 }));
 vi.mock('@/lib/supabase', () => ({ getSupabaseAdmin }));
 
-describe('signed Hermes scheduler tick route', () => {
+describe('signed workflow scheduler tick route', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     verifySigned.mockResolvedValue({
-      body: JSON.stringify({ ownerId: '00000000-0000-4000-8000-000000000001', workerId: 'mac-mini-hermes', limit: 10 }),
+      body: JSON.stringify({ ownerId: '00000000-0000-4000-8000-000000000001', workerId: 'mac-mini-workflow', limit: 10 }),
       nonce: 'scheduler-nonce',
     });
     consumeNonce.mockResolvedValue(null);
@@ -32,7 +32,7 @@ describe('signed Hermes scheduler tick route', () => {
     }], error: null }));
     getSupabaseAdmin.mockReturnValue({ rpc });
 
-    const response = await POST(new Request('http://localhost/api/agent-bridge/hermes-scheduler/tick', { method: 'POST' }));
+    const response = await POST(new Request('http://localhost/api/agent-bridge/workflow-scheduler/tick', { method: 'POST' }));
     const body = await response.json();
 
     expect(response.status).toBe(200);
@@ -44,8 +44,8 @@ describe('signed Hermes scheduler tick route', () => {
   });
 
   it('rejects invalid bodies before consuming the nonce', async () => {
-    verifySigned.mockResolvedValue({ body: JSON.stringify({ workerId: 'mac-mini-hermes' }), nonce: 'bad-nonce' });
-    const response = await POST(new Request('http://localhost/api/agent-bridge/hermes-scheduler/tick', { method: 'POST' }));
+    verifySigned.mockResolvedValue({ body: JSON.stringify({ workerId: 'mac-mini-workflow' }), nonce: 'bad-nonce' });
+    const response = await POST(new Request('http://localhost/api/agent-bridge/workflow-scheduler/tick', { method: 'POST' }));
     expect(response.status).toBe(400);
     expect(consumeNonce).not.toHaveBeenCalled();
   });

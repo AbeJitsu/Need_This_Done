@@ -2,7 +2,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { expect, test } from '@playwright/test';
 
 const localUrl = 'http://127.0.0.1:54321';
-const password = 'local-hermes-plan-preview-123!';
+const password = 'local-workflow-plan-preview-123!';
 const planId = '00000000-0000-4000-8000-000000000071';
 let admin: SupabaseClient;
 let userId: string;
@@ -36,14 +36,14 @@ function plan(status: 'draft' | 'approved') {
 
 test.beforeAll(async ({}, workerInfo) => {
   if (process.env.ENV_TARGET !== 'local' || process.env.NEXT_PUBLIC_SUPABASE_URL !== localUrl) {
-    throw new Error('Hermes browser contract is local-only.');
+    throw new Error('Workflow browser contract is local-only.');
   }
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceRoleKey) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY for Hermes browser contract.');
+  if (!serviceRoleKey) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY for workflow browser contract.');
   admin = createClient(localUrl, serviceRoleKey, { auth: { autoRefreshToken: false, persistSession: false } });
-  email = `hermes-plan-${Date.now()}-${workerInfo.workerIndex}@example.test`;
+  email = `workflow-plan-${Date.now()}-${workerInfo.workerIndex}@example.test`;
   const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
-  if (error || !data.user) throw new Error(error?.message || 'Could not create Hermes browser fixture user.');
+  if (error || !data.user) throw new Error(error?.message || 'Could not create workflow browser fixture user.');
   userId = data.user.id;
   const role = await admin.from('user_roles').upsert({ user_id: userId, role: 'admin' });
   if (role.error) throw new Error(role.error.message);
@@ -90,7 +90,7 @@ test('an authenticated browser reviews route, cost, and approval before frozen-p
   expect(login.ok()).toBe(true);
   await page.goto('/admin/operations');
 
-  await expect(page.getByRole('heading', { name: 'Review a Hermes plan before OpenClaw runs' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Review a workflow plan before OpenClaw runs' })).toBeVisible();
   await expect(page.getByText('Route: selected-free.')).toBeVisible();
   await expect(page.getByText('$0.0000 estimated')).toBeVisible();
   await expect(page.getByText('send_external_messages')).toBeVisible();
@@ -99,7 +99,7 @@ test('an authenticated browser reviews route, cost, and approval before frozen-p
   await page.getByRole('button', { name: 'Approve and freeze' }).click();
   await expect.poll(() => approvalBody).toMatchObject({ note: 'Reviewed in the authenticated operations dashboard.' });
   expect(String(approvalBody?.idempotencyKey)).toMatch(/^[0-9a-f-]{36}$/);
-  await expect(page.getByRole('status')).toContainText('Hermes plan approved and frozen.');
+  await expect(page.getByRole('status')).toContainText('Workflow plan approved and frozen.');
   await expect(page.getByRole('button', { name: 'Dispatch frozen plan' })).toBeVisible();
   expect(dispatchCalls).toBe(0);
 });

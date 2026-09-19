@@ -54,7 +54,7 @@ fi
 for template in "$script_dir"/*.plist.template; do
   name="$(basename "$template" .template)"
   target="$output_dir/$name"
-  sed -e "s|__PRIVATE_ENV_PATH__|$runtime_dir/bridge.env|g" -e "s|__PRIVATE_CONFIG_PATH__|$config_path|g" -e "s|__LOG_DIR__|$runtime_dir/logs|g" -e "s|__RUNNER_PATH__|$script_dir/run-bridge.sh|g" -e "s|__GATEWAY_RUNNER_PATH__|$script_dir/run-gateway.sh|g" -e "s|__HERMES_SCHEDULER_RUNNER_PATH__|$script_dir/run-hermes-scheduler.sh|g" -e "s|__BRIDGE_ENTRYPOINT__|$script_dir/../dist/index.js|g" -e "s|__HERMES_SCHEDULER_ENTRYPOINT__|$script_dir/../dist/hermes-scheduler-entrypoint.js|g" -e "s|__NODE_BINARY__|$node_binary|g" -e "s|__OPENCLAW_BINARY__|$openclaw_binary|g" -e "s|__OPENCLAW_PROFILE__|$openclaw_profile|g" -e "s|__OPENCLAW_GATEWAY_PORT__|$gateway_port|g" "$template" > "$target"
+  sed -e "s|__PRIVATE_ENV_PATH__|$runtime_dir/bridge.env|g" -e "s|__PRIVATE_CONFIG_PATH__|$config_path|g" -e "s|__LOG_DIR__|$runtime_dir/logs|g" -e "s|__RUNNER_PATH__|$script_dir/run-bridge.sh|g" -e "s|__GATEWAY_RUNNER_PATH__|$script_dir/run-gateway.sh|g" -e "s|__WORKFLOW_SCHEDULER_RUNNER_PATH__|$script_dir/run-workflow-scheduler.sh|g" -e "s|__BRIDGE_ENTRYPOINT__|$script_dir/../dist/index.js|g" -e "s|__WORKFLOW_SCHEDULER_ENTRYPOINT__|$script_dir/../dist/workflow-scheduler-entrypoint.js|g" -e "s|__NODE_BINARY__|$node_binary|g" -e "s|__OPENCLAW_BINARY__|$openclaw_binary|g" -e "s|__OPENCLAW_PROFILE__|$openclaw_profile|g" -e "s|__OPENCLAW_GATEWAY_PORT__|$gateway_port|g" "$template" > "$target"
   if rg -q '__[A-Z_]+__' "$target" || ! "$plutil_binary" -lint "$target" >/dev/null; then
     rm -f "$target"
     echo "template rendering failed validation" >&2

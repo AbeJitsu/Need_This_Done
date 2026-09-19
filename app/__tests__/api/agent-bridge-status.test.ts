@@ -29,7 +29,7 @@ describe('signed Mac worker status route', () => {
     verifySigned.mockResolvedValue({
       body: JSON.stringify({
         ownerId: '00000000-0000-4000-8000-000000000001',
-        workerId: 'macbook-pro-hermes-rehearsal',
+        workerId: 'macbook-pro-workflow-rehearsal',
       }),
       nonce: 'status-nonce',
     });
@@ -38,7 +38,7 @@ describe('signed Mac worker status route', () => {
 
   it('returns only durable heartbeat and current-task status', async () => {
     const heartbeat = {
-      worker_id: 'macbook-pro-hermes-rehearsal',
+      worker_id: 'macbook-pro-workflow-rehearsal',
       owner_id: '00000000-0000-4000-8000-000000000001',
       status: 'online',
       version: 'bridge',
@@ -76,7 +76,7 @@ describe('signed Mac worker status route', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body.workerId).toBe('macbook-pro-hermes-rehearsal');
+    expect(body.workerId).toBe('macbook-pro-workflow-rehearsal');
     expect(body.heartbeat).toEqual(heartbeat);
     expect(body.currentTask).toEqual(safeTask);
     expect(JSON.stringify(body)).not.toContain('must-not-be-returned');

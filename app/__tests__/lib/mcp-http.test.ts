@@ -38,6 +38,7 @@ describe('MCP Streamable HTTP request boundary', () => {
     expect(response.status).toBe(200);
     expect(body.result.protocolVersion).toBe(MCP_PROTOCOL_VERSION);
     expect(body.result.capabilities.tools).toEqual({ listChanged: false });
+    expect(body.result.serverInfo).toEqual({ name: 'needthisdone-workflows', version: '0.1.0' });
   });
 
   it('returns exactly the three approved tools after protocol initialization', async () => {
@@ -52,8 +53,8 @@ describe('MCP Streamable HTTP request boundary', () => {
   });
 
   it('dispatches a validated start request while preserving approval gating', async () => {
-    // This proves the authenticated site owner reaches Hermes explicitly;
-    // it does not prove that the durable Hermes dispatcher or worker is live.
+    // This proves the authenticated site owner reaches the workflow boundary;
+    // it does not prove that durable dispatch or a worker is live.
     const startWorkflow = vi.fn(async (_input, context) => {
       expect(context).toEqual(authContext);
       return {

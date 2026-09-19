@@ -13,7 +13,7 @@ configured worker-host workflow. Local tests alone do not meet this finish line.
 [ Owner requests work in the browser ]
                  |
                  v
-[ Hermes returns a bounded plan and allowed model route ]
+[ Workflow planner returns a bounded plan and allowed model route ]
                  |
                  v
 [ Owner approves the frozen plan in the browser ]
@@ -44,7 +44,9 @@ It is complete only when all of these are true:
    control planes.
 2. Keep the site-account-to-MCP boundary separate from worker authentication:
    site login identifies the owner, an owner-scoped bearer credential authorizes
-   `/api/mcp`, and Hermes/OpenClaw retain their private worker-host credentials.
+   `/api/mcp`, and the workflow planner/OpenClaw retain their private
+   worker-host credentials. Hermes CLI is an unrelated optional external tool;
+   it is not part of this runtime.
    Store only token hashes and show raw MCP tokens once; prove migration 113 and
    RLS locally before any hosted migration or endpoint proof.
 3. Connect the signed private bridge to a real loopback OpenClaw Gateway on a
@@ -52,8 +54,8 @@ It is complete only when all of these are true:
    outbound-only boundary and frozen-plan checks. The MacBook Pro is the first
    rehearsal example and the Mac mini is the intended always-on example; neither
    is a permanent architecture requirement.
-4. Use Hermes to return the bounded plan and approved model route. Prefer an
-   allowed OpenRouter free route; surface a paid route for separate browser
+4. Use the NeedThisDone workflow planner to return the bounded plan and approved
+   model route. Prefer an allowed OpenRouter free route; surface a paid route for separate browser
    approval instead of silently falling back.
 5. Keep the existing `REDIS_URL` integration for transient acceleration and
    coordination only. Add no second durable queue or database.
@@ -65,21 +67,42 @@ It is complete only when all of these are true:
 7. Rehearse and record the read-only workflow. Then separately approve and
    rehearse one tiny Codex worktree task.
 
+## Naming and value correction — 2026-09-19
+
+The internal planner and recurrence process are named **workflow planner** and
+**workflow scheduler**. The name Hermes is reserved for the separate external
+Hermes CLI. Deployed compatibility identifiers such as `planner: "hermes"`,
+the legacy scheduler tick alias, scheduler RPC/table names, and historical
+migration/test names remain unchanged until a forward migration can preserve
+existing signed workers and hosted data. They are explicitly legacy wire
+names, not a CLI dependency.
+
+NeedThisDone is justified only by durable operational leverage over Work alone:
+cross-tool state, deduplication/recovery, approval and cost boundaries, private
+outbound execution, and evidence. The first measurable pilot is a weekday
+read-only project-maintenance review that reports changes and, after approval,
+returns a tested branch/commit. It never merges, deploys, applies migrations,
+or sends external messages automatically. Compare owner minutes, useful
+findings, duplicate alerts, recovery interventions, successful runs, and cost
+over two weeks of Work-only versus two weeks of NeedThisDone; keep the system
+only if the net time saved is meaningful.
+
 ## Scheduled-work readiness — 2026-09-18
 
-The `feature/work-hermes-scheduler-2026-09-18` branch records the intended
-ChatGPT Work → NeedThisDone MCP → durable schedule → outbound Mac mini Hermes
+The `refactor/workflow-planner-naming-2026-09-19` branch records the intended
+ChatGPT Work → NeedThisDone MCP → durable schedule → outbound Mac mini workflow
 path in
-[`bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt`](bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt).
+[`bridge/rehearsal/MAC_MINI_WORKFLOW_SCHEDULER_SETUP.txt`](bridge/rehearsal/MAC_MINI_WORKFLOW_SCHEDULER_SETUP.txt).
 It now includes the draft-only durable schedule/run foundation and outbound
-Hermes tick loop. It does not activate a Mac, connect ChatGPT Work, expose
+workflow scheduler tick loop. It does not activate a Mac, connect ChatGPT Work, expose
 schedule-management MCP tools, or make the current MCP dispatcher live.
 
 The next implementation slice is schedule management: validated IANA timezone
 creation, pause/resume, and owner-visible review history. The durable layer
 already coalesces a missed daily run and inserts at most one approval-required
-run for its schedule-time identity. Hermes remains outbound-only and never
-accepts an inbound connection. MCP tools and a ChatGPT Work-compatible OAuth
+run for its schedule-time identity. The workflow scheduler remains
+outbound-only and never accepts an inbound connection. MCP tools and a ChatGPT
+Work-compatible OAuth
 2.1 resource server are separate code and hosted-proof increments. The first
 pilot remains draft-only; coding and all external actions keep per-run approval.
 
@@ -90,11 +113,11 @@ authenticated NeedThisDone owner creates and revokes owner-scoped credentials
 from Account Settings, and a compatible LLM presents that bearer credential to
 `/api/mcp`. The server resolves the owner and credential, rejects missing,
 malformed, revoked, expired, cross-origin, or unavailable-storage requests,
-records last use, and passes the owner context into the Hermes contract. Raw
+records last use, and passes the owner context into the workflow contract. Raw
 tokens are never persisted and are returned only in the creation response.
 
-This does not authenticate or activate Hermes/OpenClaw on a worker host, wire
-durable MCP-to-Hermes dispatch, activate Redis or vector memory, prove hosted
+This does not authenticate or activate Hermes CLI/OpenClaw on a worker host, wire
+durable MCP-to-workflow dispatch, activate Redis or vector memory, prove hosted
 Supabase/Vercel, or rebuild the chatbot. The required next proof is disposable
 local Supabase migration 113/RLS plus the local account/API/MCP checks; hosted
 promotion remains a separately approved later stage.
@@ -110,7 +133,7 @@ operator planning, approvals, dispatch, worker controls, and internal health
 remain behind the existing operator boundary.
 
 This first slice is read-only. It does not claim that a public contact request
-is linked to an owner, that the Hermes dispatcher is live, or that a worker has
+is linked to an owner, that the workflow dispatcher is live, or that a worker has
 completed a customer workflow. The next implementation slice is to connect an
 accepted request to an authenticated owner record, then add the approved
 request-creation path and a private-file preview once the local RLS proof is
@@ -124,7 +147,7 @@ green.
 | Browser approval and durable workflow lifecycle | Built and locally tested through the retained `agent_plans` / run / task records | Complete a real read-only worker-host rehearsal |
 | Redis | Existing `REDIS_URL` client is active for cache, rate limits, and deduplication | Use it for transient workflow signals only after durable dispatch exists |
 | Vector memory | Private Upstash Vector adapter and environment contract are implemented locally; chatbot/page indexing remains retired | Configure the index and run a namespaced upsert/query check |
-| MCP facade | Device-independent schemas, owner-scoped account credentials, a local Streamable HTTP handler, owner-context propagation, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production remote access and Hermes persistence wiring remain pending | Pass migration 113/RLS and the local profile, then the hosted profile, then connect the dispatcher to durable Hermes records |
+| MCP facade | Device-independent schemas, owner-scoped account credentials, a local Streamable HTTP handler, owner-context propagation, and an opt-in stage-reporting Playwright diagnostic are implemented and tested; the diagnostic now enforces real local Supabase first and a separate hosted read-only profile; production remote access and workflow persistence wiring remain pending | Pass migration 113/RLS and the local profile, then the hosted profile, then connect the dispatcher to durable workflow records |
 | Worker host | Any correctly configured local computer, private server, or cloud machine; not activated | Configure the private bridge environment and validate the loopback Gateway |
 | MacBook Pro (example) | Abe's interactive coding and first bridge-rehearsal host | Use for the first rehearsal if selected |
 | Mac mini (example) | Intended always-on worker-host example; not activated | Repeat the approved worker proof if selected |
@@ -137,7 +160,7 @@ Each capability must carry the narrowest useful evidence at each layer:
 | Layer | Evidence we can build now | What remains later |
 | --- | --- | --- |
 | Unit | Pure validation, credential hashing/redaction, MCP auth outcomes, owner-scoped API behavior, status mapping, Redis coordination helpers, and vector REST request/response tests | None for deterministic behavior |
-| Contract | MCP/Hermes schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
+| Contract | MCP/workflow schemas, bridge signatures, worker payloads, Supabase lifecycle shapes, Redis signals, and vector provenance metadata | Confirm the live clients use the same contract |
 | Integration | Disposable local Supabase/RLS including migration 113, controlled Redis, signed bridge routes, and mocked Upstash REST; the MCP diagnostic adds a real local-Supabase-first check | Hosted Supabase, Upstash account, and Mac runtime integration |
 | Browser/E2E | Existing approval/review journeys plus the opt-in MCP vertical-slice diagnostic with health, auth, discovery, and workflow-stage evidence | A real worker-backed journey, vector projection, and remote compatible-LLM connector |
 | Live rehearsal | Not available in this environment | Selected local/cloud worker host, Vercel, Supabase, Redis/vector, provider, and durable result |
@@ -210,7 +233,7 @@ link, card geometry, or motion must update the homepage assertions in
 system stage model, metadata, direct CTAs, or responsive card geometry must
 update its route assertions and the same ledgers.
 
-## Public `/system` case study
+## Public `/system` overview
 
 The public [system case study](app/app/system/page.tsx) is an explanatory page
 for the private-system boundary, not part of the assistant finish line. Its

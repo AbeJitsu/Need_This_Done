@@ -84,7 +84,7 @@ function samplePlan(): Plan {
   };
 }
 
-export default function HermesPlanPanel({ previewMode = false }: { previewMode?: boolean }) {
+export default function WorkflowPlanPanel({ previewMode = false }: { previewMode?: boolean }) {
   const [plans, setPlans] = useState<Plan[]>(previewMode ? [samplePlan()] : []);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [request, setRequest] = useState('');
@@ -102,13 +102,13 @@ export default function HermesPlanPanel({ previewMode = false }: { previewMode?:
     try {
       const response = await fetch('/api/agent-plans', { cache: 'no-store' });
       const payload = await response.json() as { plans?: Plan[]; growthProfiles?: Profile[]; error?: string };
-      if (!response.ok) throw new Error(payload.error || 'Hermes plans could not be loaded.');
+      if (!response.ok) throw new Error(payload.error || 'Workflow plans could not be loaded.');
       setPlans(payload.plans || []);
       setProfiles(payload.growthProfiles || []);
       setProfileId((current) => current || payload.growthProfiles?.find((profile) => !profile.emergency_stop)?.id || '');
       setError(null);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Hermes plans could not be loaded.');
+      setError(loadError instanceof Error ? loadError.message : 'Workflow plans could not be loaded.');
     } finally {
       setLoading(false);
     }
@@ -119,7 +119,7 @@ export default function HermesPlanPanel({ previewMode = false }: { previewMode?:
   const selectedProfile = useMemo(() => profiles.find((profile) => profile.id === profileId) || null, [profiles, profileId]);
 
   async function createPlan() {
-    if (previewMode) { setNotice('Local preview is read-only. No Hermes request was sent.'); return; }
+    if (previewMode) { setNotice('Local preview is read-only. No Workflow request was sent.'); return; }
     if (!request.trim() || !profileId) { setError('Choose a growth profile and enter the operator request.'); return; }
     setBusy('create'); setError(null);
     try {
@@ -128,12 +128,12 @@ export default function HermesPlanPanel({ previewMode = false }: { previewMode?:
         body: JSON.stringify({ originalRequest: request, workflowType, growthProfileId: profileId, idempotencyKey: key() }),
       });
       const payload = await response.json() as { error?: string; plan?: Plan; duplicate?: boolean };
-      if (!response.ok) throw new Error(payload.error || 'Hermes could not create a draft.');
-      setNotice(payload.duplicate ? 'The Hermes request was already saved.' : 'Hermes draft created. Review it before approval.');
+      if (!response.ok) throw new Error(payload.error || 'Workflow planner could not create a draft.');
+      setNotice(payload.duplicate ? 'The Workflow request was already saved.' : 'Workflow draft created. Review it before approval.');
       setRequest('');
       await load();
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : 'Hermes could not create a draft.');
+      setError(createError instanceof Error ? createError.message : 'Workflow planner could not create a draft.');
     } finally { setBusy(null); }
   }
 
@@ -147,10 +147,10 @@ export default function HermesPlanPanel({ previewMode = false }: { previewMode?:
       const payload = await response.json() as { error?: string };
       if (!response.ok) throw new Error(payload.error || `Plan ${actionName} failed.`);
       setNotice(actionName === 'dispatch'
-        ? 'Frozen Hermes plan dispatched to the signed Mac bridge queue.'
+        ? 'Frozen workflow plan dispatched to the signed Mac bridge queue.'
         : actionName === 'approve'
-          ? 'Hermes plan approved and frozen.'
-          : 'Hermes plan rejection recorded.');
+          ? 'Workflow plan approved and frozen.'
+          : 'Workflow plan rejection recorded.');
       await load();
     } catch (actionError) {
       setError(actionError instanceof Error ? actionError.message : `Plan ${actionName} failed.`);
@@ -178,9 +178,9 @@ export default function HermesPlanPanel({ previewMode = false }: { previewMode?:
   }
 
   return (
-    <section className="mt-8" aria-labelledby="hermes-plan-heading">
+    <section className="mt-8" aria-labelledby="workflow-plan-heading">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Hermes · bounded plan only</p><h2 id="hermes-plan-heading" className="mt-2 text-3xl font-black">Review a Hermes plan before OpenClaw runs</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[#50675e]">Hermes rewrites and decomposes the request. A human freezes the reviewed plan; only then can the browser dispatch it to the signed Mac bridge. The first route is free-only.</p></div>
+        <div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Workflow · bounded plan only</p><h2 id="workflow-plan-heading" className="mt-2 text-3xl font-black">Review a workflow plan before OpenClaw runs</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[#50675e]">The workflow planner rewrites and decomposes the request. A human freezes the reviewed plan; only then can the browser dispatch it to the signed Mac bridge. The first route is free-only.</p></div>
         <span className="rounded-full bg-[#e5f2eb] px-3 py-2 text-xs font-bold text-[#126b4e]">No automatic dispatch</span>
       </div>
 
@@ -193,12 +193,12 @@ export default function HermesPlanPanel({ previewMode = false }: { previewMode?:
           <label className="block text-sm font-bold">Operator request<textarea value={request} onChange={(event) => setRequest(event.target.value)} placeholder="Describe the outcome you want prepared for review…" className="mt-2 min-h-24 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] p-3 text-sm font-normal" disabled={previewMode} /></label>
           <label className="block text-sm font-bold">Workflow<select value={workflowType} onChange={(event) => setWorkflowType(event.target.value as typeof workflowType)} className="mt-2 min-h-10 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] px-3 text-sm" disabled={previewMode}><option value="research_outreach">Research + drafts</option><option value="daily_content">Daily content</option></select></label>
           <label className="block text-sm font-bold">Growth profile<select value={profileId} onChange={(event) => setProfileId(event.target.value)} className="mt-2 min-h-10 w-full rounded-xl border border-[#183229]/15 bg-[#f7f4ed] px-3 text-sm" disabled={previewMode || !profiles.length}><option value="">Select profile</option>{profiles.map((profile) => <option value={profile.id} key={profile.id} disabled={profile.emergency_stop}>{profile.name}{profile.selected_model_id ? '' : ' · pin model first'}</option>)}</select></label>
-          <button className={buttonClass + ' bg-[#126b4e] text-white disabled:opacity-50'} disabled={previewMode || busy === 'create' || !selectedProfile} onClick={() => void createPlan()}>{busy === 'create' ? 'Planning…' : 'Create Hermes plan'}</button>
+          <button className={buttonClass + ' bg-[#126b4e] text-white disabled:opacity-50'} disabled={previewMode || busy === 'create' || !selectedProfile} onClick={() => void createPlan()}>{busy === 'create' ? 'Planning…' : 'Create Workflow plan'}</button>
         </div>
       </article>
 
       <div className="mt-5 space-y-4">
-        {plans.length === 0 && !loading && <p className={panelClass + ' text-sm text-[#50675e]'}>No Hermes drafts yet.</p>}
+        {plans.length === 0 && !loading && <p className={panelClass + ' text-sm text-[#50675e]'}>No Workflow drafts yet.</p>}
         {plans.slice(0, 8).map((plan) => <PlanCard key={plan.id} plan={plan} editing={editing[plan.id] ?? plan.rewritten_instruction} setEditing={(value) => setEditing((current) => ({ ...current, [plan.id]: value }))} busy={busy} previewMode={previewMode} onSave={() => void saveEdit(plan)} onAction={(name) => void action(plan, name)} />)}
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildHermesOpenClawInstruction, estimateHermesRequest, parseHermesOutput, planWithHermes } from '@/lib/hermes';
+import { buildOpenClawInstruction, estimateWorkflowPlannerRequest, parseWorkflowPlannerOutput, planWorkflow } from '@/lib/workflow-planner';
 import type { OpenRouterModel } from '@/lib/openrouter-core';
 
 const step = {
@@ -30,9 +30,10 @@ function model(): OpenRouterModel {
   };
 }
 
-describe('Hermes bounded planning role', () => {
+describe('NeedThisDone workflow planner', () => {
   it('normalizes mandatory forbidden actions and creates a delivery-disabled OpenClaw instruction', () => {
-    const plan = parseHermesOutput(raw, 'research_outreach');
+    const plan = parseWorkflowPlannerOutput(raw, 'research_outreach');
+    // Frozen v2 snapshots use this deployed marker; it is not a Hermes CLI dependency.
     expect(plan.forbiddenActions).toEqual(expect.arrayContaining([
       'send_external_messages', 'publish_content', 'spend_money',
       'change_connected_accounts', 'deliver_external_content',
@@ -42,19 +43,19 @@ describe('Hermes bounded planning role', () => {
 
   it('rejects a task whose role does not match its safe task type', () => {
     const invalid = raw.replace('public_web_researcher', 'outreach_writer');
-    expect(() => parseHermesOutput(invalid, 'research_outreach')).toThrow('does not match task type');
+    expect(() => parseWorkflowPlannerOutput(invalid, 'research_outreach')).toThrow('does not match task type');
   });
 
   it('fails closed when pinned pricing cannot produce an estimate', () => {
-    const plan = parseHermesOutput(raw, 'research_outreach');
-    expect(() => estimateHermesRequest({ ...model(), pricing: { prompt: null, completion: null, request: null, webSearch: null } }, 'bounded prompt', {
+    const plan = parseWorkflowPlannerOutput(raw, 'research_outreach');
+    expect(() => estimateWorkflowPlannerRequest({ ...model(), pricing: { prompt: null, completion: null, request: null, webSearch: null } }, 'bounded prompt', {
       ...plan,
       estimatedUsage: { ...plan.estimatedUsage, completionTokens: 200 },
     })).toThrow('pricing metadata');
   });
 
   it('keeps the instruction server-authored when a plan is persisted', () => {
-    const instruction = buildHermesOpenClawInstruction({
+    const instruction = buildOpenClawInstruction({
       workflowType: 'research_outreach', growthProfileId: '00000000-0000-4000-8000-000000000001',
       rewrittenInstruction: 'Do bounded work.', steps: [step], allowedCapabilities: ['research_public_web'],
       forbiddenActions: ['send_external_messages'], expectedArtifacts: ['dossier'],
@@ -63,7 +64,7 @@ describe('Hermes bounded planning role', () => {
   });
 
   it('runs against a fake completion client without dispatching work', async () => {
-    const result = await planWithHermes({
+    const result = await planWorkflow({
       model: model(),
       prompt: 'bounded fake planning request',
       workflowType: 'research_outreach',

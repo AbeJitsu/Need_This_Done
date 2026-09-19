@@ -28,7 +28,7 @@ export const REQUIRED_FORBIDDEN_ACTIONS = [
   'deliver_external_content',
 ] as const;
 
-export const HERMES_TASK_TYPES = [
+export const WORKFLOW_TASK_TYPES = [
   'coordinate',
   'research_public_web',
   'draft_outreach',
@@ -37,7 +37,7 @@ export const HERMES_TASK_TYPES = [
   'regenerate_artifact',
 ] as const;
 
-export const HERMES_AGENT_ROLES = [
+export const WORKFLOW_AGENT_ROLES = [
   'coordinator',
   'public_web_researcher',
   'outreach_writer',
@@ -45,20 +45,20 @@ export const HERMES_AGENT_ROLES = [
   'reviewer',
 ] as const;
 
-const hermesStepSchema = z.object({
+const workflowStepSchema = z.object({
   key: z.string().trim().regex(/^[a-zA-Z0-9_-]{1,80}$/),
   title: z.string().trim().min(1).max(240),
   instruction: z.string().trim().min(1).max(8_000),
-  taskType: z.enum(HERMES_TASK_TYPES),
-  agentRole: z.enum(HERMES_AGENT_ROLES),
+  taskType: z.enum(WORKFLOW_TASK_TYPES),
+  agentRole: z.enum(WORKFLOW_AGENT_ROLES),
   capabilities: z.array(z.string().trim().min(1).max(80)).max(12),
   expectedArtifacts: z.array(z.string().trim().min(1).max(160)).max(12),
   estimatedCostUsd: z.number().finite().nonnegative(),
 }).strict();
 
-export const hermesOutputSchema = z.object({
+export const workflowPlannerOutputSchema = z.object({
   rewrittenInstruction: z.string().trim().min(1).max(12_000),
-  steps: z.array(hermesStepSchema).min(1).max(12),
+  steps: z.array(workflowStepSchema).min(1).max(12),
   allowedCapabilities: z.array(z.string().trim().min(1).max(80)).max(12),
   forbiddenActions: z.array(z.string().trim().min(1).max(120)).max(24),
   expectedArtifacts: z.array(z.string().trim().min(1).max(160)).max(24),
@@ -70,10 +70,10 @@ export const hermesOutputSchema = z.object({
   }).strict(),
 }).strict();
 
-export type HermesOutput = z.infer<typeof hermesOutputSchema>;
-export type HermesStep = HermesOutput['steps'][number];
+export type WorkflowPlannerOutput = z.infer<typeof workflowPlannerOutputSchema>;
+export type WorkflowPlanStep = WorkflowPlannerOutput['steps'][number];
 
-export type HermesGrowthProfileContext = {
+export type WorkflowGrowthProfileContext = {
   id: string;
   name: string;
   targetMarket: string;
@@ -85,17 +85,17 @@ export type HermesGrowthProfileContext = {
   timezone: string;
 };
 
-export type NormalizedHermesPlan = {
+export type NormalizedWorkflowPlan = {
   rewrittenInstruction: string;
-  steps: HermesStep[];
+  steps: WorkflowPlanStep[];
   allowedCapabilities: string[];
   forbiddenActions: string[];
   expectedArtifacts: string[];
-  estimatedUsage: HermesOutput['estimatedUsage'];
+  estimatedUsage: WorkflowPlannerOutput['estimatedUsage'];
   openclawInstruction: Record<string, unknown>;
 };
 
-export type HermesCompletionClient = {
+export type WorkflowPlannerClient = {
   chatCompletion(request: {
     model: string;
     messages: OpenRouterMessage[];
@@ -104,7 +104,7 @@ export type HermesCompletionClient = {
   }): Promise<OpenRouterCompletion>;
 };
 
-export const hermesResponseJsonSchema = {
+export const workflowPlannerResponseJsonSchema = {
   type: 'object',
   additionalProperties: false,
   required: ['rewrittenInstruction', 'steps', 'allowedCapabilities', 'forbiddenActions', 'expectedArtifacts', 'estimatedUsage'],
@@ -119,8 +119,8 @@ export const hermesResponseJsonSchema = {
           key: { type: 'string' },
           title: { type: 'string' },
           instruction: { type: 'string' },
-          taskType: { type: 'string', enum: [...HERMES_TASK_TYPES] },
-          agentRole: { type: 'string', enum: [...HERMES_AGENT_ROLES] },
+          taskType: { type: 'string', enum: [...WORKFLOW_TASK_TYPES] },
+          agentRole: { type: 'string', enum: [...WORKFLOW_AGENT_ROLES] },
           capabilities: { type: 'array', items: { type: 'string' } },
           expectedArtifacts: { type: 'array', items: { type: 'string' } },
           estimatedCostUsd: { type: 'number', minimum: 0 },
@@ -148,16 +148,16 @@ function listValue(value: unknown) {
   return value.filter((item): item is string => typeof item === 'string' && Boolean(item.trim())).map((item) => item.trim());
 }
 
-function parseHermesJson(raw: string) {
+function parseWorkflowPlannerJson(raw: string) {
   const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
   try {
     return JSON.parse(cleaned) as unknown;
   } catch {
-    throw new Error('Hermes did not return valid plan JSON.');
+    throw new Error('Workflow planner did not return valid plan JSON.');
   }
 }
 
-function expectedRoleForTask(taskType: HermesStep['taskType']) {
+function expectedRoleForTask(taskType: WorkflowPlanStep['taskType']) {
   if (taskType === 'coordinate') return 'coordinator';
   if (taskType === 'research_public_web') return 'public_web_researcher';
   if (taskType === 'draft_outreach') return 'outreach_writer';
@@ -165,25 +165,25 @@ function expectedRoleForTask(taskType: HermesStep['taskType']) {
   return 'reviewer';
 }
 
-export function parseHermesOutput(raw: string, workflowType: 'research_outreach' | 'daily_content') {
-  const parsed = hermesOutputSchema.safeParse(parseHermesJson(raw));
-  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'The Hermes response did not match the required shape.');
+export function parseWorkflowPlannerOutput(raw: string, workflowType: 'research_outreach' | 'daily_content') {
+  const parsed = workflowPlannerOutputSchema.safeParse(parseWorkflowPlannerJson(raw));
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || 'The workflow planner response did not match the required shape.');
   const value = parsed.data;
   for (const step of value.steps) {
     if (step.agentRole !== expectedRoleForTask(step.taskType)) {
-      throw new Error(`Hermes role does not match task type ${step.taskType}.`);
+      throw new Error(`The workflow planner role does not match task type ${step.taskType}.`);
     }
     if (step.capabilities.some((capability) => !(SAFE_OPENCLAW_CAPABILITIES as readonly string[]).includes(capability))) {
-      throw new Error('Hermes requested a capability outside the OpenClaw allowlist.');
+      throw new Error('Workflow requested a capability outside the OpenClaw allowlist.');
     }
   }
   const allowedCapabilities = [...new Set([...value.allowedCapabilities, ...value.steps.flatMap((step) => step.capabilities)])];
   if (allowedCapabilities.some((capability) => !(SAFE_OPENCLAW_CAPABILITIES as readonly string[]).includes(capability))) {
-    throw new Error('Hermes requested a capability outside the OpenClaw allowlist.');
+    throw new Error('Workflow requested a capability outside the OpenClaw allowlist.');
   }
   const forbiddenActions = [...new Set([...value.forbiddenActions, ...REQUIRED_FORBIDDEN_ACTIONS])];
   const expectedArtifacts = [...new Set([...value.expectedArtifacts, ...value.steps.flatMap((step) => step.expectedArtifacts)])];
-  const openclawInstruction = buildHermesOpenClawInstruction({
+  const openclawInstruction = buildOpenClawInstruction({
     workflowType,
     rewrittenInstruction: value.rewrittenInstruction,
     steps: value.steps,
@@ -199,13 +199,13 @@ export function parseHermesOutput(raw: string, workflowType: 'research_outreach'
     expectedArtifacts,
     estimatedUsage: value.estimatedUsage,
     openclawInstruction,
-  } satisfies NormalizedHermesPlan;
+  } satisfies NormalizedWorkflowPlan;
 }
 
-export function buildHermesOpenClawInstruction(input: {
+export function buildOpenClawInstruction(input: {
   workflowType: 'research_outreach' | 'daily_content';
   rewrittenInstruction: string;
-  steps: HermesStep[];
+  steps: WorkflowPlanStep[];
   allowedCapabilities: string[];
   forbiddenActions: string[];
   expectedArtifacts: string[];
@@ -213,6 +213,8 @@ export function buildHermesOpenClawInstruction(input: {
 }) {
   return {
     version: 2,
+    // Frozen v2 snapshots retain this deployed marker for compatibility. It
+    // is not the Hermes CLI and does not create a runtime dependency on it.
     planner: 'hermes',
     executor: 'openclaw',
     workflowType: input.workflowType,
@@ -241,15 +243,15 @@ export function buildHermesOpenClawInstruction(input: {
   } satisfies Record<string, unknown>;
 }
 
-export function createHermesPrompt(input: {
+export function createWorkflowPlannerPrompt(input: {
   originalRequest: string;
   workflowType: 'research_outreach' | 'daily_content';
-  profile: HermesGrowthProfileContext;
+  profile: WorkflowGrowthProfileContext;
 }) {
   const painSignals = listValue(input.profile.painSignals);
   const exclusionRules = listValue(input.profile.exclusionRules);
   return [
-    'You are Hermes, the NeedThisDone bounded planning role.',
+    'You are the NeedThisDone workflow planner.',
     'Create a reviewable execution plan only. Do not execute work, browse, send, publish, spend, log in, change accounts, or deliver anything externally.',
     `Requested workflow type: ${input.workflowType}.`,
     `Operator request: ${input.originalRequest.trim()}`,
@@ -264,7 +266,7 @@ export function createHermesPrompt(input: {
   ].join('\n');
 }
 
-export function estimateHermesRequest(model: OpenRouterModel, prompt: string, output: HermesOutput) {
+export function estimateWorkflowPlannerRequest(model: OpenRouterModel, prompt: string, output: WorkflowPlannerOutput) {
   const promptTokens = Math.min(100_000, Math.max(1, Math.ceil(prompt.length / 4)));
   const completionTokens = Math.min(100_000, Math.max(1_200, output.estimatedUsage.completionTokens));
   const cost = estimateOpenRouterRequestCost(model, {
@@ -272,7 +274,7 @@ export function estimateHermesRequest(model: OpenRouterModel, prompt: string, ou
     maxCompletionTokens: completionTokens,
     maxWebSearchCalls: 0,
   });
-  if (cost === null) throw new Error('The pinned model does not expose enough pricing metadata for a Hermes estimate.');
+  if (cost === null) throw new Error('The pinned model does not expose enough pricing metadata for a workflow estimate.');
   return {
     promptTokens,
     completionTokens,
@@ -281,8 +283,8 @@ export function estimateHermesRequest(model: OpenRouterModel, prompt: string, ou
   };
 }
 
-export async function planWithHermes(input: {
-  client: HermesCompletionClient;
+export async function planWorkflow(input: {
+  client: WorkflowPlannerClient;
   model: OpenRouterModel;
   prompt: string;
   workflowType: 'research_outreach' | 'daily_content';
@@ -294,9 +296,9 @@ export async function planWithHermes(input: {
       { role: 'user', content: input.prompt },
     ],
     maxTokens: 4_000,
-    responseSchema: hermesResponseJsonSchema,
+    responseSchema: workflowPlannerResponseJsonSchema,
   });
-  const plan = parseHermesOutput(completion.content, input.workflowType);
+  const plan = parseWorkflowPlannerOutput(completion.content, input.workflowType);
   return {
     plan,
     usage: {

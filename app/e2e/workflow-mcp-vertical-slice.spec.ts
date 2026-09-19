@@ -16,9 +16,9 @@ const controlPlaneRequiredStages = new Set([
   'mcp.credentials',
   'mcp.initialize',
   'mcp.tool-discovery',
-  'hermes.start-workflow',
-  'hermes.list-workflows',
-  'hermes.workflow-status',
+  'workflow.start-workflow',
+  'workflow.list-workflows',
+  'workflow.workflow-status',
 ]);
 
 type StageState = 'passed' | 'failed' | 'blocked';
@@ -137,13 +137,13 @@ async function runStage<T>(
 
 test.beforeEach(() => {
   test.skip(
-    process.env.HERMES_MCP_E2E !== 'true',
-    'Run with HERMES_MCP_E2E=true; this diagnostic is intentionally separate from the retained public browser gate.',
+    process.env.WORKFLOW_MCP_E2E !== 'true',
+    'Run with WORKFLOW_MCP_E2E=true; this diagnostic is intentionally separate from the retained public browser gate.',
   );
 });
 
-test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async ({ request }, testInfo) => {
-  test.setTimeout(Number(process.env.HERMES_MCP_E2E_TIMEOUT_MS || 180_000));
+test('diagnoses the ChatGPT → MCP → workflow → worker vertical slice', async ({ request }, testInfo) => {
+  test.setTimeout(Number(process.env.WORKFLOW_MCP_E2E_TIMEOUT_MS || 180_000));
 
   const stages: StageRecord[] = [];
   // The raw account token may be supplied to a disposable local diagnostic
@@ -151,22 +151,22 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   // must be paired with MCP_BEARER_TOKEN_OWNER_ID.
   const token = process.env.MCP_E2E_MCP_TOKEN?.trim() || process.env.MCP_BEARER_TOKEN?.trim();
   const bootstrapOwnerId = process.env.MCP_BEARER_TOKEN_OWNER_ID?.trim();
-  const requireExecution = process.env.HERMES_MCP_E2E_REQUIRE_EXECUTION === 'true';
-  const allowDraft = process.env.HERMES_MCP_E2E_ALLOW_DRAFT === 'true';
-  const target = process.env.HERMES_MCP_E2E_TARGET?.trim() || 'local';
+  const requireExecution = process.env.WORKFLOW_MCP_E2E_REQUIRE_EXECUTION === 'true';
+  const allowDraft = process.env.WORKFLOW_MCP_E2E_ALLOW_DRAFT === 'true';
+  const target = process.env.WORKFLOW_MCP_E2E_TARGET?.trim() || 'local';
   const explicitBaseUrl = process.env.BASE_URL?.trim();
   const baseUrl = process.env.BASE_URL || `http://127.0.0.1:${process.env.PLAYWRIGHT_PORT || '3100'}`;
   const baseHost = new URL(baseUrl).hostname;
-  const allowRemoteWrite = process.env.HERMES_MCP_E2E_ALLOW_REMOTE_WRITE === 'true';
-  const hostedReadOnly = target === 'hosted' && !allowRemoteWrite && process.env.HERMES_MCP_E2E_HOSTED_READONLY !== 'false';
+  const allowRemoteWrite = process.env.WORKFLOW_MCP_E2E_ALLOW_REMOTE_WRITE === 'true';
+  const hostedReadOnly = target === 'hosted' && !allowRemoteWrite && process.env.WORKFLOW_MCP_E2E_HOSTED_READONLY !== 'false';
   const workflowFixture = process.env.MCP_E2E_WORKFLOW_ID?.trim();
   let workflowId = isUuid(workflowFixture) ? workflowFixture : undefined;
   let nextRequestId = 1;
   let healthServices: Record<string, unknown> = {};
   const requiredStages = new Set(controlPlaneRequiredStages);
   if (hostedReadOnly) {
-    requiredStages.delete('hermes.start-workflow');
-    if (!workflowId) requiredStages.delete('hermes.workflow-status');
+    requiredStages.delete('workflow.start-workflow');
+    if (!workflowId) requiredStages.delete('workflow.workflow-status');
   }
 
   await runStage(stages, 'environment.target', async () => {
@@ -212,7 +212,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
           ? hostedReadOnly
             ? 'Hosted profile selected in read-only mode; health will prove the deployed app can reach its server-side Supabase and Redis.'
             : 'Hosted profile selected with explicit remote-write permission.'
-          : 'Hosted profile requires an explicit non-local BASE_URL. Keep HERMES_MCP_E2E_HOSTED_READONLY=true for the safe preflight; remote workflow writes additionally require HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true.',
+          : 'Hosted profile requires an explicit non-local BASE_URL. Keep WORKFLOW_MCP_E2E_HOSTED_READONLY=true for the safe preflight; remote workflow writes additionally require WORKFLOW_MCP_E2E_ALLOW_REMOTE_WRITE=true.',
         evidence: {
           target,
           baseHost,
@@ -225,7 +225,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
 
     return {
       state: 'failed',
-      detail: `Unknown HERMES_MCP_E2E_TARGET=${target}; use local or hosted.`,
+      detail: `Unknown WORKFLOW_MCP_E2E_TARGET=${target}; use local or hosted.`,
       evidence: { target },
     };
   });
@@ -335,22 +335,22 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   const canStart = allowDraft && ((target === 'local' && localOnlyHosts.has(baseHost)) || allowRemoteWrite);
   if (hostedReadOnly) {
     stages.push({
-      name: 'hermes.start-workflow',
+      name: 'workflow.start-workflow',
       state: 'blocked',
       detail: 'Hosted read-only mode intentionally skips start_workflow so the preflight cannot create or mutate a hosted workflow. Use a separately approved remote-write rehearsal for this stage.',
     });
   } else if (workflowId && !canStart) {
-    stages.push({ name: 'hermes.start-workflow', state: 'passed', detail: 'Using the supplied MCP_E2E_WORKFLOW_ID fixture; no new workflow was created.' });
+    stages.push({ name: 'workflow.start-workflow', state: 'passed', detail: 'Using the supplied MCP_E2E_WORKFLOW_ID fixture; no new workflow was created.' });
   } else if (!toolsDiscovered) {
-    stages.push({ name: 'hermes.start-workflow', state: 'blocked', detail: 'Blocked because MCP tool discovery did not succeed.' });
+    stages.push({ name: 'workflow.start-workflow', state: 'blocked', detail: 'Blocked because MCP tool discovery did not succeed.' });
   } else if (!canStart) {
     stages.push({
-      name: 'hermes.start-workflow',
+      name: 'workflow.start-workflow',
       state: 'blocked',
-      detail: 'Set HERMES_MCP_E2E_ALLOW_DRAFT=true on the local target to create the approval-gated draft; hosted writes require HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true and a separately approved rehearsal.',
+      detail: 'Set WORKFLOW_MCP_E2E_ALLOW_DRAFT=true on the local target to create the approval-gated draft; hosted writes require WORKFLOW_MCP_E2E_ALLOW_REMOTE_WRITE=true and a separately approved rehearsal.',
     });
   } else {
-    await runStage(stages, 'hermes.start-workflow', async () => {
+    await runStage(stages, 'workflow.start-workflow', async () => {
       const idempotencyKey = process.env.MCP_E2E_IDEMPOTENCY_KEY?.trim() || randomUUID();
       if (!isUuid(idempotencyKey)) {
         return { state: 'failed', detail: 'MCP_E2E_IDEMPOTENCY_KEY must be a UUID.' };
@@ -375,8 +375,8 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
       return {
         state: valid ? 'passed' : 'failed',
         detail: valid
-          ? `Hermes created approval-gated workflow ${returnedWorkflowId}.`
-          : `start_workflow returned HTTP ${response.status()} (${responseError(body)}); the MCP dispatcher or Hermes persistence path is not complete.`,
+          ? `The workflow boundary created approval-gated workflow ${returnedWorkflowId}.`
+          : `start_workflow returned HTTP ${response.status()} (${responseError(body)}); the MCP dispatcher or workflow persistence path is not complete.`,
         status: response.status(),
         evidence: {
           isError: result?.isError ?? null,
@@ -388,7 +388,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
   }
 
   if (token && initialized && toolsDiscovered) {
-    await runStage(stages, 'hermes.list-workflows', async () => {
+    await runStage(stages, 'workflow.list-workflows', async () => {
       const { response, body } = await mcpPost(request, token, nextRequestId++, 'tools/call', {
         name: 'list_workflows',
         arguments: { limit: 10 },
@@ -403,18 +403,18 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
       return {
         state: valid ? 'passed' : 'failed',
         detail: valid
-          ? `Hermes listed ${workflows?.length || 0} reviewable workflow(s).`
+          ? `The workflow boundary listed ${workflows?.length || 0} reviewable workflow(s).`
           : `list_workflows returned HTTP ${response.status()} (${responseError(body)}); durable workflow listing is not complete.`,
         status: response.status(),
         evidence: { count: workflows?.length || 0, containsWorkflow: Boolean(containsWorkflow) },
       };
     });
   } else {
-    stages.push({ name: 'hermes.list-workflows', state: 'blocked', detail: 'Blocked because MCP initialization or tool discovery did not succeed.' });
+    stages.push({ name: 'workflow.list-workflows', state: 'blocked', detail: 'Blocked because MCP initialization or tool discovery did not succeed.' });
   }
 
   if (token && initialized && toolsDiscovered && workflowId) {
-    await runStage(stages, 'hermes.workflow-status', async () => {
+    await runStage(stages, 'workflow.workflow-status', async () => {
       const { response, body } = await mcpPost(request, token, nextRequestId++, 'tools/call', {
         name: 'get_workflow_status',
         arguments: { workflowId },
@@ -429,7 +429,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
       return {
         state: valid ? 'passed' : 'failed',
         detail: valid
-          ? `Hermes returned workflow ${workflowId} in status ${structured?.status}.`
+          ? `The workflow boundary returned workflow ${workflowId} in status ${structured?.status}.`
           : `get_workflow_status returned HTTP ${response.status()} (${responseError(body)}); durable status is not readable through MCP.`,
         status: response.status(),
         evidence: {
@@ -440,7 +440,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
       };
     });
   } else {
-    stages.push({ name: 'hermes.workflow-status', state: 'blocked', detail: 'Blocked because no workflow ID was created or supplied.' });
+    stages.push({ name: 'workflow.workflow-status', state: 'blocked', detail: 'Blocked because no workflow ID was created or supplied.' });
   }
 
   if (requireExecution) {
@@ -484,7 +484,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
       stages.push({ name: 'workflow.execution', state: 'blocked', detail: 'Full execution requires MCP_E2E_WORKFLOW_ID or a newly created workflow.' });
     } else {
       await runStage(stages, 'workflow.execution', async () => {
-        const deadline = Date.now() + Number(process.env.HERMES_MCP_E2E_POLL_MS || 120_000);
+        const deadline = Date.now() + Number(process.env.WORKFLOW_MCP_E2E_POLL_MS || 120_000);
         let lastStatus = 'unknown';
         while (Date.now() < deadline) {
           const { response, body } = await mcpPost(request, token, nextRequestId++, 'tools/call', {
@@ -527,7 +527,7 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
     stages.push({
       name: 'workflow.execution',
       state: 'blocked',
-      detail: 'Control-plane mode stops at the approval boundary. Set HERMES_MCP_E2E_REQUIRE_EXECUTION=true only for an explicitly approved worker rehearsal.',
+      detail: 'Control-plane mode stops at the approval boundary. Set WORKFLOW_MCP_E2E_REQUIRE_EXECUTION=true only for an explicitly approved worker rehearsal.',
     });
   }
 
@@ -541,15 +541,15 @@ test('diagnoses the ChatGPT → MCP → Hermes → worker vertical slice', async
     failures: stages.filter((stage) => stage.state === 'failed').map(({ name, detail, status }) => ({ name, detail, status })),
     blocked: stages.filter((stage) => stage.state === 'blocked').map(({ name, detail }) => ({ name, detail })),
   };
-  await testInfo.attach('hermes-mcp-vertical-slice.json', {
+  await testInfo.attach('workflow-mcp-vertical-slice.json', {
     body: JSON.stringify(report, null, 2),
     contentType: 'application/json',
   });
   // Keep a filesystem copy beside the Playwright report as well as the
   // attachment so a blocked diagnostic remains reviewable after the run.
-  await writeFile(testInfo.outputPath('hermes-mcp-vertical-slice.json'), JSON.stringify(report, null, 2), 'utf8');
-  console.info(`[hermes-mcp-e2e] ${stages.map((stage) => `${stage.name}=${stage.state}`).join(' | ')}`);
+  await writeFile(testInfo.outputPath('workflow-mcp-vertical-slice.json'), JSON.stringify(report, null, 2), 'utf8');
+  console.info(`[workflow-mcp-e2e] ${stages.map((stage) => `${stage.name}=${stage.state}`).join(' | ')}`);
 
   const actionable = stages.filter((stage) => stage.state === 'failed' || (stage.state === 'blocked' && (requireExecution || requiredStages.has(stage.name))));
-  expect(actionable, `Hermes MCP vertical-slice diagnostics:\n${actionable.map((stage) => `- ${stage.name}: ${stage.detail}`).join('\n')}`).toEqual([]);
+  expect(actionable, `Workflow MCP vertical-slice diagnostics:\n${actionable.map((stage) => `- ${stage.name}: ${stage.detail}`).join('\n')}`).toEqual([]);
 });

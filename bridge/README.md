@@ -78,7 +78,7 @@ BRIDGE_ENV_FILE=/ABSOLUTE/PRIVATE/PATH/bridge.env \
 [`rehearsal/RUNBOOK.txt`](rehearsal/RUNBOOK.txt) records the exact preparation
 and the separate approval boundary for the future read-only rehearsal.
 
-[`rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt`](rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt)
+[`rehearsal/MAC_MINI_WORKFLOW_SCHEDULER_SETUP.txt`](rehearsal/MAC_MINI_WORKFLOW_SCHEDULER_SETUP.txt)
 is the handoff runbook for the future Mac mini scheduler host. It distinguishes
 the implemented draft-only durable recurrence loop from the still-unbuilt
 schedule-management MCP and ChatGPT Work OAuth increments, and it must be

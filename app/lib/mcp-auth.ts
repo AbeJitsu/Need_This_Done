@@ -3,9 +3,9 @@ import 'server-only';
 import { timingSafeEqual } from 'node:crypto';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { hashMcpAccessToken, isValidMcpAccessToken, isValidUuid } from '@/lib/mcp-token';
-import type { HermesMcpAuthContext } from '@/lib/hermes-mcp-contract';
+import type { WorkflowMcpAuthContext } from '@/lib/workflow-mcp-contract';
 
-export type McpAuthContext = HermesMcpAuthContext;
+export type McpAuthContext = WorkflowMcpAuthContext;
 export type McpAuthResult = { ok: true; context: McpAuthContext } | { ok: false; response: Response };
 
 function constantTimeEqual(left: string, right: string) {
@@ -81,7 +81,7 @@ function bootstrapConfigurationIsInvalid() {
 /**
  * Authenticate an MCP request with either the temporary owner-bound bootstrap
  * value or a database-backed owner credential. Raw bearer values are never
- * sent to Supabase, logged, or placed in the Hermes context.
+ * sent to Supabase, logged, or placed in the workflow context.
  */
 export async function authenticateMcpRequest(request: Request): Promise<McpAuthResult> {
   const policy = originPolicy();

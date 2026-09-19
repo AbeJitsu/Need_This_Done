@@ -9,7 +9,7 @@ import { test } from 'node:test';
 import { BridgeApiClient, BridgeApiError } from '../dist/bridge-client.js';
 import { OpenClawGatewayClient } from '../dist/openclaw-gateway.js';
 import { AgentBridgeRunner } from '../dist/runner.js';
-import { HermesScheduler } from '../dist/hermes-scheduler.js';
+import { WorkflowScheduler } from '../dist/workflow-scheduler.js';
 import { validateBridgeRehearsalConfiguration } from '../dist/validate-config.js';
 
 const ownerId = '00000000-0000-4000-8000-000000000001';
@@ -56,7 +56,7 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
   });
 
   await client.schedulerTick(7);
-  assert.equal(request.url, 'http://127.0.0.1:3000/api/agent-bridge/hermes-scheduler/tick');
+  assert.equal(request.url, 'http://127.0.0.1:3000/api/agent-bridge/workflow-scheduler/tick');
   assert.deepEqual(JSON.parse(request.init.body), { ownerId, workerId: 'test-worker', limit: 7 });
 
   await client.complete({ taskId, status: 'failed', providerInvoked: false, error: 'pre-provider validation failure' });
@@ -85,8 +85,8 @@ test('BridgeApiClient signs the exact server purpose and rejects unsafe API URLs
   });
 });
 
-test('HermesScheduler only materializes durable approval-required runs', async () => {
-  const scheduler = new HermesScheduler({
+test('WorkflowScheduler only materializes durable approval-required runs', async () => {
+  const scheduler = new WorkflowScheduler({
     schedulerTick: async () => ({
       materialized: 1,
       runs: [{ id: taskId, scheduleId: runId, scheduledFor: '2026-09-18T09:00:00.000Z', status: 'awaiting_approval' }],
@@ -103,7 +103,7 @@ test('rehearsal configuration validation is local-only and refuses a non-HTTPS b
     BRIDGE_API_URL: 'https://control.example.test',
     OPENCLAW_BRIDGE_SECRET: 'bridge-secret',
     BRIDGE_OWNER_ID: ownerId,
-    BRIDGE_WORKER_ID: 'macbook-pro-hermes-rehearsal',
+    BRIDGE_WORKER_ID: 'macbook-pro-workflow-rehearsal',
     OPENCLAW_EXECUTOR_MODEL_ID: 'openai/gpt-5.6-luna',
     OPENCLAW_GATEWAY_TOKEN: 'a'.repeat(32),
     OPENCLAW_GATEWAY_URL: 'ws://127.0.0.1:18789',
@@ -133,7 +133,7 @@ test('rehearsal configuration validation is local-only and refuses a non-HTTPS b
 
 test('approved private-Mac rehearsal runbook remains configuration-only', async () => {
   const runbook = await readFile(new URL('../rehearsal/RUNBOOK.txt', import.meta.url), 'utf8');
-  assert.match(runbook, /Hermes frozen plan -> signed outbound bridge -> loopback OpenClaw Gateway/);
+  assert.match(runbook, /Frozen workflow plan -> signed outbound bridge -> loopback OpenClaw Gateway/);
   assert.match(runbook, /validate-runtime-config\.sh/);
   assert.match(runbook, /Do not use\s+`npm start`/);
   assert.match(runbook, /unapproved, altered, stopped, expired, and paid-route tasks/);
@@ -373,7 +373,7 @@ test('AgentBridgeRunner reserves and reconciles model usage for an approved Open
   assert.equal(calls.completions[0].status, 'succeeded');
 });
 
-test('AgentBridgeRunner accepts only the frozen Hermes snapshot before Gateway invocation', async () => {
+test('AgentBridgeRunner accepts only the frozen workflow snapshot before Gateway invocation', async () => {
   const calls = { reservations: [], completions: [] };
   let gatewayCalls = 0;
   const approvedTask = task({
@@ -395,7 +395,7 @@ test('AgentBridgeRunner accepts only the frozen Hermes snapshot before Gateway i
       },
       close() {},
     },
-    artifactRoot: await mkdtemp(join(tmpdir(), 'needthisdone-bridge-hermes-')),
+    artifactRoot: await mkdtemp(join(tmpdir(), 'needthisdone-bridge-workflow-')),
     capabilities: ['research_public_web'],
   });
 
@@ -407,7 +407,7 @@ test('AgentBridgeRunner accepts only the frozen Hermes snapshot before Gateway i
   assert.equal(calls.completions[0].actualModelId, 'openai/gpt-5.6-luna');
 });
 
-test('AgentBridgeRunner blocks changed, expired, and paid Hermes tasks before Gateway invocation', async () => {
+test('AgentBridgeRunner blocks changed, expired, and paid workflow tasks before Gateway invocation', async () => {
   const scenarios = [
     {
       name: 'changed snapshot',
@@ -435,7 +435,7 @@ test('AgentBridgeRunner blocks changed, expired, and paid Hermes tasks before Ga
         },
         input: { modelReservationUsd: 0 },
       }),
-      error: /Paid Hermes model routes/,
+      error: /Paid workflow model routes/,
     },
   ];
 
@@ -449,7 +449,7 @@ test('AgentBridgeRunner blocks changed, expired, and paid Hermes tasks before Ga
     const runner = new AgentBridgeRunner({
       api,
       gateway: { runTask: async () => { gatewayCalls += 1; return { text: 'must not run' }; }, close() {} },
-      artifactRoot: await mkdtemp(join(tmpdir(), `needthisdone-bridge-hermes-${scenario.name.replace(' ', '-')}-`)),
+      artifactRoot: await mkdtemp(join(tmpdir(), `needthisdone-bridge-workflow-${scenario.name.replace(' ', '-')}-`)),
       capabilities: ['research_public_web'],
     });
 

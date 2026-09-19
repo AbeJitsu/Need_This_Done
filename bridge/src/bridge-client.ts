@@ -41,7 +41,7 @@ export type WorkerStatus = {
   currentTask: JsonObject | null;
 };
 
-export type HermesScheduleTick = {
+export type WorkflowScheduleTick = {
   materialized: number;
   runs: Array<{
     id: string;
@@ -205,7 +205,9 @@ export class BridgeApiClient {
    * claim a worker task or invoke the local OpenClaw gateway.
    */
   schedulerTick(limit = 20) {
-    return this.post<HermesScheduleTick>('/api/agent-bridge/hermes-scheduler/tick', {
+    // The route remains legacy-named until a forward database/API migration
+    // can preserve existing signed workers without an unsafe cutover.
+    return this.post<WorkflowScheduleTick>('/api/agent-bridge/workflow-scheduler/tick', {
       ownerId: this.ownerId,
       workerId: this.workerId,
       limit,

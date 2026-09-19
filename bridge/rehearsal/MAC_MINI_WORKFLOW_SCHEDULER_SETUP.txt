@@ -1,13 +1,14 @@
-NeedThisDone Mac mini + Hermes scheduler setup
+NeedThisDone Mac mini + workflow scheduler setup
 
 Purpose
 
-Prepare the Mac mini to become the private NeedThisDone scheduler and
+Prepare the Mac mini to become the private NeedThisDone workflow scheduler and
 read-only worker host. ChatGPT Work remains the conversation surface. It uses
 the public NeedThisDone MCP endpoint to create, inspect, pause, resume, and
-remove NeedThisDone schedules. Hermes on the Mac mini reconciles due schedules
-from durable server-side records and sends results back through the existing
-signed outbound bridge.
+remove NeedThisDone schedules. The NeedThisDone workflow scheduler on the Mac
+mini reconciles due schedules from durable server-side records and sends
+results back through the existing signed outbound bridge. Hermes CLI is a
+separate external product and is not required by this setup.
 
 The number of schedules is therefore governed by NeedThisDone's own durable
 records, quotas, and safety policies—not by the native ChatGPT Work scheduled
@@ -19,12 +20,12 @@ Target operating path (not yet live)
       -> public NeedThisDone MCP over HTTPS + OAuth
       -> Supabase durable schedules, runs, approvals, and evidence
       -> Mac mini outbound signed claim/reconciliation
-      -> Hermes scheduler/coordinator
+      -> NeedThisDone workflow scheduler
       -> loopback-only OpenClaw read-only worker
       -> signed result and evidence back to Supabase and ChatGPT Work
 
 If the Mac mini is asleep or offline, the schedule remains durable and due.
-When it returns, Hermes must apply the stored missed-run policy. The initial
+When it returns, the workflow scheduler must apply the stored missed-run policy. The initial
 policy to implement is "coalesce one read-only missed run"—never replay a
 backlog or perform an external action while recovering.
 
@@ -40,16 +41,16 @@ What exists on this branch
 What exists now
 
 - A durable, owner-scoped daily schedule/run schema and a signed outbound
-  Hermes scheduler loop. When a due schedule is observed, it coalesces missed
+  workflow scheduler loop. When a due schedule is observed, it coalesces missed
   time into one immutable `awaiting_approval` run and advances the next due
   time. This does not create an OpenClaw task or execute anything.
-- A review-only `com.needthisdone.hermes-scheduler` launchd template and
+- A review-only `com.needthisdone.workflow-scheduler` launchd template and
   wrapper. `npm run mac:worker -- prepare` renders it but does not load it.
 
 What does not exist yet
 
 - Schedule-specific MCP tools or a server-side schedule creation surface.
-- A working durable Hermes dispatcher behind the default MCP handler; it still
+- A working durable workflow dispatcher behind the default MCP handler; it still
   fails closed until the persistence adapter is connected.
 - ChatGPT Work OAuth authorization for NeedThisDone MCP. Existing ntd_mcp_
   bearer credentials are a repository seam, not the ChatGPT Work connector.
@@ -91,7 +92,7 @@ Build and test these pieces before treating the Mac mini as a scheduler:
    Mac must leave the approved work recoverable without duplicating it.
 4. Add narrow MCP tools: create_schedule, list_schedules, get_schedule,
    pause_schedule, resume_schedule, delete_schedule, and list_schedule_runs.
-   Keep generic workflow tools separate until the durable Hermes adapter is
+   Keep generic workflow tools separate until the durable workflow adapter is
    connected.
 5. Start with a draft-only schedule. It may create a reviewable proposed run,
    but may not invoke a worker. A later read-only automatic pilot needs an
@@ -124,7 +125,7 @@ repository.
   git clone git@github.com:AbeJitsu/Need_This_Done.git /Users/YOUR_MAC_USER/Developer/Need_This_Done
   cd /Users/YOUR_MAC_USER/Developer/Need_This_Done
   git fetch origin
-  git switch --track origin/feature/work-hermes-scheduler-2026-09-18
+  git switch --track origin/refactor/workflow-planner-naming-2026-09-19
   git status --short --branch
   cd bridge
   npm ci
@@ -157,7 +158,7 @@ repository.
   BRIDGE_API_URL=https://YOUR_DEPLOYED_NEEDTHISDONE_HOST
   OPENCLAW_BRIDGE_SECRET=REPLACE_WITH_PRIVATE_SIGNING_SECRET
   BRIDGE_OWNER_ID=REPLACE_WITH_OWNER_UUID
-  BRIDGE_WORKER_ID=mac-mini-hermes
+  BRIDGE_WORKER_ID=mac-mini-workflow
   OPENCLAW_GATEWAY_TOKEN=REPLACE_WITH_A_RANDOM_VALUE_AT_LEAST_32_CHARACTERS
   BRIDGE_ARTIFACT_ROOT=/Users/YOUR_MAC_USER/.needthisdone/mac-worker/artifacts
   OPENCLAW_EXECUTOR_MODEL_ID=openai/gpt-5.6-luna

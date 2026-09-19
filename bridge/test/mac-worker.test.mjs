@@ -18,7 +18,7 @@ function environment(overrides = {}) {
     BRIDGE_API_URL: 'https://control.example.test/api',
     OPENCLAW_BRIDGE_SECRET: 'bridge-secret',
     BRIDGE_OWNER_ID: ownerId,
-    BRIDGE_WORKER_ID: 'macbook-pro-hermes-rehearsal',
+    BRIDGE_WORKER_ID: 'macbook-pro-workflow-rehearsal',
     OPENCLAW_GATEWAY_TOKEN: 'a'.repeat(32),
     BRIDGE_ARTIFACT_ROOT: '/private/needthisdone/artifacts',
     OPENCLAW_EXECUTOR_MODEL_ID: MAC_WORKER_MODEL,

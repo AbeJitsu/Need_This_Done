@@ -4,9 +4,9 @@ import {
   MCP_TOOL_DEFINITIONS,
   MCP_TOOL_NAMES,
   startWorkflowInputSchema,
-  type HermesMcpAuthContext,
-  type HermesMcpDispatcher,
-} from '@/lib/hermes-mcp-contract';
+  type WorkflowMcpAuthContext,
+  type WorkflowMcpDispatcher,
+} from '@/lib/workflow-mcp-contract';
 import { authenticateMcpRequest, type McpAuthResult } from '@/lib/mcp-auth';
 
 export const MCP_PROTOCOL_VERSION = '2025-06-18';
@@ -68,9 +68,9 @@ function parseJsonRpc(body: string): JsonRpcRequest | null {
   return value as JsonRpcRequest;
 }
 
-function unavailableDispatcher(): HermesMcpDispatcher {
-  const unavailable = async (_input: unknown, _context: HermesMcpAuthContext): Promise<never> => {
-    throw new Error('Hermes workflow service is unavailable.');
+function unavailableDispatcher(): WorkflowMcpDispatcher {
+  const unavailable = async (_input: unknown, _context: WorkflowMcpAuthContext): Promise<never> => {
+    throw new Error('NeedThisDone workflow service is unavailable.');
   };
   return {
     startWorkflow: unavailable,
@@ -97,8 +97,8 @@ function toolError(message: string) {
 async function callTool(
   name: string,
   args: unknown,
-  dispatcher: HermesMcpDispatcher,
-  context: HermesMcpAuthContext,
+  dispatcher: WorkflowMcpDispatcher,
+  context: WorkflowMcpAuthContext,
 ) {
   if (!MCP_TOOL_NAMES.includes(name as typeof MCP_TOOL_NAMES[number])) {
     return { protocolError: errorResponse(null, -32602, 'Unknown MCP tool.') };
@@ -120,12 +120,12 @@ async function callTool(
     const result = await dispatcher.listWorkflows(parsed.data, context);
     return { result: toolResult(result) };
   } catch {
-    return { result: toolError('Hermes could not complete the workflow request.') };
+    return { result: toolError('Workflow planner could not complete the workflow request.') };
   }
 }
 
 export function createMcpRequestHandler(
-  dispatcher: HermesMcpDispatcher = unavailableDispatcher(),
+  dispatcher: WorkflowMcpDispatcher = unavailableDispatcher(),
   authenticate: (request: Request) => McpAuthResult | Promise<McpAuthResult> = authenticateMcpRequest,
 ) {
   return async function handleMcpRequest(request: Request): Promise<Response> {
@@ -159,7 +159,7 @@ export function createMcpRequestHandler(
         result: {
           protocolVersion: MCP_PROTOCOL_VERSION,
           capabilities: { tools: { listChanged: false } },
-          serverInfo: { name: 'needthisdone-hermes', version: '0.1.0' },
+          serverInfo: { name: 'needthisdone-workflows', version: '0.1.0' },
           instructions: 'Use only the three approval-gated workflow tools.',
         },
       });

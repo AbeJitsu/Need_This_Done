@@ -3,7 +3,7 @@ import { z } from 'zod';
 // Transport-neutral contract for the stable MCP control-plane surface.
 //
 // Any compatible LLM client must be able to call this contract from any
-// approved device. Worker-host selection belongs to Hermes scheduling, not to
+// approved device. Worker-host selection belongs to NeedThisDone scheduling, not to
 // the MCP caller and not to the durable workflow identity.
 
 export const MCP_TOOL_NAMES = [
@@ -132,17 +132,17 @@ export type ListWorkflowsResult = z.infer<typeof listWorkflowsResultSchema>;
 
 /**
  * The site-account credential is the MCP caller's identity. It is separate
- * from Hermes/OpenClaw worker authentication and is passed explicitly so a
+ * from NeedThisDone/OpenClaw worker authentication and is passed explicitly so a
  * future durable dispatcher cannot accidentally use a global owner.
  */
-export type HermesMcpAuthContext = {
+export type WorkflowMcpAuthContext = {
   ownerId: string;
   credentialId: string | null;
   authMethod: 'database' | 'bootstrap';
 };
 
-export type HermesMcpDispatcher = {
-  startWorkflow(input: StartWorkflowInput, context: HermesMcpAuthContext): Promise<StartWorkflowResult>;
-  getWorkflowStatus(input: GetWorkflowStatusInput, context: HermesMcpAuthContext): Promise<WorkflowStatusResult>;
-  listWorkflows(input: ListWorkflowsInput, context: HermesMcpAuthContext): Promise<ListWorkflowsResult>;
+export type WorkflowMcpDispatcher = {
+  startWorkflow(input: StartWorkflowInput, context: WorkflowMcpAuthContext): Promise<StartWorkflowResult>;
+  getWorkflowStatus(input: GetWorkflowStatusInput, context: WorkflowMcpAuthContext): Promise<WorkflowStatusResult>;
+  listWorkflows(input: ListWorkflowsInput, context: WorkflowMcpAuthContext): Promise<ListWorkflowsResult>;
 };
