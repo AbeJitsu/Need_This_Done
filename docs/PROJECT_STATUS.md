@@ -1,9 +1,11 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/work-hermes-scheduler-2026-09-18` (branched from `dev` at `26c2697eb0d61eef9f9d4cb95f5a7794ccb44dbd`)
-**Last updated:** 2026-09-18
+**Branch:** `feature/reconcile-hosted-migration-2026-09-19` (branched from `dev` at `6b5b9cb0ed3c440bab4ea59109baddc62c8b0cb6`)
+**Last updated:** 2026-09-19
 
 ## Latest change
+
+- On 2026-09-19, the hosted Supabase migration-history check found one direct hosted migration not present in GitHub: `20260915183432_115_lock_down_retired_public_tables`. This reconciliation branch adds its exact recorded SQL under `supabase/migrations/` so GitHub preserves the hosted RLS/grant correction. It does not rerun or alter hosted Supabase; hosted migrations 110–115 remain pending and require a fresh backup, dry run, and separate application approval.
 
 - On 2026-09-18, the dated scheduler branch added a draft-only Hermes
   scheduler service: migration `115_hermes_scheduler_draft_runs.sql`, a signed
