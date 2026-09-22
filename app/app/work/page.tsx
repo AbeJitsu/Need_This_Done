@@ -5,21 +5,21 @@ import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 // ============================================================================
 // Work Page - /work
 // ============================================================================
-// A real-project page that explains the practical skills used across NeedThisDone.
+// Portfolio page for the technical work behind NeedThisDone and related builds.
 
 export const metadata: Metadata = {
-  title: 'What We Build | NeedThisDone',
+  title: 'Selected Work | NeedThisDone',
   description:
     PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/work' },
   openGraph: {
-    title: 'What We Build | NeedThisDone',
+    title: 'Selected Work | NeedThisDone',
     description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What We Build | NeedThisDone',
+    title: 'Selected Work | NeedThisDone',
     description: PUBLIC_CORE_PROMISE,
   },
 };

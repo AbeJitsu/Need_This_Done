@@ -5,10 +5,10 @@
  * summaries cannot quietly drift apart.
  */
 export const PUBLIC_CORE_PROMISE =
-  'NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.';
+  'Abe builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.';
 
-export const PUBLIC_BRAND_PROMISE = 'Your vision, brought to life.';
-export const PUBLIC_BRAND_TITLE = 'Your Vision, Brought to Life';
+export const PUBLIC_BRAND_PROMISE = 'A computer and technology generalist.';
+export const PUBLIC_BRAND_TITLE = 'A Computer and Technology Generalist';
 
 export const PUBLIC_SITE_DESCRIPTION = `${PUBLIC_CORE_PROMISE} ${PUBLIC_BRAND_PROMISE}`;
 export const PUBLIC_REPORT_FALLBACK =

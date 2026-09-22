@@ -1,19 +1,17 @@
-import { PUBLIC_OFFERS } from './public-offers';
-
 export const PUBLIC_VARIANT = "match-crib-v1" as const;
 
 export const PUBLIC_NAVIGATION = [
+  { href: "/work", label: "Selected Work" },
   { href: "/services", label: "Capabilities" },
-  { href: "/how-it-works", label: "How We Work" },
-  { href: "/work", label: "What We Build" },
   { href: "/about", label: "About" },
+  { href: "/blog", label: "Notes" },
 ] as const;
 
 export const PUBLIC_HOME_JOURNEY = [
-  { id: "what-we-do", href: "/services", label: "Capabilities" },
-  { id: "how-it-works", href: "/how-it-works", label: "How We Work" },
-  { id: "examples", href: "/work", label: "What We Build" },
-  { id: "why-us", href: "/about", label: "About" },
+  { id: "capabilities", href: "/services", label: "Capabilities" },
+  { id: "featured-work", href: "/work", label: "Selected Work" },
+  { id: "approach", href: "/about", label: "About" },
+  { id: "notes", href: "/blog", label: "Notes" },
 ] as const;
 
 export function getPublicHomeHref(href: string) {
@@ -23,11 +21,12 @@ export function getPublicHomeHref(href: string) {
 
 export const PUBLIC_PRIMARY_ACTION = {
   href: "/contact",
-  label: "Share Your Vision",
+  label: "Start a conversation",
 } as const;
 
 export const PUBLIC_HOME_CONVERSION = {
-  id: "share-your-vision",
+  id: "contact",
+  href: PUBLIC_PRIMARY_ACTION.href,
   label: PUBLIC_PRIMARY_ACTION.label,
 } as const;
 
@@ -36,49 +35,52 @@ export type PublicHomeSectionId = (typeof PUBLIC_HOME_JOURNEY)[number]["id"];
 export function getPublicHomeNextStep(id: PublicHomeSectionId) {
   const currentIndex = PUBLIC_HOME_JOURNEY.findIndex((section) => section.id === id);
   const nextSection = PUBLIC_HOME_JOURNEY[currentIndex + 1] ?? (
-    id === "why-us" ? PUBLIC_HOME_CONVERSION : null
+    id === "notes" ? PUBLIC_HOME_CONVERSION : null
   );
 
   return nextSection
-    ? { href: `#${nextSection.id}`, label: `Next: ${nextSection.label}` }
+    ? {
+        href: id === "notes" ? PUBLIC_HOME_CONVERSION.href : `#${nextSection.id}`,
+        label: `Next: ${nextSection.label}`,
+      }
     : null;
 }
 
 export const PUBLIC_ROUTE_STAGES = {
   "/": {
-    stage: "recognize",
+    stage: "orient",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/services", label: "See What We Do" },
+    secondary: { href: "/work", label: "See selected work" },
     event: "home",
   },
   "/services": {
-    stage: "understand",
+    stage: "capabilities",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/how-it-works", label: "Next: How We Work" },
+    secondary: { href: "/work", label: "See selected work" },
     event: "services",
   },
   "/how-it-works": {
-    stage: "reassure",
+    stage: "approach",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/work", label: "Next: What We Build" },
+    secondary: { href: "/work", label: "See selected work" },
     event: "how_it_works",
   },
   "/system": {
     stage: "trust",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/work", label: "Next: What We Build" },
+    secondary: { href: "/work", label: "Back to selected work" },
     event: "system",
   },
   "/work": {
-    stage: "recognize",
+    stage: "proof",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/about", label: "Next: About" },
+    secondary: { href: "/about", label: "How I work" },
     event: "work",
   },
   "/about": {
     stage: "trust",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/contact", label: "Share Your Vision" },
+    secondary: { href: "/contact", label: "Start a conversation" },
     event: "about",
   },
   "/website-fix": {
@@ -194,10 +196,11 @@ export const ENGAGEMENT_ROUTES = [
 
 
 export const PUBLIC_FOOTER_GROUPS = [
-  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/blog', label: 'Insights' }] },
-  { title: 'Starting points', links: [
-    ...Object.values(PUBLIC_OFFERS).map(offer => ({ href: offer.detailHref, label: offer.name })),
-    { href: '/pricing', label: 'Pricing' }, { href: '/site-analyzer', label: 'Website Snapshot' },
+  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/system', label: 'NeedThisDone system' }] },
+  { title: 'Proof', links: [
+    { href: '/site-analyzer', label: 'Live site analyzer' },
+    { href: '/work#case-studies', label: 'Case studies' },
+    { href: '/blog', label: 'Engineering notes' },
   ] },
   { title: 'Support', links: [
     { href: '/faq', label: 'FAQ' }, { href: '/ada-compliance', label: 'Accessibility' },

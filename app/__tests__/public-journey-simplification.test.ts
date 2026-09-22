@@ -18,159 +18,111 @@ const appRoot = resolve(__dirname, '..');
 const repositoryRoot = resolve(appRoot, '..');
 const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
-describe('vision-first public journey', () => {
-  it('leads with the promise and actions', () => {
+describe('portfolio public journey', () => {
+  it('leads with a generalist portfolio promise and clear actions', () => {
     const home = source('components/home/HomePageClient.tsx');
-    for (const line of ['Your vision,', 'brought', 'to life.']) expect(home).toContain(line);
-    expect(home).toContain('Bring us the problem');
-    expect(home).toContain('href="/contact"');
-    expect(home).toContain('Share Your Vision');
-    expect(home).toContain('href="#examples"');
-    expect(home).toContain('See what we can build');
-    expect(home).not.toContain('See what I can build');
-    expect(home).not.toContain('homepage-bridge');
-    expect(home).not.toContain('Inspect the system behind the work');
+    expect(home).toContain('I build');
+    expect(home).toContain('across');
+    expect(home).toContain('the stack');
+    expect(home).toContain('See selected work');
+    expect(home).toContain('href="/work#case-studies"');
+    expect(home).toContain('Start a conversation');
+    expect(home).not.toContain('Your vision,');
+    expect(home).not.toContain('Bring us the problem');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
   });
 
-  it('uses the approved public navigation while retaining support links in the footer', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Capabilities', 'How We Work', 'What We Build', 'About']);
-    expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['what-we-do', 'how-it-works', 'examples', 'why-us']);
-    for (const link of PUBLIC_NAVIGATION) expect(getPublicHomeHref(link.href)).toMatch(/^\/#/);
-    expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Share Your Vision' });
+  it('uses selected work, capabilities, about, and notes as the primary navigation', () => {
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Selected Work', 'Capabilities', 'About', 'Notes']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/work', '/services', '/about', '/blog']);
+    expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['capabilities', 'featured-work', 'approach', 'notes']);
+    expect(PUBLIC_NAVIGATION.map(link => getPublicHomeHref(link.href))).toEqual([
+      '/#featured-work', '/#capabilities', '/#approach', '/#notes',
+    ]);
+    expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Start a conversation' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
-    for (const route of ['/about', '/pricing', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
-    expect(destinations).not.toContain('/system');
-    expect(PUBLIC_FOOTER_GROUPS.find(group => group.title === 'Explore')?.links).not.toContainEqual({ href: '/system', label: 'The System' });
-
-    expect(getPublicHomeNextStep('what-we-do')).toEqual({ href: '#how-it-works', label: 'Next: How We Work' });
-    expect(getPublicHomeNextStep('how-it-works')).toEqual({ href: '#examples', label: 'Next: What We Build' });
-    expect(getPublicHomeNextStep('examples')).toEqual({ href: '#why-us', label: 'Next: About' });
-    expect(getPublicHomeNextStep('why-us')).toEqual({ href: '#share-your-vision', label: 'Next: Share Your Vision' });
-
+    for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms', '/system']) expect(destinations).toContain(route);
+    expect(destinations).toContain('/work#case-studies');
   });
 
-  it('keeps the public system page conceptual and separate from internal status', () => {
+  it('moves through the portfolio story and ends at contact', () => {
+    expect(getPublicHomeNextStep('capabilities')).toEqual({ href: '#featured-work', label: 'Next: Selected Work' });
+    expect(getPublicHomeNextStep('featured-work')).toEqual({ href: '#approach', label: 'Next: About' });
+    expect(getPublicHomeNextStep('approach')).toEqual({ href: '#notes', label: 'Next: Notes' });
+    expect(getPublicHomeNextStep('notes')).toEqual({ href: '/contact', label: 'Next: Start a conversation' });
+  });
+
+  it('keeps the system page as an optional conceptual case study', () => {
     const system = source('app/system/page.tsx');
-    const sitemap = source('app/sitemap.ts');
     expect(system).toContain('Why this exists');
     expect(system).toContain('Chat can start the work. NeedThisDone carries it through.');
     expect(system).toContain('What chat alone leaves unresolved.');
     expect(system).toContain('From request to result');
     expect(system).toContain('Start with one outcome.');
-    expect(system).toContain('href="/contact"');
+    expect(system).toContain('Start a conversation');
     expect(system).not.toContain('SYSTEM_PROOF_LANES');
-    expect(system).not.toContain('system-technical-flow');
-    expect(system).not.toContain('system-proof-lane');
-    expect(system).not.toContain('Technical detail');
     expect(system).not.toMatch(/MCP|Supabase|Hermes|Redis|OpenClaw|Vector memory|Evidence:/i);
     expect(system).not.toMatch(/href=["']https:\/\/github\.com/);
-    expect(system).not.toMatch(/href=["']#/);
     expect(system).toContain('alternates: { canonical: "/system" }');
-    expect(sitemap).toContain("{ path: '/system'");
-    for (const title of ['Clarify the outcome', 'You make the call', 'Do the agreed work', 'Return a clear result']) {
-      expect(system).toContain(`title: "${title}"`);
-    }
   });
 
-  it('keeps both offers bounded, priced, and compatible', () => {
-    expect(PUBLIC_OFFERS['website-improvement']).toMatchObject({
-      name: 'Website Fix',
-      contactHref: '/contact?offer=website-fix',
-      price: '$500 total',
-    });
-    expect(PUBLIC_OFFERS['ai-operator']).toMatchObject({
-      name: 'Managed Automation',
-      contactHref: '/contact?offer=managed-automation',
-      price: 'Priced by proposal',
-    });
-    expect(PUBLIC_OFFERS['website-improvement'].summary).not.toContain('$');
+  it('keeps legacy offer aliases compatible while de-emphasizing them in the portfolio', () => {
+    expect(PUBLIC_OFFERS['website-improvement']).toMatchObject({ name: 'Website Fix', contactHref: '/contact?offer=website-fix', price: '$500 total' });
+    expect(PUBLIC_OFFERS['ai-operator']).toMatchObject({ name: 'Managed Automation', contactHref: '/contact?offer=managed-automation', price: 'Priced by proposal' });
     expect(normalizePublicOfferId('website-fix')).toBe('website-improvement');
     expect(normalizePublicOfferId('managed-automation')).toBe('ai-operator');
-    expect(normalizePublicOfferId('website-improvement')).toBe('website-improvement');
-    expect(normalizePublicOfferId('ai-operator')).toBe('ai-operator');
   });
 
-  it('makes service choice optional and extends the projects contract compatibly', () => {
+  it('keeps contact concise and compatible with the projects API', () => {
     const contact = source('app/contact/page.tsx');
-    expect(contact).toContain('Step {step} of 4');
-    expect(contact).toContain('Which starting point fits?');
-    expect(contact).toMatch(/body\.append\(["']intakeContext["']/);
+    expect(contact).toContain('What are you building or trying to fix?');
+    expect(contact).toContain('body.append("message", data.message)');
+    expect(contact).toContain('Is there a useful starting point?');
+    expect(contact).not.toContain('intakeContext');
     for (const field of ['name', 'email', 'company']) expect(contact).toMatch(new RegExp(`body\\.append\\(["']${field}["']`));
     expect(source('app/api/projects/route.ts')).toContain("formData.get('message')");
   });
 
-  it('gives services, work, and home separate jobs in the public journey', () => {
+  it('gives home, capabilities, and work distinct jobs', () => {
     const services = source('components/services/ServicesPageClient.tsx');
     const work = source('components/work/WorkPageClient.tsx');
     const home = source('components/home/HomePageClient.tsx');
-
-    expect(services).toContain('PUBLIC_OFFERS');
-    expect(services).toContain('detail.fit');
-    expect(services).toContain('detail.summary');
-    expect(services).toContain('detail.price');
-    expect(services).toContain('detail.detailHref');
-    expect(services).not.toContain('PUBLIC_CAPABILITIES');
-    expect(services).not.toContain('ServiceIllustration');
-    expect(services).not.toContain('Before');
-    expect(services).toContain('Starting points');
-
-    expect(work).toContain('PUBLIC_CAPABILITIES');
-    expect(work).toContain('PUBLIC_CAPABILITIES_INTRO');
-    expect(work).toContain('Built in production');
-    expect(work).toContain('href="/system"');
-    expect(work).toContain('See how the system carries work from request to review');
+    expect(services).toContain('PUBLIC_CAPABILITIES');
+    expect(services).toContain('PUBLIC_CAPABILITIES_INTRO');
+    expect(services).toContain('React');
+    expect(services).not.toContain('PUBLIC_OFFERS');
+    expect(work).toContain('caseStudies');
+    expect(work).toContain('architectureLayers');
+    expect(work).toContain('processSteps');
     expect(work).toContain('data-public-capability-card');
-    expect(work).toContain('Full-stack');
-    for (const phrase of [
-      'Supabase/PostgreSQL',
-      'schemas and migrations',
-      'role-scoped data',
-      'agent coordination',
-      'GitHub/Vercel delivery',
-    ]) expect(work).not.toContain(phrase);
-    expect(work).not.toContain('PUBLIC_EXAMPLES');
-    expect(work).not.toMatch(/\b(?:illustrative|hypothetical|case study|could look like)\b/i);
-    expect(work).not.toMatch(/\$500|priced by proposal/i);
-
-    expect(home).toContain('offer.fit');
-    expect(home).toContain('href="/work"');
+    expect(home).toContain('href="/work#case-studies"');
     expect(home).not.toContain('PUBLIC_EXAMPLES');
-    expect(home).not.toContain('getPublicExampleHref');
-    expect(home).not.toContain('What might be tried');
   });
 
-  it('gives How We Work and Why Us distinct jobs', () => {
+  it('gives About and How I Work distinct portfolio jobs', () => {
     const howItWorks = source('app/how-it-works/page.tsx');
     const about = source('app/about/page.tsx');
-    expect(howItWorks).toContain('Tell us what is going on');
-    expect(howItWorks).toContain('You decide, then we do the agreed work');
-    expect(about).toContain('Technical skill with a customer-facing mindset.');
-    expect(about).toContain('Clarity is part of the work.');
-    expect(about).toContain('Show the result');
-    expect(about).not.toContain('Tell us what is going on');
-    expect(about).not.toContain('You decide, then we do the agreed work');
+    expect(howItWorks).toContain('I make the next technical decision easier to see.');
+    expect(howItWorks).toContain('Make the problem observable');
+    expect(about).toContain('About Abe');
+    expect(about).toContain('I like problems that cross more than one layer.');
+    expect(about).toContain('Clarity is part of the implementation.');
+    expect(about).not.toContain('Meet the team');
   });
 
   it('keeps public styles scoped away from the authenticated interface', () => {
     expect(source('components/public/PublicChrome.tsx')).toContain('className="public-shell"');
     expect(source('app/globals.css')).toContain('.public-shell');
     expect(source('components/public/PublicChrome.tsx')).toContain('if (isPrivate)');
-    expect(source('lib/page-config.ts')).toContain("{ href: '/website-fix', label: 'Website Fix' }");
-    expect(source('lib/page-config.ts')).toContain("{ href: '/managed-automation', label: 'Managed Automation' }");
     expect(source('components/public/PublicChrome.tsx')).not.toContain('HomeJourneyProgress');
     expect(source('app/globals.css')).not.toContain('homepage-journey-progress');
     expect(source('components/public/PublicHeader.tsx')).toContain('href="/login"');
-    expect(source('components/public/PublicHeader.tsx')).toContain('>Sign in</Link>');
   });
 
   it('keeps the editorial palette readable and honors reduced motion', () => {
     for (const [foreground, background] of [
-      ['#50675e', '#f7f4ed'],
-      ['#126b4e', '#f7f4ed'],
-      ['#ffffff', '#126b4e'],
-      ['#183229', '#e8e2d5'],
-      ['#dce8dd', '#18372e'],
+      ['#50675e', '#f7f4ed'], ['#126b4e', '#f7f4ed'], ['#ffffff', '#126b4e'],
+      ['#183229', '#e8e2d5'], ['#dce8dd', '#18372e'],
     ]) expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5);
     const styles = source('app/globals.css');
     expect(styles).toContain('@media (prefers-reduced-motion: reduce)');
@@ -182,16 +134,13 @@ describe('vision-first public journey', () => {
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
     expect(readme).toContain('# NeedThisDone');
     expect(readme).toContain('## Public website and private assistant');
-    expect(readme).toContain('The public [`/system` case study](app/app/system/page.tsx) is a visual explanation');
     expect(roadmap).toContain('Assistant-first finish line');
-    expect(roadmap).toContain('## Public homepage and optional `/system` proof');
   });
 
-  it('updates the social preview and root metadata to the new promise', () => {
-    expect(PUBLIC_BRAND_TITLE).toBe('Your Vision, Brought to Life');
+  it('uses the new portfolio promise in metadata', () => {
+    expect(PUBLIC_BRAND_TITLE).toBe('A Computer and Technology Generalist');
     expect(source('app/layout.tsx')).toContain('PUBLIC_BRAND_TITLE');
-    expect(source('public/og-image.svg')).toContain('Your vision,');
-    expect(source('public/og-image.svg')).toContain('brought to life.');
-    expect(seoConfig.description).toContain('teams and individuals');
+    expect(source('public/og-image.svg')).toContain('Computer and');
+    expect(seoConfig.description).toContain('React and Next.js');
   });
 });

@@ -43,16 +43,16 @@ export const caseStudies: CaseStudy[] = [
   {
     id: 'needthisdone',
     title: 'NeedThisDone.com',
-    subtitle: 'Coordinated Work and Review System',
-    role: 'Product system',
-    period: 'Current',
+    subtitle: 'A Full-Stack System for Reviewable Work',
+    role: 'Independent build',
+    period: 'Ongoing',
     description:
-      'A browser-based system that turns a project request into durable work records, evidence, approvals, and outcomes.',
+      'A browser-based system exploring how requests become durable work records, evidence, approvals, and reviewable outcomes.',
     impact: [
-      'A site report opens a preselected targeted-fix request',
+      'A live site analyzer leads into a preselected technical conversation',
       'Project, brief, decision, and outcome records are durable in Supabase',
       'Authenticated surfaces keep work, evidence, and decisions role-scoped',
-      'Every external outreach action remains behind a human approval and sender boundary',
+      'External outreach stays behind an explicit human approval boundary',
     ],
     features: [
       'Public site analyzer and report pages',
@@ -113,23 +113,23 @@ export interface ArchLayer {
 
 export const architectureLayers: ArchLayer[] = [
   {
-    label: 'Public conversion',
-    items: ['Site Audit', 'Offer Choice', 'Adaptive Intake', 'Report Handoff'],
+    label: 'Public interface',
+    items: ['Site Analyzer', 'Project Intake', 'Report Handoff', 'Accessible Routes'],
     color: 'emerald',
   },
   {
-    label: 'Private operations',
+    label: 'Application workflow',
     items: ['Run Records', 'Approval Queues', 'Artifacts', 'Outcome Records'],
     color: 'blue',
   },
   {
-    label: 'Durable truth',
+    label: 'Durable data',
     items: ['Supabase', 'PostgreSQL', 'RLS', 'Idempotency'],
     color: 'purple',
   },
   {
-    label: 'Transient support',
-    items: ['Redis Cache', 'Rate Limits', 'Deduplication', 'Short-lived Coordination'],
+    label: 'Operational support',
+    items: ['Redis Cache', 'Rate Limits', 'Deduplication', 'Recovery Paths'],
     color: 'amber',
   },
 ];

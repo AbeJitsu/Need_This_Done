@@ -33,7 +33,7 @@ export default function BlogPostCTA({ offerId }: { offerId: PublicOfferId }) {
             href="/contact"
             className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)] transition hover:bg-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--public-dark)]"
           >
-            Share Your Vision <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
       </div>

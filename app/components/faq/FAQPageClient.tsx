@@ -103,7 +103,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
             <p className="text-sm font-bold text-[var(--public-ink)]">Still unsure?</p>
             <p className="mt-2 text-sm leading-6 text-[var(--public-muted)]">Share the context you have and we can clarify the right starting point.</p>
             <Link href="/contact" className="mt-5 inline-flex items-center gap-2 font-bold text-[var(--public-green)]">
-              Share Your Vision <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>

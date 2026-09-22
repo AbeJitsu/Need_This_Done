@@ -108,7 +108,7 @@ export default function SiteReportEmail({
             </Text>
             <Section style={ctaSection}>
               <Button style={secondaryButton} href={`${siteUrl}/contact`}>
-                Share Your Vision
+                Start a conversation
               </Button>
             </Section>
           </Section>

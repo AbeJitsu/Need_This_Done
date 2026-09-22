@@ -54,7 +54,7 @@ describe('current repository documentation', () => {
 
   it('keeps the public system case study tied to its maintenance record', () => {
     expect(source('README.md')).toContain(
-      '[`/system` case study](app/app/system/page.tsx)',
+      'The public [`/system` overview](app/app/system/page.tsx)',
     );
     expect(source('ROADMAP.md')).toContain('## Public `/system` case study');
     expect(source('ROADMAP.md')).toContain(

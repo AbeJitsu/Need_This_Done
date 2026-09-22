@@ -65,7 +65,7 @@ export default function UnifiedPricingPage() {
             href="/contact"
             className="public-button mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white"
           >
-            Share Your Vision{" "}
+            Start a conversation{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

@@ -1,98 +1,63 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
-import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
+import { PUBLIC_CAPABILITIES, PUBLIC_CAPABILITIES_INTRO } from "@/lib/public-capabilities";
 
-const offerIds = ["website-improvement", "ai-operator"] as const satisfies readonly PublicOfferId[];
-const nextStep = PUBLIC_ROUTE_STAGES["/services"].secondary;
+const stack = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "Postgres / Supabase",
+  "REST and MCP APIs",
+  "Redis",
+  "Playwright",
+  "Vitest",
+  "GitHub",
+];
 
 export default function ServicesPageClient() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
-            Starting points
-          </p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Capabilities</p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Practical help for the work that is getting in the way.
+            I can move between the layers of a technical problem.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            Choose a clear place to start, then we can shape the larger build around the result you need.
+            {PUBLIC_CAPABILITIES_INTRO}
           </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24" aria-labelledby="offers-heading">
+      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24" aria-labelledby="capabilities-heading">
         <div className="max-w-3xl">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-            Two clear ways to start
-          </p>
-          <h2 id="offers-heading" className="mt-5 font-playfair text-4xl font-black md:text-5xl">
-            Start with the piece that needs attention.
-          </h2>
-          <p className="mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-            These offers keep the first step clear. The Work page shows the wider full-stack capability map.
-          </p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">What I can bring</p>
+          <h2 id="capabilities-heading" className="mt-5 font-playfair text-4xl font-black md:text-5xl">A generalist range with concrete edges.</h2>
+          <p className="mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">“Generalist” does not mean every tool or every project. It means I can follow the problem across the layers that need to cooperate.</p>
         </div>
-
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
-          {offerIds.map((offerId) => {
-            const detail = PUBLIC_OFFERS[offerId];
-            return (
-              <article
-                key={offerId}
-                data-public-offer-card
-                className="rounded-[1.75rem] border border-[var(--public-ink)]/10 bg-white/80 p-7 shadow-[0_1.25rem_3rem_rgba(24,55,46,.06)] sm:p-9"
-              >
-                <p className="text-xs font-bold uppercase tracking-[.18em] text-[#775d22]">
-                  Starting point
-                </p>
-                <h3 className="mt-4 font-playfair text-3xl font-black">
-                  {detail.name}
-                </h3>
-                <p data-public-offer-region="fit" className="mt-5 text-xl font-semibold leading-8">
-                  {detail.fit}
-                </p>
-                <p data-public-offer-region="summary" className="mt-5 max-w-[52ch] leading-7 text-[var(--public-muted)]">
-                  {detail.summary}
-                </p>
-                <div data-public-offer-region="actions" className="mt-8 flex flex-wrap items-center justify-between gap-5 border-t border-[var(--public-ink)]/10 pt-6">
-                  <p className="text-2xl font-bold">{detail.price}</p>
-                  <Link
-                    href={detail.detailHref}
-                    className="inline-flex min-h-11 items-center gap-2 font-bold text-[var(--public-green)] underline underline-offset-4"
-                  >
-                    See {detail.name} details
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {PUBLIC_CAPABILITIES.map((capability, index) => (
+            <article key={capability.title} data-public-capability-card className="rounded-[1.5rem] border border-[var(--public-ink)]/10 bg-white/80 p-6 shadow-[0_1.25rem_3rem_rgba(24,55,46,.06)] sm:p-7">
+              <span className="text-sm font-black tracking-[.14em] text-[#775d22]">{String(index + 1).padStart(2, "0")}</span>
+              <h3 className="mt-6 font-playfair text-2xl font-black leading-tight">{capability.title}</h3>
+              <p className="mt-4 leading-7 text-[var(--public-muted)]">{capability.description}</p>
+              <ul className="mt-6 space-y-2 text-sm font-semibold leading-6 text-[var(--public-green)]">{capability.examples.map((example) => <li key={example}>{example}</li>)}</ul>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-cream)]">
-        <div className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
-          <h2 className="font-playfair text-4xl font-black md:text-5xl">
-            Not sure which path fits?
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl leading-7 text-[var(--public-muted)]">
-            Share what is happening. We will help you choose a useful starting point.
-          </p>
-          <Link href="/contact" className="public-button mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white">
-            Share Your Vision
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-          {nextStep && (
-            <p className="mt-5">
-              <Link href={nextStep.href} className="font-semibold text-[var(--public-green)] underline">
-                {nextStep.label}
-              </Link>
-            </p>
-          )}
+      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)] px-5 py-16 sm:px-8 md:py-24" aria-labelledby="stack-heading">
+        <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[.8fr_1.2fr] md:items-start">
+          <div><p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">Working vocabulary</p><h2 id="stack-heading" className="mt-5 font-playfair text-4xl font-black md:text-5xl">Tools are useful when they serve the system.</h2></div>
+          <div><p className="max-w-[60ch] leading-7 text-[var(--public-muted)]">These are the tools and boundaries I use most often. The important part is choosing the smallest reliable combination for the problem.</p><div className="mt-8 flex flex-wrap gap-3">{stack.map((item) => <span key={item} className="rounded-full border border-[var(--public-ink)]/15 bg-white/70 px-4 py-2 text-sm font-semibold text-[var(--public-green)]">{item}</span>)}</div></div>
         </div>
+      </section>
+
+      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-cream)] px-5 py-16 text-center sm:px-8 md:py-24">
+        <h2 className="font-playfair text-4xl font-black md:text-5xl">Start with the technical problem.</h2>
+        <p className="mx-auto mt-5 max-w-xl leading-7 text-[var(--public-muted)]">You do not need a polished brief. A short description, a link, or a confusing system boundary is enough to begin a useful conversation.</p>
+        <div className="mt-8 flex flex-wrap justify-center gap-4"><Link href="/work#case-studies" className="public-button inline-flex min-h-12 items-center gap-2 rounded-full border border-[var(--public-ink)]/20 px-7 py-3 font-bold text-[var(--public-ink)]">See selected work <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link><Link href="/contact" className="public-button inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white">Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div>
       </section>
     </main>
   );

@@ -19,6 +19,6 @@ it('marks the current route, returns focus on Escape, and closes on route change
   route.pathname = '/work';
   view.rerender(<PublicHeader />);
   expect(view.queryByRole('navigation', { name: 'Mobile navigation' })).toBeNull();
-  expect(view.getByRole('link', { name: 'What We Build' })).toHaveAttribute('aria-current', 'page');
+  expect(view.getByRole('link', { name: 'Selected Work' })).toHaveAttribute('aria-current', 'page');
   expect(await axe(view.container)).toHaveNoViolations();
 });

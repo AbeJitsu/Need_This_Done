@@ -36,10 +36,12 @@ export const seoConfig = {
 
   // SEO keywords
   keywords: [
-    'your vision brought to life',
-    'outcome partner for teams',
-    'bring a team vision to life',
-    'focused business improvement',
+    'computer and technology generalist',
+    'full-stack developer portfolio',
+    'React and Next.js developer',
+    'technical systems builder',
+    'backend database API integrations',
+    'technical operations',
     'website fix',
     'website accessibility fix',
     'website performance fix',

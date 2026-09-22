@@ -13,8 +13,8 @@ const repositoryRoot = resolve(appRoot, '..');
 
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/how-it-works', '/work', '/about']);
-    expect(PUBLIC_PRIMARY_ACTION.label).toBe('Share Your Vision');
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/work', '/services', '/about', '/blog']);
+    expect(PUBLIC_PRIMARY_ACTION.label).toBe('Start a conversation');
   });
 
   it('indexes every intended public route and keeps private surfaces out of indexing', async () => {
@@ -62,7 +62,7 @@ describe('public route hygiene', () => {
       expect(readFileSync(resolve(appRoot, `app/${page}/page.tsx`), 'utf8')).toContain('permanentRedirect');
     }
     const about = readFileSync(resolve(appRoot, 'app/about/page.tsx'), 'utf8');
-    expect(about).toMatch(/title:\s*['\"]About Us \| NeedThisDone['\"]/);
+    expect(about).toMatch(/title:\s*['\"]About Abe \| NeedThisDone['\"]/);
     expect(about).not.toContain('permanentRedirect');
     expect(PUBLIC_OFFERS['website-improvement'].detailHref).toBe('/website-fix');
     const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');

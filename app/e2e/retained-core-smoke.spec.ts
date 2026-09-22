@@ -11,17 +11,15 @@ test.describe('Retained core smoke checks', () => {
     );
   });
 
-  test('contact intake keeps offer aliases while using shared vision questions', async ({ page }) => {
+  test('contact keeps offer aliases while using the concise conversation form', async ({ page }) => {
     const response = await page.goto('/contact?offer=website-fix');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /tell us what is not working/i })).toBeVisible();
-    await page.getByRole('button', { name: /^Step 4:/ }).click();
-    await expect(page.getByRole('radio', { name: 'Website Fix', exact: true })).toBeChecked();
-    await page.getByRole('radio', { name: 'Managed Automation', exact: true }).check();
-    await expect(page.getByRole('radio', { name: 'Managed Automation', exact: true })).toBeChecked();
-    await page.getByRole('button', { name: /^Step 1:/ }).click();
-    await expect(page.getByRole('textbox', { name: /idea or situation/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /bring the technical problem as it is/i })).toBeVisible();
+    await expect(page.getByRole('radio', { name: 'Website work', exact: true })).toBeChecked();
+    await page.getByRole('radio', { name: 'Automation', exact: true }).check();
+    await expect(page.getByRole('radio', { name: 'Automation', exact: true })).toBeChecked();
+    await expect(page.getByRole('textbox', { name: /^Your message/ })).toBeVisible();
   });
 
   test('site analyzer page renders the audit form', async ({ page }) => {
@@ -176,7 +174,7 @@ test('FAQ closing action stays readable without wrapping at public widths', asyn
   for (const width of [375, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/faq');
-    const action = page.getByRole('main').getByRole('link', { name: 'Share Your Vision', exact: true }).last();
+    const action = page.getByRole('main').getByRole('link', { name: 'Start a conversation', exact: true }).last();
     await action.scrollIntoViewIfNeeded();
     await expect(action).toBeVisible();
     expect(await action.evaluate(element => getComputedStyle(element).whiteSpace)).toBe('nowrap');

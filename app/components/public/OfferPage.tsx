@@ -42,7 +42,7 @@ export default function OfferPage({
             href={offer.contactHref}
             className="public-button mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-soft)] px-7 py-3 font-bold text-[var(--public-ink)] hover:bg-white"
           >
-            Share Your Vision
+            Start a conversation
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <p className="mt-5 font-bold text-[#dce8dd]">{offer.price} · Work agreed before we start</p>

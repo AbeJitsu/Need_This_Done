@@ -214,7 +214,7 @@ export default function SystemPage() {
               </p>
               <div className="system-hero__actions">
                 <Link href="/contact" className="system-button system-button--gold">
-                  Share Your Vision
+                  Start a conversation
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </div>
@@ -293,7 +293,7 @@ export default function SystemPage() {
           </p>
           <div className="system-closing__actions">
             <Link href="/contact" className="system-button system-button--green">
-              Share Your Vision
+              Start a conversation
               <ArrowRight aria-hidden="true" />
             </Link>
             {nextStep && (

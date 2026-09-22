@@ -65,7 +65,7 @@ function textValues(value: unknown): string[] {
 describe('public language contract', () => {
   it('keeps the core promise centralized and within the sentence target', () => {
     expect(PUBLIC_CORE_PROMISE).toBe(
-      'NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.',
+      'Abe builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.',
     );
     expect(isPublicCopyWithinLimit(PUBLIC_CORE_PROMISE)).toBe(true);
   });
@@ -87,9 +87,10 @@ describe('public language contract', () => {
     expect(activePublicSources).not.toContain(retiredPromise);
   });
 
-  it('keeps company-facing public copy in first-person plural', () => {
+  it('keeps the portfolio-facing pages direct and personal', () => {
     const publicCompanyCopy = publicCompanyVoicePaths.map(readApp).join('\n');
-    expect(publicCompanyCopy).not.toMatch(/\bI(?:['’](?:m|ve|ll|d))?\b/);
+    expect(publicCompanyCopy).toContain('I build');
+    expect(publicCompanyCopy).toContain('I work');
   });
 
   it('rejects trust-undermining disclaimer copy on public-facing surfaces', () => {
@@ -138,9 +139,7 @@ describe('public language contract', () => {
       .map((pattern) => pattern.source);
 
     expect(matches, 'Public copy must describe real capability and evidence directly.').toEqual([]);
-    expect(publicCopy).toContain(
-      'We build your vision, connect the tools you need, and solve the problem that matters most.',
-    );
+    expect(publicCopy).toContain('I build practical software across the stack');
   });
 
   it('keeps the future-work reassurance in the FAQ defaults', () => {
@@ -236,9 +235,9 @@ describe('public language contract', () => {
 
   it('keeps the contact form focused and avoids duplicate invitation copy', () => {
     const contact = readApp('app/contact/page.tsx');
-    const invitation = 'Tell us what is not working.';
+    const invitation = 'Bring the technical problem as it is.';
     expect(contact.split(invitation).length - 1).toBe(1);
-    expect(contact).toContain('Which starting point fits?');
+    expect(contact).toContain('Is there a useful starting point?');
     expect(contact).toContain('Your name');
     expect(contact).toContain('Your email');
   });

@@ -15,12 +15,12 @@ describe("public offer and capability records", () => {
   it("keeps the capability map complete and end to end", () => {
     expect(PUBLIC_CAPABILITIES).toHaveLength(6);
     expect(PUBLIC_CAPABILITIES.map(({ title }) => title)).toEqual([
-      "Websites and interfaces people can use",
-      "Workflows that keep moving",
-      "Information that stays organized",
-      "Tools that work together",
-      "Private workspaces and dashboards",
-      "Testing, launch, and evidence",
+      "Interfaces people can actually use",
+      "Backends, data, and permissions",
+      "APIs and integrations",
+      "Workflows and automation",
+      "Systems that hold together",
+      "Testing and delivery",
     ]);
 
     for (const capability of PUBLIC_CAPABILITIES) {

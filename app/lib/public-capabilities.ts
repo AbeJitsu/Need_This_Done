@@ -1,41 +1,41 @@
 export const PUBLIC_CAPABILITIES = [
   {
-    title: "Websites and interfaces people can use",
+    title: "Interfaces people can actually use",
     description:
-      "Clear pages, forms, dashboards, and digital experiences that help people know what to do next.",
-    examples: ["Responsive experiences", "Accessible forms", "Useful dashboards"],
+      "Responsive pages, forms, dashboards, and application flows that make the next action clear.",
+    examples: ["React and Next.js", "Accessible forms", "Responsive dashboards"],
   },
   {
-    title: "Workflows that keep moving",
+    title: "Backends, data, and permissions",
     description:
-      "Turn repeated steps, decisions, and handoffs into a clearer way to get work done.",
-    examples: ["Approvals and handoffs", "Repeatable workflows", "Connected actions"],
+      "Durable records and server-side rules that keep the system honest as the work moves forward.",
+    examples: ["Postgres and Supabase", "Auth and RLS", "Durable state"],
   },
   {
-    title: "Information that stays organized",
+    title: "APIs and integrations",
     description:
-      "Keep the records, decisions, and context behind the work available when people need them.",
-    examples: ["Reliable records", "Clear permissions", "Searchable context"],
+      "Connect the services a project depends on so information can move without manual glue work.",
+    examples: ["REST and MCP boundaries", "Payments and email", "External services"],
   },
   {
-    title: "Tools that work together",
+    title: "Workflows and automation",
     description:
-      "Connect the services a project already depends on so information moves without extra busywork.",
-    examples: ["Email and payments", "Calendar and scheduling", "External services"],
+      "Turn repeated steps, approvals, and handoffs into a path that is easier to run and review.",
+    examples: ["Approval paths", "Scheduled work", "Operational tooling"],
   },
   {
-    title: "Private workspaces and dashboards",
+    title: "Systems that hold together",
     description:
-      "Give people one place to review requests, progress, decisions, and results.",
-    examples: ["Status views", "Owner controls", "Reviewable results"],
+      "Look across the layers when the hard part is not one component but the connection between them.",
+    examples: ["Source-of-truth design", "Failure recovery", "Reviewable results"],
   },
   {
-    title: "Testing, launch, and evidence",
+    title: "Testing and delivery",
     description:
-      "Check the experience, protect the important paths, and make delivery easier to trust.",
-    examples: ["Responsive checks", "Accessibility checks", "Reliable releases"],
+      "Protect the important paths and make the result easier to check before it moves forward.",
+    examples: ["Unit and contract tests", "Accessibility checks", "Release evidence"],
   },
 ] as const;
 
 export const PUBLIC_CAPABILITIES_INTRO =
-  "From the first idea through the experience behind it, we choose only the pieces that fit.";
+  "I like the problems that cross more than one layer. I can move from interface to data model to API to the operational path that keeps it running.";

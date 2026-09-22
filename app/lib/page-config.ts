@@ -417,12 +417,12 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
   header: {
     brand: 'Need This Done',
     navLinks: [
-      { href: '/website-fix', label: 'Website Fix' },
-      { href: '/managed-automation', label: 'Managed Automation' },
-      { href: '/how-it-works', label: 'How It Works' },
-      { href: '/work', label: 'Work' },
+      { href: '/work', label: 'Selected Work' },
+      { href: '/services', label: 'Capabilities' },
+      { href: '/about', label: 'About' },
+      { href: '/blog', label: 'Notes' },
     ],
-    ctaButton: { text: 'Share Your Vision', href: '/contact' },
+    ctaButton: { text: 'Start a conversation', href: '/contact' },
   },
   footer: {
     brand: 'Need This Done',
@@ -699,12 +699,12 @@ export const PAGE_CONFIGS = {
         { question: 'What if the request grows?', answer: 'The original agreement remains the reference. We discuss extra work and its price separately. You decide whether to continue.' },
         { question: 'Can we discuss another piece of work later?', answer: 'We start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.' },
         { question: 'What does a website snapshot cover?', answer: 'It highlights selected issues worth reviewing. It does not review every interaction or provide legal advice. Read what the checks cover.', links: [{ text: 'Read what the checks cover.', href: '/ada-compliance' }] },
-        { question: 'How do I get started?', answer: 'Share the change you want in your own words. Choosing a service is optional. Share Your Vision.', links: [{ text: 'Share Your Vision.', href: '/contact' }] },
+        { question: 'How do I get started?', answer: 'Share the technical problem, product idea, or question you have in your own words. Choosing a starting point is optional.', links: [{ text: 'Start a conversation.', href: '/contact' }] },
       ],
       cta: {
         title: 'Still have a question?',
-        description: 'Share the vision and context you have. We can clarify the next useful step.',
-        buttons: [{ text: 'Share Your Vision', variant: 'purple', href: '/contact' }],
+        description: 'Share the context you have. We can clarify the next useful step.',
+        buttons: [{ text: 'Start a conversation', variant: 'purple', href: '/contact' }],
         hoverColor: 'purple',
       },
     } as FAQPageContent,
@@ -761,7 +761,7 @@ export const PAGE_CONFIGS = {
     contentType: 'contact_page',
     defaults: {
       header: {
-        title: 'Tell us what needs to change.',
+        title: 'Bring the technical problem as it is.',
         description: 'Share the context for one useful first move.',
       },
       quickLink: { text: 'Contact →', href: '/contact' },
@@ -770,7 +770,7 @@ export const PAGE_CONFIGS = {
         emailField: { label: 'Your email', placeholder: 'your@email.com' },
         companyField: { label: 'Company', placeholder: 'Where you work', optional: '(if applicable)' },
         serviceField: {
-          label: 'Which starting point fits?',
+          label: 'Is there a useful starting point?',
           placeholder: '',
           defaultOption: 'Choose a starting point',
           otherOption: 'Something else',
