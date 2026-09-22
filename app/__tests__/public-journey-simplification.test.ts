@@ -33,11 +33,12 @@ describe('portfolio public journey', () => {
   });
 
   it('uses selected work, capabilities, about, and notes as the primary navigation', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Selected Work', 'Capabilities', 'About', 'Notes']);
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/work', '/services', '/about', '/blog']);
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Capabilities', 'Selected Work', 'About', 'Notes']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/work', '/about', '/blog']);
     expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['capabilities', 'featured-work', 'approach', 'notes']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(PUBLIC_HOME_JOURNEY.map(link => link.href));
     expect(PUBLIC_NAVIGATION.map(link => getPublicHomeHref(link.href))).toEqual([
-      '/#featured-work', '/#capabilities', '/#approach', '/#notes',
+      '/#capabilities', '/#featured-work', '/#approach', '/#notes',
     ]);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Start a conversation' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));

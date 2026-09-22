@@ -7,7 +7,6 @@ import MarkdownContent from '@/components/blog/MarkdownContent';
 import BlogPostCTA from '@/components/blog/BlogPostCTA';
 import RelatedPosts from '@/components/blog/RelatedPosts';
 import {
-  formatPublishedDate,
   calculateReadingTime,
   BLOG_CATEGORIES,
 } from '@/lib/blog-types';
@@ -72,7 +71,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${post.meta_title || post.title} - NeedThisDone Blog`,
+    title: `${post.meta_title || post.title} - NeedThisDone Notes`,
     description: post.meta_description || post.excerpt || undefined,
     alternates: { canonical: `/blog/${slug}` },
     openGraph: {
@@ -136,7 +135,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               className="mb-8 inline-flex items-center gap-2 text-sm text-emerald-50/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e]"
             >
               <ArrowLeft size={16} />
-              Back to Insights
+              Back to Notes
             </Link>
 
             {/* Editorial bar + category */}
@@ -156,7 +155,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               {post.title}
             </h1>
 
-            {/* Author + date + reading time strip */}
+            {/* Author + reading time strip */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-emerald-50/70">
               {/* Author avatar */}
               {post.author_name && (
@@ -168,17 +167,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 </div>
               )}
 
-              {post.author_name && post.published_at && (
-                <span className="text-emerald-50/35">·</span>
-              )}
-
-              {post.published_at && (
-                <span>
-                  {formatPublishedDate(post.published_at)}
-                </span>
-              )}
-
-              <span className="text-emerald-50/35">·</span>
+              {post.author_name && <span className="text-emerald-50/35">·</span>}
               <span>{readingTime} min read</span>
             </div>
           </div>

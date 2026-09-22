@@ -6,7 +6,8 @@ const publicRoutes = [
   '/how-it-works', '/system', '/pricing', '/work', '/blog', '/contact',
   '/faq', '/ada-compliance', '/privacy', '/terms',
   '/blog/ai-context-budget-tips', '/blog/loading-tricks-feel-instant',
-  '/blog/rewriting-copy-plain-language',
+  '/blog/rewriting-copy-plain-language', '/blog/finding-the-useful-shape',
+  '/blog/build-the-smallest-useful-slice',
 ];
 
 for (const route of publicRoutes) {
@@ -106,12 +107,11 @@ test('capabilities and work show the technical range', async ({ page }) => {
 
   await page.goto('/work');
   const work = page.getByRole('main');
-  await expect(work.getByRole('heading', { name: 'NeedThisDone.com', exact: true })).toBeVisible();
+  await expect(work.getByRole('heading', { name: 'NeedThisDone', exact: true })).toBeVisible();
   await expect(work.getByRole('heading', { name: 'Content workflow', exact: true })).toBeVisible();
-  await expect(work.locator('[data-public-capability-card]')).toHaveCount(6);
-  await expect(work.locator('[data-public-proof-card]')).toHaveCount(4);
-  await expect(work.getByRole('link', { name: 'Read the NeedThisDone system note', exact: true })).toHaveAttribute('href', '/system');
-  await expect(work.getByRole('link', { name: 'Open the GitHub repository', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done');
+  await expect(work.locator('article')).toHaveCount(3);
+  await expect(work.getByRole('link', { name: 'Read the system note', exact: true })).toHaveAttribute('href', '/system');
+  await expect(work.getByRole('link', { name: 'Open the code', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done');
 });
 
 test('contact keeps the message path concise and preserves offer aliases', async ({ page }) => {
@@ -127,8 +127,8 @@ test('desktop public navigation names the portfolio sections', async ({ page }, 
   await page.goto('/');
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
   for (const [label, href] of [
-    ['Selected Work', '/#featured-work'],
     ['Capabilities', '/#capabilities'],
+    ['Selected Work', '/#featured-work'],
     ['About', '/#approach'],
     ['Notes', '/#notes'],
   ]) {
@@ -144,4 +144,14 @@ test('public pages pass an accessibility scan on the portfolio front door', asyn
   await page.goto('/');
   const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations).toEqual([]);
+});
+
+test('public routes pass rendered color contrast checks', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public', 'Contrast scan runs in the desktop public project.');
+
+  for (const route of publicRoutes) {
+    await page.goto(route);
+    const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
+    expect(results.violations, `Color contrast violations on ${route}`).toEqual([]);
+  }
 });

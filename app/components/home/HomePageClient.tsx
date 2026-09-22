@@ -87,6 +87,7 @@ export default function HomePageClient() {
                 alt="A laptop, paper notes, and connected visual ideas on a warm workbench"
                 fill
                 priority
+                unoptimized
                 sizes="(min-width: 768px) 45vw, 100vw"
                 className="object-cover"
               />

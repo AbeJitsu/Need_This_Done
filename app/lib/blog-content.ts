@@ -2,13 +2,16 @@ import posts from '@/content/blog-posts.json';
 import type { BlogPost, BlogPostSummary } from '@/lib/blog-types';
 import { getRetainedArticleCopy } from '@/lib/public-article-copy';
 
-// Each repository-owned post was reviewed on 2026-08-08. These three remain
-// useful to the two current offers; the other six resolve to the Insights hub
-// rather than continuing to imply a broader product or a current service.
+// Each repository-owned post was reviewed on 2026-08-08. These five remain
+// useful to the public portfolio; the other posts resolve to the Notes hub or
+// another relevant page rather than continuing to imply a broader product or
+// a current service.
 export const RETAINED_POST_SLUGS = new Set([
   'ai-context-budget-tips',
   'loading-tricks-feel-instant',
   'rewriting-copy-plain-language',
+  'finding-the-useful-shape',
+  'build-the-smallest-useful-slice',
 ]);
 
 const publishedPosts = (posts as BlogPost[])

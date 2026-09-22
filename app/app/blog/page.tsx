@@ -8,7 +8,7 @@ import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 export const dynamic = 'force-static';
 
 // ============================================================================
-// Blog Page - Public Blog Listing
+// Notes Page - Public writing archive
 // ============================================================================
 // Displays all published blog posts in a clean, scannable layout.
 // Features the most recent post prominently, then shows others in a grid.
@@ -18,18 +18,18 @@ export const dynamic = 'force-static';
 // then click on any section to edit its content directly.
 
 export const metadata = {
-  title: 'Insights | NeedThisDone',
+  title: 'Notes | NeedThisDone',
   description:
     PUBLIC_CORE_PROMISE,
   alternates: { canonical: '/blog' },
   openGraph: {
-    title: 'Insights | NeedThisDone',
+    title: 'Notes | NeedThisDone',
     description: PUBLIC_CORE_PROMISE,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'Insights | NeedThisDone',
+    title: 'Notes | NeedThisDone',
     description: PUBLIC_CORE_PROMISE,
   },
 };

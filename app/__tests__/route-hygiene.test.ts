@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { PUBLIC_NAVIGATION, PUBLIC_PRIMARY_ACTION } from '@/lib/public-journey';
 import { PUBLIC_OFFERS } from '@/lib/public-offers';
-import { listBlogPosts } from '@/lib/blog-content';
+import { getBlogPost, listBlogPosts } from '@/lib/blog-content';
 import { seoConfig } from '@/lib/seo-config';
 import sitemap from '@/app/sitemap';
 import robots from '@/app/robots';
@@ -13,7 +13,7 @@ const repositoryRoot = resolve(appRoot, '..');
 
 describe('public route hygiene', () => {
   it('keeps the public navigation on the intended page progression', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/work', '/services', '/about', '/blog']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/work', '/about', '/blog']);
     expect(PUBLIC_PRIMARY_ACTION.label).toBe('Start a conversation');
   });
 
@@ -46,6 +46,32 @@ describe('public route hygiene', () => {
     expect(robotsConfig.sitemap).toBe(`${seoConfig.baseUrl}/sitemap.xml`);
     const disallow = robotsConfig.rules?.[0]?.disallow || [];
     expect(disallow).toEqual(expect.arrayContaining(['/dashboard/', '/employee/', '/prospecting/', '/admin/', '/report/', '/login']));
+  });
+
+  it('keeps the refreshed notes short and visually distinct', () => {
+    for (const [slug, image] of [
+      ['finding-the-useful-shape', '/images/notes/clear-next-step.jpg'],
+      ['build-the-smallest-useful-slice', '/images/notes/useful-slice.jpg'],
+    ]) {
+      const post = getBlogPost(slug);
+      expect(post).toBeTruthy();
+      expect(post?.featured_image).toBe(image);
+      expect(post?.content.trim().split(/\n\s*\n/)).toHaveLength(4);
+    }
+  });
+
+  it('gives every public note a distinct local featured image', () => {
+    const posts = listBlogPosts();
+    const images = posts.map((post) => post.featured_image);
+
+    expect(posts.length).toBeGreaterThan(0);
+    expect(images.every(Boolean)).toBe(true);
+    expect(new Set(images).size).toBe(images.length);
+
+    for (const image of images) {
+      expect(image).toMatch(/^\/images\//);
+      expect(existsSync(resolve(appRoot, 'public', image!.slice(1)))).toBe(true);
+    }
   });
 
   it('keeps permanent redirects and retired public paths aligned', () => {

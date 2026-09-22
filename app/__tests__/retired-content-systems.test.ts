@@ -61,8 +61,8 @@ describe('retired content systems', () => {
     }
   });
 
-  it('keeps only the three current, relevant posts and preserves retirement destinations', () => {
-    expect(listBlogPosts()).toHaveLength(3);
+  it('keeps only the current, relevant posts and preserves retirement destinations', () => {
+    expect(listBlogPosts()).toHaveLength(5);
     expect(listBlogPosts().map((post) => post.slug).sort()).toEqual([...RETAINED_POST_SLUGS].sort());
     expect(getRetiredBlogDestination('combat-medic-to-developer-skills-transfer')).toBe('/work');
     expect(getRetiredBlogDestination('custom-stripe-checkout-nextjs-server-actions')).toBe('/services');

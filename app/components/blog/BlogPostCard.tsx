@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, BookOpen, CalendarDays } from 'lucide-react';
-import { BLOG_CATEGORIES, formatPublishedDate, type BlogPostSummary } from '@/lib/blog-types';
+import { ArrowRight, BookOpen } from 'lucide-react';
+import { BLOG_CATEGORIES, type BlogPostSummary } from '@/lib/blog-types';
 
 const CATEGORY_COLORS: Record<string, {
   badge: string;
@@ -47,13 +47,6 @@ function Meta({ post, dark = false }: { post: BlogPostSummary; dark?: boolean })
   return (
     <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-sm ${dark ? 'text-emerald-50/60' : 'text-[#50675e]'}`}>
       {post.author_name && <span>{post.author_name}</span>}
-      {post.author_name && post.published_at && <span aria-hidden="true">·</span>}
-      {post.published_at && (
-        <span className="inline-flex items-center gap-1.5">
-          <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-          {formatPublishedDate(post.published_at)}
-        </span>
-      )}
     </div>
   );
 }
@@ -79,7 +72,7 @@ export default function BlogPostCard({ post, featured = false }: BlogPostCardPro
             <div className="pointer-events-none absolute -bottom-24 -left-10 h-48 w-48 rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
             <div className="relative flex h-full flex-col justify-between gap-10">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Latest note</p>
+                <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Featured note</p>
                 <div className="mt-8 grid h-14 w-14 place-items-center rounded-2xl bg-emerald-300 text-[#18372e]">
                   <BookOpen className="h-7 w-7" aria-hidden="true" />
                 </div>

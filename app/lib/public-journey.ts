@@ -1,8 +1,8 @@
 export const PUBLIC_VARIANT = "match-crib-v1" as const;
 
 export const PUBLIC_NAVIGATION = [
-  { href: "/work", label: "Selected Work" },
   { href: "/services", label: "Capabilities" },
+  { href: "/work", label: "Selected Work" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Notes" },
 ] as const;

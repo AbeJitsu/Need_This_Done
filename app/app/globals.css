@@ -2418,6 +2418,16 @@ Blog Markdown Content — Reading Experience
   background: rgba(255, 255, 255, 0.08);
 }
 
+.homepage-closing .homepage-button--ghost {
+  border-color: rgba(18, 107, 78, 0.35);
+  color: var(--homepage-green);
+}
+
+.homepage-closing .homepage-button--ghost:hover {
+  border-color: rgba(18, 107, 78, 0.7);
+  background: rgba(18, 107, 78, 0.08);
+}
+
 .homepage-button--green {
   background: var(--homepage-green);
   color: white;
