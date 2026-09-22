@@ -50,7 +50,18 @@ describe('portfolio public journey', () => {
     expect(getPublicHomeNextStep('capabilities')).toEqual({ href: '#featured-work', label: 'Next: Selected Work' });
     expect(getPublicHomeNextStep('featured-work')).toEqual({ href: '#approach', label: 'Next: About' });
     expect(getPublicHomeNextStep('approach')).toEqual({ href: '#notes', label: 'Next: Notes' });
-    expect(getPublicHomeNextStep('notes')).toEqual({ href: '/contact', label: 'Next: Start a conversation' });
+    expect(getPublicHomeNextStep('notes')).toBeNull();
+  });
+
+  it('keeps build notes concrete and the final contact action singular', () => {
+    const home = source('components/home/HomePageClient.tsx');
+    const notes = home.split('<section id="notes"')[1]?.split('</section>')[0] ?? '';
+
+    expect(notes).toContain('Notes from the work behind the software.');
+    expect(notes).toContain('Short write-ups share technical choices, small experiments, and lessons learned along the way.');
+    expect(notes).not.toMatch(/\breasoning\b/i);
+    expect(notes.match(/Start a conversation/g)).toHaveLength(1);
+    expect(getPublicHomeNextStep('notes')).toBeNull();
   });
 
   it('keeps the system page as an optional conceptual case study', () => {

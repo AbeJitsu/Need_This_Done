@@ -208,13 +208,12 @@ export default function HomePageClient() {
       <section id="notes" aria-labelledby="notes-heading" className="homepage-closing">
         <div className="homepage-closing__inner">
           <p className="homepage-eyebrow">Build notes</p>
-          <h2 id="notes-heading" className="homepage-heading">The work is easier to trust when the reasoning is visible.</h2>
-          <p>Build notes cover the technical choices, small experiments, and lessons behind the work.</p>
+          <h2 id="notes-heading" className="homepage-heading">Notes from the work behind the software.</h2>
+          <p>Short write-ups share technical choices, small experiments, and lessons learned along the way.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/blog" className="homepage-button homepage-button--green">Read the notes <ArrowRight aria-hidden="true" /></Link>
             <Link href="/contact" className="homepage-button homepage-button--ghost">Start a conversation <ArrowRight aria-hidden="true" /></Link>
           </div>
-          <HomeNextStep sectionId="notes" />
         </div>
       </section>
     </main>

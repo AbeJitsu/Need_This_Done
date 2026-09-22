@@ -34,13 +34,11 @@ export type PublicHomeSectionId = (typeof PUBLIC_HOME_JOURNEY)[number]["id"];
 
 export function getPublicHomeNextStep(id: PublicHomeSectionId) {
   const currentIndex = PUBLIC_HOME_JOURNEY.findIndex((section) => section.id === id);
-  const nextSection = PUBLIC_HOME_JOURNEY[currentIndex + 1] ?? (
-    id === "notes" ? PUBLIC_HOME_CONVERSION : null
-  );
+  const nextSection = PUBLIC_HOME_JOURNEY[currentIndex + 1];
 
   return nextSection
     ? {
-        href: id === "notes" ? PUBLIC_HOME_CONVERSION.href : `#${nextSection.id}`,
+        href: `#${nextSection.id}`,
         label: `Next: ${nextSection.label}`,
       }
     : null;
