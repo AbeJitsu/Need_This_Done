@@ -127,7 +127,7 @@ const schemas = {
         name: 'When do we agree on the price?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'I agree on the work and price with you before you commit.',
+          text: 'We agree on the work and price with you before you commit.',
         },
       },
       {
@@ -143,7 +143,7 @@ const schemas = {
         name: 'How do I start Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Share the repeated problem at work and the better result you want. I agree on the work and price with you before you commit.',
+          text: 'Share the repeated problem at work and the better result you want. We agree on the work and price with you before you commit.',
         },
       },
       {
@@ -151,7 +151,7 @@ const schemas = {
         name: 'How do you review a technical problem?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'I look at the visible experience, the system behind it, and the next useful change.',
+          text: 'We look at the visible experience, the system behind it, and the next useful change.',
         },
       },
     ],

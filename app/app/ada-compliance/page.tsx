@@ -62,7 +62,7 @@ export default function AdaCompliancePage() {
             Make your website easier for more people to use.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/75">
-            Accessibility is part of making a useful website. I can review the
+            Accessibility is part of making a useful website. We can review the
             visible experience, explain what is getting in the way, and help define
             a practical first improvement. This is not legal advice.
           </p>

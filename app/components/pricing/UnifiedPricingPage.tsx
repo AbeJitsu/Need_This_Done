@@ -17,8 +17,8 @@ export default function UnifiedPricingPage() {
             Know what help costs before you say yes.
           </h1>
           <p className="mx-auto mt-6 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)]">
-            A clear price starts with a clear piece of work. Tell me what keeps
-            happening. I will agree on what needs to change with you.
+            A clear price starts with a clear piece of work. Tell us what keeps
+            happening. We will agree on what needs to change with you.
           </p>
         </div>
       </section>
@@ -47,7 +47,7 @@ export default function UnifiedPricingPage() {
 
       <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8">
         <p className="mb-10 max-w-[60ch] text-lg leading-8">
-          I agree on the work and price with you before you commit.
+          We agree on the work and price with you before you commit.
         </p>
         <ThreeStepFlow />
       </section>
@@ -58,7 +58,7 @@ export default function UnifiedPricingPage() {
             You can start with the problem.
           </h2>
           <p className="mx-auto mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-            Share what is getting in the way. I will clarify the work and the
+            Share what is getting in the way. We will clarify the work and the
             price before anything begins.
           </p>
           <Link

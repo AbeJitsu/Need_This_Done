@@ -6,28 +6,28 @@ import { PUBLIC_CORE_PROMISE, PUBLIC_BRAND_PROMISE } from "@/lib/public-copy";
 const principles = [
   [
     "Start with the real problem",
-    "I begin with the bottleneck, the people affected, and the result that would make the work better.",
+    "Start with the bottleneck, the people affected, and the result that would make the work better.",
   ],
   [
     "Keep the system understandable",
-    "I make the important boundaries visible: what the interface does, where data lives, and which actions need review.",
+    "Make the important boundaries visible: what the interface does, where data lives, and which actions need review.",
   ],
   [
     "Build the useful piece first",
-    "I prefer a small, working slice that can be tested and improved over a large plan that stays theoretical.",
+    "A small, working slice can be tested and improved before a larger plan takes shape.",
   ],
   [
     "Leave evidence behind",
-    "I use tests, accessible paths, clear records, and documented decisions so the work can be trusted later.",
+    "Tests, accessible paths, clear records, and documented decisions make the work easier to trust later.",
   ],
 ] as const;
 
 export const metadata: Metadata = {
-  title: "About Me | NeedThisDone",
+  title: "About NeedThisDone | NeedThisDone",
   description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About Me | NeedThisDone",
+    title: "About NeedThisDone | NeedThisDone",
     description: PUBLIC_CORE_PROMISE,
     type: "website",
   },
@@ -38,14 +38,14 @@ export default function AboutPage() {
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">About me</p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">About NeedThisDone</p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
             {PUBLIC_BRAND_PROMISE}
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            I build practical software across the stack and enjoy the work between
-            disciplines: turning a vague problem into a useful interface, a sound
-            data model, a reliable API, and a path someone can actually operate.
+            NeedThisDone builds practical software across the stack. The work connects
+            vague problems to useful interfaces, sound data models, reliable APIs, and
+            paths people can operate.
           </p>
         </div>
       </section>
@@ -55,19 +55,17 @@ export default function AboutPage() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">The through line</p>
             <h2 id="background-heading" className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl">
-              I like problems that cross more than one layer.
+              Problems that cross more than one layer.
             </h2>
           </div>
           <div className="max-w-[60ch] space-y-5 leading-7 text-[var(--public-muted)]">
             <p>
-              My center of gravity is full-stack product work: React and Next.js on
-              the front end, backends and APIs behind it, and databases, permissions,
-              integrations, and automation that keep the whole thing coherent.
+              The work spans full-stack product development: React and Next.js,
+              backends, APIs, databases, permissions, integrations, and automation.
             </p>
             <p>
-              I also bring a technical operations mindset. I care about what happens
-              after the demo: how a failure is recovered, how a decision is recorded,
-              and how another person can understand the system without guessing.
+              The focus extends beyond the demo. Failures need recovery, decisions need
+              records, and systems should be understandable without guessing.
             </p>
           </div>
         </div>
@@ -76,7 +74,7 @@ export default function AboutPage() {
       <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
           <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">How I work</p>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">Working principles</p>
             <h2 className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl">
               Clarity is part of the implementation.
             </h2>
@@ -98,7 +96,7 @@ export default function AboutPage() {
           <h2 className="font-playfair text-4xl font-black md:text-5xl">See the work, then start a conversation.</h2>
           <p className="mx-auto mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">
             If you have a technical problem, a product idea, or a system you want to
-            make more dependable, send the unpolished version. I can help define the
+            make more dependable, send the unpolished version. We can help define the
             first useful slice.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">

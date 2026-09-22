@@ -5,14 +5,14 @@
  * summaries cannot quietly drift apart.
  */
 export const PUBLIC_CORE_PROMISE =
-  'I build practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.';
+  'NeedThisDone builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.';
 
-export const PUBLIC_BRAND_PROMISE = 'A computer and technology generalist.';
-export const PUBLIC_BRAND_TITLE = 'A Computer and Technology Generalist';
+export const PUBLIC_BRAND_PROMISE = 'An independent technology practice.';
+export const PUBLIC_BRAND_TITLE = 'Independent Technology Practice';
 
 export const PUBLIC_SITE_DESCRIPTION = `${PUBLIC_CORE_PROMISE} ${PUBLIC_BRAND_PROMISE}`;
 export const PUBLIC_REPORT_FALLBACK =
-  'I checked selected website signals. The results show where a closer review may help.';
+  'Selected website signals show where a closer review may help.';
 
 export const PUBLIC_SENTENCE_TARGET = 20;
 export const PUBLIC_SENTENCE_HARD_LIMIT = 25;

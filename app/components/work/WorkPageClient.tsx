@@ -38,7 +38,7 @@ const projects = [
 
 const simpleSteps = [
   ["Start with the messy part", "A slow task, a confusing website, or an idea you cannot quite explain yet."],
-  ["Find the useful shape", "I work out what the first helpful version needs to do."],
+  ["Find the useful shape", "Define what the first helpful version needs to do."],
   ["Leave you with something real", "A working path, a clearer decision, or a tool you can keep using."],
 ] as const;
 
@@ -48,7 +48,7 @@ export default function WorkPageClient() {
       <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[.85fr_1.15fr] md:items-center md:py-20">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">A few things I&apos;ve built</p>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Selected builds</p>
             <h1 className="mt-6 max-w-3xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
               Useful things for messy problems.
             </h1>
@@ -102,7 +102,7 @@ export default function WorkPageClient() {
       <section className="border-y border-[var(--public-ink)]/10 bg-[var(--public-sand)] px-5 py-16 sm:px-8 md:py-24" aria-labelledby="approach-heading">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">The part I enjoy</p>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">The working approach</p>
             <h2 id="approach-heading" className="mt-4 font-playfair text-4xl font-black md:text-5xl">Making the next step feel obvious.</h2>
           </div>
           <ol className="mt-10 grid gap-4 md:grid-cols-3">

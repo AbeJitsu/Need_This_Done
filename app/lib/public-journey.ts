@@ -74,7 +74,7 @@ export const PUBLIC_ROUTE_STAGES = {
   "/work": {
     stage: "proof",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/about", label: "How I work" },
+    secondary: { href: "/about", label: "The approach" },
     event: "work",
   },
   "/about": {
@@ -92,7 +92,7 @@ export const PUBLIC_ROUTE_STAGES = {
   "/managed-automation": {
     stage: "fit",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/how-it-works", label: "See how I help" },
+    secondary: { href: "/how-it-works", label: "See how it works" },
     event: "managed_automation",
   },
   "/pricing": {

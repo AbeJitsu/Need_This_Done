@@ -1,13 +1,20 @@
 # Public language audit
 
-**Reviewed:** 2026-09-12
-**Branch:** `feature/system-page-plain-english-2026-09-11`
+**Reviewed:** 2026-09-22
+**Branch:** `feature/public-brand-voice-2026-09-22`
 **Scope:** anonymous public routes, retained articles, report and analyzer
 states, recovery states, and legacy redirects.
 
 The public promise is:
 
-> NeedThisDone helps teams and individuals solve technology problems and simplify repeated work with clear, focused solutions.
+> NeedThisDone builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.
+
+The public voice is brand-led and appropriately collective. Marketing pages use
+NeedThisDone or neutral descriptions for identity and capability, “we” or “us”
+for shared commitments, and “you” for the visitor’s outcome. Singular operator
+language such as “I,” “my,” and “me” does not appear in public marketing copy.
+The site describes an independent technology practice without implying a large
+agency, staffed department, or unlimited delivery capacity.
 
 Public prose targets 20 words or fewer per sentence. Twenty-five words is the
 hard ceiling. Visitor-submitted text, quoted website text, URLs, legal
@@ -29,7 +36,7 @@ report copy still needs owner review before publication.
 | `/how-it-works` | The introduction named a problem but not the wider technical-help scope. | “Tell us what is not working. We’ll find the next move.” The supporting copy names websites, workflows, tools, repeated work, the agreed work, and visible change. | 14 max | Implemented; owner review pending |
 | `/system` | The page repeated the same request → approval → execution → result story across the hero, operating rail, architecture rail, status lists, and closing comparison. | Start with the problem chat alone leaves behind, contrast it with NeedThisDone, then use four problem/solution cards and a shorter five-card technical map. Keep proof lanes for current-state honesty; each card names the problem, what changes, and the technical detail. | Concise architecture note | Implemented; owner review pending |
 | `/work` | The page relied on hypothetical before-and-after stories and a disclaimer instead of showing the full capability range. | “Full-stack work from first idea to working result.” The page maps frontends, backends, APIs, data, integrations, agents, automations, testing, deployment, and evidence, then uses NeedThisDone as one production proof. | Concise capability map | Implemented; owner review pending |
-| `/about` | The introduction did not sound like an effective technical partner. | “Clear help for problems that matter.” The supporting copy names technical know-how, focused work, and visible change. | 12 max | Implemented; owner review pending |
+| `/about` | The page relied on first-person identity language. | “Independent technology practice.” NeedThisDone builds practical software across the stack. The work connects vague problems to useful interfaces, sound data models, reliable APIs, and paths people can operate. | Concise | Implemented; owner review pending |
 | `/faq` | The FAQ began with fit and scope questions without sounding like a direct source of help. | “Answers about what we can help with, how we work, pricing, and what happens next.” A new answer explains that future work can be discussed separately. | 14 max | Implemented; owner review pending |
 | `/blog` | The metadata described a broad vision instead of practical help. | “Practical ideas for teams and individuals trying to get work moving.” Article cards introduce three retained articles with shorter copy. | 12 max | Implemented; owner review pending |
 | `/site-analyzer` | “SEO,” “certify compliance,” and “every interaction” made a limited tool sound broader than it is. | “We check selected website signals. The findings can point to one useful correction.” | 10 max | Implemented; owner review pending |

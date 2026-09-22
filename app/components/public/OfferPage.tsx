@@ -45,7 +45,7 @@ export default function OfferPage({
             Start a conversation
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <p className="mt-5 font-bold text-[#dce8dd]">{offer.price} · Work agreed before I start</p>
+          <p className="mt-5 font-bold text-[#dce8dd]">{offer.price} · Work agreed before it starts</p>
           </div>
           <ServiceIllustration kind={offerId === 'website-improvement' ? 'website' : 'work'} />
         </div>
@@ -101,11 +101,11 @@ export default function OfferPage({
       </section>
       <div className="public-section">
         <p className="text-3xl font-bold">{offer.price}</p>
-        <p className="mt-3">I agree on the work and price with you before you commit.</p>
+        <p className="mt-3">We agree on the work and price with you before you commit.</p>
         <Link href="/work#capabilities" className="public-explore mt-4">Explore the full capability map</Link>
       </div>
-      <PublicClosing title="Tell me what you want to change." href={offer.contactHref} secondary={PUBLIC_ROUTE_STAGES[route].secondary}>
-        <p>Share the part that matters to you. I will clarify the work before you decide.</p>
+      <PublicClosing title="Tell us what you want to change." href={offer.contactHref} secondary={PUBLIC_ROUTE_STAGES[route].secondary}>
+        <p>Share the part that matters to you. We will clarify the work before you decide.</p>
       </PublicClosing>
     </main>
   );

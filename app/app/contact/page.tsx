@@ -114,7 +114,7 @@ function ContactForm() {
             Thanks for reaching out.
           </h1>
           <p className="mt-4 leading-7 text-[#50675e]">
-            I&apos;ll read what you sent and follow up with a practical next step.
+            We&apos;ll read what you sent and follow up with a practical next step.
           </p>
           <Link href="/work" className="public-explore mt-6">See selected work</Link>
         </section>
@@ -129,7 +129,7 @@ function ContactForm() {
           <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">{PUBLIC_PRIMARY_ACTION.label}</p>
           <h1 className="mt-5 font-playfair text-5xl font-black">Bring the technical problem as it is.</h1>
           <p className="mt-5 max-w-2xl text-[#dce8dd]">
-            Tell me what you are building, what is getting in the way, or what you
+            Tell us what you are building, what is getting in the way, or what you
             want to understand better. A polished brief is not required.
           </p>
         </div>

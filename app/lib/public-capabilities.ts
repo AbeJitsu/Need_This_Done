@@ -38,4 +38,4 @@ export const PUBLIC_CAPABILITIES = [
 ] as const;
 
 export const PUBLIC_CAPABILITIES_INTRO =
-  "I like the problems that cross more than one layer. I can move from interface to data model to API to the operational path that keeps it running.";
+  "NeedThisDone works across the layers that make a system useful: interface, data model, API, and operations.";

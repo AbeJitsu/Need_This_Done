@@ -10,7 +10,7 @@ import { PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 
 export const metadata: Metadata = {
   title: 'Pricing | NeedThisDone',
-  description: `${PUBLIC_CORE_PROMISE} I agree on the work and price with you before you commit.`,
+  description: `${PUBLIC_CORE_PROMISE} We agree on the work and price with you before you commit.`,
   alternates: { canonical: '/pricing' },
   openGraph: {
     title: 'Website Fix & Managed Automation Pricing | NeedThisDone',

@@ -4,7 +4,7 @@ import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
-  title: "How I Work | NeedThisDone",
+  title: "How It Works | NeedThisDone",
   description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/how-it-works" },
 };
@@ -12,23 +12,23 @@ export const metadata: Metadata = {
 const steps = [
   [
     "Make the problem observable",
-    "I start with the page, bottleneck, evidence, and desired result. A broad idea becomes a concrete slice of work.",
+    "Start with the page, bottleneck, evidence, and desired result. A broad idea becomes a concrete slice of work.",
   ],
   [
     "Map the system boundary",
-    "I identify which interface, data, API, integration, or operational path has to change together.",
+    "Identify which interface, data, API, integration, or operational path has to change together.",
   ],
   [
     "Build the smallest useful path",
-    "I connect the pieces end to end, keeping the first result small enough to inspect and improve.",
+    "Connect the pieces end to end, keeping the first result small enough to inspect and improve.",
   ],
   [
     "Verify what matters",
-    "I use route, accessibility, browser, and workflow checks to confirm that the intended path still works.",
+    "Route, accessibility, browser, and workflow checks confirm that the intended path still works.",
   ],
   [
     "Hand off a clear next decision",
-    "The result should show what changed, what remains, and what I would do next if the work continues.",
+    "The result shows what changed, what remains, and what comes next if the work continues.",
   ],
 ] as const;
 
@@ -37,9 +37,9 @@ export default function HowItWorksPage() {
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">How I work</p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">How it works</p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            I make the next technical decision easier to see.
+            Make the next technical decision easier to see.
           </h1>
           <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
             Good software work is not only writing code. It is choosing the right

@@ -3,8 +3,8 @@
   <circle cx="1090" cy="-30" r="330" fill="#d0a94f" opacity="0.14"/>
   <rect x="72" y="68" width="1056" height="494" rx="8" fill="none" stroke="#183229" stroke-opacity="0.16"/>
   <text x="112" y="155" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="4" fill="#126b4e">PORTFOLIO · FULL-STACK · SYSTEMS</text>
-  <text x="112" y="290" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700" fill="#183229">Computer and</text>
-  <text x="112" y="385" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700" fill="#183229">technology generalist.</text>
+  <text x="112" y="290" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700" fill="#183229">Independent</text>
+  <text x="112" y="385" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700" fill="#183229">technology practice.</text>
   <rect x="112" y="448" width="86" height="5" rx="2.5" fill="#d0a94f"/>
   <text x="112" y="510" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="700" fill="#183229">Need This Done</text>
 </svg>

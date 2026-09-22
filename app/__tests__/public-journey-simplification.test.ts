@@ -19,11 +19,11 @@ const repositoryRoot = resolve(appRoot, '..');
 const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
 describe('portfolio public journey', () => {
-  it('leads with a generalist portfolio promise and clear actions', () => {
+  it('leads with an independent-practice promise and clear actions', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('I build');
-    expect(home).toContain('across');
-    expect(home).toContain('the stack');
+    expect(home).toContain('Practical software');
+    expect(home).toContain('for messy');
+    expect(home).toContain('problems.');
     expect(home).toContain('See selected work');
     expect(home).toContain('href="/work#case-studies"');
     expect(home).toContain('Start a conversation');
@@ -100,13 +100,13 @@ describe('portfolio public journey', () => {
     expect(home).not.toContain('PUBLIC_EXAMPLES');
   });
 
-  it('gives About and How I Work distinct portfolio jobs', () => {
+  it('gives About and How It Works distinct portfolio jobs', () => {
     const howItWorks = source('app/how-it-works/page.tsx');
     const about = source('app/about/page.tsx');
-    expect(howItWorks).toContain('I make the next technical decision easier to see.');
+    expect(howItWorks).toContain('Make the next technical decision easier to see.');
     expect(howItWorks).toContain('Make the problem observable');
-    expect(about).toContain('About me');
-    expect(about).toContain('I like problems that cross more than one layer.');
+    expect(about).toContain('About NeedThisDone');
+    expect(about).toContain('Problems that cross more than one layer.');
     expect(about).toContain('Clarity is part of the implementation.');
     expect(about).not.toContain('Meet the team');
   });
@@ -138,10 +138,10 @@ describe('portfolio public journey', () => {
     expect(roadmap).toContain('Assistant-first finish line');
   });
 
-  it('uses the new portfolio promise in metadata', () => {
-    expect(PUBLIC_BRAND_TITLE).toBe('A Computer and Technology Generalist');
+  it('uses the independent-practice promise in metadata', () => {
+    expect(PUBLIC_BRAND_TITLE).toBe('Independent Technology Practice');
     expect(source('app/layout.tsx')).toContain('PUBLIC_BRAND_TITLE');
-    expect(source('public/og-image.svg')).toContain('Computer and');
+    expect(source('public/og-image.svg')).toContain('Independent');
     expect(seoConfig.description).toContain('React and Next.js');
   });
 });

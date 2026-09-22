@@ -76,8 +76,8 @@ test('homepage leads with the generalist portfolio promise', async ({ page }) =>
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/');
   const hero = page.locator('main > section').first();
-  await expect(hero.getByRole('heading', { name: 'I build across the stack.' })).toBeVisible();
-  await expect(hero).toContainText('browser, a backend, a database, an API');
+  await expect(hero.getByRole('heading', { name: 'Practical software for messy problems.' })).toBeVisible();
+  await expect(hero).toContainText('interfaces, backends, databases, APIs');
   await expect(hero.getByRole('link', { name: 'See selected work', exact: true })).toHaveAttribute('href', '/work#case-studies');
   await expect(page.locator('#capabilities')).toBeVisible();
   await expect(page.locator('#featured-work')).toBeVisible();

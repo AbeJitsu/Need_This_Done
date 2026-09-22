@@ -669,7 +669,7 @@ export const PAGE_CONFIGS = {
       },
       customSection: {
         title: 'Need a different commitment?',
-        description: 'Share the context and I will confirm what belongs in the scope before work begins.',
+        description: 'Share the context and we will confirm what belongs in the scope before work begins.',
         buttons: [
           { text: 'Contact', variant: 'green', href: '/contact' },
           { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
@@ -687,23 +687,23 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: {
         title: 'Questions, answered.',
-        description: 'Answers about what I can help with, how I work, pricing, and what happens next.',
+        description: 'Answers about what NeedThisDone can help with, how the work happens, pricing, and what happens next.',
       },
       items: [
-        { question: 'Do I need to know which service fits?', answer: 'No. Start with what you want to change. I can clarify the next useful step with you. Explore the two starting points.', links: [{ text: 'Explore the two starting points.', href: '/services' }] },
-        { question: 'What if I have tried to solve this before?', answer: 'Tell me what you tried and what you learned. I will use that context when discussing the work.' },
-        { question: 'How much preparation do I need?', answer: 'A few sentences are enough to begin. You can browse all four intake steps first. I discuss access, review time, and delivery timing before you decide.' },
+        { question: 'Do I need to know which service fits?', answer: 'No. Start with what you want to change. We can clarify the next useful step with you. Explore the two starting points.', links: [{ text: 'Explore the two starting points.', href: '/services' }] },
+        { question: 'What if I have tried to solve this before?', answer: 'Tell us what you tried and what you learned. We will use that context when discussing the work.' },
+        { question: 'How much preparation do I need?', answer: 'A few sentences are enough to begin. You can browse all four intake steps first. We discuss access, review time, and delivery timing before you decide.' },
         { question: 'What does Website Fix include?', answer: `${PUBLIC_OFFERS['website-improvement'].summary} ${PUBLIC_OFFERS['website-improvement'].price}. See Website Fix details.`, links: [{ text: 'See Website Fix details.', href: PUBLIC_OFFERS['website-improvement'].detailHref }] },
         { question: 'What does Managed Automation start with?', answer: `${PUBLIC_OFFERS['ai-operator'].summary} Explore Managed Automation.`, links: [{ text: 'Explore Managed Automation.', href: PUBLIC_OFFERS['ai-operator'].detailHref }] },
-        { question: 'When do we agree on the price?', answer: 'I agree on the work and price with you before you commit. Review pricing.', links: [{ text: 'Review pricing.', href: '/pricing' }] },
-        { question: 'What if the request grows?', answer: 'The original agreement remains the reference. I will discuss extra work and its price separately. You decide whether to continue.' },
-        { question: 'Can we discuss another piece of work later?', answer: 'I start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.' },
-        { question: 'How do you review a technical problem?', answer: 'I look at the visible experience, the system behind it, and the next useful change. Start a conversation.', links: [{ text: 'Start a conversation.', href: '/contact' }] },
+        { question: 'When do we agree on the price?', answer: 'We agree on the work and price with you before you commit. Review pricing.', links: [{ text: 'Review pricing.', href: '/pricing' }] },
+        { question: 'What if the request grows?', answer: 'The original agreement remains the reference. We will discuss extra work and its price separately. You decide whether to continue.' },
+        { question: 'Can we discuss another piece of work later?', answer: 'The work starts with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.' },
+        { question: 'How do you review a technical problem?', answer: 'We look at the visible experience, the system behind it, and the next useful change. Start a conversation.', links: [{ text: 'Start a conversation.', href: '/contact' }] },
         { question: 'How do I get started?', answer: 'Share the technical problem, product idea, or question you have in your own words. Choosing a starting point is optional.', links: [{ text: 'Start a conversation.', href: '/contact' }] },
       ],
       cta: {
         title: 'Still have a question?',
-        description: 'Share the context you have. I can clarify the next useful step.',
+        description: 'Share the context you have. We can clarify the next useful step.',
         buttons: [{ text: 'Start a conversation', variant: 'purple', href: '/contact' }],
         hoverColor: 'purple',
       },

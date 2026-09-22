@@ -13,7 +13,7 @@ import {
 import { PUBLIC_OFFERS } from '@/lib/public-offers';
 import { RETAINED_ARTICLE_COPY } from '@/lib/public-article-copy';
 import { defaultFAQContent, defaultPrivacyContent, defaultTermsContent } from '@/lib/default-page-content';
-import { getRetiredBlogDestination, listBlogPosts } from '@/lib/blog-content';
+import { getBlogPost, getRetiredBlogDestination, listBlogPosts } from '@/lib/blog-content';
 import {
   buildDeterministicAnalysis,
   buildExecutiveSummary,
@@ -62,9 +62,9 @@ function textValues(value: unknown): string[] {
 }
 
 describe('public language contract', () => {
-  it('keeps the core promise centralized and within the sentence target', () => {
+  it('keeps the brand-led core promise centralized and within the sentence target', () => {
     expect(PUBLIC_CORE_PROMISE).toBe(
-      'I build practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.',
+      'NeedThisDone builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.',
     );
     expect(isPublicCopyWithinLimit(PUBLIC_CORE_PROMISE)).toBe(true);
   });
@@ -86,10 +86,11 @@ describe('public language contract', () => {
     expect(activePublicSources).not.toContain(retiredPromise);
   });
 
-  it('keeps the portfolio-facing pages direct and personal', () => {
+  it('keeps public marketing copy brand-led and appropriately collective', () => {
     const publicCompanyCopy = publicCompanyVoicePaths.map(readApp).join('\n');
-    expect(publicCompanyCopy).toContain('I build');
-    expect(publicCompanyCopy).toContain('I work');
+    expect(publicCompanyCopy).toContain('NeedThisDone builds');
+    expect(publicCompanyCopy).toContain('We agree');
+    expect(publicCompanyCopy).not.toMatch(/\b(?:I|I['’]m|I['’]ll|I['’]ve|my|me)\b/);
   });
 
   it('rejects trust-undermining disclaimer copy on public-facing surfaces', () => {
@@ -137,13 +138,13 @@ describe('public language contract', () => {
       .map((pattern) => pattern.source);
 
     expect(matches, 'Public copy must describe real capability and evidence directly.').toEqual([]);
-    expect(publicCopy).toContain('I build practical software across the stack');
+    expect(publicCopy).toContain('NeedThisDone builds practical software across the stack');
   });
 
   it('keeps the future-work reassurance in the FAQ defaults', () => {
     expect(defaultFAQContent.items).toContainEqual({
       question: 'Can we discuss another piece of work later?',
-      answer: 'I start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.',
+      answer: 'The work starts with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.',
     });
   });
 
@@ -167,6 +168,22 @@ describe('public language contract', () => {
       '4 Loading Tricks That Make a Site Feel Faster',
       'A Smaller AI Brief Works Better',
     ]);
+  });
+
+  it('keeps active notes free of singular operator voice', () => {
+    for (const summary of listBlogPosts()) {
+      const post = getBlogPost(summary.slug);
+      expect(post).not.toBeNull();
+      if (!post) continue;
+      const publicText = [
+        post.title,
+        post.excerpt,
+        post.content,
+        post.meta_title,
+        post.meta_description,
+      ].filter(Boolean).join('\n');
+      expect(publicText).not.toMatch(/\b(?:I|I['’]m|I['’]ll|I['’]ve|my|me)\b/);
+    }
   });
 
   it('keeps legal and offer copy readable', () => {
