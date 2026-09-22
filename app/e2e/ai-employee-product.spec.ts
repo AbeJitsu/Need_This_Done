@@ -23,6 +23,54 @@ for (const route of publicRoutes) {
   });
 }
 
+test('homepage text stays inside its containers at public widths', async ({ page }) => {
+  for (const viewport of [
+    { width: 375, height: 900 },
+    { width: 1280, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+
+    const overflow = await page.evaluate(() => {
+      const viewportRight = document.documentElement.clientWidth;
+      const textSelectors = 'h1,h2,h3,h4,h5,h6,p,li,a,button,label,dt,dd,blockquote';
+
+      return Array.from(document.querySelectorAll<HTMLElement>(textSelectors)).flatMap((element) => {
+        const style = getComputedStyle(element);
+        const box = element.getBoundingClientRect();
+        if (
+          box.width <= 0 ||
+          box.height <= 0 ||
+          style.display === 'none' ||
+          style.visibility === 'hidden' ||
+          element.classList.contains('sr-only')
+        ) return [];
+
+        const issues: string[] = [];
+        if (element.scrollWidth > element.clientWidth + 1) issues.push('scroll width exceeds client width');
+        if (box.left < -1 || box.right > viewportRight + 1) issues.push('element escapes viewport');
+
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const textRects = Array.from(range.getClientRects());
+        if (textRects.some((rect) => rect.left < box.left - 1 || rect.right > box.right + 1)) {
+          issues.push('text escapes element bounds');
+        }
+
+        return issues.length > 0
+          ? [{
+              element: `${element.tagName.toLowerCase()}.${String(element.className).slice(0, 80)}`,
+              text: (element.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 100),
+              issues,
+            }]
+          : [];
+      });
+    });
+
+    expect(overflow, `Text overflow detected at ${viewport.width}px`).toEqual([]);
+  }
+});
+
 test('homepage leads with the generalist portfolio promise', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/');
@@ -59,7 +107,7 @@ test('capabilities and work show the technical range', async ({ page }) => {
   await page.goto('/work');
   const work = page.getByRole('main');
   await expect(work.getByRole('heading', { name: 'NeedThisDone.com', exact: true })).toBeVisible();
-  await expect(work.getByRole('heading', { name: 'Acadio', exact: true })).toBeVisible();
+  await expect(work.getByRole('heading', { name: 'Content workflow', exact: true })).toBeVisible();
   await expect(work.locator('[data-public-capability-card]')).toHaveCount(6);
   await expect(work.locator('[data-public-proof-card]')).toHaveCount(4);
   await expect(work.getByRole('link', { name: 'Read the NeedThisDone system note', exact: true })).toHaveAttribute('href', '/system');

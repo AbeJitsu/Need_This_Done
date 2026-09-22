@@ -78,8 +78,8 @@ export const caseStudies: CaseStudy[] = [
     color: 'emerald',
   },
   {
-    id: 'acadio',
-    title: 'Acadio',
+    id: 'content-workflow',
+    title: 'Content workflow',
     subtitle: 'Reviewable Content Delivery',
     role: 'Technical operations system',
     period: '2025',

@@ -4,7 +4,7 @@ import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import { caseStudies } from "@/lib/portfolio-data";
 
 const needThisDone = caseStudies.find((study) => study.id === "needthisdone");
-const acadio = caseStudies.find((study) => study.id === "acadio");
+const contentWorkflow = caseStudies.find((study) => study.id === "content-workflow");
 
 const projects = [
   {
@@ -18,12 +18,12 @@ const projects = [
   },
   {
     eyebrow: "Workflow build",
-    title: "Acadio",
+    title: "Content workflow",
     description: "A content pipeline that turned recurring preparation into a repeatable, reviewable handoff.",
     href: "/contact",
     action: "Start a conversation",
     className: "bg-[#e8e2d5] text-[var(--public-ink)]",
-    detail: acadio?.tech.slice(0, 4),
+    detail: contentWorkflow?.tech.slice(0, 4),
   },
   {
     eyebrow: "The next useful tool",

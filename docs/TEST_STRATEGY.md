@@ -112,7 +112,7 @@ The Hermes vertical slice has an intentional environment order:
 | `retired-content-systems.test.ts` | Legacy chatbot/page embeddings/content remain retired | Prevents vector work restoring the old product | Private vector availability |
 | `retired-developer-surface.test.ts` | Retired developer routes/links | Keeps unsupported tooling absent | Coding worker behavior |
 | `retired-inline-editor-surface.test.ts` | Retired editor surface | Prevents old control plane returning | External editor integrations |
-| `retired-lms-surface.test.ts` | LMS routes/enrollment/navigation | Keeps current product boundary coherent | Acadio behavior |
+| `retired-lms-surface.test.ts` | LMS routes/enrollment/navigation | Keeps current product boundary coherent | Content workflow behavior |
 | `retired-local-tooling.test.ts` | Unused tooling/dependencies | Reduces unsupported maintenance surface | Whether every unused package is harmful |
 | `retired-order-commerce-surface.test.ts` | Storefront/cart/order/payment routes | Prevents retired commerce returning | Future billing work |
 | `retired-storefront-surface.test.ts` | Retired storefront links/providers | Protects public boundary | A live storefront |

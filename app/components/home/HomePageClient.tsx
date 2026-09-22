@@ -164,7 +164,7 @@ export default function HomePageClient() {
               <div className="homepage-card-identity homepage-teaser__identity">
                 <div className="homepage-teaser__topline"><span className="homepage-teaser__number">02</span><Database className="homepage-teaser__icon" aria-hidden="true" /></div>
                 <p className="homepage-teaser__label">Workflow build</p>
-                <h3 className="homepage-teaser__title">Acadio</h3>
+                <h3 className="homepage-teaser__title">Content workflow</h3>
               </div>
               <div className="homepage-card-detail homepage-teaser__detail"><p className="homepage-teaser__description">A content pipeline that turned recurring preparation into a repeatable handoff.</p></div>
             </article>

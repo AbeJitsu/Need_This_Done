@@ -3122,6 +3122,20 @@ Blog Markdown Content — Reading Experience
     border-left-color: rgba(255, 255, 255, 0.14);
   }
 
+  .homepage-teaser__card {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 1.75rem;
+    min-height: 22rem;
+  }
+
+  .homepage-teaser__card .homepage-card-detail {
+    padding-top: 1.5rem;
+    padding-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-left: 0;
+  }
+
   .homepage-offer-card__details,
   .homepage-example-card__details {
     grid-template-columns: repeat(2, minmax(0, 1fr));
