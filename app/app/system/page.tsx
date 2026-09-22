@@ -227,7 +227,7 @@ export default function SystemPage() {
 
       <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-cream)]" aria-label="A physical view of the work path">
         <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 md:py-14">
-          <PublicPageVisual kind="problem-map" />
+          <PublicPageVisual kind="system-bridge" />
         </div>
       </section>
 

@@ -66,7 +66,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
           </ContentSection>
 
           <div className="grid gap-6">
-            <PublicPageVisual kind="conversation-start" priority />
+            <PublicPageVisual kind="faq-answers" priority />
             <aside className="rounded-[2rem] border border-white/15 bg-white/[.08] p-6 backdrop-blur-sm sm:p-8" aria-labelledby="faq-overview-heading">
               <div className="flex items-center gap-3 text-emerald-200">
                 <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-300 text-[var(--public-dark)]">

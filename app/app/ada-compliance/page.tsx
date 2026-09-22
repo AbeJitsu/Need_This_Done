@@ -86,7 +86,7 @@ export default function AdaCompliancePage() {
               </p>
             </div>
           </div>
-          <PublicPageVisual kind="interface-craft" priority />
+          <PublicPageVisual kind="accessibility-craft" priority />
         </div>
       </section>
 

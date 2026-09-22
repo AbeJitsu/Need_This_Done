@@ -23,7 +23,7 @@ export default function UnifiedPricingPage() {
               happening. We will agree on what needs to change with you.
             </p>
           </div>
-          <PublicPageVisual kind="workflow-path" priority />
+          <PublicPageVisual kind="pricing-scope" priority />
         </div>
       </section>
 

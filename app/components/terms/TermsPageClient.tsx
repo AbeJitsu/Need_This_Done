@@ -9,5 +9,5 @@ interface TermsPageClientProps {
 
 /** Compatibility wrapper for the existing /terms route and content shape. */
 export default function TermsPageClient({ initialContent }: TermsPageClientProps) {
-  return <LegalPageClient document="terms" initialContent={initialContent} />;
+  return <LegalPageClient document="terms" visualKind="terms-agreement" initialContent={initialContent} />;
 }

@@ -3,7 +3,7 @@ import PublicClosing from "./PublicClosing";
 import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { ArrowRight, Check } from "lucide-react";
-import PublicPageVisual from "./PublicPageVisual";
+import PublicPageVisual, { type PublicPageVisualKind } from "./PublicPageVisual";
 
 type OfferPageProps = {
   offerId: PublicOfferId;
@@ -12,6 +12,7 @@ type OfferPageProps = {
   commitment: string;
   included: string[];
   excluded: string[];
+  visualKind: Extract<PublicPageVisualKind, "website-fix" | "managed-automation">;
 };
 
 export default function OfferPage({
@@ -21,6 +22,7 @@ export default function OfferPage({
   commitment,
   included,
   excluded,
+  visualKind,
 }: OfferPageProps) {
   const offer = PUBLIC_OFFERS[offerId];
   const route = offerId === "website-improvement" ? "/website-fix" : "/managed-automation";
@@ -47,7 +49,7 @@ export default function OfferPage({
           </Link>
           <p className="mt-5 font-bold text-[#dce8dd]">{offer.price} · Work agreed before it starts</p>
           </div>
-          <PublicPageVisual kind={offerId === "website-improvement" ? "interface-craft" : "workflow-path"} priority />
+          <PublicPageVisual kind={visualKind} priority />
         </div>
       </section>
       <section className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:grid-cols-[.7fr_1.3fr] md:py-24">

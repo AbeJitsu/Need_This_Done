@@ -9,5 +9,5 @@ interface PrivacyPageClientProps {
 
 /** Compatibility wrapper for the existing /privacy route and content shape. */
 export default function PrivacyPageClient({ initialContent }: PrivacyPageClientProps) {
-  return <LegalPageClient document="privacy" initialContent={initialContent} />;
+  return <LegalPageClient document="privacy" visualKind="privacy-boundary" initialContent={initialContent} />;
 }

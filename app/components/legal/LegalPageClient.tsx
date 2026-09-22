@@ -14,7 +14,7 @@ import {
   ContentSection,
 } from '@/components/content/ContentStructure';
 import type { LegalPageContent } from '@/lib/page-content-types';
-import PublicPageVisual from '@/components/public/PublicPageVisual';
+import PublicPageVisual, { type PublicPageVisualKind } from '@/components/public/PublicPageVisual';
 
 export type LegalDocumentKind = 'privacy' | 'terms';
 
@@ -76,6 +76,7 @@ const LEGAL_DOCUMENT_CONFIG: Record<LegalDocumentKind, LegalDocumentConfig> = {
 interface LegalPageClientProps {
   initialContent: LegalPageContent;
   document: LegalDocumentKind;
+  visualKind: Extract<PublicPageVisualKind, 'privacy-boundary' | 'terms-agreement'>;
 }
 
 function LegalParagraphs({ content }: { content: string }) {
@@ -94,7 +95,7 @@ function LegalParagraphs({ content }: { content: string }) {
   );
 }
 
-export default function LegalPageClient({ initialContent, document }: LegalPageClientProps) {
+export default function LegalPageClient({ initialContent, document, visualKind }: LegalPageClientProps) {
   const content = initialContent;
   const config = LEGAL_DOCUMENT_CONFIG[document];
   const PageIcon = config.icon;
@@ -120,7 +121,7 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
             </ContentSection>
 
             <div className="grid gap-6">
-              <PublicPageVisual kind={document === 'privacy' ? 'conversation-start' : 'workflow-path'} priority />
+              <PublicPageVisual kind={visualKind} priority />
               <ContentSection sectionKey="quickSummary" label="Quick Summary">
                 <section id="at-a-glance" data-legal-panel="summary" aria-labelledby="at-a-glance-heading" className="min-w-0 rounded-[1.75rem] bg-[var(--public-cream)] p-6 text-[var(--public-ink)] shadow-xl shadow-black/10 sm:p-7">
                   <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">At a glance</p>

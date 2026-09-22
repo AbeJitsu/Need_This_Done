@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CircleCheckBig, Database, GitBranch, Layers3, Wrench } from "lucide-react";
 import {
   getPublicHomeNextStep,
   type PublicHomeSectionId,
 } from "@/lib/public-journey";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 const buildSignals = [
   {
@@ -81,17 +81,7 @@ export default function HomePageClient() {
                 </Link>
               </div>
             </div>
-            <div className="relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl md:min-h-[25rem]">
-              <Image
-                src="/images/portfolio-hero.png"
-                alt="A laptop, paper notes, and connected visual ideas on a warm workbench"
-                fill
-                priority
-                unoptimized
-                sizes="(min-width: 768px) 45vw, 100vw"
-                className="object-cover"
-              />
-            </div>
+            <PublicPageVisual kind="messy-problems" priority className="min-h-[18rem] md:min-h-[25rem]" />
           </div>
         </div>
       </section>
