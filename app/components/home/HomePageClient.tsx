@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Database, GitBranch, Layers3, Wrench } from "lucide-react";
+import { ArrowRight, CircleCheckBig, Database, GitBranch, Layers3, Wrench } from "lucide-react";
 import {
   getPublicHomeNextStep,
   type PublicHomeSectionId,
@@ -25,9 +25,9 @@ const buildSignals = [
 ] as const;
 
 const workingPrinciples = [
-  ["Understand the whole path", "I look past the visible bug to the people, data, and handoffs around it."],
-  ["Build the useful slice", "I choose a contained piece that can be tested, reviewed, and improved without pretending the whole system is finished."],
-  ["Leave evidence behind", "The result should explain what changed, what was checked, and what still needs a decision."],
+  { title: "Understand the whole path", description: "I look past the visible bug to the people, data, and handoffs around it.", icon: GitBranch },
+  { title: "Build the useful slice", description: "I choose a contained piece that can be tested, reviewed, and improved without pretending the whole system is finished.", icon: Wrench },
+  { title: "Leave evidence behind", description: "The result should explain what changed, what was checked, and what still needs a decision.", icon: CircleCheckBig },
 ] as const;
 
 function HomeNextStep({
@@ -194,11 +194,11 @@ export default function HomePageClient() {
             </h2>
           </div>
           <ol className="homepage-principles">
-            {workingPrinciples.map(([title, description], index) => (
+            {workingPrinciples.map(({ title, description, icon: SignalIcon }, index) => (
               <li key={title} className="homepage-principle">
                 <article className="homepage-principle__card">
                   <div className="homepage-card-identity homepage-principle__identity">
-                    <div className="homepage-principle__topline"><span className="homepage-principle__number">0{index + 1}</span><span className="homepage-principle__signal" aria-hidden="true" /></div>
+                    <div className="homepage-principle__topline"><span className="homepage-principle__number">0{index + 1}</span><span className="homepage-principle__signal" aria-hidden="true"><SignalIcon /></span></div>
                     <p className="homepage-card-kicker">How I work</p>
                     <h3>{title}</h3>
                   </div>

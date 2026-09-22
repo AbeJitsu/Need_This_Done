@@ -2583,6 +2583,12 @@ Blog Markdown Content — Reading Experience
   color: #c9dcca;
 }
 
+.homepage-principle__signal svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 2.25;
+}
+
 .homepage-teaser__stage--better .homepage-teaser__icon {
   background: var(--homepage-gold);
   color: var(--homepage-ink);
