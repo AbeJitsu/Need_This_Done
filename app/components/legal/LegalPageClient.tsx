@@ -14,6 +14,7 @@ import {
   ContentSection,
 } from '@/components/content/ContentStructure';
 import type { LegalPageContent } from '@/lib/page-content-types';
+import PublicPageVisual from '@/components/public/PublicPageVisual';
 
 export type LegalDocumentKind = 'privacy' | 'terms';
 
@@ -118,24 +119,27 @@ export default function LegalPageClient({ initialContent, document }: LegalPageC
               </div>
             </ContentSection>
 
-            <ContentSection sectionKey="quickSummary" label="Quick Summary">
-              <section id="at-a-glance" data-legal-panel="summary" aria-labelledby="at-a-glance-heading" className="min-w-0 rounded-[1.75rem] bg-[var(--public-cream)] p-6 text-[var(--public-ink)] shadow-xl shadow-black/10 sm:p-7">
-                <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">At a glance</p>
-                <h2 id="at-a-glance-heading" className="mt-3 font-playfair text-3xl font-black">
-                  {content.quickSummary.title}
-                </h2>
-                <ul className="mt-6 space-y-4">
-                  {content.quickSummary.items.map((item, index) => (
-                    <li key={`${item}-${index}`} className="flex items-start gap-3 text-sm leading-6 text-[#40564e]">
-                      <span className="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[var(--public-soft)]">
-                        <Check className={`h-3.5 w-3.5 ${config.accent.summaryIcon}`} strokeWidth={3} aria-hidden="true" />
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </ContentSection>
+            <div className="grid gap-6">
+              <PublicPageVisual kind={document === 'privacy' ? 'conversation-start' : 'workflow-path'} priority />
+              <ContentSection sectionKey="quickSummary" label="Quick Summary">
+                <section id="at-a-glance" data-legal-panel="summary" aria-labelledby="at-a-glance-heading" className="min-w-0 rounded-[1.75rem] bg-[var(--public-cream)] p-6 text-[var(--public-ink)] shadow-xl shadow-black/10 sm:p-7">
+                  <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">At a glance</p>
+                  <h2 id="at-a-glance-heading" className="mt-3 font-playfair text-3xl font-black">
+                    {content.quickSummary.title}
+                  </h2>
+                  <ul className="mt-6 space-y-4">
+                    {content.quickSummary.items.map((item, index) => (
+                      <li key={`${item}-${index}`} className="flex items-start gap-3 text-sm leading-6 text-[#40564e]">
+                        <span className="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[var(--public-soft)]">
+                          <Check className={`h-3.5 w-3.5 ${config.accent.summaryIcon}`} strokeWidth={3} aria-hidden="true" />
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </ContentSection>
+            </div>
           </div>
 
           <ContentSection sectionKey="lastUpdated" label="Last Updated">

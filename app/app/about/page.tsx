@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PUBLIC_CORE_PROMISE, PUBLIC_BRAND_PROMISE } from "@/lib/public-copy";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 const principles = [
   [
@@ -37,16 +38,19 @@ export default function AboutPage() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">About NeedThisDone</p>
-          <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            {PUBLIC_BRAND_PROMISE}
-          </h1>
-          <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            NeedThisDone builds practical software across the stack. The work connects
-            vague problems to useful interfaces, sound data models, reliable APIs, and
-            paths people can operate.
-          </p>
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">About NeedThisDone</p>
+            <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
+              {PUBLIC_BRAND_PROMISE}
+            </h1>
+            <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
+              NeedThisDone builds practical software across the stack. The work connects
+              vague problems to useful interfaces, sound data models, reliable APIs, and
+              paths people can operate.
+            </p>
+          </div>
+          <PublicPageVisual kind="problem-map" priority />
         </div>
       </section>
 

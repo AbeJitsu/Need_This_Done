@@ -12,6 +12,7 @@ import {
   Target,
   Workflow,
 } from "lucide-react";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 const nextStep = PUBLIC_ROUTE_STAGES["/system"].secondary;
 const systemDescription =
@@ -221,6 +222,12 @@ export default function SystemPage() {
             </div>
             <SystemMap />
           </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-cream)]" aria-label="A physical view of the work path">
+        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 md:py-14">
+          <PublicPageVisual kind="problem-map" />
         </div>
       </section>
 

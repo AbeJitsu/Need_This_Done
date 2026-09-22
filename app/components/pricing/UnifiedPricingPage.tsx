@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { OfferComparison, ThreeStepFlow } from "@/components/public/PublicServiceVisuals";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 export default function UnifiedPricingPage() {
   return (
@@ -9,17 +10,20 @@ export default function UnifiedPricingPage() {
       className="min-h-screen bg-[var(--public-cream)] text-[var(--public-ink)]"
     >
       <section className="public-page-hero border-b border-[var(--public-ink)]/10">
-        <div className="mx-auto max-w-6xl px-5 py-16 text-center sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">
-            Pricing
-          </p>
-          <h1 className="mt-5 font-playfair text-5xl font-black leading-tight md:text-7xl">
-            Know what help costs before you say yes.
-          </h1>
-          <p className="mx-auto mt-6 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)]">
-            A clear price starts with a clear piece of work. Tell us what keeps
-            happening. We will agree on what needs to change with you.
-          </p>
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 text-center sm:px-8 md:py-24 md:text-left lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:gap-14">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--public-green)]">
+              Pricing
+            </p>
+            <h1 className="mt-5 font-playfair text-5xl font-black leading-tight md:text-7xl">
+              Know what help costs before you say yes.
+            </h1>
+            <p className="mx-auto mt-6 max-w-[60ch] text-lg leading-8 text-[var(--public-muted)] md:mx-0">
+              A clear price starts with a clear piece of work. Tell us what keeps
+              happening. We will agree on what needs to change with you.
+            </p>
+          </div>
+          <PublicPageVisual kind="workflow-path" priority />
         </div>
       </section>
 

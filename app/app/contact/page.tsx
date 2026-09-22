@@ -8,6 +8,7 @@ import { normalizePublicOfferId } from "@/lib/public-offers";
 import { recordEngagement } from "@/lib/engagement";
 import { PUBLIC_PRIMARY_ACTION, PUBLIC_VARIANT } from "@/lib/public-journey";
 import { PROJECT_MESSAGE_MAX_LENGTH } from "@/lib/validation";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 type StartingPoint = "" | "website-fix" | "managed-automation";
 
@@ -125,13 +126,16 @@ function ContactForm() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero bg-[#18372e] text-white">
-        <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">{PUBLIC_PRIMARY_ACTION.label}</p>
-          <h1 className="mt-5 font-playfair text-5xl font-black">Bring the technical problem as it is.</h1>
-          <p className="mt-5 max-w-2xl text-[#dce8dd]">
-            Tell us what you are building, what is getting in the way, or what you
-            want to understand better. A polished brief is not required.
-          </p>
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:py-20 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">{PUBLIC_PRIMARY_ACTION.label}</p>
+            <h1 className="mt-5 font-playfair text-5xl font-black">Bring the technical problem as it is.</h1>
+            <p className="mt-5 max-w-2xl text-[#dce8dd]">
+              Tell us what you are building, what is getting in the way, or what you
+              want to understand better. A polished brief is not required.
+            </p>
+          </div>
+          <PublicPageVisual kind="conversation-start" priority />
         </div>
       </section>
 

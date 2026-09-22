@@ -3,7 +3,7 @@ import PublicClosing from "./PublicClosing";
 import { PUBLIC_OFFERS, type PublicOfferId } from "@/lib/public-offers";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { ArrowRight, Check } from "lucide-react";
-import ServiceIllustration from "./ServiceIllustration";
+import PublicPageVisual from "./PublicPageVisual";
 
 type OfferPageProps = {
   offerId: PublicOfferId;
@@ -27,7 +27,7 @@ export default function OfferPage({
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-ink)] text-white">
-        <div className="offer-hero mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
+        <div className="offer-hero mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
           <div>
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#b9d5bd]">
             {offer.name} · A clear place to start
@@ -47,7 +47,7 @@ export default function OfferPage({
           </Link>
           <p className="mt-5 font-bold text-[#dce8dd]">{offer.price} · Work agreed before it starts</p>
           </div>
-          <ServiceIllustration kind={offerId === 'website-improvement' ? 'website' : 'work'} />
+          <PublicPageVisual kind={offerId === "website-improvement" ? "interface-craft" : "workflow-path"} priority />
         </div>
       </section>
       <section className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:grid-cols-[.7fr_1.3fr] md:py-24">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PublicClosing from "@/components/public/PublicClosing";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
 import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
 
@@ -36,16 +37,19 @@ export default function HowItWorksPage() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">How it works</p>
-          <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Make the next technical decision easier to see.
-          </h1>
-          <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            Good software work is not only writing code. It is choosing the right
-            boundary, making the result observable, and leaving enough evidence for
-            someone else to review.
-          </p>
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">How it works</p>
+            <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
+              Make the next technical decision easier to see.
+            </h1>
+            <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
+              Good software work is not only writing code. It is choosing the right
+              boundary, making the result observable, and leaving enough evidence for
+              someone else to review.
+            </p>
+          </div>
+          <PublicPageVisual kind="workflow-path" priority />
         </div>
       </section>
 

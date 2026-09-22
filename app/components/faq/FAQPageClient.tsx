@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ChevronDown, HelpCircle } from 'lucide-react';
 import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
 import type { FAQPageContent } from '@/lib/page-content-types';
+import PublicPageVisual from '@/components/public/PublicPageVisual';
 
 interface FAQPageClientProps {
   content: FAQPageContent;
@@ -64,31 +65,34 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
             </div>
           </ContentSection>
 
-          <aside className="rounded-[2rem] border border-white/15 bg-white/[.08] p-6 backdrop-blur-sm sm:p-8" aria-labelledby="faq-overview-heading">
-            <div className="flex items-center gap-3 text-emerald-200">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-300 text-[var(--public-dark)]">
-                <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <p className="text-xs font-bold uppercase tracking-[.2em]">A clear starting point</p>
-            </div>
-            <h2 id="faq-overview-heading" className="mt-6 font-playfair text-3xl font-black">Know what stays visible.</h2>
-            <p className="mt-3 leading-7 text-emerald-50/70">
-              The useful answer is usually the one that makes the next decision easier.
-            </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              {[
-                ['01', 'Commitment', 'What is included?'],
-                ['02', 'Boundary', 'What needs review?'],
-                ['03', 'Next step', 'What happens after?'],
-              ].map(([number, title, description]) => (
-                <div key={number} className="rounded-2xl border border-white/10 bg-black/10 p-4">
-                  <span className="text-xs font-bold text-emerald-300">{number}</span>
-                  <p className="mt-3 text-sm font-bold text-white">{title}</p>
-                  <p className="mt-1 text-sm leading-5 text-emerald-50/65">{description}</p>
-                </div>
-              ))}
-            </div>
-          </aside>
+          <div className="grid gap-6">
+            <PublicPageVisual kind="conversation-start" priority />
+            <aside className="rounded-[2rem] border border-white/15 bg-white/[.08] p-6 backdrop-blur-sm sm:p-8" aria-labelledby="faq-overview-heading">
+              <div className="flex items-center gap-3 text-emerald-200">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-300 text-[var(--public-dark)]">
+                  <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <p className="text-xs font-bold uppercase tracking-[.2em]">A clear starting point</p>
+              </div>
+              <h2 id="faq-overview-heading" className="mt-6 font-playfair text-3xl font-black">Know what stays visible.</h2>
+              <p className="mt-3 leading-7 text-emerald-50/70">
+                The useful answer is usually the one that makes the next decision easier.
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                {[
+                  ['01', 'Commitment', 'What is included?'],
+                  ['02', 'Boundary', 'What needs review?'],
+                  ['03', 'Next step', 'What happens after?'],
+                ].map(([number, title, description]) => (
+                  <div key={number} className="rounded-2xl border border-white/10 bg-black/10 p-4">
+                    <span className="text-xs font-bold text-emerald-300">{number}</span>
+                    <p className="mt-3 text-sm font-bold text-white">{title}</p>
+                    <p className="mt-1 text-sm leading-5 text-emerald-50/65">{description}</p>
+                  </div>
+                ))}
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
 

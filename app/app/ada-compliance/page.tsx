@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Check, FileSearch, ShieldCheck } from "lucide-react";
 import { seoConfig } from "@/lib/seo-config";
 import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 export const metadata: Metadata = {
   title: "Website Accessibility Checks | NeedThisDone",
@@ -54,35 +55,38 @@ export default function AdaCompliancePage() {
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero relative overflow-hidden bg-[var(--public-dark)] text-white">
         <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
-        <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8 md:py-28">
-          <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
-            Website accessibility
-          </p>
-          <h1 className="mt-5 max-w-4xl font-playfair text-5xl font-black leading-tight md:text-7xl">
-            Make your website easier for more people to use.
-          </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/75">
-            Accessibility is part of making a useful website. We can review the
-            visible experience, explain what is getting in the way, and help define
-            a practical first improvement. This is not legal advice.
-          </p>
-          <div className="mt-9">
-            <Link
-              href="/contact"
-              className="public-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)]"
-            >
-              Start a conversation{" "}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <p className="mt-4">
-              <Link
-                href="/website-fix"
-                className="font-semibold text-emerald-100 underline"
-              >
-                See Website Fix details
-              </Link>
+        <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
+              Website accessibility
             </p>
+            <h1 className="mt-5 max-w-4xl font-playfair text-5xl font-black leading-tight md:text-7xl">
+              Make your website easier for more people to use.
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/75">
+              Accessibility is part of making a useful website. We can review the
+              visible experience, explain what is getting in the way, and help define
+              a practical first improvement. This is not legal advice.
+            </p>
+            <div className="mt-9">
+              <Link
+                href="/contact"
+                className="public-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)]"
+              >
+                Start a conversation{" "}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <p className="mt-4">
+                <Link
+                  href="/website-fix"
+                  className="font-semibold text-emerald-100 underline"
+                >
+                  See Website Fix details
+                </Link>
+              </p>
+            </div>
           </div>
+          <PublicPageVisual kind="interface-craft" priority />
         </div>
       </section>
 

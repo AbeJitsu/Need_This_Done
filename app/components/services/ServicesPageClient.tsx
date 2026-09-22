@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PUBLIC_CAPABILITIES, PUBLIC_CAPABILITIES_INTRO } from "@/lib/public-capabilities";
+import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 const stack = [
   "React",
@@ -18,14 +19,17 @@ export default function ServicesPageClient() {
   return (
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Capabilities</p>
-          <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-            Practical work across the layers of a technical problem.
-          </h1>
-          <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-            {PUBLIC_CAPABILITIES_INTRO}
-          </p>
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Capabilities</p>
+            <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
+              Practical work across the layers of a technical problem.
+            </h1>
+            <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
+              {PUBLIC_CAPABILITIES_INTRO}
+            </p>
+          </div>
+          <PublicPageVisual kind="interface-craft" priority />
         </div>
       </section>
 
