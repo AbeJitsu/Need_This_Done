@@ -94,9 +94,9 @@ export function OfferComparison({
 }
 
 const deliverySteps = [
-  ["We listen", "Tell us what keeps happening and what you have tried."],
-  ["We agree on the change", "We confirm the work and price with you before starting."],
-  ["We show what changed", "We resolve the agreed problem and show you the result."],
+  ["I listen", "Tell me what keeps happening and what you have tried."],
+  ["I agree on the change", "I confirm the work and price with you before starting."],
+  ["I show what changed", "I resolve the agreed problem and show you the result."],
 ] as const;
 
 export function ThreeStepFlow() {

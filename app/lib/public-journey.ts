@@ -86,13 +86,13 @@ export const PUBLIC_ROUTE_STAGES = {
   "/website-fix": {
     stage: "fit",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/site-analyzer", label: "Get a Website Snapshot" },
+    secondary: { href: "/contact", label: "Start a conversation" },
     event: "website_fix",
   },
   "/managed-automation": {
     stage: "fit",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/how-it-works", label: "See How We Help" },
+    secondary: { href: "/how-it-works", label: "See how I help" },
     event: "managed_automation",
   },
   "/pricing": {
@@ -107,15 +107,9 @@ export const PUBLIC_ROUTE_STAGES = {
     secondary: null,
     event: "contact",
   },
-  "/site-analyzer": {
-    stage: "check",
-    primary: { href: "/site-analyzer", label: "Create My Website Snapshot" },
-    secondary: PUBLIC_PRIMARY_ACTION,
-    event: "site_analyzer",
-  },
   "/ada-compliance": {
     stage: "check",
-    primary: { href: "/site-analyzer", label: "Get a Website Snapshot" },
+    primary: PUBLIC_PRIMARY_ACTION,
     secondary: { href: "/website-fix", label: "See Website Fix Details" },
     event: "ada_compliance",
   },
@@ -198,7 +192,6 @@ export const ENGAGEMENT_ROUTES = [
 export const PUBLIC_FOOTER_GROUPS = [
   { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/system', label: 'NeedThisDone system' }] },
   { title: 'Proof', links: [
-    { href: '/site-analyzer', label: 'Live site analyzer' },
     { href: '/work#case-studies', label: 'Case studies' },
     { href: '/blog', label: 'Engineering notes' },
   ] },

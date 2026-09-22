@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Database, GitBranch, Layers3, Wrench } from "lucide-react";
 import {
@@ -59,7 +60,7 @@ export default function HomePageClient() {
         <div className="homepage-hero__inner">
           <div className="homepage-hero__grid">
             <div className="homepage-hero__copy">
-              <p className="homepage-eyebrow homepage-eyebrow--light">Abe Jitsu · NeedThisDone</p>
+              <p className="homepage-eyebrow homepage-eyebrow--light">My work · NeedThisDone</p>
               <h1 id="homepage-hero-heading" className="homepage-hero__title">
                 <span className="homepage-hero__title-line">I build</span>{" "}
                 <span className="homepage-hero__title-line">across</span>{" "}
@@ -79,6 +80,16 @@ export default function HomePageClient() {
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </div>
+            </div>
+            <div className="relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl md:min-h-[25rem]">
+              <Image
+                src="/images/portfolio-hero.png"
+                alt="A laptop, paper notes, and connected visual ideas on a warm workbench"
+                fill
+                priority
+                sizes="(min-width: 768px) 45vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
@@ -152,10 +163,10 @@ export default function HomePageClient() {
             <article className="homepage-teaser__card">
               <div className="homepage-card-identity homepage-teaser__identity">
                 <div className="homepage-teaser__topline"><span className="homepage-teaser__number">02</span><Database className="homepage-teaser__icon" aria-hidden="true" /></div>
-                <p className="homepage-teaser__label">Live demo</p>
-                <h3 className="homepage-teaser__title">Site analyzer</h3>
+                <p className="homepage-teaser__label">Workflow build</p>
+                <h3 className="homepage-teaser__title">Acadio</h3>
               </div>
-              <div className="homepage-card-detail homepage-teaser__detail"><p className="homepage-teaser__description">A working example of URL validation, asynchronous report creation, recovery states, and private results.</p></div>
+              <div className="homepage-card-detail homepage-teaser__detail"><p className="homepage-teaser__description">A content pipeline that turned recurring preparation into a repeatable handoff.</p></div>
             </article>
             <article className="homepage-teaser__card">
               <div className="homepage-card-identity homepage-teaser__identity">

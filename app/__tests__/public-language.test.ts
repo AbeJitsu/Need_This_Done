@@ -45,7 +45,6 @@ const publicCompanyVoicePaths = [
   'app/pricing/page.tsx',
   'app/privacy/page.tsx',
   'app/services/page.tsx',
-  'app/site-analyzer/page.tsx',
   'app/system/page.tsx',
   'app/terms/page.tsx',
   'app/website-fix/page.tsx',
@@ -65,7 +64,7 @@ function textValues(value: unknown): string[] {
 describe('public language contract', () => {
   it('keeps the core promise centralized and within the sentence target', () => {
     expect(PUBLIC_CORE_PROMISE).toBe(
-      'Abe builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.',
+      'I build practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.',
     );
     expect(isPublicCopyWithinLimit(PUBLIC_CORE_PROMISE)).toBe(true);
   });
@@ -114,7 +113,6 @@ describe('public language contract', () => {
       'app/pricing/page.tsx',
       'app/privacy/page.tsx',
       'app/services/page.tsx',
-      'app/site-analyzer/page.tsx',
       'app/system/page.tsx',
       'app/terms/page.tsx',
       'app/website-fix/page.tsx',
@@ -145,7 +143,7 @@ describe('public language contract', () => {
   it('keeps the future-work reassurance in the FAQ defaults', () => {
     expect(defaultFAQContent.items).toContainEqual({
       question: 'Can we discuss another piece of work later?',
-      answer: 'We start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.',
+      answer: 'I start with one clear piece so you can see what you are agreeing to. If something else would help, we can discuss it separately.',
     });
   });
 
@@ -225,8 +223,6 @@ describe('public language contract', () => {
       'components/report/AccessibilityCallout.tsx',
       'components/report/ReportHero.tsx',
       'components/report/ScoreBreakdown.tsx',
-      'components/home/sections/SiteAnalyzerTeaser.tsx',
-      'app/site-analyzer/page.tsx',
     ].map(readApp).join('\n');
 
     expect(publicSources).not.toMatch(/lawsuit|legal risk|AI[- ]powered|\bgrade\b|certif(?:y|ication|ied)/i);

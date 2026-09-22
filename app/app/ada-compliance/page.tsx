@@ -62,16 +62,16 @@ export default function AdaCompliancePage() {
             Make your website easier for more people to use.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/75">
-            Our limited website snapshot checks common barriers, search signals,
-            and basic speed clues. It points to a problem worth reviewing.
-            It is not legal advice.
+            Accessibility is part of making a useful website. I can review the
+            visible experience, explain what is getting in the way, and help define
+            a practical first improvement. This is not legal advice.
           </p>
           <div className="mt-9">
             <Link
-              href="/site-analyzer"
+              href="/contact"
               className="public-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[var(--public-dark)]"
             >
-              Get a Website Snapshot{" "}
+              Start a conversation{" "}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <p className="mt-4">

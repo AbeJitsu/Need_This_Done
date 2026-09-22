@@ -288,7 +288,7 @@ export default function SystemPage() {
             Start with one outcome.
           </h2>
           <p>
-            Bring one clear result you want. We will help define the useful first
+            Bring one clear result you want. I will help define the useful first
             move.
           </p>
           <div className="system-closing__actions">

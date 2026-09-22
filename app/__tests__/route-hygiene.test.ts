@@ -30,7 +30,6 @@ describe('public route hygiene', () => {
       '/how-it-works',
       '/system',
       '/contact',
-      '/site-analyzer',
       '/ada-compliance',
       '/faq',
       '/blog',
@@ -49,7 +48,7 @@ describe('public route hygiene', () => {
     expect(disallow).toEqual(expect.arrayContaining(['/dashboard/', '/employee/', '/prospecting/', '/admin/', '/report/', '/login']));
   });
 
-  it('keeps permanent redirects and the audit-to-intake handoff aligned', () => {
+  it('keeps permanent redirects and retired public paths aligned', () => {
     const config = readFileSync(resolve(appRoot, 'next.config.mjs'), 'utf8');
     expect(config).not.toContain("source: '/about'");
     expect(config).toContain("source: '/resume'");
@@ -57,12 +56,14 @@ describe('public route hygiene', () => {
     expect(config).toContain("destination: '/faq'");
     expect(config).toContain("source: '/build'");
     expect(config).toContain("destination: '/contact?offer=website-fix'");
+    expect(config).toContain("source: '/site-analyzer'");
+    expect(config).toContain("destination: '/work'");
 
     for (const page of ['resume', 'guide']) {
       expect(readFileSync(resolve(appRoot, `app/${page}/page.tsx`), 'utf8')).toContain('permanentRedirect');
     }
     const about = readFileSync(resolve(appRoot, 'app/about/page.tsx'), 'utf8');
-    expect(about).toMatch(/title:\s*['\"]About Abe \| NeedThisDone['\"]/);
+    expect(about).toMatch(/title:\s*['\"]About Me \| NeedThisDone['\"]/);
     expect(about).not.toContain('permanentRedirect');
     expect(PUBLIC_OFFERS['website-improvement'].detailHref).toBe('/website-fix');
     const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');

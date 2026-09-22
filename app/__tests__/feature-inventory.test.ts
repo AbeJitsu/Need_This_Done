@@ -8,13 +8,12 @@ const exists = (relativePath: string) => existsSync(resolve(APP, relativePath));
 const source = (relativePath: string) => readFileSync(resolve(APP, relativePath), 'utf8');
 
 describe('retained product inventory', () => {
-  it('keeps the public growth-service and intake surfaces', () => {
+  it('keeps the public portfolio and legacy report API surfaces', () => {
     for (const path of [
       'app/page.tsx',
       'app/services/page.tsx',
       'app/pricing/page.tsx',
       'app/contact/page.tsx',
-      'app/site-analyzer/page.tsx',
       'app/api/site-analyzer/route.ts',
       'app/api/projects/route.ts',
     ]) {

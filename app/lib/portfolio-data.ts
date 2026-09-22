@@ -49,13 +49,13 @@ export const caseStudies: CaseStudy[] = [
     description:
       'A browser-based system exploring how requests become durable work records, evidence, approvals, and reviewable outcomes.',
     impact: [
-      'A live site analyzer leads into a preselected technical conversation',
+      'A public site leads into a focused technical conversation',
       'Project, brief, decision, and outcome records are durable in Supabase',
       'Authenticated surfaces keep work, evidence, and decisions role-scoped',
       'External outreach stays behind an explicit human approval boundary',
     ],
     features: [
-      'Public site analyzer and report pages',
+      'A clear public path into a technical conversation',
       'Adaptive project intake',
       'Browser workspace for runs, artifacts, and approvals',
       'Supabase RLS and authenticated lifecycle checks',
@@ -114,7 +114,7 @@ export interface ArchLayer {
 export const architectureLayers: ArchLayer[] = [
   {
     label: 'Public interface',
-    items: ['Site Analyzer', 'Project Intake', 'Report Handoff', 'Accessible Routes'],
+    items: ['Project Context', 'Conversation Path', 'Clear Handoff', 'Accessible Routes'],
     color: 'emerald',
   },
   {

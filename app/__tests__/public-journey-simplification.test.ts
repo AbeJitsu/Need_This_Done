@@ -92,9 +92,9 @@ describe('portfolio public journey', () => {
     expect(services).toContain('React');
     expect(services).not.toContain('PUBLIC_OFFERS');
     expect(work).toContain('caseStudies');
-    expect(work).toContain('architectureLayers');
-    expect(work).toContain('processSteps');
-    expect(work).toContain('data-public-capability-card');
+    expect(work).toContain('portfolio-hero.png');
+    expect(work).toContain('Useful things for messy problems.');
+    expect(work).toContain('simpleSteps');
     expect(home).toContain('href="/work#case-studies"');
     expect(home).not.toContain('PUBLIC_EXAMPLES');
   });
@@ -104,7 +104,7 @@ describe('portfolio public journey', () => {
     const about = source('app/about/page.tsx');
     expect(howItWorks).toContain('I make the next technical decision easier to see.');
     expect(howItWorks).toContain('Make the problem observable');
-    expect(about).toContain('About Abe');
+    expect(about).toContain('About me');
     expect(about).toContain('I like problems that cross more than one layer.');
     expect(about).toContain('Clarity is part of the implementation.');
     expect(about).not.toContain('Meet the team');

@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 const publicRoutes = [
   '/', '/services', '/about', '/website-fix', '/managed-automation',
   '/how-it-works', '/system', '/pricing', '/work', '/blog', '/contact',
-  '/faq', '/site-analyzer', '/ada-compliance', '/privacy', '/terms',
+  '/faq', '/ada-compliance', '/privacy', '/terms',
   '/blog/ai-context-budget-tips', '/blog/loading-tricks-feel-instant',
   '/blog/rewriting-copy-plain-language',
 ];

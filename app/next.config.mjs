@@ -120,6 +120,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/site-analyzer',
+        destination: '/work',
+        permanent: true,
+      },
+      {
         source: '/guide',
         destination: '/faq',
         permanent: true,

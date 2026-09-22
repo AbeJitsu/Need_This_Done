@@ -23,11 +23,11 @@ const principles = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: "About Abe | NeedThisDone",
+  title: "About Me | NeedThisDone",
   description: PUBLIC_CORE_PROMISE,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About Abe | NeedThisDone",
+    title: "About Me | NeedThisDone",
     description: PUBLIC_CORE_PROMISE,
     type: "website",
   },
@@ -38,7 +38,7 @@ export default function AboutPage() {
     <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
       <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">About Abe</p>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">About me</p>
           <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
             {PUBLIC_BRAND_PROMISE}
           </h1>

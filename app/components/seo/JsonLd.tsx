@@ -127,7 +127,7 @@ const schemas = {
         name: 'When do we agree on the price?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'We agree on the work and price before you commit.',
+          text: 'I agree on the work and price with you before you commit.',
         },
       },
       {
@@ -143,15 +143,15 @@ const schemas = {
         name: 'How do I start Managed Automation?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Share the repeated problem at work and the better result you want. We agree on the work and price before you commit.',
+          text: 'Share the repeated problem at work and the better result you want. I agree on the work and price with you before you commit.',
         },
       },
       {
         '@type': 'Question',
-        name: 'What does a website snapshot cover?',
+        name: 'How do you review a technical problem?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It highlights selected website signals. It does not review every interaction or provide legal advice.',
+          text: 'I look at the visible experience, the system behind it, and the next useful change.',
         },
       },
     ],

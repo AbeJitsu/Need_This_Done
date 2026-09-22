@@ -22,14 +22,6 @@ test.describe('Retained core smoke checks', () => {
     await expect(page.getByRole('textbox', { name: /^Your message/ })).toBeVisible();
   });
 
-  test('site analyzer page renders the audit form', async ({ page }) => {
-    const response = await page.goto('/site-analyzer');
-
-    expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /see where your website could work better/i })).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /website url|your website/i })).toBeVisible();
-  });
-
   test('project dashboard requires an authenticated session', async ({ page }) => {
     await page.goto('/dashboard');
     const dashboardHeading = page.getByRole('heading', { name: /what's happening with your work|agent operations/i });
