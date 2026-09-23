@@ -122,6 +122,17 @@ Supabase/Vercel, or rebuild the chatbot. The required next proof is disposable
 local Supabase migration 113/RLS plus the local account/API/MCP checks; hosted
 promotion remains a separately approved later stage.
 
+## MCP durable draft persistence — 2026-09-15
+
+The MCP dispatcher now persists an owner-scoped, approval-gated draft in
+`mcp_workflows`; status and list requests read that durable record. This is a
+request and review boundary only. It does not create a plan or task, invoke a
+provider or worker, or perform an external action. The additive schema is
+migration 117 because migrations 115 and 116 are already recorded in the shared
+history. The next proof is to apply 117 in disposable local Supabase, verify
+owner isolation and browser write denial, then pass the local MCP diagnostic.
+Hosted migration and worker activation remain separate review decisions.
+
 ## Authenticated owner workspace — 2026-09-11
 
 The feature branch now makes `/dashboard` the authenticated owner-facing place

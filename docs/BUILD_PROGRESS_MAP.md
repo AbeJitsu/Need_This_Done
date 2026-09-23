@@ -18,7 +18,7 @@ order, and evidence targets cannot drift silently.
 | Gate | What must be true | Current state | Evidence required to advance |
 |---|---|---|---|
 | Contract | A compatible LLM client has one small, validated MCP surface; site login identifies the owner, an owner-scoped bearer credential authorizes MCP, and safety/result shapes are tested | Built locally | Token/auth/API/contract tests and route-level protocol checks; local RLS proof is next |
-| Local control plane | Disposable local Supabase has migration 117/RLS proof, and MCP creates and reads an approval-gated draft | Next proof | `npm run verify:database` plus `npm run test:workflow-mcp:local` with the real local Supabase gate passing |
+| Local control plane | Dispatcher code and migration 117 are present; disposable local Supabase migration/RLS proof and the MCP draft diagnostic have not run | Next proof | `npm run verify:database` plus `npm run test:workflow-mcp:local` with the real local Supabase gate passing |
 | Hosted control plane | Vercel, hosted Supabase, Redis, and secure remote MCP access work together | Pending | `npm run test:workflow-mcp:hosted` against an explicit deployed `BASE_URL`; remote writes remain separately approved |
 | Worker execution | The workflow scheduler/bridge claims approved work on a correctly configured local or cloud worker host, OpenClaw completes it, and evidence returns through status | Pending | Approved worker-host rehearsal with signed bridge, isolated worktree, tests, commit SHA, and durable result |
 
