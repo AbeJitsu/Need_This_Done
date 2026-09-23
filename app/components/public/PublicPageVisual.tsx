@@ -87,7 +87,7 @@ export default function PublicPageVisual({
   const visual = PUBLIC_PAGE_VISUALS[kind];
 
   return (
-    <div className={`relative aspect-[16/10] min-h-[15rem] overflow-hidden rounded-[2rem] border border-white/15 bg-[#183229] shadow-2xl ${className}`}>
+    <div className={`relative w-full min-w-0 max-w-full ${kind === "interface-craft" ? "aspect-[3/2]" : "aspect-video"} overflow-hidden rounded-[2rem] border border-white/15 bg-[#183229] shadow-2xl ${className}`}>
       <Image
         src={visual.src}
         alt={visual.alt}

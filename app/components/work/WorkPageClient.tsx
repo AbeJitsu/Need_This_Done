@@ -64,7 +64,7 @@ export default function WorkPageClient() {
               </Link>
             </div>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl">
+          <div className="relative aspect-video w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl">
             <Image src="/images/portfolio-hero.png" alt="A laptop, paper notes, and connected visual ideas on a warm workbench" fill priority unoptimized sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" />
           </div>
         </div>

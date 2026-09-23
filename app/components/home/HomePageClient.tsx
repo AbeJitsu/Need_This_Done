@@ -48,7 +48,7 @@ export default function HomePageClient() {
                 </Link>
               </div>
             </div>
-            <PublicPageVisual kind="messy-problems" priority className="min-h-[18rem] md:min-h-[25rem]" />
+            <PublicPageVisual kind="messy-problems" priority />
           </div>
         </div>
       </section>

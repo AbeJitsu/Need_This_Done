@@ -178,12 +178,13 @@ export default async function BlogPostPage({ params }: PageProps) {
             ================================================================ */}
         {post.featured_image && (
           <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 -mt-8">
-            <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative aspect-[3/2] w-full min-w-0 overflow-hidden rounded-2xl shadow-2xl">
               <Image
                 src={post.featured_image}
                 alt={post.title}
                 fill
                 unoptimized
+                sizes="(min-width: 1024px) 64rem, calc(100vw - 2rem)"
                 className="object-cover"
                 priority
               />

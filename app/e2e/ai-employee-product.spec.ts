@@ -24,6 +24,45 @@ for (const route of publicRoutes) {
   });
 }
 
+test('public photos and their frames fit narrow phone viewports', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public-mobile', 'Phone image geometry belongs to the mobile project.');
+  test.setTimeout(300_000);
+
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+
+    for (const route of publicRoutes) {
+      const response = await page.goto(route);
+      expect(response?.ok(), `${route} should load at ${width}px`).toBe(true);
+      await expect(page.locator('main img[src*="/images/"]').first()).toBeVisible();
+
+      const photos = await page.locator('main img[src*="/images/"]').evaluateAll(async (images) => {
+        await Promise.all(images.map((image) => (image as HTMLImageElement).decode()));
+        return images.map((image) => {
+          const frame = image.parentElement!.getBoundingClientRect();
+          const viewport = document.documentElement.clientWidth;
+          const photo = image as HTMLImageElement;
+          return {
+            source: image.getAttribute('src'),
+            left: frame.left,
+            right: frame.right,
+            viewport,
+            aspectDifference: Math.abs(frame.width / frame.height - photo.naturalWidth / photo.naturalHeight),
+          };
+        });
+      });
+
+      expect(photos.length, `${route} should have a public photo`).toBeGreaterThan(0);
+      expect(
+        photos.filter(({ left, right, viewport, aspectDifference }) =>
+          left < 15 || right > viewport - 15 || aspectDifference > 0.1
+        ),
+        `${route} has a clipped photo or frame at ${width}px`
+      ).toEqual([]);
+    }
+  }
+});
+
 test('homepage text stays inside its containers at public widths', async ({ page }) => {
   for (const viewport of [
     { width: 375, height: 900 },

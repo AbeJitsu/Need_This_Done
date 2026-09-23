@@ -1,9 +1,18 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/public-navigation-2026-09-23` (branched from `dev` at `b6889fdc7494102b4e20127b9cbdfb5f4987114b`)
+**Branch:** `dev` (mobile imagery fix based on `92978043bd46ef827b0a4f98a6f7309182e0ca9d`)
 **Last updated:** 2026-09-23
 
 ## Latest change
+
+- On 2026-09-23, public photo frames now match the source image proportions
+  and shrink to the phone viewport. Removed the homepage image minimum height,
+  corrected the shared visual, Work hero, and Notes article image frames, and
+  added a browser geometry check for every public route at 320px and 390px.
+  The 40 rendered route-width checks passed; lint, type-check, 77 unit files
+  (412 passed, four skipped), 52 accessibility checks, and production build
+  passed. Branch promotion is recorded in the release evidence below.
+  Rollback: revert the mobile imagery commit with a new commit.
 
 - On 2026-09-23, the public header now points to the same dedicated pages as
   the footer for Capabilities, Selected Work, About, and Notes on every route.
