@@ -36,10 +36,12 @@ describe('public page image coverage', () => {
     }
   });
 
-  it('keeps article imagery on note pages instead of repeating it in the archive', () => {
+  it('keeps article imagery unique to its page instead of repeating it in cross-links', () => {
     const archive = readFileSync(resolve(appRoot, 'components/blog/BlogPageClient.tsx'), 'utf8');
+    const related = readFileSync(resolve(appRoot, 'components/blog/RelatedPosts.tsx'), 'utf8');
     const card = readFileSync(resolve(appRoot, 'components/blog/BlogPostCard.tsx'), 'utf8');
     expect(archive).toContain('showImage={false}');
+    expect(related).toContain('showImage={false}');
     expect(card).toContain('showImage?: boolean');
   });
 

@@ -24,7 +24,7 @@ export default function RelatedPosts({ posts, categoryLabel }: RelatedPostsProps
       <h2 className="mb-8 font-playfair text-3xl font-black text-[#183229]">{heading}</h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {posts.map((post) => (
-          <BlogPostCard key={post.id} post={post} />
+          <BlogPostCard key={post.id} post={post} showImage={false} />
         ))}
       </div>
     </section>
