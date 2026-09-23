@@ -45,7 +45,7 @@ describe('portfolio public journey', () => {
     for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
     expect(destinations).not.toContain('/system');
     expect(destinations).toContain('/work#case-studies');
-    expect(source('components/work/WorkPageClient.tsx').match(/href="\/system"/g)).toHaveLength(1);
+    expect(source('components/work/WorkPageClient.tsx').match(/href:\s*["']\/system["']/g)).toHaveLength(1);
   });
 
   it('moves through the portfolio story and ends at contact', () => {
