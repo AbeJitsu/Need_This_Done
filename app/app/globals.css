@@ -2698,6 +2698,11 @@ Blog Markdown Content — Reading Experience
   padding-block: clamp(4.5rem, 9vw, 8rem);
 }
 
+.homepage-section__inner--compact,
+.homepage-closing__inner--compact {
+  padding-block: clamp(3rem, 5vw, 4.5rem);
+}
+
 .homepage-section__intro {
   max-width: 49rem;
 }

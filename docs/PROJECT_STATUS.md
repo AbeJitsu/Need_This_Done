@@ -1,9 +1,23 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/reconcile-hosted-migration-2026-09-19` (branched from `dev` at `6b5b9cb0ed3c440bab4ea59109baddc62c8b0cb6`)
-**Last updated:** 2026-09-19
+**Branch:** `feature/public-navigation-2026-09-23` (branched from `dev` at `b6889fdc7494102b4e20127b9cbdfb5f4987114b`)
+**Last updated:** 2026-09-23
 
 ## Latest change
+
+- On 2026-09-23, the public header now points to the same dedicated pages as
+  the footer for Capabilities, Selected Work, About, and Notes on every route.
+  The homepage is a shorter overview with a direct contact action, capabilities
+  preview, and one featured build; the longer detail remains on the dedicated
+  pages. A legacy offer link to `/work#capabilities` now points to the actual
+  `/services` page. Focused public journey tests passed 12/12, accessibility
+  tests passed 52/52, the required unit suite passed 412 with four expected
+  skips, and lint, type-check, production build, and `git diff --check`
+  passed. Browser navigation and visual verification remain pending because
+  Chromium was not available and the Playwright download returned an invalid
+  zero-byte archive (owner: site maintainer; target: 2026-09-30). This branch
+  has not been merged or deployed. Rollback: revert this branch's navigation
+  commit before promotion, or revert it with a new commit if already promoted.
 
 - On 2026-09-19, the hosted Supabase migration-history check found one direct hosted migration not present in GitHub: `20260915183432_115_lock_down_retired_public_tables`. This reconciliation branch adds its exact recorded SQL under `supabase/migrations/` so GitHub preserves the hosted RLS/grant correction. It does not rerun or alter hosted Supabase; hosted migrations 110–115 were applied sequentially through the Supabase migration tool on 2026-09-19 after the hosted-only history reconciliation; a follow-up ACL correction is recorded as migration 116 and was applied after verification.
 

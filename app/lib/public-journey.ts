@@ -7,42 +7,10 @@ export const PUBLIC_NAVIGATION = [
   { href: "/blog", label: "Notes" },
 ] as const;
 
-export const PUBLIC_HOME_JOURNEY = [
-  { id: "capabilities", href: "/services", label: "Capabilities" },
-  { id: "featured-work", href: "/work", label: "Selected Work" },
-  { id: "approach", href: "/about", label: "About" },
-  { id: "notes", href: "/blog", label: "Notes" },
-] as const;
-
-export function getPublicHomeHref(href: string) {
-  const section = PUBLIC_HOME_JOURNEY.find((item) => item.href === href);
-  return section ? `/#${section.id}` : href;
-}
-
 export const PUBLIC_PRIMARY_ACTION = {
   href: "/contact",
   label: "Start a conversation",
 } as const;
-
-export const PUBLIC_HOME_CONVERSION = {
-  id: "contact",
-  href: PUBLIC_PRIMARY_ACTION.href,
-  label: PUBLIC_PRIMARY_ACTION.label,
-} as const;
-
-export type PublicHomeSectionId = (typeof PUBLIC_HOME_JOURNEY)[number]["id"];
-
-export function getPublicHomeNextStep(id: PublicHomeSectionId) {
-  const currentIndex = PUBLIC_HOME_JOURNEY.findIndex((section) => section.id === id);
-  const nextSection = PUBLIC_HOME_JOURNEY[currentIndex + 1];
-
-  return nextSection
-    ? {
-        href: `#${nextSection.id}`,
-        label: `Next: ${nextSection.label}`,
-      }
-    : null;
-}
 
 export const PUBLIC_ROUTE_STAGES = {
   "/": {

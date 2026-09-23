@@ -3,9 +3,6 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { normalizePublicOfferId, PUBLIC_OFFERS } from '@/lib/public-offers';
 import {
-  getPublicHomeNextStep,
-  getPublicHomeHref,
-  PUBLIC_HOME_JOURNEY,
   PUBLIC_NAVIGATION,
   PUBLIC_FOOTER_GROUPS,
   PUBLIC_PRIMARY_ACTION,
@@ -25,7 +22,7 @@ describe('portfolio public journey', () => {
     expect(home).toContain('for messy');
     expect(home).toContain('problems.');
     expect(home).toContain('See selected work');
-    expect(home).toContain('href="/work#case-studies"');
+    expect(home).toContain('href="/work"');
     expect(home).toContain('Start a conversation');
     expect(home).not.toContain('Your vision,');
     expect(home).not.toContain('Bring us the problem');
@@ -35,36 +32,24 @@ describe('portfolio public journey', () => {
   it('uses selected work, capabilities, about, and notes as the primary navigation', () => {
     expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Capabilities', 'Selected Work', 'About', 'Notes']);
     expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/work', '/about', '/blog']);
-    expect(PUBLIC_HOME_JOURNEY.map(link => link.id)).toEqual(['capabilities', 'featured-work', 'approach', 'notes']);
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(PUBLIC_HOME_JOURNEY.map(link => link.href));
-    expect(PUBLIC_NAVIGATION.map(link => getPublicHomeHref(link.href))).toEqual([
-      '/#capabilities', '/#featured-work', '/#approach', '/#notes',
-    ]);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Start a conversation' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
+    for (const link of PUBLIC_NAVIGATION) expect(destinations).toContain(link.href);
     for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
     expect(destinations).not.toContain('/system');
     expect(destinations).toContain('/work#case-studies');
     expect(source('components/work/WorkPageClient.tsx')).toContain('href="/system"');
   });
 
-  it('moves through the portfolio story and ends at contact', () => {
-    expect(getPublicHomeNextStep('capabilities')).toEqual({ href: '#featured-work', label: 'Next: Selected Work' });
-    expect(getPublicHomeNextStep('featured-work')).toEqual({ href: '#approach', label: 'Next: About' });
-    expect(getPublicHomeNextStep('approach')).toEqual({ href: '#notes', label: 'Next: Notes' });
-    expect(getPublicHomeNextStep('notes')).toBeNull();
-  });
-
-  it('keeps build notes concrete and the final contact action singular', () => {
+  it('keeps the homepage short and links to the full pages', () => {
     const home = source('components/home/HomePageClient.tsx');
-    const notes = home.split('<section id="notes"')[1]?.split('</section>')[0] ?? '';
-
-    expect(notes).toContain('Notes from the work behind the software.');
-    expect(notes).toContain('Short write-ups share technical choices, small experiments, and lessons learned along the way.');
-    expect(notes).not.toMatch(/\breasoning\b/i);
-    expect(home).not.toMatch(/\breasoning\b/i);
-    expect(notes.match(/Start a conversation/g)).toHaveLength(1);
-    expect(getPublicHomeNextStep('notes')).toBeNull();
+    expect(home.match(/<section\b/g)).toHaveLength(4);
+    expect(home).toContain('href="/services"');
+    expect(home).toContain('href="/work"');
+    expect(home).toContain('href="/contact"');
+    expect(home).not.toContain('id="approach"');
+    expect(home).not.toContain('id="notes"');
+    expect(source('components/public/PublicHeader.tsx')).not.toContain('getPublicHomeHref');
   });
 
   it('keeps the system page as an optional conceptual case study', () => {
@@ -110,7 +95,7 @@ describe('portfolio public journey', () => {
     expect(work).toContain('portfolio-hero.png');
     expect(work).toContain('Useful things for messy problems.');
     expect(work).toContain('simpleSteps');
-    expect(home).toContain('href="/work#case-studies"');
+    expect(home).toContain('href="/work"');
     expect(home).not.toContain('PUBLIC_EXAMPLES');
   });
 

@@ -1,9 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CircleCheckBig, Database, GitBranch, Layers3, Wrench } from "lucide-react";
-import {
-  getPublicHomeNextStep,
-  type PublicHomeSectionId,
-} from "@/lib/public-journey";
+import { ArrowRight, Database, Layers3, Wrench } from "lucide-react";
 import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 const buildSignals = [
@@ -23,33 +19,6 @@ const buildSignals = [
     description: "Start with the smallest working piece, then show what changed and how it was checked.",
   },
 ] as const;
-
-const workingPrinciples = [
-  { title: "Understand the whole path", description: "Look past the visible bug to the people, data, and handoffs around it.", icon: GitBranch },
-  { title: "Build the useful slice", description: "Choose a contained piece that can be tested, reviewed, and improved without pretending the whole system is finished.", icon: Wrench },
-  { title: "Leave evidence behind", description: "The result should explain what changed, what was checked, and what still needs a decision.", icon: CircleCheckBig },
-] as const;
-
-function HomeNextStep({
-  sectionId,
-  light = false,
-}: {
-  sectionId: PublicHomeSectionId;
-  light?: boolean;
-}) {
-  const nextStep = getPublicHomeNextStep(sectionId);
-  if (!nextStep) return null;
-
-  return (
-    <Link
-      href={nextStep.href}
-      className={`homepage-link homepage-next-step${light ? " homepage-link--light" : ""}`}
-    >
-      {nextStep.label}
-      <ArrowRight aria-hidden="true" />
-    </Link>
-  );
-}
 
 export default function HomePageClient() {
   return (
@@ -71,13 +40,11 @@ export default function HomePageClient() {
                 people using the system.
               </p>
               <div className="homepage-hero__actions">
-                <Link href="/work#case-studies" className="homepage-button homepage-button--gold">
-                  See selected work
-                  <ArrowRight aria-hidden="true" />
+                <Link href="/contact" className="homepage-button homepage-button--gold">
+                  Start a conversation <ArrowRight aria-hidden="true" />
                 </Link>
-                <Link href="/about" className="homepage-button homepage-button--ghost">
-                  How the work takes shape
-                  <ArrowRight aria-hidden="true" />
+                <Link href="/work" className="homepage-button homepage-button--ghost">
+                  See selected work <ArrowRight aria-hidden="true" />
                 </Link>
               </div>
             </div>
@@ -87,133 +54,50 @@ export default function HomePageClient() {
       </section>
 
       <section id="capabilities" aria-labelledby="capabilities-heading" className="homepage-section homepage-section--light">
-        <div className="homepage-section__inner">
-          <div className="homepage-section__intro homepage-section__intro--split">
-            <div>
-              <p className="homepage-eyebrow">Capabilities</p>
-              <h2 id="capabilities-heading" className="homepage-heading homepage-heading--compact">
-                The problems that sit between categories.
-              </h2>
-            </div>
-            <p className="homepage-section__lead">
-              The work moves between product surface, application logic, data,
-              integrations, and the operational details that make software dependable.
-            </p>
-          </div>
-
-          <div className="homepage-offer-grid">
-            {buildSignals.map(({ icon: Icon, label, description }, index) => (
-              <article key={label} className="homepage-offer-card">
-                <div className="homepage-card-identity homepage-offer-card__identity">
-                  <div className="homepage-offer-card__topline">
-                    <span className="homepage-offer-card__number">0{index + 1}</span>
-                    <span className="homepage-offer-card__icon"><Icon aria-hidden="true" /></span>
-                  </div>
-                  <p className="homepage-card-kicker">Capability</p>
-                  <h3>{label}</h3>
-                </div>
-                <div className="homepage-card-detail homepage-offer-card__detail">
-                  <p className="homepage-offer-card__fit">{description}</p>
-                </div>
+        <div className="homepage-section__inner homepage-section__inner--compact">
+          <p className="homepage-eyebrow">Capabilities</p>
+          <h2 id="capabilities-heading" className="homepage-heading homepage-heading--compact">
+            Useful work across the stack.
+          </h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {buildSignals.map(({ icon: Icon, label, description }) => (
+              <article key={label} className="rounded-2xl border border-[var(--public-ink)]/10 bg-white/80 p-6">
+                <Icon className="h-6 w-6 text-[var(--public-green)]" aria-hidden="true" />
+                <h3 className="mt-5 font-playfair text-2xl font-black">{label}</h3>
+                <p className="mt-3 leading-7 text-[var(--public-muted)]">{description}</p>
               </article>
             ))}
           </div>
-
-          <div className="homepage-section__actions">
-            <Link href="/services" className="homepage-link">
-              See the full capability map
-              <ArrowRight aria-hidden="true" />
-            </Link>
-            <HomeNextStep sectionId="capabilities" />
-          </div>
+          <Link href="/services" className="homepage-link homepage-link--standalone">
+            Explore capabilities <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
 
       <section id="featured-work" aria-labelledby="featured-work-heading" className="homepage-section homepage-section--dark">
-        <div className="homepage-section__inner">
-          <div className="homepage-section__intro">
-            <p className="homepage-eyebrow homepage-eyebrow--light">Selected work</p>
-            <h2 id="featured-work-heading" className="homepage-heading">
-              Built systems, not just screens.
-            </h2>
-            <p className="homepage-section__lead">
-              NeedThisDone is the main independent build: a public site, private workspace,
-              APIs, database-backed state, approval boundaries, and delivery checks.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            <article className="homepage-teaser__card">
-              <div className="homepage-card-identity homepage-teaser__identity">
-                <div className="homepage-teaser__topline"><span className="homepage-teaser__number">01</span><GitBranch className="homepage-teaser__icon" aria-hidden="true" /></div>
-                <p className="homepage-teaser__label">Featured build</p>
-                <h3 className="homepage-teaser__title">NeedThisDone</h3>
-              </div>
-              <div className="homepage-card-detail homepage-teaser__detail"><p className="homepage-teaser__description">A full-stack control plane for requests, approvals, private work, evidence, and review.</p></div>
-            </article>
-            <article className="homepage-teaser__card">
-              <div className="homepage-card-identity homepage-teaser__identity">
-                <div className="homepage-teaser__topline"><span className="homepage-teaser__number">02</span><Database className="homepage-teaser__icon" aria-hidden="true" /></div>
-                <p className="homepage-teaser__label">Workflow build</p>
-                <h3 className="homepage-teaser__title">Content workflow</h3>
-              </div>
-              <div className="homepage-card-detail homepage-teaser__detail"><p className="homepage-teaser__description">A content pipeline that turned recurring preparation into a repeatable handoff.</p></div>
-            </article>
-            <article className="homepage-teaser__card">
-              <div className="homepage-card-identity homepage-teaser__identity">
-                <div className="homepage-teaser__topline"><span className="homepage-teaser__number">03</span><Wrench className="homepage-teaser__icon" aria-hidden="true" /></div>
-                <p className="homepage-teaser__label">Technical notes</p>
-                <h3 className="homepage-teaser__title">How the pieces fit</h3>
-              </div>
-              <div className="homepage-card-detail homepage-teaser__detail"><p className="homepage-teaser__description">Short notes on React, performance, data boundaries, and making complex work easier to understand.</p></div>
-            </article>
-          </div>
-
-          <div className="homepage-section__actions">
-            <Link href="/work#case-studies" className="homepage-link homepage-link--light">Open the project portfolio <ArrowRight aria-hidden="true" /></Link>
-            <HomeNextStep sectionId="featured-work" light />
-          </div>
+        <div className="homepage-section__inner homepage-section__inner--compact">
+          <p className="homepage-eyebrow homepage-eyebrow--light">Selected work</p>
+          <h2 id="featured-work-heading" className="homepage-heading homepage-heading--compact">
+            One build, many connected parts.
+          </h2>
+          <p className="homepage-section__lead">
+            NeedThisDone is an independent build with a public site, private workspace,
+            APIs, database-backed state, approval boundaries, and delivery checks.
+          </p>
+          <Link href="/work" className="homepage-link homepage-link--light homepage-link--standalone">
+            Explore selected work <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
 
-      <section id="approach" aria-labelledby="approach-heading" className="homepage-section homepage-section--light">
-        <div className="homepage-section__inner">
-          <div className="homepage-section__intro">
-            <p className="homepage-eyebrow">Approach</p>
-            <h2 id="approach-heading" className="homepage-heading homepage-heading--compact">
-              Clearer technical decisions. Better next steps.
-            </h2>
-          </div>
-          <ol className="homepage-principles">
-            {workingPrinciples.map(({ title, description, icon: SignalIcon }, index) => (
-              <li key={title} className="homepage-principle">
-                <article className="homepage-principle__card">
-                  <div className="homepage-card-identity homepage-principle__identity">
-                    <div className="homepage-principle__topline"><span className="homepage-principle__number">0{index + 1}</span><span className="homepage-principle__signal" aria-hidden="true"><SignalIcon /></span></div>
-                    <p className="homepage-card-kicker">Working principle</p>
-                    <h3>{title}</h3>
-                  </div>
-                  <div className="homepage-card-detail homepage-principle__detail"><p>{description}</p></div>
-                </article>
-              </li>
-            ))}
-          </ol>
-          <div className="homepage-section__actions">
-            <Link href="/about" className="homepage-link">See the approach <ArrowRight aria-hidden="true" /></Link>
-            <HomeNextStep sectionId="approach" />
-          </div>
-        </div>
-      </section>
-
-      <section id="notes" aria-labelledby="notes-heading" className="homepage-closing">
-        <div className="homepage-closing__inner">
-          <p className="homepage-eyebrow">Build notes</p>
-          <h2 id="notes-heading" className="homepage-heading">Notes from the work behind the software.</h2>
-          <p>Short write-ups share technical choices, small experiments, and lessons learned along the way.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/blog" className="homepage-button homepage-button--green">Read the notes <ArrowRight aria-hidden="true" /></Link>
-            <Link href="/contact" className="homepage-button homepage-button--ghost">Start a conversation <ArrowRight aria-hidden="true" /></Link>
-          </div>
+      <section className="homepage-closing" aria-labelledby="homepage-closing-heading">
+        <div className="homepage-closing__inner homepage-closing__inner--compact">
+          <p className="homepage-eyebrow">Start here</p>
+          <h2 id="homepage-closing-heading" className="homepage-heading">What would make your work easier?</h2>
+          <p>A short description of the problem or the thing you want to build is enough to start.</p>
+          <Link href="/contact" className="homepage-button homepage-button--green">
+            Start a conversation <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </main>

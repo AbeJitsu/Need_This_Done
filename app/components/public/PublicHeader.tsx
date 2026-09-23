@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
-  getPublicHomeHref,
   PUBLIC_NAVIGATION,
   PUBLIC_PRIMARY_ACTION,
   isPublicRouteCurrent,
@@ -16,7 +15,6 @@ const links = PUBLIC_NAVIGATION;
 export default function PublicHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const isHome = pathname === '/';
 
   const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -35,7 +33,7 @@ export default function PublicHeader() {
       <div className="mx-auto flex min-h-[72px] max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]">
         <Link href="/" className="font-playfair text-xl font-black tracking-tight" onClick={() => setOpen(false)}>Need This Done</Link>
         <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
-          {links.map((link) => <Link key={link.href} href={isHome ? getPublicHomeHref(link.href) : link.href} aria-current={isPublicRouteCurrent(pathname, link.href) ? 'page' : undefined} className={`inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold transition ${isPublicRouteCurrent(pathname, link.href) ? 'bg-[var(--public-soft)] text-[var(--public-ink)]' : 'text-[#40564e] hover:text-[var(--public-green)]'}`}>{link.label}</Link>)}
+          {links.map((link) => <Link key={link.href} href={link.href} aria-current={isPublicRouteCurrent(pathname, link.href) ? 'page' : undefined} className={`inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold transition ${isPublicRouteCurrent(pathname, link.href) ? 'bg-[var(--public-soft)] text-[var(--public-ink)]' : 'text-[#40564e] hover:text-[var(--public-green)]'}`}>{link.label}</Link>)}
         </nav>
         <div className="flex items-center gap-2">
           <Link href="/login" className="hidden items-center rounded-full border border-[var(--public-ink)]/20 px-4 py-2.5 text-sm font-bold text-[var(--public-ink)] transition hover:bg-[var(--public-soft)] focus-visible:ring-[#d0a94f] sm:inline-flex">Sign in</Link>
@@ -44,7 +42,7 @@ export default function PublicHeader() {
         </div>
       </div>
       {open && <nav id="public-mobile-navigation" aria-label="Mobile navigation" className="border-t border-[var(--public-ink)]/10 bg-[var(--public-cream)] px-5 py-3 lg:hidden">
-        {links.map((link) => <Link key={link.href} href={isHome ? getPublicHomeHref(link.href) : link.href} onClick={() => setOpen(false)} aria-current={isPublicRouteCurrent(pathname, link.href) ? "page" : undefined} className={`block rounded-lg px-3 py-3 font-semibold text-[var(--public-ink)] hover:bg-[var(--public-soft)] ${isPublicRouteCurrent(pathname, link.href) ? "bg-[var(--public-soft)]" : ""}`}>{link.label}</Link>)}
+        {links.map((link) => <Link key={link.href} href={link.href} onClick={() => setOpen(false)} aria-current={isPublicRouteCurrent(pathname, link.href) ? "page" : undefined} className={`block rounded-lg px-3 py-3 font-semibold text-[var(--public-ink)] hover:bg-[var(--public-soft)] ${isPublicRouteCurrent(pathname, link.href) ? "bg-[var(--public-soft)]" : ""}`}>{link.label}</Link>)}
         <Link href="/login" onClick={() => setOpen(false)} className="mt-2 block rounded-lg border border-[var(--public-ink)]/20 px-3 py-3 text-center font-bold text-[var(--public-ink)] hover:bg-[var(--public-soft)]">Sign in</Link>
         <Link href={PUBLIC_PRIMARY_ACTION.href} onClick={() => setOpen(false)} className="mt-2 block rounded-lg bg-[var(--public-green)] px-3 py-3 text-center font-bold text-white">{PUBLIC_PRIMARY_ACTION.label}</Link>
       </nav>}

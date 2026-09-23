@@ -78,24 +78,17 @@ test('homepage leads with the generalist portfolio promise', async ({ page }) =>
   const hero = page.locator('main > section').first();
   await expect(hero.getByRole('heading', { name: 'Practical software for messy problems.' })).toBeVisible();
   await expect(hero).toContainText('interfaces, backends, databases, APIs');
-  await expect(hero.getByRole('link', { name: 'See selected work', exact: true })).toHaveAttribute('href', '/work#case-studies');
+  await expect(hero.getByRole('link', { name: 'See selected work', exact: true })).toHaveAttribute('href', '/work');
   await expect(page.locator('#capabilities')).toBeVisible();
   await expect(page.locator('#featured-work')).toBeVisible();
-  await expect(page.locator('#approach')).toBeVisible();
-  await expect(page.locator('#notes')).toBeVisible();
-  await expect(page.locator('main > section')).toHaveCount(5);
+  await expect(page.locator('main > section')).toHaveCount(4);
+  await expect(hero.getByRole('link', { name: 'Start a conversation' })).toHaveAttribute('href', '/contact');
 });
 
-test('homepage next steps move through the portfolio story', async ({ page }) => {
+test('homepage previews lead to their full pages', async ({ page }) => {
   await page.goto('/');
-  for (const [section, label, href] of [
-    ['capabilities', 'Next: Selected Work', '#featured-work'],
-    ['featured-work', 'Next: About', '#approach'],
-    ['approach', 'Next: Notes', '#notes'],
-    ['notes', 'Next: Start a conversation', '/contact'],
-  ]) {
-    await expect(page.locator(`#${section}`).getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
-  }
+  await expect(page.locator('#capabilities').getByRole('link', { name: 'Explore capabilities' })).toHaveAttribute('href', '/services');
+  await expect(page.locator('#featured-work').getByRole('link', { name: 'Explore selected work' })).toHaveAttribute('href', '/work');
 });
 
 test('capabilities and work show the technical range', async ({ page }) => {
@@ -122,21 +115,34 @@ test('contact keeps the message path concise and preserves offer aliases', async
   await expect(page.getByRole('button', { name: 'Start a conversation', exact: true })).toBeVisible();
 });
 
-test('desktop public navigation names the portfolio sections', async ({ page }, testInfo) => {
+test('desktop header and footer lead to the same full pages', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'public', 'Desktop navigation is intentionally collapsed on mobile.');
   await page.goto('/');
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+  const footer = page.getByRole('navigation', { name: 'Footer navigation' });
   for (const [label, href] of [
-    ['Capabilities', '/#capabilities'],
-    ['Selected Work', '/#featured-work'],
-    ['About', '/#approach'],
-    ['Notes', '/#notes'],
+    ['Capabilities', '/services'],
+    ['Selected Work', '/work'],
+    ['About', '/about'],
+    ['Notes', '/blog'],
   ]) {
     await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
+    await expect(footer.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
   }
+  await navigation.getByRole('link', { name: 'Capabilities' }).click();
+  await expect(page).toHaveURL(/\/services$/);
   await expect(page.getByRole('link', { name: 'Start a conversation', exact: true }).first()).toHaveAttribute('href', '/contact');
-  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'NeedThisDone system', exact: true })).toHaveAttribute('href', '/system');
+  await expect(footer.getByRole('link', { name: 'Capabilities', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
+});
+
+test('mobile navigation opens the full page from home', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'public-mobile', 'Mobile menu behavior runs in the mobile public project.');
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open navigation menu' }).click();
+  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Notes' }).click();
+  await expect(page).toHaveURL(/\/blog$/);
+  await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
 });
 
 test('public pages pass an accessibility scan on the portfolio front door', async ({ page }, testInfo) => {
