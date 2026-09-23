@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { PUBLIC_PAGE_VISUALS } from '@/components/public/PublicPageVisual';
+import { listBlogPosts } from '@/lib/blog-content';
 
 const appRoot = resolve(__dirname, '..');
 
@@ -40,6 +41,21 @@ describe('public page image coverage', () => {
     const card = readFileSync(resolve(appRoot, 'components/blog/BlogPostCard.tsx'), 'utf8');
     expect(archive).toContain('showImage={false}');
     expect(card).toContain('showImage?: boolean');
+  });
+
+  it('gives every published note article its own local image', () => {
+    const noteImages = listBlogPosts().map((post) => {
+      expect(post.featured_image, `${post.slug} should have a featured image`).toBeTruthy();
+      return post.featured_image as string;
+    });
+    const allImages = [...publicPageCoverage.map((page) => page.image), ...noteImages];
+
+    expect(new Set(allImages).size).toBe(allImages.length);
+
+    for (const image of noteImages) {
+      expect(image).toMatch(/^\/images\/notes\//);
+      expect(existsSync(resolve(appRoot, 'public', image.slice(1)))).toBe(true);
+    }
   });
 
   it('gives every intended public static page one distinct primary image', () => {
