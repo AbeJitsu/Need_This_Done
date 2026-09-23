@@ -188,7 +188,7 @@ export const ENGAGEMENT_ROUTES = [
 
 
 export const PUBLIC_FOOTER_GROUPS = [
-  { title: 'Explore', links: [...PUBLIC_NAVIGATION, { href: '/system', label: 'NeedThisDone system' }] },
+  { title: 'Explore', links: [...PUBLIC_NAVIGATION] },
   { title: 'Proof', links: [
     { href: '/work#case-studies', label: 'Case studies' },
     { href: '/blog', label: 'Engineering notes' },

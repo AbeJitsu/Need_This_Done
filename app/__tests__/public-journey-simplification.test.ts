@@ -42,8 +42,10 @@ describe('portfolio public journey', () => {
     ]);
     expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Start a conversation' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
-    for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms', '/system']) expect(destinations).toContain(route);
+    for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
+    expect(destinations).not.toContain('/system');
     expect(destinations).toContain('/work#case-studies');
+    expect(source('components/work/WorkPageClient.tsx')).toContain('href="/system"');
   });
 
   it('moves through the portfolio story and ends at contact', () => {
