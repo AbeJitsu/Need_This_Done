@@ -62,6 +62,7 @@ describe('portfolio public journey', () => {
     expect(notes).toContain('Notes from the work behind the software.');
     expect(notes).toContain('Short write-ups share technical choices, small experiments, and lessons learned along the way.');
     expect(notes).not.toMatch(/\breasoning\b/i);
+    expect(home).not.toMatch(/\breasoning\b/i);
     expect(notes.match(/Start a conversation/g)).toHaveLength(1);
     expect(getPublicHomeNextStep('notes')).toBeNull();
   });

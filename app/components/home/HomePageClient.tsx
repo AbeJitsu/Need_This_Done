@@ -20,7 +20,7 @@ const buildSignals = [
   {
     icon: Wrench,
     label: "Useful technical work",
-    description: "The smallest working piece first, with the reasoning left visible.",
+    description: "Start with the smallest working piece, then show what changed and how it was checked.",
   },
 ] as const;
 
