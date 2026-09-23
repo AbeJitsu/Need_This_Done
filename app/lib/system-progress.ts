@@ -31,7 +31,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     state: 'next-proof',
     status: 'Next proof',
     description: 'Next, prove an approval-gated workflow against real local Supabase.',
-    evidence: 'npm run verify:database; npm run test:hermes-mcp:local',
+    evidence: 'npm run verify:database; npm run test:workflow-mcp:local',
   },
   {
     number: '03',
@@ -39,7 +39,7 @@ export const SYSTEM_PROOF_LANES: readonly SystemProofLane[] = [
     state: 'pending',
     status: 'Pending',
     description: 'Then prove Vercel, Supabase, Redis, and remote access together.',
-    evidence: 'npm run test:hermes-mcp:hosted',
+    evidence: 'npm run test:workflow-mcp:hosted',
   },
   {
     number: '04',

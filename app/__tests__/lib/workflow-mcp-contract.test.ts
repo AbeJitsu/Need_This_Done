@@ -7,11 +7,11 @@ import {
   startWorkflowInputSchema,
   startWorkflowResultSchema,
   workflowStatusResultSchema,
-} from '@/lib/hermes-mcp-contract';
+} from '@/lib/workflow-mcp-contract';
 
 const workflowId = '11111111-1111-4111-8111-111111111111';
 
-describe('Hermes MCP workflow contract', () => {
+describe('NeedThisDone workflow MCP contract', () => {
   it('exposes exactly the three read/create workflow tools', () => {
     expect(MCP_TOOL_NAMES).toEqual([
       'start_workflow',

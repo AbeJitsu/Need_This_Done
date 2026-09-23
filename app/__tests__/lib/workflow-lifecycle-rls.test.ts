@@ -4,7 +4,7 @@ import { closePool, getPool } from '../../../supabase/tests/helpers';
 const localDescribe = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true' ? describe : describe.skip;
 const operator = '00000000-0000-4860-8000-0000000000d1';
 const member = '00000000-0000-4860-8000-0000000000d2';
-const workerId = 'openclaw-hermes-proof';
+const workerId = 'openclaw-workflow-proof';
 const profileId = '00000000-0000-4860-8000-0000000000d3';
 
 type DatabaseRole = 'anon' | 'authenticated' | 'service_role';
@@ -82,7 +82,7 @@ const dossier = {
   suggestedOutreach: { subject: 'A booking-path idea', body: 'A human-reviewed draft only.' },
 };
 
-localDescribe.sequential('Hermes and OpenClaw frozen-plan dispatch boundary', () => {
+localDescribe.sequential('Workflow and OpenClaw frozen-plan dispatch boundary', () => {
   beforeAll(async () => {
     const pool = getPool();
     await pool.query('begin');
@@ -108,8 +108,8 @@ localDescribe.sequential('Hermes and OpenClaw frozen-plan dispatch boundary', ()
         id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
         created_at, updated_at, confirmation_token, raw_app_meta_data, raw_user_meta_data
       ) values
-        ($1, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'hermes-operator@example.test', '', now(), now(), now(), '', '{}', '{}'),
-        ($2, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'hermes-member@example.test', '', now(), now(), now(), '', '{}', '{}')
+        ($1, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'workflow-operator@example.test', '', now(), now(), now(), '', '{}', '{}'),
+        ($2, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'workflow-member@example.test', '', now(), now(), now(), '', '{}', '{}')
     `, [operator, member]);
     await pool.query(`insert into public.user_roles (user_id, role) values ($1, 'admin') on conflict (user_id) do update set role = excluded.role`, [operator]);
     await pool.query(`delete from public.growth_profiles where id = $1`, [profileId]);
@@ -117,7 +117,7 @@ localDescribe.sequential('Hermes and OpenClaw frozen-plan dispatch boundary', ()
       insert into public.growth_profiles (
         id, owner_id, target_market, geography, offer, sender_name, sender_email,
         model_route, selected_model_id, selected_model_rationale
-      ) values ($1, $2, 'local service operators', 'New York', 'a focused growth review', 'Operator', 'operator@example.test', 'selected-free', 'provider/pinned-model', 'local Hermes proof')
+      ) values ($1, $2, 'local service operators', 'New York', 'a focused growth review', 'Operator', 'operator@example.test', 'selected-free', 'provider/pinned-model', 'local workflow proof')
     `, [profileId, operator]);
   });
 

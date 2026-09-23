@@ -366,7 +366,7 @@ export default function AccountSettingsClient() {
               <h2 className={`text-2xl font-semibold ${headingColors.primary} mb-1`}>MCP connection</h2>
               <p className={`${mutedTextColors.normal} text-sm leading-6`}>
                 Your site login identifies you here. An MCP credential authorizes a compatible LLM client to call
-                the NeedThisDone endpoint for your account. Hermes and OpenClaw remain separately authenticated on
+                the NeedThisDone endpoint for your account. The workflow planner and OpenClaw remain separately authenticated on
                 the private worker host.
               </p>
             </div>

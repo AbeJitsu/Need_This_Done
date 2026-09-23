@@ -4,7 +4,7 @@ Purpose
 
 Prepare a later, separately approved private-Mac rehearsal of this exact seam:
 
-  Hermes frozen plan -> signed outbound bridge -> loopback OpenClaw Gateway
+  Frozen workflow plan -> signed outbound bridge -> loopback OpenClaw Gateway
 
 This runbook is preparation only. It never authorizes a hosted migration,
 deployment, secret provisioning, provider activation, launchd load, worker
@@ -61,7 +61,7 @@ handshake, then starts the bridge and waits for its heartbeat. Stop it with:
 
 For a disposable local control-plane rehearsal, the private environment must
 set `BRIDGE_MODE=disposable-local`, use a loopback `BRIDGE_API_URL`, and use the
-reserved worker ID `macbook-pro-hermes-rehearsal`. Then run:
+reserved worker ID `macbook-pro-workflow-rehearsal`. Then run:
 
   npm run mac:worker -- test --local --duration 60
 
@@ -83,10 +83,10 @@ asking for the distinct activation approval.
 
 MacBook Pro foreground rehearsal acceptance (not run by this preparation)
 
-The MacBook Pro temporary worker ID is `macbook-pro-hermes-rehearsal`; run it
+The MacBook Pro temporary worker ID is `macbook-pro-workflow-rehearsal`; run it
 only in foreground processes and stop the Gateway and bridge afterward. The
 Mac mini remains the separately required always-on target. The approved
-rehearsal must demonstrate one browser-approved, free-route, read-only Hermes
+rehearsal must demonstrate one browser-approved, free-route, read-only workflow
 plan with a reviewable private asset. It must separately
 show that unapproved, altered, stopped, expired, and paid-route tasks never
 reach Gateway invocation. Record only the exact checks run. Do not claim a

@@ -1,7 +1,7 @@
 # NeedThisDone — Test Strategy and Suite Inventory
 
 **Status:** working test contract for the private assistant foundation  
-**Last audited:** 2026-09-11
+**Last audited:** 2026-09-12
 **Progress:** [ROADMAP.md](../ROADMAP.md)  
 **Evidence:** [PROJECT_STATUS.md](PROJECT_STATUS.md) and [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
 **Build map:** [BUILD_PROGRESS_MAP.md](BUILD_PROGRESS_MAP.md)
@@ -34,7 +34,7 @@ contract—for example, “do not touch the database before signature validation
 | Database/RLS | `npm run verify:database` | SQL constraints, migrations, RLS, security posture, and durable lifecycle rules against disposable local Supabase | Hosted Supabase state or production data |
 | Integration | `vitest.integration.config.ts` | Multiple application components working together with controlled local dependencies | Hosted providers or a real worker |
 | Accessibility | `npm run test:a11y` | Semantic roles, keyboard behavior, focus, and axe-level regressions | Every browser, device, or screen reader |
-| Browser/E2E | `app/e2e` Playwright suites; `npm run test:hermes-mcp:local`; `npm run test:hermes-mcp:hosted` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice against an explicitly selected environment | Real Mac execution, live provider calls, or customer outcomes unless stated |
+| Browser/E2E | `app/e2e` Playwright suites; `npm run test:workflow-mcp:local`; `npm run test:workflow-mcp:hosted` | Route composition, browser auth, approvals, recovery, responsive behavior, visible outcomes, and the stage-by-stage device-independent MCP vertical slice against an explicitly selected environment | Real Mac execution, live provider calls, or customer outcomes unless stated |
 | Bridge/worker | `bridge/test` | HMAC, frozen-plan enforcement, loopback RPC, artifact safety, and no-delivery defaults | macOS launchd behavior on Linux, live Gateway credentials, or external effects |
 | Live rehearsal | Any correctly configured local or cloud worker host; MacBook Pro first and Mac mini later are current examples | Configured host, network, providers, durable result, and operator handoff | Lower-level regression coverage; this is expensive environment-specific evidence |
 
@@ -43,20 +43,20 @@ contract—for example, “do not touch the database before signature validation
 The site session and MCP bearer credential are deliberately tested as separate
 identities. A site login authorizes Account Settings through the existing
 server-side admin/operator guard; a named `ntd_mcp_` credential authorizes
-`/api/mcp` and carries an explicit owner context into the Hermes contract.
+`/api/mcp` and carries an explicit owner context into the workflow contract.
 
 | Evidence | Proves | Does not prove |
 |---|---|---|
 | `lib/mcp-token.test.ts` | Cryptographic generation, exact format, SHA-256 hashing, and non-usable display prefixes | A token was stored or accepted by hosted Supabase |
-| `lib/mcp-auth.test.ts` | Valid, missing, malformed, revoked, expired, owner-bound, origin, last-use, storage-failure, and bootstrap fail-closed outcomes | Hosted endpoint reachability, real credentials, or Hermes execution |
+| `lib/mcp-auth.test.ts` | Valid, missing, malformed, revoked, expired, owner-bound, origin, last-use, storage-failure, and bootstrap fail-closed outcomes | Hosted endpoint reachability, real credentials, or workflow execution |
 | `api/mcp-tokens.test.ts` | Authenticated owner-scoped list/create/revoke behavior, one-time raw-token response, redaction, cache headers, and cross-origin rejection | Browser rendering, Supabase RLS, or a real account session |
-| `lib/mcp-http.test.ts` | Authenticated owner context reaches each MCP tool dispatcher without widening the three-tool contract | Durable Hermes dispatch or worker authentication |
+| `lib/mcp-http.test.ts` | Authenticated owner context reaches each MCP tool dispatcher without widening the three-tool contract | Durable workflow dispatch or worker authentication |
 | `lib/mcp-access-tokens-rls.test.ts` | Disposable local migration 113 enables RLS, denies anon/authenticated table access, grants service-role lifecycle access, and enforces hash/prefix/name/expiration/uniqueness constraints | Hosted migration application or production data |
 
 Raw MCP values are not placed in fixtures, logs, reports, browser storage, or
 the credential list. The local Supabase/RLS proof must pass before a hosted MCP
 profile is considered. Redis and vector memory are not authentication stores;
-durable MCP-to-Hermes dispatch remains a later integration proof when its
+durable MCP-to-workflow dispatch remains a later integration proof when its
 adapter is wired.
 
 ## Standard gates
@@ -67,30 +67,42 @@ adapter is wired.
 | `npm run verify:database` | Local persistence/security gate | Disposable local Supabase lint, schema manifest, RLS, recovery, and integration checks |
 | `npm run test:retained-smoke` | Public desktop/mobile smoke | Retained public routes and recovery paths; not private worker proof |
 | `npm run test:browser-harness` | Browser boot contract | Separates harness startup failures from product failures |
-| `npm run test:hermes-browser` | Hermes UI contract | Plan preview and approval using controlled internal endpoints; no provider or worker dispatch |
-| `npm run test:hermes-mcp:local` (also `test:hermes-mcp`) | Local-first MCP control-plane diagnostic | Runs `verify:database` first against the real local Supabase instance, then calls the local `/api/mcp` route and reports health, vector configuration, authentication, discovery, Hermes start/list/status, and the exact missing boundary; dummy credentials do not count |
-| `npm run test:hermes-mcp:hosted` | Hosted Supabase read-only preflight | Uses an explicit non-local `BASE_URL`, skips the local web server, and proves the deployed app's server-side Supabase/Redis health plus MCP auth/handshake/discovery and safe read-only listing; it never starts a hosted workflow |
-| `npm run test:hermes-mcp:full` | Full local worker-rehearsal diagnostic | Runs the local database gate first, then adds signed worker status, terminal workflow polling, and the semantic-memory projection checkpoint; requires explicit approved-rehearsal environment values |
+| `npm run test:workflow-browser` | Workflow UI contract | Plan preview and approval using controlled internal endpoints; no provider or worker dispatch |
+| `npm run test:workflow-mcp:local` (also `test:workflow-mcp`) | Local-first MCP control-plane diagnostic | Runs `verify:database` first against the real local Supabase instance, then calls the local `/api/mcp` route and reports health, vector configuration, authentication, discovery, workflow start/list/status, and the exact missing boundary; dummy credentials do not count |
+| `npm run test:workflow-mcp:hosted` | Hosted Supabase read-only preflight | Uses an explicit non-local `BASE_URL`, skips the local web server, and proves the deployed app's server-side Supabase/Redis health plus MCP auth/handshake/discovery and safe read-only listing; it never starts a hosted workflow |
+| `npm run test:workflow-mcp:full` | Full local worker-rehearsal diagnostic | Runs the local database gate first, then adds signed worker status, terminal workflow polling, and the semantic-memory projection checkpoint; requires explicit approved-rehearsal environment values |
 | `npm test` in `bridge/` | Private bridge suite | Bridge logic and worker safety; macOS-only assertions need macOS evidence |
 
-The latest recorded application gate passed 70 deterministic unit/API files
-with 370 tests and 6 accessibility files with 60 tests. The database/RLS
-suites are intentionally excluded from the fast unit command and belong to
-`verify:database`; they are not missing.
+The 2026-09-12 audit verified the application gate from a clean checkout:
+`npm run test:unit` passes 400 tests across 75 files, and `npm run test:a11y`
+passes 60 tests across 6 files. The fast unit command explicitly excludes all
+database/RLS suites, including `lib/mcp-access-tokens-rls.test.ts`; those tests
+belong to `verify:database` and are not silently counted as passing unit tests.
+The unit suite does not contact Supabase. The MCP HTTP tests mock the
+authentication module so a clean checkout does not require unrelated Supabase
+configuration just to test the HTTP contract.
 
-The Hermes vertical slice has an intentional environment order:
+The wider repository inventory contains 103 test files and 567 declared test
+cases when browser, database, and bridge files are included. These numbers are
+not a quality score: some tests protect the public website, some protect
+private security boundaries, some verify retired surfaces stay absent, and
+some are environment-specific diagnostics. Browser matrix skips and the
+local-only MCP diagnostic are intentional and do not count as proof when their
+required environment is unavailable.
 
-1. `npm run test:hermes-mcp:local` proves the real local Supabase database/RLS
+The workflow vertical slice has an intentional environment order:
+
+1. `npm run test:workflow-mcp:local` proves the real local Supabase database/RLS
    gate first, then proves the local application, Redis, vector configuration,
-   MCP transport, and Hermes control-plane boundary. The command refuses a
+   MCP transport, and workflow control-plane boundary. The command refuses a
    remote `BASE_URL` or non-local Supabase target.
-2. Only after the local run passes, `npm run test:hermes-mcp:hosted` runs against
+2. Only after the local run passes, `npm run test:workflow-mcp:hosted` runs against
    the deployed app. Its `/api/health` response is the hosted server-side
    Supabase/Redis check; the test process's local `.env.local` is not used as a
    substitute for hosted connectivity. The hosted profile is read-only by
    default and does not call `start_workflow`.
 3. A hosted workflow creation or worker execution is a separate approved
-   rehearsal. It requires `HERMES_MCP_E2E_ALLOW_REMOTE_WRITE=true`, a controlled
+   rehearsal. It requires `WORKFLOW_MCP_E2E_ALLOW_REMOTE_WRITE=true`, a controlled
    idempotency key or fixture, and the corresponding hosted bridge credentials
    outside Git.
 
@@ -152,7 +164,7 @@ The Hermes vertical slice has an intentional environment order:
 | `lib/calendar-provider.test.ts` | Provider normalization | Keeps provider details replaceable | Live API |
 | `lib/consultation-request.test.ts` | Intake validation/normalization | Protects public intake contract | Persistence |
 | `lib/google-oauth-state.test.ts` | Signed OAuth state/nonce | Prevents callback attacks | Google OAuth |
-| `lib/hermes.test.ts` | Plan schema, roles, capabilities, forbidden actions, cost estimates | Protects planner/executor boundary | Model quality |
+| `lib/workflow-planner.test.ts` | Plan schema, roles, capabilities, forbidden actions, cost estimates | Protects planner/executor boundary | Model quality |
 | `lib/image-unoptimized.test.ts` | Image configuration policy | Prevents unsupported behavior returning | CDN/browser rendering |
 | `lib/inbound-email-forwarding.test.ts` | Inbound mail normalization | Keeps mail processing auditable | Provider delivery |
 | `lib/model-evaluation.test.ts` | Model selection/evaluation | Prevents unsafe/unpriced choices | Model quality |
@@ -173,7 +185,7 @@ The Hermes vertical slice has an intentional environment order:
 | `lib/site-analyzer.test.ts` | Analyzer/report normalization and fallback | Protects retained analyzer contract | Scan quality |
 | `lib/transactional-email-service.test.ts` | Event keys/provider construction | Prevents email side effects duplicating | Provider delivery |
 | `lib/vector-memory.test.ts` | Optional vector status, namespaced upsert/query, bounds, timeout, redaction | Proves semantic memory cannot leak or become durable truth | Live index/embedding quality |
-| `lib/hermes-mcp-contract.test.ts` | Exact three-tool surface, bounded start requests, approval-gated results, status states, and cursor-bounded listings | Proves any compatible LLM client can use one stable device-independent contract without receiving internal records or bypassing approval | MCP transport, Hermes persistence, worker dispatch, or live device connectivity |
+| `lib/workflow-mcp-contract.test.ts` | Exact three-tool surface, bounded start requests, approval-gated results, status states, and cursor-bounded listings | Proves any compatible LLM client can use one stable device-independent contract without receiving internal records or bypassing approval | MCP transport, workflow persistence, worker dispatch, or live device connectivity |
 | `lib/vision-intake.test.ts` | Intake answers, limits, aliases | Protects public intake behavior | Browser rendering |
 | `lib/wcag-contrast.test.ts` | Contrast calculations | Protects design-token readability | Full axe coverage |
 | `lib/website-fix-invoice-service.test.ts` | Invoice creation/retry semantics | Keeps billing durable/idempotent | Stripe |
@@ -187,10 +199,11 @@ These suites are intentionally excluded from the fast unit command and run via
 |---|---|---|---|
 | `lib/agent-operations-rls.test.ts` | Agent-operation RLS/lifecycle access, including authenticated owner reads | Protects durable worker state and cross-owner isolation | Hosted RLS |
 | `lib/ai-employee-rls.test.ts` | Private assistant table policies | Prevents cross-owner access | Production data |
-| `lib/hermes-lifecycle-rls.test.ts` | Hermes plan/run/task RLS/transitions | Protects durable orchestration | Standalone Hermes |
+| `lib/workflow-lifecycle-rls.test.ts` | Workflow plan/run/task RLS/transitions; the stored v2 planner marker remains legacy-compatible | Protects durable orchestration | Standalone Hermes CLI |
 | `lib/prospecting-rls.test.ts` | Prospecting policies | Protects private prospects | Hosted RLS |
 | `lib/provider-workflow-recovery.test.ts` | Provider failure/recovery state | Makes retries truthful | Live provider recovery |
 | `lib/retained-schema-manifest.test.ts` | Retained schema/migration manifest | Detects stale/missing objects | Hosted parity |
+| `lib/retired-public-schema-security.test.ts` | Forward lockdown migration contract for retired public relations | Prevents permissive policy/grant regressions | Hosted migration application |
 | `lib/security-hardening.test.ts` | Local schema security checks | Blocks RLS/exposure regressions | Hosted security |
 
 ## Accessibility/component inventory
@@ -217,10 +230,14 @@ These suites are intentionally excluded from the fast unit command and run via
 | `e2e/authenticated-employee-workspace.spec.ts` | Controlled browser auth/workspace | Proves browser contract | Real user/worker |
 | `e2e/browser-harness.spec.ts` | Browser startup/route load | Isolates harness failures | Full workflow |
 | `e2e/daily-cockpit.spec.ts` | Daily operator cockpit | Protects review flow | Worker completion |
-| `e2e/hermes-plan-preview.spec.ts` | Draft preview/approval UI | Protects review before dispatch | Provider/Redis/Mac |
-| `e2e/hermes-mcp-vertical-slice.spec.ts` | Real application diagnostic for health, MCP auth/handshake/discovery, Hermes start/list/status, and optional signed-worker/full-execution checkpoints; attaches a redacted stage report | Shows the first missing connected boundary when the operating-system path is run | Production OAuth, remote LLM-client reachability, workflow persistence until the dispatcher is wired, live vector projection, or external effects |
+| `e2e/workflow-plan-preview.spec.ts` | Draft preview/approval UI | Protects review before dispatch | Provider/Redis/Mac |
+| `e2e/workflow-mcp-vertical-slice.spec.ts` | Real application diagnostic for health, MCP auth/handshake/discovery, workflow start/list/status, and optional signed-worker/full-execution checkpoints; attaches a redacted stage report | Shows the first missing connected boundary when the operating-system path is run | Production OAuth, remote LLM-client reachability, workflow persistence until the dispatcher is wired, live vector projection, or external effects |
 | `e2e/prospecting-workspace.spec.ts` | Prospect review/suppression UI | Protects operator controls | Outreach |
 | `e2e/retained-core-smoke.spec.ts` | Public/mobile smoke matrix | Catches route/overflow/recovery regressions | Hosted/customer results |
+
+`lib/system-progress.test.ts` also protects the `/system` page's code-owned
+proof-gate ordering and evidence targets. It is a small contract test rather
+than a browser test, so it does not prove visual layout or visitor behavior.
 
 ## Bridge/worker inventory
 
@@ -229,6 +246,10 @@ These suites are intentionally excluded from the fast unit command and run via
 | `bridge/test/bridge.test.mjs` | Signed requests, URL safety, rehearsal config, launchd rendering | Protects private outbound boundary | macOS launchd on Linux |
 | `bridge/test/mac-worker.test.mjs` | Env parsing, activation confirmation, local/HTTPS modes | Prevents accidental activation/shell evaluation | Running the selected worker host |
 | `bridge/test/openclaw-proof.test.mjs` | Gateway handshake, task evidence, model usage, frozen-plan/no-delivery behavior | Proves replaceable non-sender worker | Live credentials/external effects |
+
+`supabase/tests/security-hardening.test.ts` is the SQL-level companion to the
+application security tests. It verifies the disposable local Supabase schema
+and security posture directly and runs only through the database gate.
 
 ## Consolidation rules
 
@@ -250,8 +271,9 @@ target operating-system path still does not pass end to end:
 
 - the three-tool MCP schemas, local authenticated Streamable HTTP handler, and
   opt-in diagnostic exist, but production OAuth/connector setup, remote
-  reachability, and Hermes persistence wiring are not verified;
-- Hermes remains an application planning role, not yet the standalone workflow
+  reachability, and workflow persistence wiring are not verified;
+- the workflow planner remains bounded application planning, not a standalone
+  Hermes CLI integration;
   service in the architecture;
 - Redis is not yet the workflow queue/lease/heartbeat layer;
 - the full diagnostic cannot safely claim worker execution until an explicitly
@@ -264,9 +286,9 @@ target operating-system path still does not pass end to end:
 - no hosted, provider, paid-action, external-message, or customer-result proof
   is implied by local tests.
 
-Run `npm run test:hermes-mcp` after copying and filling the private local
-environment. Use `npm run test:hermes-mcp:full` only for a separately approved
+Run `npm run test:workflow-mcp` after copying and filling the private local
+environment. Use `npm run test:workflow-mcp:full` only for a separately approved
 worker rehearsal, with `MCP_E2E_WORKFLOW_ID`, `MCP_E2E_OWNER_ID`,
 `MCP_E2E_WORKER_ID`, and the server-side bridge secret supplied outside Git.
 The next TDD increment should replace the unavailable default MCP dispatcher
-with a durable Hermes adapter and then make the diagnostic's next stage pass.
+with a durable workflow adapter and then make the diagnostic's next stage pass.

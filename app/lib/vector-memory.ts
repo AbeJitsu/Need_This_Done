@@ -4,7 +4,7 @@ import 'server-only';
 //
 // This is deliberately not a chatbot or a public search feature. It stores
 // selected, provenance-bearing projections of durable Supabase records in an
-// Upstash Vector index so Hermes/an approved LLM client can retrieve relevant
+// Upstash Vector index so the workflow planner/an approved LLM client can retrieve relevant
 // context later.
 // Supabase remains authoritative; losing or disabling this projection must not
 // remove workflow state.

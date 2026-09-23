@@ -110,7 +110,8 @@ test('capabilities and work show the technical range', async ({ page }) => {
   await expect(work.getByRole('heading', { name: 'NeedThisDone', exact: true })).toBeVisible();
   await expect(work.getByRole('heading', { name: 'Content workflow', exact: true })).toBeVisible();
   await expect(work.locator('article')).toHaveCount(3);
-  await expect(work.getByRole('link', { name: 'Read the system note', exact: true })).toHaveAttribute('href', '/system');
+  await expect(work.locator('a[href="/system"]')).toHaveCount(1);
+  await expect(work.getByRole('link', { name: 'Read the system note', exact: true })).toHaveCount(0);
   await expect(work.getByRole('link', { name: 'Open the code', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done');
 });
 
@@ -135,7 +136,7 @@ test('desktop public navigation names the portfolio sections', async ({ page }, 
     await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
   }
   await expect(page.getByRole('link', { name: 'Start a conversation', exact: true }).first()).toHaveAttribute('href', '/contact');
-  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'NeedThisDone system', exact: true })).toHaveAttribute('href', '/system');
+  await expect(page.getByRole('contentinfo').locator('a[href="/system"]')).toHaveCount(0);
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });
 

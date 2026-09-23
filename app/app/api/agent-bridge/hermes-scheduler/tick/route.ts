@@ -20,17 +20,21 @@ const schema = z.object({
  * scheduler may only materialize durable approval-required schedule runs.
  */
 export async function POST(request: Request) {
-  const signed = await verifySignedAgentBridgeRequest(request, '/api/agent-bridge/hermes-scheduler/tick');
+  const requestPath = new URL(request.url).pathname;
+  const signingPath = requestPath === '/api/agent-bridge/workflow-scheduler/tick'
+    ? '/api/agent-bridge/workflow-scheduler/tick'
+    : '/api/agent-bridge/hermes-scheduler/tick';
+  const signed = await verifySignedAgentBridgeRequest(request, signingPath);
   if (isSignedAgentBridgeFailure(signed)) return signed;
   let body: unknown;
   try {
     body = JSON.parse(signed.body);
   } catch {
-    return NextResponse.json({ error: 'Invalid Hermes scheduler JSON.' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid workflow scheduler JSON.' }, { status: 400 });
   }
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid Hermes scheduler request.' }, { status: 400 });
+    return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid workflow scheduler request.' }, { status: 400 });
   }
   const replay = await consumeAgentBridgeNonce(signed.nonce);
   if (replay) return replay;
@@ -39,7 +43,7 @@ export async function POST(request: Request) {
     target_owner_id: parsed.data.ownerId,
     target_limit: parsed.data.limit,
   });
-  if (error) return NextResponse.json({ error: 'Hermes scheduler state is not available.' }, { status: 503 });
+  if (error) return NextResponse.json({ error: 'Workflow scheduler state is not available.' }, { status: 503 });
 
   const runs = Array.isArray(data) ? data.map((row) => ({
     id: String(row.schedule_run_id),

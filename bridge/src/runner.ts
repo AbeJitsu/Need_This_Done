@@ -178,12 +178,12 @@ function sameJson(left: unknown, right: unknown): boolean {
     && leftKeys.every((key, index) => key === rightKeys[index] && sameJson(leftRecord[key], rightRecord[key]));
 }
 
-function validateFrozenHermesTask(task: ClaimedTask) {
+function validateFrozenWorkflowTask(task: ClaimedTask) {
   if (!task.plan_id) return;
-  if (task.agent_provider !== 'openclaw') throw new Error('Frozen Hermes work must use the OpenClaw provider lane.');
-  if (task.model_id !== ALLOWED_EXECUTOR_MODEL_ID) throw new Error('Frozen Hermes work is missing its exact allowlisted executor model.');
+  if (task.agent_provider !== 'openclaw') throw new Error('Frozen workflow work must use the OpenClaw provider lane.');
+  if (task.model_id !== ALLOWED_EXECUTOR_MODEL_ID) throw new Error('Frozen workflow work is missing its exact allowlisted executor model.');
   if (!task.lease_expires_at || new Date(task.lease_expires_at).getTime() <= Date.now()) {
-    throw new Error('Frozen Hermes task lease expired before Gateway invocation.');
+    throw new Error('Frozen workflow task lease expired before Gateway invocation.');
   }
 
   const snapshot = asRecord(task.approved_plan_snapshot);
@@ -194,11 +194,13 @@ function validateFrozenHermesTask(task: ClaimedTask) {
     || snapshot.executorModelId !== task.model_id
     || typeof snapshot.plannerModelId !== 'string'
     || !sameJson(snapshot, inputPlan)) {
-    throw new Error('Frozen Hermes snapshot does not match the bridge task.');
+    throw new Error('Frozen workflow snapshot does not match the bridge task.');
   }
   if (snapshot.modelRoute !== FREE_MODEL_ROUTE) {
-    throw new Error('Paid Hermes model routes require a separate browser approval before Gateway invocation.');
+    throw new Error('Paid workflow model routes require a separate browser approval before Gateway invocation.');
   }
+  // v2 snapshots retain planner:'hermes' as a deployed compatibility marker;
+  // it does not install, invoke, or connect to the Hermes CLI.
   if (instruction.planner !== 'hermes'
     || instruction.executor !== 'openclaw'
     || instruction.approvalRequired !== true
@@ -208,7 +210,7 @@ function validateFrozenHermesTask(task: ClaimedTask) {
     || delivery.publishing !== false
     || delivery.spending !== false
     || delivery.accountChanges !== false) {
-    throw new Error('Frozen Hermes task is missing its delivery-disabled approval contract.');
+    throw new Error('Frozen workflow task is missing its delivery-disabled approval contract.');
   }
 }
 
@@ -287,7 +289,7 @@ export class AgentBridgeRunner {
     await this.safeHeartbeat('online', null, task.id);
     try {
       if (!ALLOWED_TASK_TYPES.has(task.task_type)) throw new Error(`Task type is not allowed on the bridge: ${task.task_type}.`);
-      validateFrozenHermesTask(task);
+      validateFrozenWorkflowTask(task);
       await this.api.event(task.id, 'progress', { message: 'Task claimed by the Mac bridge.', taskKey: task.task_key }, 5);
 
       if (task.task_type === 'produce_daily_content') {

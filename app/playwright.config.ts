@@ -84,18 +84,18 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /(authenticated-employee-workspace|ai-employee-workspace|prospecting-workspace|daily-cockpit|hermes-plan-preview)\.spec\.ts/,
+      testMatch: /(authenticated-employee-workspace|ai-employee-workspace|prospecting-workspace|daily-cockpit|workflow-plan-preview)\.spec\.ts/,
     },
 
     // Explicitly invoked diagnostic for the real device-independent control
-    // plane. It is skipped unless HERMES_MCP_E2E=true. The dedicated npm
+    // plane. It is skipped unless WORKFLOW_MCP_E2E=true. The dedicated npm
     // scripts opt in so the retained browser gate stays provider-free.
     {
       name: 'mcp-control-plane',
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /hermes-mcp-vertical-slice\.spec\.ts/,
+      testMatch: /workflow-mcp-vertical-slice\.spec\.ts/,
     },
   ],
 

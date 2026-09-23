@@ -1,9 +1,13 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/reconcile-hosted-migration-2026-09-19` (branched from `dev` at `6b5b9cb0ed3c440bab4ea59109baddc62c8b0cb6`)
-**Last updated:** 2026-09-19
+**Branch:** `review/dated-branch-consolidation-2026-09-23` (branched from `dev` at `b6889fdc7494102b4e20127b9cbdfb5f4987114b`)
+**Last updated:** 2026-09-23
 
 ## Latest change
+
+- The 2026-09-15 retired-public-schema security audit is represented by the hosted migration record `20260915183432_115_lock_down_retired_public_tables.sql`, already present in `dev` and applied during the Sep 19 hosted migration sequence. This consolidation removes duplicate dated copies numbered 115 and normalizes the recorded SQL's escaped line breaks so its source is readable and testable. It does not reapply the migration or change hosted data.
+
+- On 2026-09-23, this isolated review branch consolidates six dated remote branches. The workflow planner nomenclature, public-site footer simplification, audited tests, MCP draft dispatcher, and security review changes are being combined here for validation. Migration 117 is present for local MCP draft persistence; no hosted migration, deployment, or merge to `dev`/`production` is part of this branch.
 
 - On 2026-09-19, the hosted Supabase migration-history check found one direct hosted migration not present in GitHub: `20260915183432_115_lock_down_retired_public_tables`. This reconciliation branch adds its exact recorded SQL under `supabase/migrations/` so GitHub preserves the hosted RLS/grant correction. It does not rerun or alter hosted Supabase; hosted migrations 110–115 were applied sequentially through the Supabase migration tool on 2026-09-19 after the hosted-only history reconciliation; a follow-up ACL correction is recorded as migration 116 and was applied after verification.
 
@@ -26,7 +30,7 @@
   OpenClaw path, the exact private-host preparation commands, the future
   schedule lifecycle contract, and the evidence required before activation.
   This is documentation and implementation planning only. The current MCP
-  dispatcher still fails closed; OAuth, recurring schedule records/tools,
+  dispatcher now persists approval-gated drafts locally; OAuth, recurring schedule records/tools,
   hosted connection, Mac mini host proof, and worker activation remain pending.
   No credentials, deployment, migration, provider activation, launchd load,
   worker start, external message, publication, spend, or account change

@@ -45,7 +45,7 @@ describe('portfolio public journey', () => {
     for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
     expect(destinations).not.toContain('/system');
     expect(destinations).toContain('/work#case-studies');
-    expect(source('components/work/WorkPageClient.tsx')).toContain('href="/system"');
+    expect(source('components/work/WorkPageClient.tsx').match(/href="\/system"/g)).toHaveLength(1);
   });
 
   it('moves through the portfolio story and ends at contact', () => {
@@ -149,6 +149,7 @@ describe('portfolio public journey', () => {
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
     expect(readme).toContain('# NeedThisDone');
     expect(readme).toContain('## Public website and private assistant');
+    expect(readme).toContain('The public [`/system` overview](app/app/system/page.tsx) explains the difference');
     expect(roadmap).toContain('Assistant-first finish line');
   });
 

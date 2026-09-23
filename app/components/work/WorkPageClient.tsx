@@ -121,7 +121,7 @@ export default function WorkPageClient() {
         <h2 className="font-playfair text-4xl font-black md:text-5xl">Want to see what&apos;s underneath?</h2>
         <p className="mx-auto mt-4 max-w-xl leading-7 text-[var(--public-muted)]">The technical details are here when you want them. They stay out of the way until they are useful.</p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Link href="/system" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--public-ink)]/20 px-5 py-2.5 font-bold">Read the system note <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+
           <a href="https://github.com/AbeJitsu/Need_This_Done" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--public-green)] px-5 py-2.5 font-bold text-white">Open the code <ExternalLink className="h-4 w-4" aria-hidden="true" /></a>
         </div>
       </section>

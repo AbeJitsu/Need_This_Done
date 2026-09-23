@@ -1,7 +1,7 @@
 # NeedThisDone build progress map
 
-**Last updated:** 2026-09-18
-**Branch:** `feature/work-hermes-scheduler-2026-09-18`
+**Last updated:** 2026-09-23
+**Branch:** `review/dated-branch-consolidation-2026-09-23`
 
 This is the private implementation checklist rendered in the authenticated
 operator workspace at [`/admin/operations`](../app/app/admin/operations/page.tsx).
@@ -18,15 +18,15 @@ order, and evidence targets cannot drift silently.
 | Gate | What must be true | Current state | Evidence required to advance |
 |---|---|---|---|
 | Contract | A compatible LLM client has one small, validated MCP surface; site login identifies the owner, an owner-scoped bearer credential authorizes MCP, and safety/result shapes are tested | Built locally | Token/auth/API/contract tests and route-level protocol checks; local RLS proof is next |
-| Local control plane | Disposable local Supabase has migration 113/RLS proof, and MCP creates and reads an approval-gated workflow | Next proof | `npm run verify:database` plus `npm run test:hermes-mcp:local` with the real local Supabase gate passing |
-| Hosted control plane | Vercel, hosted Supabase, Redis, and secure remote MCP access work together | Pending | `npm run test:hermes-mcp:hosted` against an explicit deployed `BASE_URL`; remote writes remain separately approved |
-| Worker execution | Hermes claims approved work on a correctly configured local or cloud worker host, OpenClaw completes it, and evidence returns through status | Pending | Approved worker-host rehearsal with signed bridge, isolated worktree, tests, commit SHA, and durable result |
+| Local control plane | Disposable local Supabase has migration 117/RLS proof, and MCP creates and reads an approval-gated draft | Next proof | `npm run verify:database` plus `npm run test:workflow-mcp:local` with the real local Supabase gate passing |
+| Hosted control plane | Vercel, hosted Supabase, Redis, and secure remote MCP access work together | Pending | `npm run test:workflow-mcp:hosted` against an explicit deployed `BASE_URL`; remote writes remain separately approved |
+| Worker execution | The workflow scheduler/bridge claims approved work on a correctly configured local or cloud worker host, OpenClaw completes it, and evidence returns through status | Pending | Approved worker-host rehearsal with signed bridge, isolated worktree, tests, commit SHA, and durable result |
 
 ## What can be built without the Macs or live credentials
 
 - Keep the three-tool MCP contract narrow and versioned.
 - Keep site-account login, owner-scoped MCP credentials, and separate
-  Hermes/OpenClaw worker authentication as distinct boundaries.
+  workflow scheduler/OpenClaw worker authentication as distinct boundaries.
 - Show raw MCP tokens once; persist only hashes and redacted metadata.
 - Add deterministic tests for authorization, idempotency, status envelopes,
   redaction, and fail-closed behavior.
@@ -44,7 +44,7 @@ order, and evidence targets cannot drift silently.
   hosted owner credential and verify the hosted migration separately.
 - Prove Vercel environment variables and hosted Supabase parity.
 - Prove live Upstash Redis or Upstash Vector connectivity.
-- Run Hermes and OpenClaw on a correctly configured local or cloud worker host.
+- Run the workflow scheduler and OpenClaw on a correctly configured local or cloud worker host.
 - Claim a real worker-generated GitHub commit through the NeedThisDone flow.
 
 ## Current implementation summary
@@ -59,19 +59,20 @@ intake is still intentionally separate from owner provisioning, so a real
 customer workflow is not claimed yet.
 
 The repository contains the MCP transport, three-tool contract, account-scoped
-credential/API boundary, authentication seam, vector adapter, Redis client, Supabase lifecycle schema, signed worker
-bridge contracts, OpenClaw safety constraints, and the visible system map. The
-default MCP dispatcher still fails closed because the durable Hermes adapter is
-not connected. That is the most important code-to-runtime gap before a real
-local workflow can pass.
+credential/API boundary, authentication seam, vector adapter, Redis client,
+Supabase lifecycle schema, signed worker bridge contracts, OpenClaw safety
+constraints, and the visible system map. The MCP dispatcher now persists
+owner-scoped, approval-gated drafts and reads their status. Migration 117 and
+focused owner-isolation/RLS tests are present; disposable local Supabase proof
+is the next code-to-runtime gate.
 
 ## Scheduled-work target
 
 The Mac mini runbook at
-[`bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt`](../bridge/rehearsal/MAC_MINI_HERMES_SCHEDULER_SETUP.txt)
+[`bridge/rehearsal/MAC_MINI_WORKFLOW_SCHEDULER_SETUP.txt`](../bridge/rehearsal/MAC_MINI_WORKFLOW_SCHEDULER_SETUP.txt)
 prepares a future scheduler host without activating it. The target keeps
 ChatGPT Work as the MCP client, Supabase as the durable schedule/run truth,
-and the Mac mini as an outbound-only Hermes reconciler. It is not a native
+and the Mac mini as an outbound-only workflow reconciler. It is not a native
 ChatGPT Work task and it is not a second durable queue.
 
 Before this target can advance, the codebase needs owner-scoped schedule/run
@@ -84,7 +85,7 @@ documentation increment.
 
 The required order remains:
 
-1. Local migration 113/RLS, account API, and owner-context proof on disposable Supabase.
+1. Local migrations 113 and 117/RLS, account API, and owner-context proof on disposable Supabase.
 2. Local MCP control-plane proof.
 3. Hosted read-only control-plane proof.
 4. Approved worker-host rehearsal, using the MacBook Pro or Mac mini as current examples if selected.
@@ -99,4 +100,4 @@ The required order remains:
 | Database/RLS | Local schema, policies, and lifecycle behavior | Hosted Supabase parity |
 | Integration/route | Next.js, auth, MCP protocol, and controlled adapters fit together | LLM-client reachability or Mac execution |
 | Browser/E2E diagnostic | The selected local or hosted stages and their first failure | A passing hosted read-only check does not prove a write or worker run |
-| Live rehearsal | The real LLM-client/MCP/Hermes/worker/result chain | Future hosts or providers not included in that rehearsal |
+| Live rehearsal | The real LLM-client/MCP/workflow/worker/result chain | Future hosts or providers not included in that rehearsal |

@@ -18,6 +18,7 @@ const retainedMarkdown = [
   'docs/PROJECT_STATUS.md',
   'docs/PUBLIC_LANGUAGE_AUDIT.md',
   'docs/RELEASE_EVIDENCE.md',
+  'docs/TEST_AUDIT_2026-09-12.md',
   'docs/TEST_STRATEGY.md',
   'docs/github-push-test.md',
   'docs/launch/LAUNCH_CHECKLIST.md',
@@ -52,11 +53,11 @@ describe('current repository documentation', () => {
     expect(source('ROADMAP.md')).not.toContain('## The assistant vision');
   });
 
-  it('keeps the public system case study tied to its maintenance record', () => {
+  it('keeps the public system overview tied to its maintenance record', () => {
     expect(source('README.md')).toContain(
       'The public [`/system` overview](app/app/system/page.tsx)',
     );
-    expect(source('ROADMAP.md')).toContain('## Public `/system` case study');
+    expect(source('ROADMAP.md')).toContain('## Public `/system` overview');
     expect(source('ROADMAP.md')).toContain(
       'app/e2e/ai-employee-product.spec.ts',
     );
