@@ -63,7 +63,7 @@ export const caseStudies: CaseStudy[] = [
       'Optional model and sender boundaries that fail closed',
     ],
     tech: [
-      'Next.js 16',
+      'Next.js 14',
       'React',
       'TypeScript',
       'Supabase',

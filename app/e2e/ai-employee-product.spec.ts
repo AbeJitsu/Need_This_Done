@@ -111,40 +111,17 @@ test('homepage text stays inside its containers at public widths', async ({ page
   }
 });
 
-test('homepage shows technical range and a live page check', async ({ page }) => {
+test('homepage leads with the generalist portfolio promise', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/');
   const hero = page.locator('main > section').first();
-  await expect(hero.getByRole('heading', { name: 'Build it. Connect it. Make it work.' })).toBeVisible();
-  await expect(hero).toContainText('React interfaces, JavaScript APIs');
+  await expect(hero.getByRole('heading', { name: 'Practical software for messy problems.' })).toBeVisible();
+  await expect(hero).toContainText('interfaces, backends, databases, APIs');
   await expect(hero.getByRole('link', { name: 'See selected work', exact: true })).toHaveAttribute('href', '/work');
-  await expect(hero.getByRole('link', { name: 'Try the live demo' })).toHaveAttribute('href', '#live-demo');
   await expect(page.locator('#capabilities')).toBeVisible();
-  await expect(page.locator('#live-demo')).toBeVisible();
   await expect(page.locator('#featured-work')).toBeVisible();
-  await expect(page.locator('main > section')).toHaveCount(5);
-  await expect(page.getByRole('main').getByRole('link', { name: 'Contact Abe' })).toHaveAttribute('href', /mailto:hello@needthisdone.com/);
-});
-
-test('live check shows server results for a selected page', async ({ page }) => {
-  await page.route('**/api/portfolio/page-check?page=work', async (route) => {
-    await route.fulfill({ json: {
-      page: { id: 'work', label: 'Selected work', path: '/work' },
-      checkedAt: '2026-09-25T16:00:00.000Z',
-      title: 'Selected Work | NeedThisDone',
-      mainHeading: 'Working features and real projects.',
-      headings: [{ tag: 'h1', text: 'Working features and real projects.' }],
-      links: 12,
-      checks: [{ label: 'Page title', passed: true, detail: 'A descriptive browser tab title is present.' }],
-    } });
-  });
-  await page.goto('/');
-  const demo = page.locator('#live-demo');
-  await demo.getByRole('button', { name: /Selected work/ }).click();
-  await demo.getByRole('button', { name: 'Run live check' }).click();
-  await expect(demo.getByText('200 OK', { exact: false })).toBeVisible();
-  await expect(demo.getByText('Selected work', { exact: true }).last()).toBeVisible();
-  await expect(demo.getByText('Heading outline', { exact: false })).toBeVisible();
+  await expect(page.locator('main > section')).toHaveCount(4);
+  await expect(hero.getByRole('link', { name: 'Start a conversation' })).toHaveAttribute('href', '/contact');
 });
 
 test('homepage previews lead to their full pages', async ({ page }) => {

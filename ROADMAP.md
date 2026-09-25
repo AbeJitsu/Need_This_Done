@@ -190,12 +190,11 @@ for replacement with a public-contract assertion.
 
 ## Public homepage and optional `/system` proof
 
-The public homepage leads with Abe Reyes's technical capabilities and verifiable
-work. Its main action opens an interactive page check: React sends a request to
-a read-only Next.js route that inspects one of three fixed public pages and
-returns a bounded set of actual HTML signals. Selected Work links to the live
-demo, the code, and a content-workflow summary. Contact remains available for
-technical roles and projects. The private assistant is not part of this demo.
+The public homepage explains what NeedThisDone does, how it works in practical
+terms, and why visitors should share their vision. Its primary navigation is
+What We Do → How We Work → Examples → Why Us, and the page ends with Share Your
+Vision. How We Work remains part of the primary reassurance path. The page
+keeps the work understandable without requiring technical detail.
 The public [system overview](app/app/system/page.tsx) stays focused on the
 plain-language difference between a conversation and a controlled path from
 request to result. It explains the four stages—define, approve, execute, and

@@ -1,23 +1,22 @@
 import Link from "next/link";
 import { ArrowRight, Database, Layers3, Wrench } from "lucide-react";
 import PublicPageVisual from "@/components/public/PublicPageVisual";
-import LivePageCheck from "@/components/home/LivePageCheck";
 
 const buildSignals = [
   {
     icon: Layers3,
-    label: "React interfaces",
-    description: "Responsive pages, accessible forms, and dashboards people can use.",
+    label: "Full-stack builds",
+    description: "Interfaces, server routes, data models, and the glue between them.",
   },
   {
     icon: Database,
-    label: "JavaScript backends",
-    description: "API routes, integrations, data models, and reliable server-side checks.",
+    label: "Systems that hold together",
+    description: "Authentication, permissions, durable state, APIs, and failure paths.",
   },
   {
     icon: Wrench,
-    label: "Troubleshooting and delivery",
-    description: "Trace the problem, explain the fix, and verify that it works.",
+    label: "Useful technical work",
+    description: "Start with the smallest working piece, then show what changed and how it was checked.",
   },
 ] as const;
 
@@ -30,20 +29,19 @@ export default function HomePageClient() {
         <div className="homepage-hero__inner">
           <div className="homepage-hero__grid">
             <div className="homepage-hero__copy">
-              <p className="homepage-eyebrow homepage-eyebrow--light">Abe Reyes · Full-stack development and technical support</p>
+              <p className="homepage-eyebrow homepage-eyebrow--light">NeedThisDone · Independent technology practice</p>
               <h1 id="homepage-hero-heading" className="homepage-hero__title">
-                <span className="homepage-hero__title-line">Build it.</span>{" "}
-                <span className="homepage-hero__title-line">Connect it.</span>{" "}
-                <span className="homepage-hero__title-line">Make it work.</span>
+                <span className="homepage-hero__title-line">Practical software</span>{" "}
+                <span className="homepage-hero__title-line">for messy</span>{" "}
+                <span className="homepage-hero__title-line">problems.</span>
               </h1>
               <p className="homepage-hero__lead">
-                NeedThisDone shows the work of Abe Reyes: React interfaces,
-                JavaScript APIs, database-backed features, and the troubleshooting
-                that makes software useful to people.
+                NeedThisDone connects interfaces, backends, databases, APIs, and the
+                people using the system.
               </p>
               <div className="homepage-hero__actions">
-                <Link href="#live-demo" className="homepage-button homepage-button--gold">
-                  Try the live demo <ArrowRight aria-hidden="true" />
+                <Link href="/contact" className="homepage-button homepage-button--gold">
+                  Start a conversation <ArrowRight aria-hidden="true" />
                 </Link>
                 <Link href="/work" className="homepage-button homepage-button--ghost">
                   See selected work <ArrowRight aria-hidden="true" />
@@ -59,7 +57,7 @@ export default function HomePageClient() {
         <div className="homepage-section__inner homepage-section__inner--compact">
           <p className="homepage-eyebrow">Capabilities</p>
           <h2 id="capabilities-heading" className="homepage-heading homepage-heading--compact">
-            What this work covers.
+            Useful work across the stack.
           </h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {buildSignals.map(({ icon: Icon, label, description }) => (
@@ -76,21 +74,15 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      <section className="homepage-section homepage-section--sand" aria-label="Live front-end and back-end demonstration">
-        <div className="homepage-section__inner homepage-section__inner--compact">
-          <LivePageCheck />
-        </div>
-      </section>
-
       <section id="featured-work" aria-labelledby="featured-work-heading" className="homepage-section homepage-section--dark">
         <div className="homepage-section__inner homepage-section__inner--compact">
           <p className="homepage-eyebrow homepage-eyebrow--light">Selected work</p>
           <h2 id="featured-work-heading" className="homepage-heading homepage-heading--compact">
-            Work you can inspect.
+            One build, many connected parts.
           </h2>
           <p className="homepage-section__lead">
-            Explore the site, its code, a content workflow, and the practical checks
-            used to ship responsive pages and working APIs.
+            NeedThisDone is an independent build with a public site, private workspace,
+            APIs, database-backed state, approval boundaries, and delivery checks.
           </p>
           <Link href="/work" className="homepage-link homepage-link--light homepage-link--standalone">
             Explore selected work <ArrowRight aria-hidden="true" />
@@ -101,16 +93,11 @@ export default function HomePageClient() {
       <section className="homepage-closing" aria-labelledby="homepage-closing-heading">
         <div className="homepage-closing__inner homepage-closing__inner--compact">
           <p className="homepage-eyebrow">Start here</p>
-          <h2 id="homepage-closing-heading" className="homepage-heading">Looking for someone who can make it work?</h2>
-          <p>For a technical role or a project, reach Abe directly or explore the code.</p>
-          <div className="homepage-hero__actions">
-            <a href="mailto:hello@needthisdone.com?subject=Technical%20opportunity" className="homepage-button homepage-button--green">
-              Contact Abe <ArrowRight aria-hidden="true" />
-            </a>
-            <a href="https://github.com/AbeJitsu/Need_This_Done" target="_blank" rel="noopener noreferrer" className="homepage-button homepage-button--ghost">
-              View GitHub
-            </a>
-          </div>
+          <h2 id="homepage-closing-heading" className="homepage-heading">What would make your work easier?</h2>
+          <p>A short description of the problem or the thing you want to build is enough to start.</p>
+          <Link href="/contact" className="homepage-button homepage-button--green">
+            Start a conversation <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </main>

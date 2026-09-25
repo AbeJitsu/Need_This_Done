@@ -16,16 +16,14 @@ const repositoryRoot = resolve(appRoot, '..');
 const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
 describe('portfolio public journey', () => {
-  it('leads with Abe’s technical work and a usable demonstration', () => {
+  it('leads with an independent-practice promise and clear actions', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('Abe Reyes');
-    expect(home).toContain('React interfaces');
-    expect(home).toContain('JavaScript APIs');
-    expect(home).toContain('<LivePageCheck />');
-    expect(home).toContain('Try the live demo');
+    expect(home).toContain('Practical software');
+    expect(home).toContain('for messy');
+    expect(home).toContain('problems.');
     expect(home).toContain('See selected work');
     expect(home).toContain('href="/work"');
-    expect(home).toContain('Contact Abe');
+    expect(home).toContain('Start a conversation');
     expect(home).not.toContain('Your vision,');
     expect(home).not.toContain('Bring us the problem');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
@@ -45,10 +43,10 @@ describe('portfolio public journey', () => {
 
   it('keeps the homepage short and links to the full pages', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home.match(/<section\b/g)).toHaveLength(5);
+    expect(home.match(/<section\b/g)).toHaveLength(4);
     expect(home).toContain('href="/services"');
     expect(home).toContain('href="/work"');
-    expect(home).toContain('href="#live-demo"');
+    expect(home).toContain('href="/contact"');
     expect(home).not.toContain('id="approach"');
     expect(home).not.toContain('id="notes"');
     expect(source('components/public/PublicHeader.tsx')).not.toContain('getPublicHomeHref');
@@ -95,9 +93,7 @@ describe('portfolio public journey', () => {
     expect(services).not.toContain('PUBLIC_OFFERS');
     expect(work).toContain('caseStudies');
     expect(work).toContain('portfolio-hero.png');
-    expect(work).toContain('Working features and real projects.');
-    expect(work).toContain('href: "/#live-demo"');
-    expect(work).not.toContain('Something custom');
+    expect(work).toContain('Useful things for messy problems.');
     expect(work).toContain('simpleSteps');
     expect(home).toContain('href="/work"');
     expect(home).not.toContain('PUBLIC_EXAMPLES');

@@ -101,7 +101,7 @@ The MacBook Pro and Mac mini are implementation examples, not architectural requ
 
 NeedThisDone has two related but separate boundaries:
 
-- The public website is Abe Reyes's technical portfolio. It shows React and JavaScript work, selected projects, and a read-only demonstration that checks three fixed public pages. Visitors can still share a project or contact Abe about a technical role. A public submission does not approve work or expose the private worker.
+- The public website explains the service and lets visitors share what they want improved. A public submission starts a conversation; it does not approve work or expose the private worker.
 - The private assistant is the authenticated system described above. It owns the planning, approval, execution, and evidence lifecycle.
 
 The public [`/system` overview](app/app/system/page.tsx) explains the difference between a conversation and a controlled path from request to result. Internal proof and operational status are rendered only in the authenticated operator workspace at `/admin/operations`, using [`app/lib/system-progress.ts`](app/lib/system-progress.ts).
