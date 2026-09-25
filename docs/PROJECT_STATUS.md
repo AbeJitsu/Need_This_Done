@@ -1,9 +1,26 @@
 # NeedThisDone — Project Status
 
-**Branch:** `dev` (mobile imagery fix based on `92978043bd46ef827b0a4f98a6f7309182e0ca9d`)
-**Last updated:** 2026-09-23
+**Branch:** `feature/portfolio-live-demo-2026-09-25` (from `dev` at `ec154d43f22c4c4d0828dc0a7f3b35c988a18b38`)
+**Last updated:** 2026-09-25
 
 ## Latest change
+
+- On 2026-09-25, `feature/portfolio-live-demo-2026-09-25` refocused the
+  homepage on Abe Reyes's technical capabilities, with a React page selector
+  and a read-only Next.js endpoint that inspects three fixed public pages.
+  The endpoint returns bounded title, heading, description, and link signals;
+  it accepts no visitor URL, account, email, or worker instruction. Selected
+  Work now links to the working demo and a specific content-workflow summary
+  instead of a placeholder build. A local production build and actual HTTP
+  requests returned a homepage and valid results for Home and Work; invalid
+  page IDs returned 400. The code gate passed lint, type-check, 78 unit files
+  (415 passed, four skipped), then the two focused demo interaction/accessibility
+  checks passed. The earlier code gate included 52 accessibility checks and a
+  production build.
+  Browser rendering remains unverified because the Chromium download returned
+  a zero-byte archive (owner: site maintainer; target: 2026-09-30). No branch
+  promotion, hosted deployment, customer result, or private worker activation
+  is claimed. Rollback: revert this branch's portfolio commit on `dev`.
 
 - On 2026-09-23, public photo frames now match the source image proportions
   and shrink to the phone viewport. Removed the homepage image minimum height,

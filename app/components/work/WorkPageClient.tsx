@@ -8,31 +8,31 @@ const contentWorkflow = caseStudies.find((study) => study.id === "content-workfl
 
 const projects = [
   {
+    eyebrow: "Try it now",
+    title: "Live page check",
+    description: "A React interface calls a JavaScript API to inspect real pages and display the result.",
+    href: "/#live-demo",
+    action: "Run the demo",
+    className: "bg-[#18372e] text-white",
+    detail: ["React", "Next.js API", "TypeScript", "HTML parsing"],
+  },
+  {
     eyebrow: "Main build",
     title: "NeedThisDone",
-    description: "A place to turn a messy request into a clear next step, with the work and decisions kept together.",
+    description: "A responsive public site and private workspace built across the interface, API, and data layers.",
     href: "/system",
-    action: "See how it works",
-    className: "bg-[#18372e] text-white",
+    action: "Read the system note",
+    className: "bg-[#e8e2d5] text-[var(--public-ink)]",
     detail: needThisDone?.tech.slice(0, 4),
   },
   {
     eyebrow: "Workflow build",
     title: "Content workflow",
     description: "A content pipeline that turned recurring preparation into a repeatable, reviewable handoff.",
-    href: "/contact",
-    action: "Start a conversation",
-    className: "bg-[#e8e2d5] text-[var(--public-ink)]",
-    detail: contentWorkflow?.tech.slice(0, 4),
-  },
-  {
-    eyebrow: "The next useful tool",
-    title: "Something custom",
-    description: "A focused tool shaped around the way you already work, instead of another generic app to learn.",
-    href: "/contact",
-    action: "Start a conversation",
+    href: "#content-workflow",
+    action: "Read the work summary",
     className: "bg-[#d8e5da] text-[var(--public-ink)]",
-    detail: ["Clear first step", "Useful scope", "Room to grow"],
+    detail: contentWorkflow?.tech.slice(0, 4),
   },
 ] as const;
 
@@ -50,10 +50,10 @@ export default function WorkPageClient() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Selected builds</p>
             <h1 className="mt-6 max-w-3xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-              Useful things for messy problems.
+              Working features and real projects.
             </h1>
             <p className="mt-6 max-w-[48ch] text-lg leading-8 text-[#dce8dd]">
-              Websites, tools, and systems that help people understand what to do next.
+              Try a live feature, inspect the code, and see how a repeatable content workflow was built.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="#case-studies" className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#d0a94f] px-6 py-3 font-bold text-[var(--public-dark)] transition hover:bg-[#e2c36f]">
@@ -96,6 +96,25 @@ export default function WorkPageClient() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section id="content-workflow" className="border-y border-[var(--public-ink)]/10 bg-white/70 px-5 py-16 sm:px-8 md:py-20" aria-labelledby="content-workflow-heading">
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[.75fr_1.25fr]">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">Work summary · 2025</p>
+            <h2 id="content-workflow-heading" className="mt-4 font-playfair text-4xl font-black">Content workflow</h2>
+            <p className="mt-4 leading-7 text-[var(--public-muted)]">The problem: variable PDF source material needed a dependable path into clean HTML and a reviewable handoff.</p>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold">What was built</h3>
+            <ul className="mt-4 grid gap-3">
+              {contentWorkflow?.impact.map((item) => (
+                <li key={item} className="rounded-xl border border-[var(--public-ink)]/10 bg-[var(--public-cream)] p-4 leading-6">{item}</li>
+              ))}
+            </ul>
+            <p className="mt-5 text-sm text-[var(--public-muted)]">Tools: {contentWorkflow?.tech.join(' · ')}</p>
+          </div>
         </div>
       </section>
 
