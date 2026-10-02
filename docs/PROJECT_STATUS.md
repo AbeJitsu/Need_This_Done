@@ -1,9 +1,27 @@
 # NeedThisDone — Project Status
 
-**Branch:** `dev` (mobile imagery fix based on `92978043bd46ef827b0a4f98a6f7309182e0ca9d`)
-**Last updated:** 2026-09-23
+**Branch:** `feature/public-design-2026-10-02` (based on `dev` at `3e2ebdc913041f2a9fdc04c9f3d074f4ab300b44`)
+**Last updated:** 2026-10-02
 
 ## Latest change
+
+- On 2026-10-02, the public portfolio received a hiring-focused design refresh
+  while retaining the green, gold, cream, and serif identity. Home now introduces
+  the developer and a featured build; Work has two substantive case studies with
+  real public-interface screenshots, contributions, implementation details, and
+  explicit development-stage limits. About adds relevant experience, Capabilities
+  links to evidence, Contact welcomes role conversations, and shared public
+  styling improves Notes, articles, system explanations, legal pages, forms,
+  navigation, and responsive layouts. Private workflows and API contracts are
+  unchanged. The code gate passed (412 unit tests, four expected skips, 52
+  accessibility tests, lint, type-check, production build). Production browser
+  checks passed 67 with five intended device-specific skips; independent geometry
+  checks passed across 21 routes at 320px, 390px, and 1440px, and eight routes
+  passed rendered accessibility scans. Seed-dependent report checks remain
+  unavailable without a disposable local database (owner: site maintainer;
+  follow-up: 2026-10-09). Vercel deployment and branch promotion remain pending
+  at this commit. Rollback: a new Git revert of this design commit; no schema
+  rollback or hosted migration is required.
 
 - On 2026-09-23, public photo frames now match the source image proportions
   and shrink to the phone viewport. Removed the homepage image minimum height,

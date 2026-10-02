@@ -1,129 +1,307 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
+import { Code2, ExternalLink, FileCode2, FlaskConical } from "lucide-react";
 import { caseStudies } from "@/lib/portfolio-data";
 
-const needThisDone = caseStudies.find((study) => study.id === "needthisdone");
-const contentWorkflow = caseStudies.find((study) => study.id === "content-workflow");
-
-const projects = [
-  {
-    eyebrow: "Main build",
-    title: "NeedThisDone",
-    description: "A place to turn a messy request into a clear next step, with the work and decisions kept together.",
-    href: "/system",
-    action: "See how it works",
-    className: "bg-[#18372e] text-white",
-    detail: needThisDone?.tech.slice(0, 4),
-  },
-  {
-    eyebrow: "Workflow build",
-    title: "Content workflow",
-    description: "A content pipeline that turned recurring preparation into a repeatable, reviewable handoff.",
-    href: "/contact",
-    action: "Start a conversation",
-    className: "bg-[#e8e2d5] text-[var(--public-ink)]",
-    detail: contentWorkflow?.tech.slice(0, 4),
-  },
-  {
-    eyebrow: "The next useful tool",
-    title: "Something custom",
-    description: "A focused tool shaped around the way you already work, instead of another generic app to learn.",
-    href: "/contact",
-    action: "Start a conversation",
-    className: "bg-[#d8e5da] text-[var(--public-ink)]",
-    detail: ["Clear first step", "Useful scope", "Room to grow"],
-  },
-] as const;
-
+const needThisDone = caseStudies.find((study) => study.id === "needthisdone")!;
+const contentWorkflow = caseStudies.find(
+  (study) => study.id === "content-workflow",
+)!;
+const codeRoot = "https://github.com/AbeJitsu/Need_This_Done";
 const simpleSteps = [
-  ["Start with the messy part", "A slow task, a confusing website, or an idea you cannot quite explain yet."],
-  ["Find the useful shape", "Define what the first helpful version needs to do."],
-  ["Leave you with something real", "A working path, a clearer decision, or a tool you can keep using."],
+  [
+    "Start with the messy part",
+    "A slow task, a confusing website, or an idea that needs a clearer shape.",
+  ],
+  [
+    "Find the useful shape",
+    "Define what the first helpful version needs to do.",
+  ],
+  [
+    "Leave something reviewable",
+    "A working path, a documented decision, and checks that someone else can follow.",
+  ],
 ] as const;
 
 export default function WorkPageClient() {
   return (
-    <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[.85fr_1.15fr] md:items-center md:py-20">
+    <main
+      id="main-content"
+      className="studio-work bg-[var(--public-cream)] text-[var(--public-ink)]"
+    >
+      <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">Selected builds</p>
-            <h1 className="mt-6 max-w-3xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
+            <p className="studio-kicker studio-kicker--light">
+              Selected work · Abe Reyes
+            </p>
+            <h1 className="mt-5 font-playfair text-5xl font-black leading-tight">
               Useful things for messy problems.
             </h1>
-            <p className="mt-6 max-w-[48ch] text-lg leading-8 text-[#dce8dd]">
-              Websites, tools, and systems that help people understand what to do next.
+            <p className="mt-6 max-w-[52ch] text-lg leading-8 text-[#dce8dd]">
+              Two projects. Different problems. The same attention to the
+              interface, the data, and the handoff.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="#case-studies" className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#d0a94f] px-6 py-3 font-bold text-[var(--public-dark)] transition hover:bg-[#e2c36f]">
-                See the builds <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="#case-studies"
+                className="public-action studio-gold-button"
+              >
+                See the builds
               </Link>
-              <Link href="/contact" className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-bold text-white transition hover:bg-white/10">
-                Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <a
+                href={codeRoot}
+                className="studio-text-link studio-text-link--light"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open the code <ExternalLink size={16} aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+          <div className="relative aspect-video w-full min-w-0 overflow-hidden rounded-[1.25rem] border border-white/15">
+            <Image
+              src="/images/portfolio-hero.png"
+              alt="A laptop, paper notes, and connected visual ideas on a warm workbench"
+              fill
+              priority
+              unoptimized
+              sizes="(min-width: 1024px) 35vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="case-studies"
+        className="public-section studio-case-studies"
+        aria-labelledby="projects-heading"
+      >
+        <div className="studio-section-heading">
+          <div>
+            <p className="studio-kicker">A closer look</p>
+            <h2 id="projects-heading" className="studio-title">
+              The work behind the words.
+            </h2>
+          </div>
+          <span className="studio-index">01 — 02</span>
+        </div>
+        <article id="needthisdone" className="studio-case-study">
+          <div className="studio-case-heading">
+            <span className="studio-case-number">01</span>
+            <div>
+              <p className="studio-kicker">
+                {needThisDone.role} · {needThisDone.period}
+              </p>
+              <h3>NeedThisDone</h3>
+              <p>A full-stack system for reviewable work.</p>
+            </div>
+          </div>
+          <div className="studio-case-grid">
+            <div>
+              <figure className="studio-browser">
+                <div className="studio-browser-bar" aria-hidden="true">
+                  <span className="studio-browser-mark" />
+                  <span>needthisdone.com / notes</span>
+                  <Code2 size={16} />
+                </div>
+                <div className="studio-browser-image">
+                  <Image
+                    src="/images/work/engineering-notes.webp"
+                    alt="The NeedThisDone notes interface with its featured article and responsive reading layout"
+                    width={1280}
+                    height={900}
+                    sizes="(min-width: 1024px) 55vw, 100vw"
+                    unoptimized
+                  />
+                </div>
+                <figcaption>Public interface / Engineering notes</figcaption>
+              </figure>
+              <div className="studio-evidence-links">
+                <Link href="/blog" className="studio-text-link">
+                  Explore the interface
+                </Link>
+                <Link href="/system" className="studio-text-link">
+                  Read the system note
+                </Link>
+              </div>
+            </div>
+            <div className="studio-case-details">
+              <dl>
+                <div>
+                  <dt>The problem</dt>
+                  <dd>
+                    Technical requests need a clear scope, durable records, and
+                    a way to review the result.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The contribution</dt>
+                  <dd>
+                    Independent application development across the public
+                    interface, authenticated workspace, APIs, and data model.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The implementation</dt>
+                  <dd>
+                    Accessible forms, authenticated routes, database
+                    permissions, approval records, and recovery paths.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Current stage</dt>
+                  <dd>
+                    The public site is available. The private workflow is under
+                    development, with end-to-end execution still being verified.
+                  </dd>
+                </div>
+              </dl>
+              <div className="studio-tag-list">
+                {needThisDone.tech.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div
+            className="studio-source-links"
+            aria-label="NeedThisDone source evidence"
+          >
+            <a
+              href={`${codeRoot}/tree/dev/app/components`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FileCode2 aria-hidden="true" size={20} />
+              <span>
+                <strong>Interface code</strong>
+                <small>Components, forms, and page layouts</small>
+              </span>
+              <ExternalLink aria-hidden="true" size={16} />
+            </a>
+            <a
+              href={`${codeRoot}/tree/dev/app/__tests__`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FlaskConical aria-hidden="true" size={20} />
+              <span>
+                <strong>Verification code</strong>
+                <small>Route, component, and accessibility checks</small>
+              </span>
+              <ExternalLink aria-hidden="true" size={16} />
+            </a>
+          </div>
+        </article>
+
+        <article
+          id="content-workflow"
+          className="studio-case-study studio-case-study--content"
+        >
+          <div className="studio-case-heading">
+            <span className="studio-case-number">02</span>
+            <div>
+              <p className="studio-kicker">
+                {contentWorkflow.role} · {contentWorkflow.period}
+              </p>
+              <h3>Content workflow</h3>
+              <p>Repeatable preparation. A reviewable handoff.</p>
+            </div>
+          </div>
+          <div className="studio-case-grid">
+            <div className="studio-workflow-panel">
+              <p className="studio-kicker">The delivery path</p>
+              <h4>
+                From source material
+                <br />
+                to useful content.
+              </h4>
+              <ol className="studio-workflow-steps">
+                {[
+                  ["PDF source", "Variable educational source material"],
+                  ["Extract and transform", "Convert content into clean HTML"],
+                  ["Validate", "Check output and prepare migration"],
+                  [
+                    "Review and hand off",
+                    "Document the result for the next person",
+                  ],
+                ].map(([title, description], index) => (
+                  <li key={title}>
+                    <span>0{index + 1}</span>
+                    <div>
+                      <strong>{title}</strong>
+                      <p>{description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <div className="studio-case-details">
+              <dl>
+                <div>
+                  <dt>The problem</dt>
+                  <dd>
+                    Recurring content preparation relied on variable source
+                    documents and careful review.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The contribution</dt>
+                  <dd>
+                    Built a PDF-to-HTML conversion pipeline, validation tools,
+                    and data-migration tooling.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The result</dt>
+                  <dd>
+                    Preparation became a documented, reusable workflow with
+                    clear review and handoff steps.
+                  </dd>
+                </div>
+              </dl>
+              <div className="studio-tag-list">
+                {contentWorkflow.tech.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+              <Link href="/about#experience" className="studio-text-link">
+                See the experience behind the work
               </Link>
             </div>
           </div>
-          <div className="relative aspect-video w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl">
-            <Image src="/images/portfolio-hero.png" alt="A laptop, paper notes, and connected visual ideas on a warm workbench" fill priority unoptimized sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" />
-          </div>
-        </div>
+        </article>
       </section>
 
-      <section id="case-studies" className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24" aria-labelledby="projects-heading">
-        <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">Selected work</p>
-          <h2 id="projects-heading" className="mt-4 font-playfair text-4xl font-black md:text-5xl">Start with what catches your eye.</h2>
-        </div>
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {projects.map((project) => (
-            <article key={project.title} className={`flex min-h-[28rem] flex-col justify-between rounded-[1.75rem] p-6 shadow-[0_1.5rem_3rem_rgba(24,55,46,.08)] sm:p-8 ${project.className}`}>
-              <div>
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-xs font-bold uppercase tracking-[.18em] opacity-70">{project.eyebrow}</p>
-                  <Sparkles className="h-5 w-5 opacity-70" aria-hidden="true" />
-                </div>
-                <h3 className="mt-16 font-playfair text-3xl font-black">{project.title}</h3>
-                <p className="mt-4 max-w-[28ch] text-lg leading-7 opacity-80">{project.description}</p>
-              </div>
-              <div>
-                <div className="mb-6 flex flex-wrap gap-2" aria-label={`${project.title} highlights`}>
-                  {project.detail?.map((item) => <span key={item} className="rounded-full border border-current/15 bg-white/20 px-3 py-1.5 text-xs font-semibold">{item}</span>)}
-                </div>
-                <Link href={project.href} className="inline-flex min-h-11 items-center gap-2 font-bold underline underline-offset-4">
-                  {project.action} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-y border-[var(--public-ink)]/10 bg-[var(--public-sand)] px-5 py-16 sm:px-8 md:py-24" aria-labelledby="approach-heading">
-        <div className="mx-auto max-w-6xl">
-          <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">The working approach</p>
-            <h2 id="approach-heading" className="mt-4 font-playfair text-4xl font-black md:text-5xl">Making the next step feel obvious.</h2>
-          </div>
-          <ol className="mt-10 grid gap-4 md:grid-cols-3">
+      <section className="studio-approach border-y border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
+        <div className="public-section">
+          <p className="studio-kicker">The working approach</p>
+          <h2 className="studio-title">Making the next step feel obvious.</h2>
+          <ol className="studio-approach-grid">
             {simpleSteps.map(([title, description], index) => (
-              <li key={title} className="rounded-[1.5rem] bg-white/65 p-6 sm:p-7">
-                <span className="text-sm font-black tracking-[.16em] text-[#775d22]">0{index + 1}</span>
-                <h3 className="mt-8 font-playfair text-2xl font-black">{title}</h3>
-                <p className="mt-3 leading-7 text-[var(--public-muted)]">{description}</p>
+              <li key={title}>
+                <span>0{index + 1}</span>
+                <h3>{title}</h3>
+                <p>{description}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
-
-      <section className="mx-auto max-w-4xl px-5 py-16 text-center sm:px-8 md:py-24">
-        <h2 className="font-playfair text-4xl font-black md:text-5xl">Want to see what&apos;s underneath?</h2>
-        <p className="mx-auto mt-4 max-w-xl leading-7 text-[var(--public-muted)]">The technical details are here when you want them. They stay out of the way until they are useful.</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Link href="/system" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--public-ink)]/20 px-5 py-2.5 font-bold">Read the system note <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
-          <a href="https://github.com/AbeJitsu/Need_This_Done" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--public-green)] px-5 py-2.5 font-bold text-white">Open the code <ExternalLink className="h-4 w-4" aria-hidden="true" /></a>
-        </div>
+      <section className="public-section text-center">
+        <p className="studio-kicker">Work together</p>
+        <h2 className="studio-title">
+          A useful place to start a conversation.
+        </h2>
+        <p className="public-reading mx-auto mt-5 leading-7 text-[var(--public-muted)]">
+          Discuss a technical role, a project, or the next problem worth
+          solving.
+        </p>
+        <Link href="/contact" className="public-action mt-7">
+          Start a conversation
+        </Link>
       </section>
     </main>
   );

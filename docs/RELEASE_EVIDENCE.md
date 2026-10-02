@@ -190,3 +190,42 @@ publication, customer outcomes, and spend remain unverified and unclaimable.
 The rollback owner is the repository maintainer through a reviewed forward Git
 revert on `dev`; hosted rollback must remain forward-only and separately
 approved.
+
+
+## 2026-10-02 — Public portfolio design refresh
+
+Branch: `feature/public-design-2026-10-02`, based on dev
+`3e2ebdc913041f2a9fdc04c9f3d074f4ab300b44`.
+
+The implementation retains the existing brand and provides a clearer developer
+introduction, substantive work case studies, actual public-interface captures,
+experience context, evidence links, and hiring-friendly contact copy. Shared
+styles refine the public navigation, Notes, articles, system explanations,
+legal pages, forms, and mobile presentation. The case studies distinguish
+available public work from private workflow implementation still awaiting
+end-to-end proof; no measured business outcome or private-runtime activation
+is claimed.
+
+Validation:
+
+- `npm run verify:code` passed lint, type-check, 77 unit files / 412 tests
+  (four existing skips), five accessibility files / 52 tests, and production build.
+- Playwright public and public-mobile suites against `next start` passed 67
+  tests with five existing device-specific skips. The two seed-dependent report
+  scenarios were excluded for each device project; the initial development
+  harness could not provide the required local database and later lost its
+  server. This is not passing report lifecycle evidence. Owner: site maintainer;
+  follow-up: 2026-10-09, using a disposable local Supabase instance.
+- Independent rendered geometry checks passed 21 public routes at three widths
+  (320px, 390px, 1440px): 63 route-width checks, including image proportions.
+- Axe scans passed Home, Work, Capabilities, About, Contact, Notes, Privacy, and
+  Terms. Mobile link navigation and Escape-to-close were verified separately.
+- Actual public Contact and Notes captures supply the two new WebP images.
+- `git diff --check` passed.
+
+The user requested the dated branch and promotion to dev and production with
+Vercel preview links. Deployment readiness and branch promotion are pending at
+this commit and must be checked against the committed SHA. This change adds no
+database migration, provider activation, secret change, external message, or
+private-worker activation. Rollback is a new forward Git revert by the repository
+maintainer; do not force-push release history.

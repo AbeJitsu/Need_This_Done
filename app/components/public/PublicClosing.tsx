@@ -7,7 +7,7 @@ export default function PublicClosing({ title, children, href = PUBLIC_PRIMARY_A
   href?: string;
   secondary?: { href: string; label: string };
 }) {
-  return <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
+  return <section className="studio-closing border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
     <div className="public-section text-center">
       <h2 className="font-playfair text-4xl font-black md:text-5xl">{title}</h2>
       <div className="public-reading mx-auto mt-5 leading-7 text-[var(--public-muted)]">{children}</div>

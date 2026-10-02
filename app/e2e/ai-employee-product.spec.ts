@@ -141,7 +141,7 @@ test('capabilities and work show the technical range', async ({ page }) => {
   const work = page.getByRole('main');
   await expect(work.getByRole('heading', { name: 'NeedThisDone', exact: true })).toBeVisible();
   await expect(work.getByRole('heading', { name: 'Content workflow', exact: true })).toBeVisible();
-  await expect(work.locator('article')).toHaveCount(3);
+  await expect(work.locator('article.studio-case-study')).toHaveCount(2);
   await expect(work.getByRole('link', { name: 'Read the system note', exact: true })).toHaveAttribute('href', '/system');
   await expect(work.getByRole('link', { name: 'Open the code', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done');
 });

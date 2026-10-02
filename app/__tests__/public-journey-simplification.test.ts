@@ -75,7 +75,7 @@ describe('portfolio public journey', () => {
 
   it('keeps contact concise and compatible with the projects API', () => {
     const contact = source('app/contact/page.tsx');
-    expect(contact).toContain('What are you building or trying to fix?');
+    expect(contact).toContain('What would you like to discuss?');
     expect(contact).toContain('body.append("message", data.message)');
     expect(contact).toContain('Is there a useful starting point?');
     expect(contact).not.toContain('intakeContext');

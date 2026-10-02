@@ -18,7 +18,7 @@ describe('conversation form', () => {
 
   it('exposes a concise accessible form', async () => {
     const { container, getByRole, getByLabelText, getByText } = render(<ContactPage />);
-    expect(getByRole('heading', { name: /what are you building or trying to fix/i })).toBeVisible();
+    expect(getByRole('heading', { name: /what would you like to discuss/i })).toBeVisible();
     expect(getByLabelText(/^Your message/)).toBeRequired();
     expect(getByLabelText('Your name')).toBeRequired();
     expect(getByLabelText('Your email')).toBeRequired();

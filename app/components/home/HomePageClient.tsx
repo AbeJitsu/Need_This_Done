@@ -1,102 +1,223 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Database, Layers3, Wrench } from "lucide-react";
+import { Code2, Database, Layers3, Wrench } from "lucide-react";
 import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 const buildSignals = [
   {
     icon: Layers3,
     label: "Full-stack builds",
-    description: "Interfaces, server routes, data models, and the glue between them.",
+    description:
+      "Interfaces, server routes, data models, and the glue between them.",
+    detail: "React · Next.js · TypeScript",
   },
   {
     icon: Database,
     label: "Systems that hold together",
-    description: "Authentication, permissions, durable state, APIs, and failure paths.",
+    description:
+      "Authentication, permissions, durable state, APIs, and failure paths.",
+    detail: "Postgres · Supabase · Redis",
   },
   {
     icon: Wrench,
     label: "Useful technical work",
-    description: "Start with the smallest working piece, then show what changed and how it was checked.",
+    description:
+      "Start with the smallest working piece, then show what changed and how it was checked.",
+    detail: "Testing · Accessibility · Delivery",
   },
 ] as const;
 
 export default function HomePageClient() {
   return (
     <main id="main-content" className="homepage-trailer">
-      <section className="homepage-hero" aria-labelledby="homepage-hero-heading">
-        <div className="homepage-hero__glow homepage-hero__glow--gold" aria-hidden="true" />
-        <div className="homepage-hero__glow homepage-hero__glow--green" aria-hidden="true" />
+      <section
+        className="homepage-hero"
+        aria-labelledby="homepage-hero-heading"
+      >
         <div className="homepage-hero__inner">
           <div className="homepage-hero__grid">
             <div className="homepage-hero__copy">
-              <p className="homepage-eyebrow homepage-eyebrow--light">NeedThisDone · Independent technology practice</p>
+              <p className="homepage-eyebrow homepage-eyebrow--light">
+                Abe Reyes · Independent developer
+              </p>
               <h1 id="homepage-hero-heading" className="homepage-hero__title">
-                <span className="homepage-hero__title-line">Practical software</span>{" "}
+                <span className="homepage-hero__title-line">
+                  Practical software
+                </span>{" "}
                 <span className="homepage-hero__title-line">for messy</span>{" "}
-                <span className="homepage-hero__title-line">problems.</span>
+                <span className="homepage-hero__title-line homepage-hero__title-line--accent">
+                  problems.
+                </span>
               </h1>
               <p className="homepage-hero__lead">
-                NeedThisDone connects interfaces, backends, databases, APIs, and the
-                people using the system.
+                NeedThisDone connects interfaces, backends, databases, APIs, and
+                the people using the system.
               </p>
               <div className="homepage-hero__actions">
-                <Link href="/contact" className="homepage-button homepage-button--gold">
-                  Start a conversation <ArrowRight aria-hidden="true" />
+                <Link
+                  href="/work"
+                  className="homepage-button homepage-button--gold"
+                >
+                  See selected work
                 </Link>
-                <Link href="/work" className="homepage-button homepage-button--ghost">
-                  See selected work <ArrowRight aria-hidden="true" />
+                <Link
+                  href="/contact"
+                  className="homepage-button homepage-button--ghost"
+                >
+                  Start a conversation
                 </Link>
               </div>
+              <p className="studio-hero-note">
+                Software development. Technical operations. A practical
+                understanding of the people doing the work.
+              </p>
             </div>
-            <PublicPageVisual kind="messy-problems" priority />
+            <figure className="studio-hero-figure">
+              <PublicPageVisual kind="messy-problems" priority />
+              <figcaption>
+                <span>01 / Find the useful shape</span>
+                <span>NeedThisDone</span>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
-      <section id="capabilities" aria-labelledby="capabilities-heading" className="homepage-section homepage-section--light">
-        <div className="homepage-section__inner homepage-section__inner--compact">
-          <p className="homepage-eyebrow">Capabilities</p>
-          <h2 id="capabilities-heading" className="homepage-heading homepage-heading--compact">
-            Useful work across the stack.
-          </h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {buildSignals.map(({ icon: Icon, label, description }) => (
-              <article key={label} className="rounded-2xl border border-[var(--public-ink)]/10 bg-white/80 p-6">
-                <Icon className="h-6 w-6 text-[var(--public-green)]" aria-hidden="true" />
-                <h3 className="mt-5 font-playfair text-2xl font-black">{label}</h3>
-                <p className="mt-3 leading-7 text-[var(--public-muted)]">{description}</p>
-              </article>
-            ))}
+      <section
+        id="featured-work"
+        aria-labelledby="featured-work-heading"
+        className="homepage-section homepage-section--light"
+      >
+        <div className="homepage-section__inner studio-section">
+          <div className="studio-section-heading">
+            <div>
+              <p className="homepage-eyebrow">Selected work / 01</p>
+              <h2
+                id="featured-work-heading"
+                className="homepage-heading homepage-heading--compact"
+              >
+                One build, many connected parts.
+              </h2>
+            </div>
+            <Link href="/work" className="studio-text-link">
+              Explore selected work
+            </Link>
           </div>
-          <Link href="/services" className="homepage-link homepage-link--standalone">
-            Explore capabilities <ArrowRight aria-hidden="true" />
-          </Link>
+          <div className="studio-featured">
+            <Link
+              href="/work#needthisdone"
+              className="studio-browser studio-browser--home"
+              aria-label="Explore the NeedThisDone project"
+            >
+              <div className="studio-browser-bar" aria-hidden="true">
+                <span className="studio-browser-mark" />
+                <span>needthisdone.com / contact</span>
+                <Code2 size={16} />
+              </div>
+              <div className="studio-browser-image">
+                <Image
+                  src="/images/work/project-intake.webp"
+                  alt="The NeedThisDone contact interface with its project message and accessible form controls"
+                  width={1280}
+                  height={900}
+                  sizes="(min-width: 1024px) 55vw, 100vw"
+                  unoptimized
+                />
+              </div>
+            </Link>
+            <div className="studio-featured-copy">
+              <p className="studio-kicker">Full-stack application · Ongoing</p>
+              <h3>NeedThisDone</h3>
+              <p>
+                A public website and private workspace, with APIs,
+                database-backed state, approval boundaries, and delivery checks.
+              </p>
+              <dl className="studio-project-facts">
+                <div>
+                  <dt>Contribution</dt>
+                  <dd>Independent design and development</dd>
+                </div>
+                <div>
+                  <dt>Built with</dt>
+                  <dd>React, Next.js, TypeScript, Supabase</dd>
+                </div>
+              </dl>
+              <Link href="/work#needthisdone" className="studio-text-link">
+                Explore the project
+              </Link>
+              <Link
+                href="/work#content-workflow"
+                className="studio-related-project"
+              >
+                <span>Also selected</span>
+                <strong>Content workflow</strong>
+                <span>Python · Content validation</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="featured-work" aria-labelledby="featured-work-heading" className="homepage-section homepage-section--dark">
-        <div className="homepage-section__inner homepage-section__inner--compact">
-          <p className="homepage-eyebrow homepage-eyebrow--light">Selected work</p>
-          <h2 id="featured-work-heading" className="homepage-heading homepage-heading--compact">
-            One build, many connected parts.
-          </h2>
-          <p className="homepage-section__lead">
-            NeedThisDone is an independent build with a public site, private workspace,
-            APIs, database-backed state, approval boundaries, and delivery checks.
-          </p>
-          <Link href="/work" className="homepage-link homepage-link--light homepage-link--standalone">
-            Explore selected work <ArrowRight aria-hidden="true" />
-          </Link>
+      <section
+        id="capabilities"
+        aria-labelledby="capabilities-heading"
+        className="homepage-section homepage-section--dark"
+      >
+        <div className="homepage-section__inner studio-section">
+          <div className="studio-section-heading">
+            <div>
+              <p className="homepage-eyebrow homepage-eyebrow--light">
+                Capabilities / 02
+              </p>
+              <h2
+                id="capabilities-heading"
+                className="homepage-heading homepage-heading--compact"
+              >
+                Useful work across the stack.
+              </h2>
+            </div>
+            <Link
+              href="/services"
+              className="studio-text-link studio-text-link--light"
+            >
+              Explore capabilities
+            </Link>
+          </div>
+          <div className="studio-capability-grid">
+            {buildSignals.map(
+              ({ icon: Icon, label, description, detail }, index) => (
+                <article key={label} className="studio-capability">
+                  <div className="studio-capability-top">
+                    <span>0{index + 1}</span>
+                    <Icon size={24} aria-hidden="true" />
+                  </div>
+                  <h3>{label}</h3>
+                  <p>{description}</p>
+                  <p className="studio-capability-detail">{detail}</p>
+                </article>
+              ),
+            )}
+          </div>
         </div>
       </section>
 
-      <section className="homepage-closing" aria-labelledby="homepage-closing-heading">
+      <section
+        className="homepage-closing"
+        aria-labelledby="homepage-closing-heading"
+      >
         <div className="homepage-closing__inner homepage-closing__inner--compact">
-          <p className="homepage-eyebrow">Start here</p>
-          <h2 id="homepage-closing-heading" className="homepage-heading">What would make your work easier?</h2>
-          <p>A short description of the problem or the thing you want to build is enough to start.</p>
-          <Link href="/contact" className="homepage-button homepage-button--green">
-            Start a conversation <ArrowRight aria-hidden="true" />
+          <p className="homepage-eyebrow">The next conversation</p>
+          <h2 id="homepage-closing-heading" className="homepage-heading">
+            Good work starts with a useful question.
+          </h2>
+          <p>
+            Discuss a technical role, a project, or a problem worth solving.
+          </p>
+          <Link
+            href="/contact"
+            className="homepage-button homepage-button--green"
+          >
+            Start a conversation
           </Link>
         </div>
       </section>
