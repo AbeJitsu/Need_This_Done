@@ -7,19 +7,20 @@ import { listBlogPosts } from '@/lib/blog-content';
 const appRoot = resolve(__dirname, '..');
 
 const publicPageCoverage = [
-  { route: '/', source: 'components/home/HomePageClient.tsx', marker: 'messy-problems', image: '/images/public/messy-problems.webp' },
-  { route: '/work', source: 'components/work/WorkPageClient.tsx', marker: '/images/portfolio-hero.png', image: '/images/portfolio-hero.png' },
+  { route: '/', source: 'components/home/HomePageClient.tsx', marker: 'TaskBoard compact', image: null },
+  { route: '/examples', source: 'app/examples/page.tsx', marker: 'ImportInspector', image: null },
+  { route: '/work', source: 'components/work/WorkPageClient.tsx', marker: '/images/work/portfolio-examples.webp', image: '/images/work/portfolio-examples.webp' },
   { route: '/services', source: 'components/services/ServicesPageClient.tsx', marker: 'interface-craft', image: '/images/public/interface-craft.webp' },
-  { route: '/about', source: 'app/about/page.tsx', marker: 'problem-map', image: '/images/public/problem-map.webp' },
+  { route: '/about', source: 'app/about/page.tsx', marker: 'pf-person-card', image: null },
   { route: '/website-fix', source: 'app/website-fix/page.tsx', marker: 'visualKind="website-fix"', image: '/images/public/website-fix.webp' },
   { route: '/managed-automation', source: 'app/managed-automation/page.tsx', marker: 'visualKind="managed-automation"', image: '/images/public/managed-automation.webp' },
   { route: '/pricing', source: 'components/pricing/UnifiedPricingPage.tsx', marker: 'pricing-scope', image: '/images/public/pricing-scope.webp' },
-  { route: '/how-it-works', source: 'app/how-it-works/page.tsx', marker: 'workflow-path', image: '/images/public/workflow-path.webp' },
-  { route: '/system', source: 'app/system/page.tsx', marker: 'system-bridge', image: '/images/public/system-bridge.webp' },
-  { route: '/contact', source: 'app/contact/page.tsx', marker: 'conversation-start', image: '/images/public/conversation-start.webp' },
+  { route: '/how-it-works', source: 'app/how-it-works/page.tsx', marker: 'pf-test-card', image: null },
+  { route: '/system', source: 'app/system/page.tsx', marker: 'pf-approach', image: null },
+  { route: '/contact', source: 'app/contact/page.tsx', marker: 'pf-page-intro', image: null },
   { route: '/ada-compliance', source: 'app/ada-compliance/page.tsx', marker: 'accessibility-craft', image: '/images/public/accessibility-craft.webp' },
   { route: '/faq', source: 'components/faq/FAQPageClient.tsx', marker: 'faq-answers', image: '/images/public/faq-answers.webp' },
-  { route: '/blog', source: 'components/blog/BlogPageClient.tsx', marker: 'notes-library', image: '/images/public/notes-library.webp' },
+  { route: '/blog', source: 'components/blog/BlogPageClient.tsx', marker: 'pf-page-intro', image: null },
   { route: '/privacy', source: 'components/privacy/PrivacyPageClient.tsx', marker: 'visualKind="privacy-boundary"', image: '/images/public/privacy-boundary.webp' },
   { route: '/terms', source: 'components/terms/TermsPageClient.tsx', marker: 'visualKind="terms-agreement"', image: '/images/public/terms-agreement.webp' },
 ] as const;
@@ -50,7 +51,7 @@ describe('public page image coverage', () => {
       expect(post.featured_image, `${post.slug} should have a featured image`).toBeTruthy();
       return post.featured_image as string;
     });
-    const allImages = [...publicPageCoverage.map((page) => page.image), ...noteImages];
+    const allImages = [...publicPageCoverage.flatMap((page) => page.image ? [page.image] : []), ...noteImages];
 
     expect(new Set(allImages).size).toBe(allImages.length);
 
@@ -60,14 +61,14 @@ describe('public page image coverage', () => {
     }
   });
 
-  it('gives every intended public static page one distinct primary image', () => {
-    const images = publicPageCoverage.map((page) => page.image);
+  it('gives each intended page a working interface, visual composition, or distinct primary image', () => {
+    const images = publicPageCoverage.flatMap((page) => page.image ? [page.image] : []);
     expect(new Set(images).size).toBe(images.length);
 
     for (const page of publicPageCoverage) {
       const source = readFileSync(resolve(appRoot, page.source), 'utf8');
       expect(source, `${page.route} should retain ${page.marker}`).toContain(page.marker);
-      expect(existsSync(resolve(appRoot, 'public', page.image.slice(1)))).toBe(true);
+      if (page.image) expect(existsSync(resolve(appRoot, 'public', page.image.slice(1)))).toBe(true);
     }
   });
 });

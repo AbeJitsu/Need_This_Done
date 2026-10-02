@@ -15,7 +15,7 @@ test.describe('Retained core smoke checks', () => {
     const response = await page.goto('/contact?offer=website-fix');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /bring the technical problem as it is/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /let.s talk about the next step/i })).toBeVisible();
     await expect(page.getByRole('radio', { name: 'Website work', exact: true })).toBeChecked();
     await page.getByRole('radio', { name: 'Automation', exact: true }).check();
     await expect(page.getByRole('radio', { name: 'Automation', exact: true })).toBeChecked();
@@ -166,7 +166,7 @@ test('FAQ closing action stays readable without wrapping at public widths', asyn
   for (const width of [375, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/faq');
-    const action = page.getByRole('main').getByRole('link', { name: 'Start a conversation', exact: true }).last();
+    const action = page.getByRole('main').getByRole('link', { name: 'Contact Abe', exact: true }).last();
     await action.scrollIntoViewIfNeeded();
     await expect(action).toBeVisible();
     expect(await action.evaluate(element => getComputedStyle(element).whiteSpace)).toBe('nowrap');

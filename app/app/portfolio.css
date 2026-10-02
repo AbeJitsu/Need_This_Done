@@ -1,0 +1,1560 @@
+/* Hiring-focused public portfolio. Authenticated application styles stay separate. */
+.public-shell {
+  --pf-paper: #f6f4ed;
+  --pf-ink: #18372e;
+  --pf-muted: #50645c;
+  --pf-line: #d9dfd6;
+  --pf-green: #126b4e;
+}
+.public-shell .pf-page {
+  background: var(--pf-paper);
+  color: var(--pf-ink);
+}
+.public-shell .pf-wrap {
+  width: min(100%, 1240px);
+  margin-inline: auto;
+  padding-inline: 48px;
+}
+.public-shell .pf-page h1,
+.public-shell .pf-page h2,
+.public-shell .pf-page h3 {
+  color: inherit;
+}
+.public-shell .pf-page h1 {
+  font-size: clamp(2.7rem, 4.5vw, 4.3rem);
+  font-weight: 650;
+  line-height: 1.07;
+  letter-spacing: -0.055em;
+}
+.public-shell .pf-page h2 {
+  font-size: clamp(2rem, 3vw, 3.05rem);
+  font-weight: 600;
+  line-height: 1.13;
+  letter-spacing: -0.045em;
+}
+.public-shell .pf-page h3 {
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+.public-shell .pf-page h1 em,
+.public-shell .pf-page h2 em {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.045em;
+  color: #47715b;
+}
+.public-shell .pf-page p {
+  line-height: 1.8;
+}
+.public-shell .pf-page :is(section, article)[id] {
+  scroll-margin-top: 108px;
+}
+.public-shell .pf-page a,
+.public-shell .pf-page button {
+  -webkit-tap-highlight-color: transparent;
+}
+.public-shell
+  .pf-page
+  :is(button, a, select, input, textarea, summary):focus-visible {
+  outline: 3px solid #9a7427;
+  outline-offset: 4px;
+}
+.public-shell .pf-page :is(button, input, select, textarea) {
+  font: inherit;
+}
+.public-shell .pf-page :is(input, textarea, select) {
+  background: #fff;
+  color: var(--pf-ink);
+  border: 1px solid #aab9ad;
+  border-radius: 7px;
+}
+.public-shell .pf-page button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.public-shell .pf-page .pf-mono {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  line-height: 1.55;
+}
+.public-shell .pf-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #486250;
+  margin-bottom: 25px;
+}
+.public-shell .pf-eyebrow > span {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: #467257;
+}
+.public-shell .pf-page .pf-lead {
+  margin-top: 28px;
+  max-width: 52ch;
+  font-size: 1rem;
+  color: var(--pf-muted);
+  line-height: 1.85;
+}
+.public-shell .pf-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 30px;
+}
+.public-shell .pf-button {
+  display: inline-flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  padding: 13px 20px;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.5;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.public-shell .pf-button--green {
+  background: #126b4e;
+  color: white;
+}
+.public-shell .pf-button--green:hover {
+  background: #0c533d;
+}
+.public-shell .pf-button--gold {
+  background: #e1bd6b;
+  color: #18372e;
+}
+.public-shell .pf-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.83rem;
+  font-weight: 650;
+  line-height: 1.7;
+  padding-block: 8px;
+  text-decoration: none;
+  color: #126b4e;
+}
+.public-shell .pf-text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.public-shell .pf-quiet-link {
+  display: block;
+  color: #50645c;
+  font-size: 0.78rem;
+  margin-top: 25px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.public-shell .pf-small {
+  font-size: 0.76rem;
+  color: #50645c;
+}
+.public-shell .pf-home-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 64px;
+  padding-block: 88px 80px;
+}
+.public-shell .pf-hero-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin-top: 37px;
+  padding-top: 19px;
+  border-top: 1px solid var(--pf-line);
+  font-size: 0.7rem;
+  color: #50645c;
+}
+.public-shell .pf-hero-workbench {
+  background: #e5e9df;
+  padding: 24px;
+  border: 1px solid #d2dbcf;
+  border-radius: 13px;
+  position: relative;
+  box-shadow: 0 25px 60px -40px #12372c66;
+}
+.public-shell .pf-workbench-caption,
+.public-shell .pf-workbench-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.public-shell .pf-workbench-caption {
+  margin-bottom: 18px;
+  color: #415d47;
+}
+.public-shell .pf-live-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.67rem;
+}
+.public-shell .pf-live-label > span {
+  height: 6px;
+  width: 6px;
+  background: #126b4e;
+  border-radius: 50%;
+}
+.public-shell .pf-workbench-foot {
+  margin-top: 18px;
+  color: #415d47;
+  font-size: 0.68rem;
+}
+.public-shell .pf-workbench-foot a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.public-shell .pf-stack-strip {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-top: 25px;
+  margin-top: 25px;
+  border-top: 1px solid #c2cdbe;
+  color: #415d47;
+  font-family: ui-monospace, monospace;
+  font-size: 0.69rem;
+}
+.public-shell .pf-board {
+  background: #fffefb;
+  border: 1px solid var(--pf-line);
+  border-radius: 10px;
+  padding: 28px;
+  min-width: 0;
+}
+.public-shell .pf-board-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.public-shell .pf-board-top .pf-mono {
+  color: #50645c;
+}
+.public-shell .pf-board-top :is(h2, h3) {
+  margin-top: 8px;
+  font-size: 1.13rem;
+}
+.public-shell .pf-pill {
+  flex-shrink: 0;
+  padding: 5px 8px;
+  border: 1px solid #ccd9cf;
+  border-radius: 5px;
+  background: #eaf2e9;
+  font-size: 0.63rem;
+  font-weight: 600;
+  color: #2c6145;
+}
+.public-shell .pf-board-progress {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: #50645c;
+  margin-top: 26px;
+}
+.public-shell .pf-board progress {
+  display: block;
+  height: 5px;
+  width: 100%;
+  margin-top: 10px;
+  border: none;
+  background: #e4eadd;
+  accent-color: #126b4e;
+  border-radius: 8px;
+}
+.public-shell .pf-board progress::-webkit-progress-bar {
+  background: #e4eadd;
+  border-radius: 8px;
+}
+.public-shell .pf-board progress::-webkit-progress-value {
+  background: #126b4e;
+  border-radius: 8px;
+}
+.public-shell .pf-board progress::-moz-progress-bar {
+  background: #126b4e;
+  border-radius: 8px;
+}
+.public-shell .pf-board-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-top: 20px;
+}
+.public-shell .pf-board-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.72rem;
+}
+.public-shell .pf-board-controls select {
+  min-height: 40px;
+  padding: 7px 10px;
+  font-size: 0.75rem;
+}
+.public-shell .pf-quiet-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #126b4e;
+  font-size: 0.73rem;
+  font-weight: 650;
+  text-align: left;
+}
+.public-shell .pf-task-list {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+.public-shell .pf-task-list li {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 11px;
+  padding-block: 16px;
+  border-top: 1px solid #e1e6dc;
+}
+.public-shell .pf-task-list li > span:nth-child(2) {
+  font-size: 0.78rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.public-shell .pf-task-list select {
+  padding: 7px;
+  max-width: 114px;
+  min-height: 38px;
+  font-size: 0.69rem;
+}
+.public-shell .pf-task-dot {
+  width: 8px;
+  height: 8px;
+  background: #a9b6a3;
+  border-radius: 50%;
+}
+.public-shell .pf-task-dot--doing {
+  background: #a27a27;
+}
+.public-shell .pf-task-dot--done {
+  background: #126b4e;
+}
+.public-shell .pf-task-done {
+  color: #50645c;
+  text-decoration: line-through;
+}
+.public-shell .pf-icon-button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  min-height: 40px;
+  color: #50645c;
+}
+.public-shell .pf-add-task {
+  display: flex;
+  gap: 10px;
+  margin-top: 17px;
+}
+.public-shell .pf-add-task input {
+  min-width: 0;
+  flex: 1;
+  padding: 12px;
+  font-size: 0.76rem;
+}
+.public-shell .pf-add-task .pf-button {
+  font-size: 0.73rem;
+  padding-inline: 13px;
+}
+.public-shell .pf-board .pf-board-note {
+  font-size: 0.65rem;
+  color: #50645c;
+  padding-top: 16px;
+  border-top: 1px solid #e1e6dc;
+  margin-top: 12px;
+}
+.public-shell .pf-board--compact {
+  padding: 23px;
+}
+.public-shell .pf-board--compact .pf-task-list li {
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.public-shell .pf-board--compact .pf-task-list li > span:nth-child(2) {
+  font-size: 0.7rem;
+}
+.public-shell .pf-board--compact .pf-task-list select {
+  max-width: 102px;
+  font-size: 0.63rem;
+}
+.public-shell .pf-board--compact .pf-board-top {
+  display: block;
+}
+.public-shell .pf-board--compact .pf-pill {
+  display: inline-block;
+  margin-top: 10px;
+}
+.public-shell .pf-feature-section {
+  padding-block: 58px 88px;
+  border-top: 1px solid var(--pf-line);
+}
+.public-shell .pf-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 35px;
+}
+.public-shell .pf-section-heading > p {
+  max-width: 33ch;
+  font-size: 0.86rem;
+  color: var(--pf-muted);
+}
+.public-shell .pf-example-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.public-shell .pf-example-card {
+  display: block;
+  background: #fffefb;
+  border: 1px solid #d9dfd6;
+  border-radius: 9px;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.public-shell .pf-example-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 35px -28px #163b2e;
+}
+.public-shell .pf-card-preview {
+  height: 174px;
+  display: grid;
+  place-items: center;
+  padding: 25px;
+  overflow: hidden;
+}
+.public-shell .pf-preview--board {
+  background: #e6ebdf;
+}
+.public-shell .pf-preview--api {
+  background: #18372e;
+  color: #e2ebdc;
+}
+.public-shell .pf-preview--debug {
+  background: #eee7d6;
+}
+.public-shell .pf-mini-board {
+  width: 78%;
+  max-width: 230px;
+  background: #fffefb;
+  padding: 15px;
+  border: 1px solid #cbd4c5;
+  border-radius: 6px;
+  box-shadow: 0 10px 18px -15px #18372e;
+}
+.public-shell .pf-mini-board span {
+  display: block;
+  height: 10px;
+  margin-bottom: 12px;
+  background: #e1e8db;
+  border-left: 5px solid #93a687;
+}
+.public-shell .pf-mini-board span:first-child {
+  width: 70%;
+  border-left-color: #126b4e;
+}
+.public-shell .pf-mini-board span:nth-child(2) {
+  width: 90%;
+}
+.public-shell .pf-mini-board i {
+  font-size: 0.61rem;
+  font-style: normal;
+  color: #50645c;
+}
+.public-shell .pf-mini-api {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  font-family: ui-monospace, monospace;
+}
+.public-shell .pf-mini-api span {
+  font-size: 0.65rem;
+  color: #c1d7bf;
+}
+.public-shell .pf-mini-api strong {
+  font-size: 2.15rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #e1bd6b;
+}
+.public-shell .pf-mini-api small {
+  font-size: 0.7rem;
+  color: #b5d7ad;
+}
+.public-shell .pf-mini-api code {
+  font-size: 0.7rem;
+}
+.public-shell .pf-mini-debug {
+  width: 100%;
+  display: grid;
+  gap: 11px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.69rem;
+}
+.public-shell .pf-mini-debug span {
+  padding: 5px 10px;
+  background: #fff9;
+  border-left: 2px solid #aab591;
+}
+.public-shell .pf-mini-debug strong {
+  font-weight: 500;
+  color: #29553d;
+  padding-left: 10px;
+}
+.public-shell .pf-card-copy {
+  padding: 24px;
+}
+.public-shell .pf-card-top {
+  display: flex;
+  justify-content: space-between;
+  color: #50645c;
+  margin-bottom: 19px;
+}
+.public-shell .pf-card-top .pf-mono {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+}
+.public-shell .pf-card-copy p {
+  margin-top: 13px;
+  font-size: 0.82rem;
+  color: var(--pf-muted);
+}
+.public-shell .pf-card-detail {
+  display: block;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid #e1e6dc;
+  font-size: 0.67rem;
+  color: #50645c;
+}
+.public-shell .pf-project-band {
+  background: #18372e;
+  color: #f6f4ed;
+}
+.public-shell .pf-project-band-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 80px;
+  padding-block: 80px;
+}
+.public-shell .pf-project-band .pf-eyebrow {
+  color: #bfd0b5;
+}
+.public-shell .pf-project-band h2 em {
+  color: #e1bd6b;
+}
+.public-shell .pf-project-band p {
+  font-size: 0.87rem;
+  color: #d2dfcc;
+  margin-top: 25px;
+  max-width: 52ch;
+}
+.public-shell .pf-project-band .pf-text-link {
+  color: #e3eadd;
+}
+.public-shell .pf-layer-map {
+  border-left: 1px solid #59765d;
+  padding-left: 29px;
+}
+.public-shell .pf-layer-map > div {
+  padding: 18px 0;
+  border-bottom: 1px solid #3f5d48;
+}
+.public-shell .pf-layer-map > div:last-child {
+  border: 0;
+}
+.public-shell .pf-layer-map span {
+  font-family: ui-monospace, monospace;
+  font-size: 0.7rem;
+  color: #d9bd75;
+  margin-right: 17px;
+}
+.public-shell .pf-layer-map strong {
+  font-size: 1.03rem;
+  font-weight: 600;
+}
+.public-shell .pf-layer-map p {
+  margin: 5px 0 0 35px;
+  font-size: 0.73rem;
+}
+.public-shell .pf-about-preview,
+.public-shell .pf-about-story,
+.public-shell .pf-work-context,
+.public-shell .pf-regression-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding-block: 80px;
+}
+.public-shell .pf-about-preview p,
+.public-shell .pf-about-story p,
+.public-shell .pf-work-context p,
+.public-shell .pf-regression-story p {
+  color: var(--pf-muted);
+  font-size: 0.94rem;
+}
+.public-shell .pf-contact-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid #d0dacb;
+  margin-top: 30px;
+  padding-top: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.public-shell .pf-page-intro {
+  padding-block: 76px 65px;
+  border-bottom: 1px solid var(--pf-line);
+}
+.public-shell .pf-page-intro h1 {
+  max-width: 22ch;
+}
+.public-shell .pf-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+.public-shell .pf-section-nav a {
+  display: inline-block;
+  padding: 10px 15px;
+  border: 1px solid #bac8b6;
+  border-radius: 6px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  background: #fafbf4;
+}
+.public-shell .pf-section-nav a:hover {
+  background: #e4ebdd;
+}
+.public-shell .pf-example-section {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 65px;
+  padding-block: 65px;
+  border-bottom: 1px solid var(--pf-line);
+}
+.public-shell .pf-example-section--wide {
+  display: block;
+}
+.public-shell .pf-number {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-family: ui-monospace, monospace;
+  font-size: 0.7rem;
+  color: #50645c;
+  margin-bottom: 23px;
+}
+.public-shell .pf-example-description > p:not(.pf-number) {
+  font-size: 0.86rem;
+  color: var(--pf-muted);
+  margin-top: 20px;
+}
+.public-shell .pf-skill-list {
+  font-size: 0.77rem;
+  color: #50645c;
+  list-style: none;
+  margin: 25px 0 20px;
+  padding: 0;
+}
+.public-shell .pf-skill-list li {
+  padding-block: 6px;
+  padding-left: 15px;
+  border-left: 2px solid #bbc9b0;
+  margin-bottom: 7px;
+}
+.public-shell .pf-example-heading {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 65px;
+  align-items: end;
+  margin-bottom: 35px;
+}
+.public-shell .pf-example-heading > div:last-child > p {
+  font-size: 0.9rem;
+  color: #50645c;
+}
+.public-shell .pf-import {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #c8d3c3;
+  background: #fffefb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.public-shell .pf-import-input,
+.public-shell .pf-import-result {
+  padding: 28px;
+  min-width: 0;
+}
+.public-shell .pf-import-result {
+  border-left: 1px solid #d9dfd6;
+  background: #eef2e7;
+}
+.public-shell .pf-panel-label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #d2dccb;
+  margin-bottom: 20px;
+}
+.public-shell .pf-panel-label > span:last-child {
+  margin-left: auto;
+}
+.public-shell .pf-sample-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 23px;
+}
+.public-shell .pf-sample-buttons button {
+  min-height: 38px;
+  font-size: 0.66rem;
+  padding: 6px 10px;
+  border: 1px solid #c2cfba;
+  border-radius: 5px;
+  background: #f3f6ee;
+  color: #305540;
+}
+.public-shell .pf-sample-buttons button:hover {
+  background: #dce8d3;
+}
+.public-shell .pf-import label {
+  display: block;
+  margin-bottom: 8px;
+}
+.public-shell .pf-import textarea {
+  width: 100%;
+  min-height: 235px;
+  resize: vertical;
+  padding: 15px;
+  background: #18372e;
+  color: #e7efdf;
+  font-family: ui-monospace, monospace;
+  font-size: 0.76rem;
+  line-height: 1.8;
+  border-color: #18372e;
+  tab-size: 2;
+}
+.public-shell .pf-import .pf-small {
+  margin: 14px 0 20px;
+}
+.public-shell .pf-response-code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.69rem;
+  color: #854b24;
+  background: #faebd1;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.public-shell .pf-response-code--ok {
+  background: #d9ead0;
+  color: #235338;
+}
+.public-shell .pf-response-empty {
+  padding: 60px 15px;
+  text-align: center;
+  color: #476b4e;
+}
+.public-shell .pf-response-empty > svg {
+  margin: 0 auto 24px;
+}
+.public-shell .pf-response-empty h3 {
+  font-size: 1.12rem;
+}
+.public-shell .pf-response-empty p {
+  font-size: 0.8rem;
+  margin-top: 16px;
+  color: #50645c;
+}
+.public-shell .pf-result-heading {
+  margin: 25px 0 8px;
+}
+.public-shell .pf-import-result > p {
+  font-size: 0.8rem;
+  color: #50645c;
+}
+.public-shell .pf-import-issues {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+.public-shell .pf-import-issues li {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #fbefd9;
+  color: #76401f;
+  padding: 13px;
+  border-left: 2px solid #b07f2f;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+}
+.public-shell .pf-valid-records {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+.public-shell .pf-valid-records li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 15px 0;
+  border-top: 1px solid #ccd8c2;
+}
+.public-shell .pf-valid-records li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.public-shell .pf-valid-records strong {
+  font-size: 0.81rem;
+}
+.public-shell .pf-valid-records span {
+  font-size: 0.75rem;
+  color: #50645c;
+  overflow-wrap: anywhere;
+}
+.public-shell .pf-response-details {
+  margin-top: 25px;
+  border-top: 1px solid #ccd8c2;
+  padding-top: 15px;
+}
+.public-shell .pf-response-details summary {
+  cursor: pointer;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+.public-shell .pf-page pre {
+  font-family: ui-monospace, monospace;
+  font-size: 0.74rem;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.public-shell .pf-response-details pre {
+  margin-top: 15px;
+  background: #fff9;
+  padding: 15px;
+  border-radius: 5px;
+}
+.public-shell .pf-error {
+  padding: 14px;
+  border-radius: 6px;
+  background: #fae7de;
+  color: #8b331d !important;
+}
+.public-shell .pf-debug-lab {
+  background: #fffefb;
+  border: 1px solid #d9dfd6;
+  border-radius: 10px;
+  padding: 28px;
+}
+.public-shell .pf-debug-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 24px;
+}
+.public-shell .pf-debug-tabs button {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #b9cbb1;
+  border-radius: 5px;
+  font-size: 0.74rem;
+  color: #305540;
+}
+.public-shell .pf-debug-tabs button[aria-pressed="true"] {
+  background: #126b4e;
+  color: white;
+  border-color: #126b4e;
+}
+.public-shell .pf-debug-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+.public-shell .pf-debug-grid pre {
+  padding: 15px;
+  background: #eef2e7;
+  margin: 10px 0 22px;
+  border-radius: 5px;
+}
+.public-shell .pf-debug-outcome {
+  padding: 30px;
+  background: #faf0de;
+  border-radius: 7px;
+  color: #754721;
+}
+.public-shell .pf-debug-outcome--fixed {
+  background: #e4efdc;
+  color: #29553d;
+}
+.public-shell .pf-debug-outcome h3 {
+  margin-top: 18px;
+}
+.public-shell .pf-debug-outcome p {
+  font-size: 0.83rem;
+  margin-top: 15px;
+}
+.public-shell .pf-debug-outcome code {
+  display: block;
+  font-size: 0.74rem;
+  margin-top: 20px;
+  overflow-wrap: anywhere;
+}
+.public-shell .pf-bottom-cta {
+  text-align: center;
+  padding-block: 70px 80px;
+}
+.public-shell .pf-bottom-cta .pf-eyebrow {
+  justify-content: center;
+}
+.public-shell .pf-bottom-cta p:not(.pf-eyebrow) {
+  max-width: 55ch;
+  margin: 23px auto 0;
+  font-size: 0.9rem;
+  color: #50645c;
+}
+.public-shell .pf-bottom-cta .pf-actions {
+  justify-content: center;
+}
+.public-shell .pf-case-identity {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+  padding-block: 35px;
+}
+.public-shell .pf-case-identity h2 {
+  margin-top: 15px;
+}
+.public-shell .pf-case-tags,
+.public-shell .pf-case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.public-shell .pf-case-tags span,
+.public-shell .pf-case-stack span {
+  padding: 7px 11px;
+  background: #e5ebdf;
+  border: 1px solid #cbd8c1;
+  border-radius: 5px;
+  color: #32553e;
+  font-size: 0.7rem;
+}
+.public-shell .pf-case-image {
+  border: 1px solid #cbd5c5;
+  border-radius: 9px;
+  overflow: hidden;
+  box-shadow: 0 24px 50px -40px #18372e77;
+}
+.public-shell .pf-case-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.public-shell .pf-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e3e9db;
+  border-bottom: 1px solid #cbd5c5;
+  padding: 12px 18px;
+}
+.public-shell .pf-window-bar > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #869e7c;
+}
+.public-shell .pf-window-bar p {
+  font-family: ui-monospace, monospace;
+  font-size: 0.65rem;
+  margin-left: 13px;
+  color: #50645c;
+}
+.public-shell .pf-case-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+  padding-block: 45px 30px;
+}
+.public-shell .pf-case-overview h3 {
+  font-size: 0.9rem;
+}
+.public-shell .pf-case-overview p {
+  margin-top: 15px;
+  font-size: 0.83rem;
+  color: #50645c;
+}
+.public-shell .pf-case-stack {
+  padding-bottom: 45px;
+}
+.public-shell .pf-code-section {
+  padding-block: 65px;
+  border-block: 1px solid var(--pf-line);
+}
+.public-shell .pf-code-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.public-shell .pf-code-grid a {
+  display: block;
+  padding: 28px;
+  border: 1px solid #d2dcce;
+  background: #fffefb;
+  border-radius: 7px;
+}
+.public-shell .pf-code-grid a:hover {
+  background: #edf3e5;
+}
+.public-shell .pf-code-grid .pf-mono {
+  display: flex;
+  justify-content: space-between;
+  color: #50645c;
+  margin-bottom: 20px;
+}
+.public-shell .pf-code-grid p {
+  font-size: 0.83rem;
+  color: #50645c;
+  margin-top: 12px;
+}
+.public-shell .pf-code-grid code {
+  display: block;
+  font-size: 0.71rem;
+  color: #315a3e;
+  margin-top: 25px;
+  overflow-wrap: anywhere;
+}
+.public-shell .pf-work-context {
+  border-bottom: 1px solid var(--pf-line);
+}
+.public-shell .pf-work-context .pf-text-link {
+  margin-top: 20px;
+}
+.public-shell .pf-about-intro {
+  display: grid;
+  grid-template-columns: 1.4fr 0.65fr;
+  gap: 80px;
+  align-items: center;
+}
+.public-shell .pf-person-card {
+  padding: 30px;
+  background: #e5ebdc;
+  border: 1px solid #cbd7c3;
+  border-radius: 9px;
+}
+.public-shell .pf-monogram {
+  display: block;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 7rem;
+  line-height: 1.4;
+  color: #315e3f;
+  letter-spacing: -0.075em;
+}
+.public-shell .pf-person-card p {
+  font-size: 0.84rem;
+  color: #415d47;
+  margin: 15px 0 30px;
+}
+.public-shell .pf-about-story {
+  border-bottom: 1px solid var(--pf-line);
+}
+.public-shell .pf-about-story p + p {
+  margin-top: 20px;
+}
+.public-shell .pf-experience {
+  padding-block: 65px;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 70px;
+  border-bottom: 1px solid var(--pf-line);
+}
+.public-shell .pf-experience ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.public-shell .pf-experience li {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding-block: 28px;
+  border-bottom: 1px solid #d5dfcd;
+}
+.public-shell .pf-experience li:first-child {
+  padding-top: 0;
+}
+.public-shell .pf-experience li:last-child {
+  border: 0;
+}
+.public-shell .pf-experience h3 {
+  margin-block: 10px;
+}
+.public-shell .pf-experience li span,
+.public-shell .pf-experience li > p {
+  font-size: 0.8rem;
+  color: #50645c;
+}
+.public-shell .pf-approach ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.public-shell .pf-approach li {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 35px;
+  padding-block: 45px;
+  border-bottom: 1px solid var(--pf-line);
+}
+.public-shell .pf-approach-number {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: #5b7958;
+}
+.public-shell .pf-approach h3 {
+  font-size: 1.5rem;
+}
+.public-shell .pf-approach p {
+  max-width: 68ch;
+  color: #50645c;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+.public-shell .pf-approach-deliverable {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 0.73rem;
+  border: 1px solid #bccdaf;
+  border-radius: 5px;
+  padding: 8px 12px;
+  background: #e8efdf;
+}
+.public-shell .pf-regression-story p:not(.pf-eyebrow) {
+  margin-top: 23px;
+}
+.public-shell .pf-test-card {
+  padding: 30px;
+  background: #18372e;
+  color: #e6eedf;
+  border-radius: 8px;
+}
+.public-shell .pf-test-card .pf-mono {
+  color: #d6bd73;
+}
+.public-shell .pf-test-card pre {
+  margin-block: 23px;
+}
+.public-shell .pf-test-card .pf-text-link {
+  color: #d6e9c8;
+}
+.public-shell .pf-empty {
+  padding: 20px;
+  color: #50645c;
+  font-size: 0.82rem;
+}
+.public-shell .pf-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.public-shell .pf-wordmark-mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: #18372e;
+  color: #e1bd6b;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.3rem;
+  border-radius: 7px;
+  letter-spacing: -0.06em;
+}
+.public-shell .pf-wordmark strong {
+  display: block;
+  font-size: 0.87rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+.public-shell .pf-wordmark small {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.56rem;
+  margin-top: 2px;
+  color: #50645c;
+}
+.public-shell .pf-footer {
+  background: #e9eddf;
+  border-top: 1px solid #ccd7c4;
+  padding-block: 45px 28px;
+  color: #18372e;
+}
+.public-shell .pf-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+.public-shell .pf-footer-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.public-shell .pf-footer p {
+  font-size: 0.77rem;
+  color: #50645c;
+  max-width: 38ch;
+  line-height: 1.8;
+  margin-top: 10px;
+}
+.public-shell .pf-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 25px;
+  align-items: start;
+  max-width: 500px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+.public-shell .pf-footer nav a {
+  padding-block: 8px;
+}
+.public-shell .pf-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 15px;
+  border-top: 1px solid #ccd7c4;
+  padding-top: 22px;
+  margin-top: 30px;
+  font-size: 0.65rem;
+  color: #50645c;
+}
+.public-shell .pf-footer-bottom > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+@media (min-width: 1600px) {
+  .public-shell .pf-home-hero {
+    padding-block: 105px;
+  }
+}
+@media (max-width: 1050px) {
+  .public-shell .pf-wrap {
+    padding-inline: 32px;
+  }
+  .public-shell .pf-home-hero {
+    gap: 36px;
+  }
+  .public-shell .pf-hero-workbench {
+    padding: 18px;
+  }
+  .public-shell .pf-workbench-caption {
+    flex-wrap: wrap;
+  }
+  .public-shell .pf-workbench-foot {
+    flex-wrap: wrap;
+  }
+  .public-shell .pf-example-cards {
+    gap: 15px;
+  }
+  .public-shell .pf-card-copy {
+    padding: 20px;
+  }
+  .public-shell .pf-example-section {
+    gap: 35px;
+  }
+  .public-shell .pf-task-list li {
+    grid-template-columns: 8px minmax(0, 1fr) auto;
+  }
+  .public-shell .pf-task-list li .pf-icon-button {
+    grid-column: 3;
+    justify-self: end;
+  }
+  .public-shell .pf-project-band-inner,
+  .public-shell .pf-about-preview,
+  .public-shell .pf-about-story,
+  .public-shell .pf-work-context,
+  .public-shell .pf-regression-story {
+    gap: 45px;
+  }
+}
+@media (max-width: 800px) {
+  .public-shell .pf-home-hero {
+    grid-template-columns: 1fr;
+    padding-block: 50px;
+    gap: 45px;
+  }
+  .public-shell .pf-hero-copy {
+    max-width: 620px;
+  }
+  .public-shell .pf-page h1 {
+    font-size: clamp(2.7rem, 6.8vw, 4rem);
+  }
+  .public-shell .pf-hero-workbench {
+    max-width: 560px;
+    width: 100%;
+  }
+  .public-shell .pf-example-cards {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .public-shell .pf-example-card {
+    display: grid;
+    grid-template-columns: 0.7fr 1fr;
+  }
+  .public-shell .pf-card-preview {
+    height: 100%;
+    min-height: 185px;
+    padding: 20px;
+  }
+  .public-shell .pf-section-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .public-shell .pf-section-heading > p {
+    max-width: 52ch;
+  }
+  .public-shell .pf-project-band-inner,
+  .public-shell .pf-about-preview,
+  .public-shell .pf-about-story,
+  .public-shell .pf-work-context,
+  .public-shell .pf-regression-story,
+  .public-shell .pf-about-intro,
+  .public-shell .pf-experience {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .public-shell .pf-layer-map {
+    padding-left: 23px;
+  }
+  .public-shell .pf-example-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-block: 45px;
+  }
+  .public-shell .pf-example-heading {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .public-shell .pf-import {
+    grid-template-columns: 1fr;
+  }
+  .public-shell .pf-import-result {
+    border-left: 0;
+    border-top: 1px solid #d9dfd6;
+  }
+  .public-shell .pf-debug-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .public-shell .pf-case-overview {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .public-shell .pf-case-identity {
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .public-shell .pf-person-card {
+    max-width: 350px;
+  }
+  .public-shell .pf-approach li {
+    grid-template-columns: 80px 1fr;
+    gap: 20px;
+  }
+  .public-shell .pf-approach-number {
+    font-size: 3.5rem;
+  }
+  .public-shell .pf-footer-inner {
+    flex-direction: column;
+    gap: 25px;
+  }
+}
+@media (max-width: 480px) {
+  .public-shell .pf-wrap {
+    padding-inline: 22px;
+  }
+  .public-shell .pf-home-hero {
+    padding-block: 36px 45px;
+  }
+  .public-shell .pf-page h1 {
+    font-size: clamp(2.45rem, 10.2vw, 3.1rem);
+    line-height: 1.12;
+  }
+  .public-shell .pf-page h2 {
+    font-size: 2.03rem;
+  }
+  .public-shell .pf-eyebrow {
+    font-size: 0.6rem;
+    gap: 7px;
+    letter-spacing: 0.08em;
+    margin-bottom: 22px;
+  }
+  .public-shell .pf-page .pf-lead {
+    font-size: 0.89rem;
+    margin-top: 22px;
+  }
+  .public-shell .pf-actions {
+    gap: 13px 20px;
+  }
+  .public-shell .pf-hero-context {
+    margin-top: 23px;
+  }
+  .public-shell .pf-hero-workbench {
+    padding: 15px;
+  }
+  .public-shell .pf-board,
+  .public-shell .pf-board--compact {
+    padding: 18px;
+  }
+  .public-shell .pf-task-list li {
+    gap: 7px;
+    grid-template-columns: 8px minmax(0, 1fr) 98px;
+  }
+  .public-shell .pf-task-list select {
+    max-width: 98px;
+    font-size: 0.64rem;
+  }
+  .public-shell .pf-board-controls {
+    gap: 10px;
+    align-items: center;
+  }
+  .public-shell .pf-board-top {
+    display: block;
+  }
+  .public-shell .pf-pill {
+    display: inline-block;
+    margin-top: 10px;
+  }
+  .public-shell .pf-add-task {
+    flex-wrap: wrap;
+  }
+  .public-shell .pf-add-task input {
+    flex-basis: 100%;
+  }
+  .public-shell .pf-stack-strip {
+    gap: 17px;
+    font-size: 0.63rem;
+  }
+  .public-shell .pf-feature-section {
+    padding-block: 40px 50px;
+  }
+  .public-shell .pf-example-card {
+    display: block;
+  }
+  .public-shell .pf-card-preview {
+    height: 155px;
+    min-height: 0;
+  }
+  .public-shell .pf-project-band-inner,
+  .public-shell .pf-about-preview,
+  .public-shell .pf-about-story,
+  .public-shell .pf-work-context,
+  .public-shell .pf-regression-story {
+    padding-block: 45px;
+  }
+  .public-shell .pf-page-intro {
+    padding-block: 42px;
+  }
+  .public-shell .pf-import-input,
+  .public-shell .pf-import-result,
+  .public-shell .pf-debug-lab,
+  .public-shell .pf-test-card {
+    padding: 20px;
+  }
+  .public-shell .pf-code-grid {
+    grid-template-columns: 1fr;
+  }
+  .public-shell .pf-code-section {
+    padding-block: 45px;
+  }
+  .public-shell .pf-experience li {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .public-shell .pf-approach li {
+    grid-template-columns: 45px 1fr;
+    gap: 20px;
+    padding-block: 32px;
+  }
+  .public-shell .pf-approach-number {
+    font-size: 2.8rem;
+  }
+  .public-shell .pf-approach h3 {
+    font-size: 1.18rem;
+  }
+  .public-shell .pf-bottom-cta {
+    padding-block: 50px;
+  }
+  .public-shell .pf-section-nav {
+    gap: 8px;
+  }
+  .public-shell .pf-section-nav a {
+    font-size: 0.67rem;
+    padding-inline: 10px;
+  }
+  .public-shell .pf-debug-tabs button {
+    font-size: 0.68rem;
+    padding-inline: 10px;
+  }
+  .public-shell .pf-footer nav {
+    gap: 5px 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .public-shell .pf-example-card {
+    transition: none;
+  }
+  .public-shell .pf-example-card:hover {
+    transform: none;
+  }
+}

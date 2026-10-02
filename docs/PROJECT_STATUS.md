@@ -1,9 +1,31 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/public-design-2026-10-02` (based on `dev` at `3e2ebdc913041f2a9fdc04c9f3d074f4ab300b44`)
+**Branch:** `feature/hiring-portfolio-2026-10-02` (based on `dev` at `60ca362e537146a92b702d972fe0606b9081fe12`)
 **Last updated:** 2026-10-02
 
 ## Latest change
+
+- On 2026-10-02, the public site was rebuilt as Abe Reyes's developer
+  portfolio for hiring managers. A lighter paper/green design, personal
+  navigation, and a compact homepage lead to working examples, one independent
+  project, the development approach, experience, Notes, and contact. The
+  examples include a React task board with validated browser persistence, a
+  real bounded Next.js validation API, and a computed before/after duplicate
+  comparison with regression tests. The API previews fictional contact data
+  without database writes or provider calls. The earlier agent-execution
+  experiment is explicitly paused and unproven; no client project or business
+  result is invented. README and ROADMAP now make this the active direction.
+  The code gate passed (429 required unit tests, four existing skips, 52
+  accessibility tests, lint, type-check, and production build). The final
+  production build also passed after source-link and FAQ-label adjustments.
+  Browser coverage passed 78 checks with six device-specific skips, including
+  the focused FAQ recheck. Geometry passed 22 routes at 320px, 390px, and 1440px
+  (66 checks), and eight complete rendered axe scans had no violations.
+  Seed-dependent report scenarios remain excluded without disposable local
+  Supabase (owner: site maintainer; follow-up: 2026-10-09). The dated branch,
+  dev, and production publication sequence is authorized by the owner; check
+  Vercel readiness against the exact committed SHA at each stage. Rollback is
+  one reviewed forward Git revert; no schema or hosted migration is involved.
 
 - On 2026-10-02, the public portfolio received a hiring-focused design refresh
   while retaining the green, gold, cream, and serif identity. Home now introduces

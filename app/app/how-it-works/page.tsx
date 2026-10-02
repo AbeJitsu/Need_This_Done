@@ -1,85 +1,141 @@
 import type { Metadata } from "next";
-import PublicClosing from "@/components/public/PublicClosing";
-import PublicPageVisual from "@/components/public/PublicPageVisual";
-import { PUBLIC_ROUTE_STAGES } from "@/lib/public-journey";
-import { PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { EXAMPLE_FILE_SOURCE } from "@/lib/portfolio-examples";
 
 export const metadata: Metadata = {
-  title: "How It Works | NeedThisDone",
-  description: PUBLIC_CORE_PROMISE,
+  title: "Development Approach — Abe Reyes",
+  description:
+    "Reproduce the problem, isolate the cause, make a focused change, and verify the result.",
   alternates: { canonical: "/how-it-works" },
 };
 
 const steps = [
   [
-    "Make the problem observable",
-    "Start with the page, bottleneck, evidence, and desired result. A broad idea becomes a concrete slice of work.",
+    "Reproduce the problem",
+    "Describe the expected behavior and the actual result. Find an input or sequence that makes the failure repeatable.",
+    "A concrete failing example.",
   ],
   [
-    "Map the system boundary",
-    "Identify which interface, data, API, integration, or operational path has to change together.",
+    "Isolate the cause",
+    "Trace the relevant interface, request, response, and data. Narrow down where the behavior diverges from the expectation.",
+    "An explanation of the failing boundary.",
   ],
   [
-    "Build the smallest useful path",
-    "Connect the pieces end to end, keeping the first result small enough to inspect and improve.",
+    "Make a focused change",
+    "Change the smallest useful part. Keep assumptions visible and use AI-assisted tools to explore and implement the solution.",
+    "A change that can be reviewed.",
   ],
   [
-    "Verify what matters",
-    "Route, accessibility, browser, and workflow checks confirm that the intended path still works.",
-  ],
-  [
-    "Hand off a clear next decision",
-    "The result shows what changed, what remains, and what comes next if the work continues.",
+    "Verify the behavior",
+    "Add a meaningful regression test. Check the working path, failure states, accessibility, and layout where the change affects them.",
+    "A result with evidence behind it.",
   ],
 ] as const;
 
 export default function HowItWorksPage() {
   return (
-    <main id="main-content" className="bg-[var(--public-cream)] text-[var(--public-ink)]">
-      <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">How it works</p>
-            <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-              Make the next technical decision easier to see.
-            </h1>
-            <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-              Good software work is not only writing code. It is choosing the right
-              boundary, making the result observable, and leaving enough evidence for
-              someone else to review.
-            </p>
-          </div>
-          <PublicPageVisual kind="workflow-path" priority />
+    <main id="main-content" className="pf-page">
+      <section className="pf-page-intro pf-wrap">
+        <p className="pf-eyebrow">
+          <span /> The development approach
+        </p>
+        <h1>
+          Find the cause.
+          <br />
+          <em>Verify the change.</em>
+        </h1>
+        <p className="pf-lead">
+          Tools help move the work forward. A repeatable process makes the
+          result understandable.
+        </p>
+        <div className="pf-actions">
+          <Link
+            href="/examples#debugging"
+            className="pf-button pf-button--green"
+          >
+            Explore a debugging example{" "}
+            <ArrowUpRight size={17} aria-hidden="true" />
+          </Link>
         </div>
       </section>
-
-      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24" aria-labelledby="process-heading">
-        <div className="max-w-3xl">
-          <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">A repeatable approach</p>
-          <h2 id="process-heading" className="mt-5 font-playfair text-4xl font-black md:text-5xl">
-            From an open question to a reviewable result.
-          </h2>
-          <p className="mt-5 text-lg leading-8 text-[var(--public-muted)]">
-            This is the process behind the projects on the work page. The tools can
-            change; the discipline stays useful.
-          </p>
-        </div>
-        <ol className="public-process mt-12">
-          {steps.map(([title, description], index) => (
-            <li key={title} className="grid gap-4 py-8 sm:grid-cols-[4rem_1fr] sm:gap-8">
-              <span className="public-process__number">{String(index + 1).padStart(2, "0")}</span>
+      <section
+        className="pf-wrap pf-approach"
+        aria-labelledby="approach-heading"
+      >
+        <h2 id="approach-heading" className="sr-only">
+          From problem to verified behavior
+        </h2>
+        <ol>
+          {steps.map(([title, description, result], index) => (
+            <li key={title}>
+              <span className="pf-approach-number">0{index + 1}</span>
               <div>
-                <h3 className="font-playfair text-2xl font-black">{title}</h3>
-                <p className="mt-3 max-w-[60ch] leading-7 text-[var(--public-muted)]">{description}</p>
+                <h3>{title}</h3>
+                <p>{description}</p>
+                <span className="pf-approach-deliverable">{result}</span>
               </div>
             </li>
           ))}
         </ol>
       </section>
-
-      <PublicClosing title="See how the pieces fit." secondary={PUBLIC_ROUTE_STAGES["/how-it-works"].secondary}>
-        <p>Selected work shows the interfaces, data boundaries, APIs, and operational details together.</p>
-      </PublicClosing>
+      <section className="pf-wrap pf-regression-story">
+        <div>
+          <p className="pf-eyebrow">An example from this portfolio</p>
+          <h2>
+            Two strings.
+            <br />
+            <em>One overlooked duplicate.</em>
+          </h2>
+          <p>
+            The import inspector accepts contact records. Different
+            capitalization and extra whitespace can hide a repeated email
+            address.
+          </p>
+          <Link href="/examples#debugging" className="pf-text-link">
+            Compare the implementations{" "}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="pf-test-card">
+          <span className="pf-mono">REGRESSION CONTRACT</span>
+          <pre>
+            {
+              "Input\n  alex@example.com\n   ALEX@EXAMPLE.COM \n\nExpected\n  1 ready row\n  Row 2: duplicate email\n\nRule\n  Normalize before comparing."
+            }
+          </pre>
+          <a
+            href={
+              EXAMPLE_FILE_SOURCE + "/app/__tests__/api/portfolio-import.test.ts"
+            }
+            className="pf-text-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Inspect the test <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+      <section className="pf-bottom-cta pf-wrap">
+        <p className="pf-eyebrow">AI-assisted development</p>
+        <h2>
+          Keep the reasoning
+          <br />
+          <em>close to the result.</em>
+        </h2>
+        <p>
+          AI can help investigate, implement, and write tests. I aim to keep
+          changes small enough to inspect and explain, then verify the behavior.
+        </p>
+        <div className="pf-actions">
+          <Link href="/work" className="pf-button pf-button--green">
+            Explore the application
+          </Link>
+          <Link href="/blog" className="pf-text-link">
+            Read the notes <ArrowUpRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

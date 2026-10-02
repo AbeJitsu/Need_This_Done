@@ -42,19 +42,19 @@ describe('current repository documentation', () => {
     expect(trackedMarkdown()).toEqual(retainedMarkdown);
   });
 
-  it('keeps the README as the single assistant and operating vision', () => {
+  it('keeps the README as the public-portfolio and operating vision', () => {
     expect(source('README.md')).toContain(
-      'NeedThisDone is a private assistant and control system for turning a person\'s plain-language request into controlled, reviewable work.',
+      "NeedThisDone is Abe Reyes's developer portfolio and independent full-stack application project.",
     );
     expect(source('ROADMAP.md')).toContain(
-      '[canonical assistant and operating vision](README.md)',
+      '[canonical portfolio and operating vision](README.md)',
     );
     expect(source('ROADMAP.md')).not.toContain('## The assistant vision');
   });
 
   it('keeps the public system case study tied to its maintenance record', () => {
     expect(source('README.md')).toContain(
-      'The public [`/system` overview](app/app/system/page.tsx)',
+      'The public [`/system` background](app/app/system/page.tsx)',
     );
     expect(source('ROADMAP.md')).toContain('## Public `/system` case study');
     expect(source('ROADMAP.md')).toContain(
@@ -68,7 +68,7 @@ describe('current repository documentation', () => {
   it('keeps agent instructions focused on canonical sources and stable boundaries', () => {
     const instructions = source('AGENTS.md');
 
-    expect(instructions).toContain('canonical assistant and operating vision');
+    expect(instructions).toContain('canonical public-portfolio and operating vision');
     expect(instructions).not.toContain('Website Fix: a $500');
     expect(instructions).not.toContain('Managed Automation: a proposal-based 30-day pilot');
   });

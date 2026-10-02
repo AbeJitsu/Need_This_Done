@@ -13,26 +13,26 @@ import { seoConfig } from '@/lib/seo-config';
 
 const appRoot = resolve(__dirname, '..');
 const repositoryRoot = resolve(appRoot, '..');
-const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
+const source = (path: string) => readFileSync(resolve(appRoot, path), 'utf8').replace(/\s+/g, ' ');
 
 describe('portfolio public journey', () => {
-  it('leads with an independent-practice promise and clear actions', () => {
+  it('introduces the developer and provides working examples', () => {
     const home = source('components/home/HomePageClient.tsx');
-    expect(home).toContain('Practical software');
-    expect(home).toContain('for messy');
-    expect(home).toContain('problems.');
-    expect(home).toContain('See selected work');
+    expect(home).toContain('Build the useful thing.');
+    expect(home).toContain('Abe Reyes');
+    expect(home).toContain('TaskBoard compact');
+    expect(home).toContain('Try the working examples');
     expect(home).toContain('href="/work"');
-    expect(home).toContain('Start a conversation');
+    expect(home).toContain('href="/examples"');
     expect(home).not.toContain('Your vision,');
     expect(home).not.toContain('Bring us the problem');
     expect(home).not.toMatch(/\b(?:LLMs?|RLS|provider|worker)\b/i);
   });
 
-  it('uses selected work, capabilities, about, and notes as the primary navigation', () => {
-    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Capabilities', 'Selected Work', 'About', 'Notes']);
-    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/services', '/work', '/about', '/blog']);
-    expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Start a conversation' });
+  it('offers short paths to work, examples, approach, experience, and notes', () => {
+    expect(PUBLIC_NAVIGATION.map(link => link.label)).toEqual(['Selected Work', 'Examples', 'Approach', 'About', 'Notes']);
+    expect(PUBLIC_NAVIGATION.map(link => link.href)).toEqual(['/work', '/examples', '/how-it-works', '/about', '/blog']);
+    expect(PUBLIC_PRIMARY_ACTION).toEqual({ href: '/contact', label: 'Contact Abe' });
     const destinations = PUBLIC_FOOTER_GROUPS.flatMap(group => group.links.map(link => link.href));
     for (const link of PUBLIC_NAVIGATION) expect(destinations).toContain(link.href);
     for (const route of ['/about', '/faq', '/contact', '/privacy', '/terms']) expect(destinations).toContain(route);
@@ -44,7 +44,7 @@ describe('portfolio public journey', () => {
   it('keeps the homepage short and links to the full pages', () => {
     const home = source('components/home/HomePageClient.tsx');
     expect(home.match(/<section\b/g)).toHaveLength(4);
-    expect(home).toContain('href="/services"');
+    expect(home).toContain('href="/examples"');
     expect(home).toContain('href="/work"');
     expect(home).toContain('href="/contact"');
     expect(home).not.toContain('id="approach"');
@@ -52,14 +52,13 @@ describe('portfolio public journey', () => {
     expect(source('components/public/PublicHeader.tsx')).not.toContain('getPublicHomeHref');
   });
 
-  it('keeps the system page as an optional conceptual case study', () => {
+  it('labels the optional system background as a paused unproven experiment', () => {
     const system = source('app/system/page.tsx');
-    expect(system).toContain('Why this exists');
-    expect(system).toContain('Chat can start the work. NeedThisDone carries it through.');
-    expect(system).toContain('What chat alone leaves unresolved.');
-    expect(system).toContain('From request to result');
-    expect(system).toContain('Start with one outcome.');
-    expect(system).toContain('Start a conversation');
+    expect(system).toContain('Paused experiment');
+    expect(system).toContain('A complete live execution workflow remains unproven.');
+    expect(system).toContain('These are design goals.');
+    expect(system).toContain('I have paused expansion');
+    expect(system).toContain('Explore the working examples');
     expect(system).not.toContain('SYSTEM_PROOF_LANES');
     expect(system).not.toMatch(/MCP|Supabase|Hermes|Redis|OpenClaw|Vector memory|Evidence:/i);
     expect(system).not.toMatch(/href=["']https:\/\/github\.com/);
@@ -83,7 +82,7 @@ describe('portfolio public journey', () => {
     expect(source('app/api/projects/route.ts')).toContain("formData.get('message')");
   });
 
-  it('gives home, capabilities, and work distinct jobs', () => {
+  it('distinguishes working examples from one inspectable independent project', () => {
     const services = source('components/services/ServicesPageClient.tsx');
     const work = source('components/work/WorkPageClient.tsx');
     const home = source('components/home/HomePageClient.tsx');
@@ -91,10 +90,11 @@ describe('portfolio public journey', () => {
     expect(services).toContain('PUBLIC_CAPABILITIES_INTRO');
     expect(services).toContain('React');
     expect(services).not.toContain('PUBLIC_OFFERS');
-    expect(work).toContain('caseStudies');
-    expect(work).toContain('portfolio-hero.png');
-    expect(work).toContain('Useful things for messy problems.');
-    expect(work).toContain('simpleSteps');
+    expect(work).toContain('NeedThisDone is my own project.');
+    expect(work).toContain('portfolio-examples.webp');
+    expect(work.match(/<article\b/g)).toHaveLength(1);
+    expect(work).toContain('The separate agent-execution experiment is paused');
+    expect(work).toContain('EXAMPLE_SOURCE');
     expect(home).toContain('href="/work"');
     expect(home).not.toContain('PUBLIC_EXAMPLES');
   });
@@ -102,11 +102,12 @@ describe('portfolio public journey', () => {
   it('gives About and How It Works distinct portfolio jobs', () => {
     const howItWorks = source('app/how-it-works/page.tsx');
     const about = source('app/about/page.tsx');
-    expect(howItWorks).toContain('Make the next technical decision easier to see.');
-    expect(howItWorks).toContain('Make the problem observable');
-    expect(about).toContain('About NeedThisDone');
-    expect(about).toContain('Problems that cross more than one layer.');
-    expect(about).toContain('Clarity is part of the implementation.');
+    expect(howItWorks).toContain('Find the cause.');
+    expect(howItWorks).toContain('Reproduce the problem');
+    expect(howItWorks).toContain('portfolio-import.test.ts');
+    expect(about).toContain('About Abe Reyes');
+    expect(about).toContain('AI-assisted development');
+    expect(about).toContain('Acadio');
     expect(about).not.toContain('Meet the team');
   });
 
@@ -116,12 +117,14 @@ describe('portfolio public journey', () => {
     expect(source('components/public/PublicChrome.tsx')).toContain('if (isPrivate)');
     expect(source('components/public/PublicChrome.tsx')).not.toContain('HomeJourneyProgress');
     expect(source('app/globals.css')).not.toContain('homepage-journey-progress');
-    expect(source('components/public/PublicHeader.tsx')).toContain('href="/login"');
+    expect(source('components/public/PublicHeader.tsx')).not.toContain('href="/login"');
+    expect(source('components/public/PublicFooter.tsx')).toContain('href="/login"');
+    expect(source('app/layout.tsx')).toContain('portfolio.css');
   });
 
   it('keeps the editorial palette readable and honors reduced motion', () => {
     for (const [foreground, background] of [
-      ['#50675e', '#f7f4ed'], ['#126b4e', '#f7f4ed'], ['#ffffff', '#126b4e'],
+      ['#53665a', '#f6f3ec'], ['#286349', '#f6f3ec'], ['#ffffff', '#236247'],
       ['#183229', '#e8e2d5'], ['#dce8dd', '#18372e'],
     ]) expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5);
     const styles = source('app/globals.css');
@@ -134,13 +137,15 @@ describe('portfolio public journey', () => {
     const roadmap = readFileSync(resolve(repositoryRoot, 'ROADMAP.md'), 'utf8');
     expect(readme).toContain('# NeedThisDone');
     expect(readme).toContain('## Public website and private assistant');
-    expect(roadmap).toContain('Assistant-first finish line');
+    expect(roadmap).toContain('Active portfolio sequence');
+    expect(roadmap).toContain('Assistant-first finish line (paused)');
+    expect(readme).toContain('The earlier private assistant experiment is paused.');
   });
 
-  it('uses the independent-practice promise in metadata', () => {
-    expect(PUBLIC_BRAND_TITLE).toBe('Independent Technology Practice');
+  it('uses the developer identity in metadata and social sharing', () => {
+    expect(PUBLIC_BRAND_TITLE).toBe('Abe Reyes — Developer Portfolio');
     expect(source('app/layout.tsx')).toContain('PUBLIC_BRAND_TITLE');
-    expect(source('public/og-image.svg')).toContain('Independent');
+    expect(source('public/og-image.svg')).toContain('Abe Reyes.');
     expect(seoConfig.description).toContain('React and Next.js');
   });
 });

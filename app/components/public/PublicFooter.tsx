@@ -1,67 +1,54 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  PUBLIC_FOOTER_GROUPS,
-  isPublicRouteCurrent,
-} from "@/lib/public-journey";
-import { PUBLIC_BRAND_PROMISE, PUBLIC_CORE_PROMISE } from "@/lib/public-copy";
+import { PUBLIC_NAVIGATION, isPublicRouteCurrent } from "@/lib/public-journey";
 
 export default function PublicFooter() {
   const pathname = usePathname();
-  const groups = PUBLIC_FOOTER_GROUPS;
   return (
-    <footer className="public-footer border-t border-[var(--public-ink)]/10 bg-[var(--public-ink)] text-[var(--public-cream)]">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1.2fr_2fr]">
-        <div>
-          <Link href="/" className="font-playfair text-xl font-black">
-            Need This Done
-          </Link>
-          <p className="mt-3 max-w-sm text-sm leading-6 text-[#dce8dd]">
-            {PUBLIC_BRAND_PROMISE} {PUBLIC_CORE_PROMISE}
-          </p>
+    <footer className="pf-footer">
+      <div className="pf-wrap">
+        <div className="pf-footer-inner">
+          <div>
+            <Link href="/about" className="pf-footer-name">
+              Abe Reyes
+            </Link>
+            <p>
+              Independent development. Technical support.
+              <br />A practical approach to connected problems.
+            </p>
+          </div>
+          <nav aria-label="Footer navigation">
+            {PUBLIC_NAVIGATION.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={
+                  isPublicRouteCurrent(pathname, link.href) ? "page" : undefined
+                }
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link href="/contact">Contact Abe</Link>
+          </nav>
         </div>
-        <nav
-          aria-label="Footer navigation"
-          className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4"
-        >
-          {groups.map(({ title, links }) => (
-            <div key={title}>
-              <h2 className="text-xs font-bold uppercase tracking-[.18em] text-[#b9d5bd]">
-                {title}
-              </h2>
-              <ul className="mt-4 space-y-3 text-sm text-[#dce8dd]">
-                {links.map(({ href, label }) => (
-                  <li key={href}>
-                    <Link
-                      aria-current={
-                        isPublicRouteCurrent(pathname, href)
-                          ? "page"
-                          : undefined
-                      }
-                      className="inline-flex min-h-11 items-center hover:text-white hover:underline aria-[current=page]:underline"
-                      href={href}
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </div>
-      <div className="studio-footer-bottom">
-        <span>Designed and developed by Abe Reyes</span>
-        <div>
-          <a
-            href="https://github.com/AbeJitsu/Need_This_Done"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-          <a href="mailto:hello@needthisdone.com">Email</a>
+        <div className="pf-footer-bottom">
+          <span>NeedThisDone / The developer portfolio of Abe Reyes</span>
+          <div>
+            <a
+              href="https://github.com/AbeJitsu/Need_This_Done"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+            <a href="mailto:hello@needthisdone.com">Email</a>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/ada-compliance">Accessibility</Link>
+            <Link href="/login">Account</Link>
+          </div>
         </div>
       </div>
     </footer>

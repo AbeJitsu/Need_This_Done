@@ -1,18 +1,26 @@
 export const PUBLIC_VARIANT = "match-crib-v1" as const;
 
 export const PUBLIC_NAVIGATION = [
-  { href: "/services", label: "Capabilities" },
   { href: "/work", label: "Selected Work" },
+  { href: "/examples", label: "Examples" },
+  { href: "/how-it-works", label: "Approach" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Notes" },
 ] as const;
 
 export const PUBLIC_PRIMARY_ACTION = {
   href: "/contact",
-  label: "Start a conversation",
+  label: "Contact Abe",
 } as const;
 
 export const PUBLIC_ROUTE_STAGES = {
+  "/examples": {
+    stage: "proof",
+    primary: PUBLIC_PRIMARY_ACTION,
+    secondary: { href: "/work", label: "Explore the project" },
+    // Group portfolio proof pages under the existing database event contract.
+    event: "work",
+  },
   "/": {
     stage: "orient",
     primary: PUBLIC_PRIMARY_ACTION,
@@ -40,19 +48,19 @@ export const PUBLIC_ROUTE_STAGES = {
   "/work": {
     stage: "proof",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/about", label: "The approach" },
+    secondary: { href: "/about", label: "About Abe" },
     event: "work",
   },
   "/about": {
     stage: "trust",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/contact", label: "Start a conversation" },
+    secondary: PUBLIC_PRIMARY_ACTION,
     event: "about",
   },
   "/website-fix": {
     stage: "fit",
     primary: PUBLIC_PRIMARY_ACTION,
-    secondary: { href: "/contact", label: "Start a conversation" },
+    secondary: PUBLIC_PRIMARY_ACTION,
     event: "website_fix",
   },
   "/managed-automation": {

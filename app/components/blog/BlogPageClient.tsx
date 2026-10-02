@@ -1,6 +1,5 @@
 import BlogPostCard from "@/components/blog/BlogPostCard";
 import PublicClosing from "@/components/public/PublicClosing";
-import PublicPageVisual from "@/components/public/PublicPageVisual";
 import type { BlogPageContent } from "@/lib/page-content-types";
 import type { BlogPostSummary } from "@/lib/blog-types";
 
@@ -14,25 +13,15 @@ export default function BlogPageClient({
   return (
     <main
       id="main-content"
-      className="studio-notes bg-[var(--public-cream)] text-[var(--public-ink)]"
+      className="pf-page studio-notes bg-[var(--public-cream)] text-[var(--public-ink)]"
     >
-      <section className="public-page-hero bg-[var(--public-dark)] text-white">
-        <div className="public-section">
-          <div className="grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[.2em] text-[#b9d5bd]">
-                Notes
-              </p>
-              <h1 className="mt-5 max-w-3xl font-playfair text-5xl font-black sm:text-6xl">
-                Ideas you can put to use.
-              </h1>
-              <p className="public-reading mt-6 text-lg leading-8 text-[#dce8dd]">
-                {initialContent.header.description}
-              </p>
-            </div>
-            <PublicPageVisual kind="notes-library" priority />
-          </div>
-        </div>
+      <section className="pf-page-intro pf-wrap">
+        <p className="pf-eyebrow"><span /> Notes from the build</p>
+        <h1>Thinking out loud.<br /><em>Making it useful.</em></h1>
+        <p className="pf-lead">
+          Short notes on interfaces, clearer communication, and practical
+          development decisions. Another way to see how I approach the work.
+        </p>
       </section>
       <section className="public-section" aria-label="All notes">
         <div className="studio-section-heading">
@@ -57,8 +46,8 @@ export default function BlogPageClient({
       </section>
       <PublicClosing title="Have a question of your own?">
         <p>
-          Share the website problem or repeated task you have in mind. We can
-          discuss a useful next step with you.
+          Reach out about the work, a development role, or a question worth
+          exploring together.
         </p>
       </PublicClosing>
     </main>

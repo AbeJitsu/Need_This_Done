@@ -38,14 +38,14 @@ export default function PublicHeader() {
       <div className="mx-auto flex min-h-[72px] max-w-6xl items-center justify-between px-5 sm:px-8 lg:min-h-[80px]">
         <Link
           href="/"
-          className="studio-wordmark"
+          className="pf-wordmark"
           onClick={() => setOpen(false)}
         >
-          <span className="studio-wordmark-symbol" aria-hidden="true">
-            n.
+          <span className="pf-wordmark-mark" aria-hidden="true">
+            ar.
           </span>
           <span>
-            Need This Done<small>By Abe Reyes</small>
+            <strong>Abe Reyes</strong><small>NEEDTHISDONE / PORTFOLIO</small>
           </span>
         </Link>
         <nav
@@ -66,12 +66,6 @@ export default function PublicHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="hidden items-center rounded-full border border-[var(--public-ink)]/20 px-4 py-2.5 text-sm font-bold text-[var(--public-ink)] transition hover:bg-[var(--public-soft)] focus-visible:ring-[#d0a94f] sm:inline-flex"
-          >
-            Sign in
-          </Link>
           <Link
             href={PUBLIC_PRIMARY_ACTION.href}
             className="hidden items-center rounded-full bg-[var(--public-green)] px-6 py-2.5 text-sm font-bold text-white transition hover:bg-[#0c563e] focus-visible:ring-[#d0a94f] sm:inline-flex"
@@ -110,13 +104,6 @@ export default function PublicHeader() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/login"
-            onClick={() => setOpen(false)}
-            className="mt-2 block rounded-lg border border-[var(--public-ink)]/20 px-3 py-3 text-center font-bold text-[var(--public-ink)] hover:bg-[var(--public-soft)]"
-          >
-            Sign in
-          </Link>
           <Link
             href={PUBLIC_PRIMARY_ACTION.href}
             onClick={() => setOpen(false)}

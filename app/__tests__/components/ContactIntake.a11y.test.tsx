@@ -30,9 +30,9 @@ describe('conversation form', () => {
     searchParams.set('offer', 'website-fix');
     const view = render(<ContactPage />);
     await waitFor(() => expect(view.getByRole('radio', { name: 'Website work', exact: true })).toBeChecked());
-    expect(view.getByRole('radio', { name: 'Not sure yet', exact: true })).not.toBeChecked();
-    fireEvent.click(view.getByRole('radio', { name: 'Not sure yet', exact: true }));
-    expect(view.getByRole('radio', { name: 'Not sure yet', exact: true })).toBeChecked();
+    expect(view.getByRole('radio', { name: 'A role or question', exact: true })).not.toBeChecked();
+    fireEvent.click(view.getByRole('radio', { name: 'A role or question', exact: true }));
+    expect(view.getByRole('radio', { name: 'A role or question', exact: true })).toBeChecked();
   });
 
   it('submits the plain message API contract and recovers from errors', async () => {
@@ -42,12 +42,12 @@ describe('conversation form', () => {
     fireEvent.change(view.getByLabelText('Your email'), { target: { value: 'alex@example.com' } });
 
     vi.mocked(fetch).mockRejectedValueOnce(new Error('offline'));
-    fireEvent.click(view.getByRole('button', { name: 'Start a conversation', exact: true }));
+    fireEvent.click(view.getByRole('button', { name: 'Contact Abe', exact: true }));
     expect(await view.findByRole('alert')).toHaveTextContent('offline');
     expect(view.getByLabelText(/^Your message/)).toHaveValue('I need help connecting a dashboard to durable project data.');
 
     vi.mocked(fetch).mockResolvedValueOnce(new Response('{}', { status: 200 }));
-    fireEvent.click(view.getByRole('button', { name: 'Start a conversation', exact: true }));
+    fireEvent.click(view.getByRole('button', { name: 'Contact Abe', exact: true }));
     await waitFor(() => expect(view.getByRole('heading', { name: 'Thanks for reaching out.' })).toBeVisible());
     const submission = [...vi.mocked(fetch).mock.calls].reverse().find(([url]) => url === '/api/projects');
     const body = submission?.[1]?.body as FormData;

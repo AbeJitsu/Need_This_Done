@@ -5,10 +5,10 @@
  * summaries cannot quietly drift apart.
  */
 export const PUBLIC_CORE_PROMISE =
-  'NeedThisDone builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.';
+  'Abe Reyes builds web applications with React and Next.js, connecting interfaces, APIs, and data. Explore working examples and his approach to troubleshooting and testing.';
 
-export const PUBLIC_BRAND_PROMISE = 'An independent technology practice.';
-export const PUBLIC_BRAND_TITLE = 'Independent Technology Practice';
+export const PUBLIC_BRAND_PROMISE = 'The developer portfolio of Abe Reyes.';
+export const PUBLIC_BRAND_TITLE = 'Abe Reyes — Developer Portfolio';
 
 export const PUBLIC_SITE_DESCRIPTION = `${PUBLIC_CORE_PROMISE} ${PUBLIC_BRAND_PROMISE}`;
 export const PUBLIC_REPORT_FALLBACK =

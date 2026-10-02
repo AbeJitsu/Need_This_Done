@@ -1,6 +1,16 @@
 # NeedThisDone
 
-NeedThisDone is a private assistant and control system for turning a person's plain-language request into controlled, reviewable work.
+NeedThisDone is Abe Reyes's developer portfolio and independent full-stack application project. The active public-site focus is hiring managers: a short overview, inspectable working examples, one honest project story, experience, and a direct way to contact Abe.
+
+## Active direction — 2026-10-02
+
+The dated `feature/hiring-portfolio-2026-10-02` branch realigns the public site around demonstrable development work. `/examples` contains a React task board with browser persistence, a bounded Next.js contact-validation API, and a reproducible duplicate-detection example. The API returns a preview and stores no records. The site identifies AI-assisted development openly and claims no client projects or business results.
+
+The earlier private assistant experiment is paused. Do not add worker hosts, agent chains, recurring execution, or local-machine infrastructure until a specific useful outcome justifies that work. Any future execution design should be evaluated against managed cloud options and the owner's current workflow. No new cloud runtime is provisioned by this portfolio change.
+
+## Preserved assistant design
+
+The repository also contains a private assistant and control-system experiment for turning a person's plain-language request into controlled, reviewable work. The following design and proof requirements remain the reference if that experiment is resumed.
 
 In simple terms:
 
@@ -12,9 +22,9 @@ In simple terms:
 
 The goal is not an uncontrolled autonomous agent. The goal is a durable record of what was requested, what was approved, what actually happened, and what should happen next.
 
-## Current status
+## Assistant implementation status (paused)
 
-The repository contains a substantial local implementation, but the complete live workflow is still being proven. The table below is the authoritative high-level status as of September 18, 2026.
+The repository contains a substantial local implementation, but the complete live workflow remains unproven and active assistant expansion is paused. The table below is the authoritative high-level status as of September 18, 2026.
 
 | Proof gate | Status | What that means |
 |---|---|---|
@@ -101,10 +111,10 @@ The MacBook Pro and Mac mini are implementation examples, not architectural requ
 
 NeedThisDone has two related but separate boundaries:
 
-- The public website explains the service and lets visitors share what they want improved. A public submission starts a conversation; it does not approve work or expose the private worker.
+- The public website presents Abe Reyes, demonstrable application work, source links, and experience. Visitors can ask about a role or project. A public submission starts a conversation; it does not approve work or expose the private worker.
 - The private assistant is the authenticated system described above. It owns the planning, approval, execution, and evidence lifecycle.
 
-The public [`/system` overview](app/app/system/page.tsx) explains the difference between a conversation and a controlled path from request to result. Internal proof and operational status are rendered only in the authenticated operator workspace at `/admin/operations`, using [`app/lib/system-progress.ts`](app/lib/system-progress.ts).
+The public [`/system` background](app/app/system/page.tsx) labels the original request-to-result design as a paused, unproven experiment. Internal proof and operational status are rendered only in the authenticated operator workspace at `/admin/operations`, using [`app/lib/system-progress.ts`](app/lib/system-progress.ts).
 
 ## Documentation and evidence
 

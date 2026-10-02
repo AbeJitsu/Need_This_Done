@@ -1,10 +1,20 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#f7f4ed"/>
-  <circle cx="1090" cy="-30" r="330" fill="#d0a94f" opacity="0.14"/>
-  <rect x="72" y="68" width="1056" height="494" rx="8" fill="none" stroke="#183229" stroke-opacity="0.16"/>
-  <text x="112" y="155" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="4" fill="#126b4e">PORTFOLIO · FULL-STACK · SYSTEMS</text>
-  <text x="112" y="290" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700" fill="#183229">Independent</text>
-  <text x="112" y="385" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700" fill="#183229">technology practice.</text>
-  <rect x="112" y="448" width="86" height="5" rx="2.5" fill="#d0a94f"/>
-  <text x="112" y="510" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="700" fill="#183229">Need This Done</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f3ec"/>
+  <rect x="760" width="440" height="630" fill="#dce9df"/>
+  <text x="84" y="107" font-family="Arial, sans-serif" font-size="21" font-weight="700" letter-spacing="3" fill="#286349">NEEDTHISDONE / DEVELOPER PORTFOLIO</text>
+  <text x="80" y="245" font-family="Arial, sans-serif" font-size="78" font-weight="700" fill="#1d332a">Abe Reyes.</text>
+  <text x="80" y="343" font-family="Georgia, serif" font-size="62" font-style="italic" fill="#286349">Build the useful thing.</text>
+  <text x="84" y="432" font-family="Arial, sans-serif" font-size="26" fill="#53665a">React interfaces. Server APIs. Verified behavior.</text>
+  <rect x="84" y="494" width="263" height="52" rx="26" fill="#236247"/>
+  <text x="113" y="528" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#fff">Explore the examples</text>
+  <rect x="829" y="155" width="305" height="320" rx="20" fill="#fffdf7" stroke="#b4c9ba"/>
+  <text x="858" y="202" font-family="Arial, sans-serif" font-size="14" letter-spacing="2" fill="#53665a">INPUT / STATE / INTERFACE</text>
+  <rect x="858" y="234" width="242" height="7" rx="3.5" fill="#dce9df"/>
+  <rect x="858" y="234" width="81" height="7" rx="3.5" fill="#286349"/>
+  <circle cx="869" cy="286" r="8" fill="#286349"/>
+  <text x="891" y="293" font-family="Arial, sans-serif" font-size="18" fill="#1d332a">Build the interface</text>
+  <circle cx="869" cy="342" r="8" fill="#bc9446"/>
+  <text x="891" y="349" font-family="Arial, sans-serif" font-size="18" fill="#1d332a">Connect the API</text>
+  <circle cx="869" cy="398" r="8" fill="#c3cec4"/>
+  <text x="891" y="405" font-family="Arial, sans-serif" font-size="18" fill="#1d332a">Check the result</text>
 </svg>

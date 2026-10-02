@@ -42,14 +42,9 @@ export const seoConfig = {
     'technical systems builder',
     'backend database API integrations',
     'technical operations',
-    'website fix',
-    'website accessibility fix',
-    'website performance fix',
-    'website conversion fix',
-    'managed automation',
-    'repeated work problem',
-    'better work outcome',
-    'small business workflow help',
+    'Abe Reyes developer',
+    'React working examples',
+    'API validation and testing',
   ],
 
   // Services for structured data

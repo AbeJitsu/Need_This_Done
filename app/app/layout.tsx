@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import './public-polish.css';
+import './portfolio.css';
 import PublicChrome from '@/components/public/PublicChrome';
 import { AuthProvider } from '@/context/AuthContext';
 import SessionProvider from '@/components/providers/SessionProvider';
@@ -10,7 +11,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { ServiceDetailModal } from '@/components/service-modal';
 import { Suspense } from 'react';
 import HeroPreviewDetector from '@/components/HeroPreviewDetector';
-import { ProfessionalServiceJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
+import { PersonJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
 import { PUBLIC_BRAND_PROMISE, PUBLIC_BRAND_TITLE, PUBLIC_CORE_PROMISE } from '@/lib/public-copy';
 import { validateEnvironmentVariables } from '@/lib/env-validation';
@@ -76,8 +77,8 @@ export const metadata: Metadata = {
   },
   description: seoConfig.description,
   keywords: seoConfig.keywords,
-  authors: [{ name: seoConfig.siteName }],
-  creator: seoConfig.siteName,
+  authors: [{ name: 'Abe Reyes' }],
+  creator: 'Abe Reyes',
   publisher: seoConfig.siteName,
 
   // Robots crawling configuration
@@ -160,9 +161,8 @@ export default function RootLayout({
     >
       <head>
         {/* JSON-LD Structured Data for rich search results */}
-        <ProfessionalServiceJsonLd />
+        <PersonJsonLd />
         <WebSiteJsonLd />
-        <LocalBusinessJsonLd />
       </head>
       <body className="antialiased">
         <SessionProvider>

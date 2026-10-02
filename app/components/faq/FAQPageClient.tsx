@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
+import { PUBLIC_PRIMARY_ACTION } from '@/lib/public-journey';
 import { ArrowRight, CheckCircle2, ChevronDown, HelpCircle } from 'lucide-react';
 import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
 import type { FAQPageContent } from '@/lib/page-content-types';
@@ -107,7 +108,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
             <p className="text-sm font-bold text-[var(--public-ink)]">Still unsure?</p>
             <p className="mt-2 text-sm leading-6 text-[var(--public-muted)]">Share the context you have and we can clarify the right starting point.</p>
             <Link href="/contact" className="mt-5 inline-flex items-center gap-2 font-bold text-[var(--public-green)]">
-              Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              {PUBLIC_PRIMARY_ACTION.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -191,7 +192,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
                       href={button.href}
                       className={`inline-flex min-h-12 whitespace-nowrap items-center justify-center gap-2 rounded-full px-7 py-3 font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--public-dark)] ${index === 0 ? 'bg-emerald-300 text-[var(--public-dark)] hover:bg-emerald-200' : 'border border-white/20 text-white hover:bg-white/10'}`}
                     >
-                      {button.text} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      {button.href === PUBLIC_PRIMARY_ACTION.href ? PUBLIC_PRIMARY_ACTION.label : button.text} <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   ))}
                 </div>

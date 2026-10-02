@@ -8,7 +8,6 @@ import { normalizePublicOfferId } from "@/lib/public-offers";
 import { recordEngagement } from "@/lib/engagement";
 import { PUBLIC_PRIMARY_ACTION, PUBLIC_VARIANT } from "@/lib/public-journey";
 import { PROJECT_MESSAGE_MAX_LENGTH } from "@/lib/validation";
-import PublicPageVisual from "@/components/public/PublicPageVisual";
 
 type StartingPoint = "" | "website-fix" | "managed-automation";
 
@@ -93,7 +92,7 @@ function ContactForm() {
           error?: string;
         } | null;
         throw new Error(
-          payload?.error || "We could not send your message. Please try again.",
+          payload?.error || "Your message could not be sent. Please try again.",
         );
       }
       setStatus("success");
@@ -107,7 +106,7 @@ function ContactForm() {
       setErrorMessage(
         submissionError instanceof Error
           ? submissionError.message
-          : "We could not send your message. Please try again.",
+          : "Your message could not be sent. Please try again.",
       );
       setStatus("error");
       recordEngagement({
@@ -141,8 +140,8 @@ function ContactForm() {
             Thanks for reaching out.
           </h1>
           <p className="mt-4 leading-7 text-[#50675e]">
-            We&apos;ll read what you sent and follow up with a practical next
-            step.
+            I&apos;ll read your message and follow up. Thanks for taking a
+            look at the work.
           </p>
           <Link href="/work" className="public-explore mt-6">
             See selected work
@@ -155,25 +154,15 @@ function ContactForm() {
   return (
     <main
       id="main-content"
-      className="bg-[var(--public-cream)] text-[var(--public-ink)]"
+      className="pf-page bg-[var(--public-cream)] text-[var(--public-ink)]"
     >
-      <section className="public-page-hero bg-[#18372e] text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:py-20 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
-              {PUBLIC_PRIMARY_ACTION.label}
-            </p>
-            <h1 className="mt-5 font-playfair text-5xl font-black">
-              Bring the technical problem as it is.
-            </h1>
-            <p className="mt-5 max-w-2xl text-[#dce8dd]">
-              Discuss a technical role, or tell us what you are building, what
-              is getting in the way, or what you want to understand better. A
-              polished brief is not required.
-            </p>
-          </div>
-          <PublicPageVisual kind="conversation-start" priority />
-        </div>
+      <section className="pf-page-intro pf-wrap">
+        <p className="pf-eyebrow"><span /> {PUBLIC_PRIMARY_ACTION.label}</p>
+        <h1>Let&apos;s talk about<br /><em>the next step.</em></h1>
+        <p className="pf-lead">
+          Have a role, a team, or a project in mind? I&apos;d like to hear
+          about it. A few sentences is a good place to start.
+        </p>
       </section>
 
       <section className="studio-contact-body mx-auto max-w-6xl px-5 py-12 sm:px-8">
@@ -243,7 +232,7 @@ function ContactForm() {
               </legend>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                 {[
-                  ["", "Not sure yet"],
+                  ["", "A role or question"],
                   ["website-fix", "Website work"],
                   ["managed-automation", "Automation"],
                 ].map(([value, label]) => (

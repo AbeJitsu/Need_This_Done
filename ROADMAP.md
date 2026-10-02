@@ -1,10 +1,19 @@
 # NeedThisDone Roadmap
 
 This is an execution list, not a second vision document. Start with the
-[canonical assistant and operating vision](README.md)
+[canonical portfolio and operating vision](README.md)
 before adding work here.
 
-## Assistant-first finish line
+## Active portfolio sequence — 2026-10-02
+
+1. Make the deployed front door useful to hiring managers: introduce Abe, show working examples, and provide short paths to the project, approach, experience, and contact.
+2. Publish three inspectable examples: a React interface with browser persistence, a real bounded validation API, and a reproducible bug with regression tests.
+3. Verify keyboard access, error recovery, mobile layouts, and the production build. Publish a dated branch preview before reviewing promotion.
+4. Expand the portfolio only when a new example shows a distinct, useful capability. The immediate evidence is independent work, not invented client projects.
+
+Assistant expansion, worker hosting, and scheduled agent execution are paused. The retained proof sequence below is historical guidance if a practical outcome warrants resuming it. Local Mac hosting is not a requirement for this portfolio or its examples.
+
+## Assistant-first finish line (paused)
 
 The first release-worthy proof is one real, controlled LLM client → Supabase →
 configured worker-host workflow. Local tests alone do not meet this finish line.
@@ -37,7 +46,7 @@ It is complete only when all of these are true:
    worktree and returns a reviewable diff and evidence. It does not begin until
    the read-only proof is accepted.
 
-## Current sequence
+## Preserved assistant sequence (paused)
 
 1. Keep one durable browser approval and private-asset lifecycle in Next.js and
    Supabase; remove or avoid duplicate queues, dashboards, memory stores, and
@@ -212,10 +221,10 @@ update its route assertions and the same ledgers.
 
 ## Public `/system` case study
 
-The public [system case study](app/app/system/page.tsx) is an explanatory page
-for the private-system boundary, not part of the assistant finish line. Its
-plain-English flow must precede the technical stack explanation, and its
-proof-state labels must match the current repository status. If its stage model,
+The public [system background](app/app/system/page.tsx) describes a paused
+experiment and its original design goals. It must say that the complete live
+workflow remains unproven and keep the active portfolio examples easy to reach.
+If its stage model,
 stack descriptions, CTA destinations, or responsive card geometry changes,
 update the route assertions in `app/e2e/ai-employee-product.spec.ts` and record
 the new validation in [Project status](docs/PROJECT_STATUS.md) and [Release evidence](docs/RELEASE_EVIDENCE.md).
@@ -232,4 +241,4 @@ The current factual state and validation record live in
 [Project Status](docs/PROJECT_STATUS.md) and
 [Release Evidence](docs/RELEASE_EVIDENCE.md). The four-gate implementation
 checklist lives in [Build Progress Map](docs/BUILD_PROGRESS_MAP.md), and the
-`/system` page presents the same gates visually.
+`/system` page presents the paused experiment without claiming live proof.

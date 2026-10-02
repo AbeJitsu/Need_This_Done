@@ -2,9 +2,10 @@
 
 ## Canonical sources
 
-`README.md` is the canonical assistant and operating vision for NeedThisDone.
-It defines the authenticated browser control plane, private Mac runtime, and
-framework responsibilities. Read it before proposing or changing a workflow,
+`README.md` is the canonical public-portfolio and operating vision for NeedThisDone.
+It defines the active hiring-manager focus, the paused assistant experiment,
+and the preserved authenticated-system boundaries. Read it before proposing
+or changing a workflow,
 provider, internal tool, browser surface, or public page.
 `ROADMAP.md` is the current outcome sequence and proof criteria; it must follow
 the README rather than redefine it.
@@ -16,8 +17,8 @@ Use the factual ledgers for changing execution state:
 - `docs/launch/LAUNCH_CHECKLIST.md` — numbered hosted-promotion controls.
 
 Do not duplicate changing product claims, milestones, or command inventories in
-agent instructions. Work that does not advance the approved assistant workflow,
-make it safer, or remove proven duplication does not enter active scope.
+agent instructions. Active work advances the developer portfolio and
+demonstrable application behavior. Assistant expansion remains paused unless the owner resumes it.
 
 ## Stable safety boundaries
 

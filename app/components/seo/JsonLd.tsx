@@ -12,6 +12,18 @@ interface JsonLdProps {
   type: 'LocalBusiness' | 'WebSite' | 'Service' | 'FAQPage' | 'ProfessionalService';
 }
 
+/** Identity for the public portfolio; service schemas remain on legacy offer pages. */
+export function PersonJsonLd() {
+  const person = {
+    '@context': 'https://schema.org', '@type': 'Person',
+    '@id': `${seoConfig.baseUrl}/about#abe-reyes`,
+    name: 'Abe Reyes', url: `${seoConfig.baseUrl}/about`,
+    description: PUBLIC_CORE_PROMISE,
+    sameAs: ['https://github.com/AbeJitsu'],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, '\\u003c') }} />;
+}
+
 // Base business information used across all schema types - sourced from seoConfig
 const businessInfo = {
   name: seoConfig.siteName,

@@ -229,3 +229,58 @@ this commit and must be checked against the committed SHA. This change adds no
 database migration, provider activation, secret change, external message, or
 private-worker activation. Rollback is a new forward Git revert by the repository
 maintainer; do not force-push release history.
+
+
+## 2026-10-02 — Hiring portfolio and working examples
+
+Branch: `feature/hiring-portfolio-2026-10-02`, based on dev
+`60ca362e537146a92b702d972fe0606b9081fe12`. Both dev and production were observed
+at that prior public-design refresh before this increment.
+
+The active public site now introduces Abe Reyes rather than presenting an
+agency. Home is a short overview with a working React component. `/examples`
+contains a persistent browser task board, an actual stateless Next.js import
+validation endpoint, and a reproducible duplicate-detection comparison.
+Work documents only NeedThisDone as the inspectable independent project;
+Acadio is experience context. About, Approach, Notes, Contact, shared public
+navigation, metadata, and social sharing follow the personal identity. The
+original system page and canonical operating documents mark the agent
+experiment as paused. All portfolio styles stay within the public shell.
+
+Validation:
+
+- The import API contract started red before implementation. Its 10 focused
+  tests now pass, including malformed JSON, media type, collection limits,
+  actual UTF-8 byte limits without Content-Length, field redaction, and
+  duplicate detection after normalization.
+- `npm run verify:code` passed lint, type-check, 79 passing required unit files
+  (one existing skipped file), 429 passing unit tests (four existing skips),
+  five accessibility files / 52 tests, and production build. The final lint
+  and production build passed after the source-link/FAQ-label adjustments;
+  the build includes its own TypeScript check. The final documentation
+  contracts passed separately (16 tests).
+- Production Playwright public/public-mobile coverage passed 78 checks with
+  six intended device-specific skips, including a focused two-device FAQ
+  recheck after centralizing its closing contact label. The examples' browser
+  tests cover persistence and corrupt-data recovery, the real API, invalid and
+  duplicate rows, JSON download, network failure/retry, and keyboard selection.
+- Two seed-dependent report scenarios were excluded for both browser projects.
+  This does not prove the report lifecycle or hosted database behavior. Owner:
+  site maintainer; follow-up: 2026-10-09 with disposable local Supabase.
+- Independent geometry checks passed 22 routes at 320px, 390px, and 1440px
+  (66 route-width checks). Complete rendered axe scans passed Home, Examples,
+  Work, About, Approach, Contact, Notes, and the paused System background.
+- The Work image is an actual capture of the portfolio examples interface.
+  Social sharing uses the new personal portfolio SVG/PNG.
+- `git diff --check` passed. The browser helper daemon was unavailable in this
+  environment, so direct Playwright/Chromium supplied the rendered evidence.
+
+The owner requested a dated branch, Vercel links, and dev/production promotion.
+Publication must be checked through GitHub ref/status and Vercel READY metadata
+for the committed SHA, sequentially for the dated branch, dev, and production.
+Code evidence here does not claim a live worker, provider, hosted database,
+paid delivery, client outcome, or agent-service usefulness. This increment
+adds no migration, secret, worker host, provider activation, or paid runtime.
+The existing engagement storage contract is preserved; Examples uses the
+existing work/proof event category. Rollback is a new reviewed forward Git
+revert by the repository maintainer; do not force-push release history.

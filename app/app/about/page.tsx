@@ -1,193 +1,153 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { PUBLIC_CORE_PROMISE, PUBLIC_BRAND_PROMISE } from "@/lib/public-copy";
-import PublicPageVisual from "@/components/public/PublicPageVisual";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-const principles = [
+export const metadata: Metadata = {
+  title: "About Abe Reyes",
+  description:
+    "Abe Reyes is an independent developer with a background in onboarding, technical support, and customer-facing work.",
+  alternates: { canonical: "/about" },
+};
+
+const experience = [
   [
-    "Start with the real problem",
-    "Start with the bottleneck, the people affected, and the result that would make the work better.",
+    "Independent development",
+    "NeedThisDone",
+    "Ongoing",
+    "Building this application across React interfaces, Next.js APIs, authentication, data models, and tests.",
   ],
   [
-    "Keep the system understandable",
-    "Make the important boundaries visible: what the interface does, where data lives, and which actions need review.",
+    "Onboarding Specialist & Developer",
+    "Acadio",
+    "April–December 2025",
+    "Content conversion, validation, data migration, and tooling for repeatable onboarding workflows.",
   ],
   [
-    "Build the useful piece first",
-    "A small, working slice can be tested and improved before a larger plan takes shape.",
-  ],
-  [
-    "Leave evidence behind",
-    "Tests, accessible paths, clear records, and documented decisions make the work easier to trust later.",
+    "Technical support",
+    "Asurion / Verizon Tech Coach",
+    "March 2026–present",
+    "Device troubleshooting, activation support, and helping customers work through technical problems.",
   ],
 ] as const;
 
-export const metadata: Metadata = {
-  title: "About NeedThisDone | NeedThisDone",
-  description: PUBLIC_CORE_PROMISE,
-  alternates: { canonical: "/about" },
-  openGraph: {
-    title: "About NeedThisDone | NeedThisDone",
-    description: PUBLIC_CORE_PROMISE,
-    type: "website",
-  },
-};
-
 export default function AboutPage() {
   return (
-    <main
-      id="main-content"
-      className="bg-[var(--public-cream)] text-[var(--public-ink)]"
-    >
-      <section className="public-page-hero border-b border-[var(--public-ink)]/10 bg-[var(--public-dark)] text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-14">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#c9dcca]">
-              About NeedThisDone · Abe Reyes
-            </p>
-            <h1 className="mt-6 max-w-4xl font-playfair text-5xl font-black leading-[.98] sm:text-6xl md:text-7xl">
-              {PUBLIC_BRAND_PROMISE}
-            </h1>
-            <p className="mt-7 max-w-[60ch] text-lg leading-8 text-[#dce8dd] md:text-xl">
-              NeedThisDone builds practical software across the stack. The work
-              connects vague problems to useful interfaces, sound data models,
-              reliable APIs, and paths people can operate.
-            </p>
-          </div>
-          <PublicPageVisual kind="problem-map" priority />
-        </div>
-      </section>
-
-      <section
-        className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24"
-        aria-labelledby="background-heading"
-      >
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:items-start">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-              The through line
-            </p>
-            <h2
-              id="background-heading"
-              className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl"
-            >
-              Problems that cross more than one layer.
-            </h2>
-          </div>
-          <div className="max-w-[60ch] space-y-5 leading-7 text-[var(--public-muted)]">
-            <p>
-              Abe Reyes is the independent developer behind NeedThisDone. The
-              work spans full-stack product development: React and Next.js,
-              backends, APIs, databases, permissions, integrations, and
-              automation.
-            </p>
-            <p>
-              The focus extends beyond the demo. Failures need recovery,
-              decisions need records, and systems should be understandable
-              without guessing.
-            </p>
+    <main id="main-content" className="pf-page">
+      <section className="pf-page-intro pf-wrap pf-about-intro">
+        <div>
+          <p className="pf-eyebrow">
+            <span /> The person behind NeedThisDone
+          </p>
+          <h1>
+            Abe Reyes.
+            <br />
+            <em>Practical by nature.</em>
+          </h1>
+          <p className="pf-lead">
+            An independent developer with a background in technical support,
+            onboarding, and customer-facing work. Based in Orlando, Florida.
+          </p>
+          <div className="pf-actions">
+            <Link href="/work" className="pf-button pf-button--green">
+              Explore my work <ArrowRight size={17} aria-hidden="true" />
+            </Link>
+            <Link href="/contact" className="pf-text-link">
+              Contact Abe <ArrowUpRight size={17} aria-hidden="true" />
+            </Link>
           </div>
         </div>
+        <div className="pf-person-card">
+          <span className="pf-mono">DEVELOPER / PROBLEM SOLVER</span>
+          <span className="pf-monogram" aria-hidden="true">
+            ar.
+          </span>
+          <p>
+            Understand the problem.
+            <br />
+            Connect the pieces.
+            <br />
+            Check the result.
+          </p>
+          <span className="pf-mono">ORLANDO, FLORIDA</span>
+        </div>
       </section>
-
+      <section className="pf-wrap pf-about-story">
+        <div>
+          <p className="pf-eyebrow">The through line</p>
+          <h2>
+            Technology makes sense
+            <br />
+            <em>when people can use it.</em>
+          </h2>
+        </div>
+        <div>
+          <p>
+            I have spent much of my working life helping people navigate
+            decisions and technical problems. That experience carries into
+            development: understand the situation, make the next step clear, and
+            verify the result.
+          </p>
+          <p>
+            NeedThisDone is where I develop and demonstrate my own application
+            work. My current interests include web interfaces, APIs, data
+            workflows, and the investigation needed when those pieces fail to
+            connect.
+          </p>
+          <p>
+            I use AI-assisted development tools as part of the process. The
+            useful question is whether the resulting behavior can be explained,
+            tested, and inspected.
+          </p>
+          <Link href="/how-it-works" className="pf-text-link">
+            Explore the development approach{" "}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
       <section
         id="experience"
-        className="public-section studio-experience"
+        className="pf-wrap pf-experience"
         aria-labelledby="experience-heading"
       >
         <div>
-          <p className="studio-kicker">The experience behind the work</p>
-          <h2 id="experience-heading" className="studio-title">
-            Technology, with a human perspective.
+          <p className="pf-eyebrow">Experience</p>
+          <h2 id="experience-heading">
+            Building on
+            <br />
+            <em>real working context.</em>
           </h2>
-          <p className="mt-5 max-w-[48ch] leading-7 text-[var(--public-muted)]">
-            A background in onboarding, technical support, and customer-facing
-            work informs how the software is built.
-          </p>
         </div>
-        <ol className="studio-experience-list">
-          <li>
-            <p className="studio-kicker">Independent development · Ongoing</p>
-            <h3>NeedThisDone</h3>
-            <p>
-              Application interfaces, APIs, database-backed workflows, testing,
-              and delivery documentation.
-            </p>
-          </li>
-          <li>
-            <p className="studio-kicker">
-              Onboarding Specialist &amp; Developer · 2025
-            </p>
-            <h3>Acadio</h3>
-            <p>
-              Content conversion, validation, data migration, and repeatable
-              onboarding workflows.
-            </p>
-          </li>
-          <li>
-            <p className="studio-kicker">Technical support · 2026–present</p>
-            <h3>Asurion / Verizon Tech Coach</h3>
-            <p>
-              Device troubleshooting, activation support, and helping customers
-              navigate technical problems.
-            </p>
-          </li>
+        <ol>
+          {experience.map(([role, company, period, description]) => (
+            <li key={company}>
+              <div>
+                <p className="pf-mono">{period}</p>
+                <h3>{company}</h3>
+                <span>{role}</span>
+              </div>
+              <p>{description}</p>
+            </li>
+          ))}
         </ol>
       </section>
-
-      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-sand)]">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
-          <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[var(--public-green)]">
-              Working principles
-            </p>
-            <h2 className="mt-5 font-playfair text-4xl font-black leading-tight md:text-5xl">
-              Clarity is part of the implementation.
-            </h2>
-          </div>
-          <dl className="public-principles mt-14 grid gap-x-10 gap-y-10 py-10 md:grid-cols-2">
-            {principles.map(([term, description], index) => (
-              <div key={term}>
-                <span className="public-principles__number" aria-hidden="true">
-                  0{index + 1}
-                </span>
-                <dt className="font-playfair text-2xl font-black">{term}</dt>
-                <dd className="mt-3 max-w-lg leading-7 text-[var(--public-muted)]">
-                  {description}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-
-      <section className="border-t border-[var(--public-ink)]/10 bg-[var(--public-cream)]">
-        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:px-8 md:py-24">
-          <h2 className="font-playfair text-4xl font-black md:text-5xl">
-            See the work, then start a conversation.
-          </h2>
-          <p className="mx-auto mt-5 max-w-[60ch] leading-7 text-[var(--public-muted)]">
-            If you have a technical problem, a product idea, or a system you
-            want to make more dependable, send the unpolished version. We can
-            help define the first useful slice.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/work"
-              className="public-button inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--public-green)] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e]"
-            >
-              See selected work{" "}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/contact"
-              className="public-button inline-flex min-h-12 items-center gap-2 rounded-full border border-[var(--public-ink)]/20 px-7 py-3 font-bold text-[var(--public-ink)]"
-            >
-              Start a conversation{" "}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
+      <section className="pf-bottom-cta pf-wrap">
+        <p className="pf-eyebrow">A starting point</p>
+        <h2>
+          Have a role or
+          <br />
+          <em>project in mind?</em>
+        </h2>
+        <p>
+          Explore the examples, ask about an implementation decision, or start a
+          conversation.
+        </p>
+        <div className="pf-actions">
+          <Link href="/contact" className="pf-button pf-button--green">
+            Contact Abe
+          </Link>
+          <Link href="/examples" className="pf-text-link">
+            Try the examples <ArrowUpRight size={17} aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </main>

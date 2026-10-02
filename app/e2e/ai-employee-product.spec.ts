@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 const publicRoutes = [
-  '/', '/services', '/about', '/website-fix', '/managed-automation',
+  '/', '/examples', '/services', '/about', '/website-fix', '/managed-automation',
   '/how-it-works', '/system', '/pricing', '/work', '/blog', '/contact',
   '/faq', '/ada-compliance', '/privacy', '/terms',
   '/blog/ai-context-budget-tips', '/blog/loading-tricks-feel-instant',
@@ -34,7 +34,8 @@ test('public photos and their frames fit narrow phone viewports', async ({ page 
     for (const route of publicRoutes) {
       const response = await page.goto(route);
       expect(response?.ok(), `${route} should load at ${width}px`).toBe(true);
-      await expect(page.locator('main img[src*="/images/"]').first()).toBeVisible();
+      const imageCount = await page.locator('main img[src*="/images/"]').count();
+      if (imageCount > 0) await expect(page.locator('main img[src*="/images/"]').first()).toBeVisible();
 
       const photos = await page.locator('main img[src*="/images/"]').evaluateAll(async (images) => {
         await Promise.all(images.map((image) => (image as HTMLImageElement).decode()));
@@ -52,7 +53,7 @@ test('public photos and their frames fit narrow phone viewports', async ({ page 
         });
       });
 
-      expect(photos.length, `${route} should have a public photo`).toBeGreaterThan(0);
+      if (route === '/work') expect(photos.length, 'Selected work should show an actual interface capture').toBeGreaterThan(0);
       expect(
         photos.filter(({ left, right, viewport, aspectDifference }) =>
           left < 15 || right > viewport - 15 || aspectDifference > 0.1
@@ -111,22 +112,23 @@ test('homepage text stays inside its containers at public widths', async ({ page
   }
 });
 
-test('homepage leads with the generalist portfolio promise', async ({ page }) => {
+test('homepage introduces Abe and lets visitors try the interface', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/');
   const hero = page.locator('main > section').first();
-  await expect(hero.getByRole('heading', { name: 'Practical software for messy problems.' })).toBeVisible();
-  await expect(hero).toContainText('interfaces, backends, databases, APIs');
-  await expect(hero.getByRole('link', { name: 'See selected work', exact: true })).toHaveAttribute('href', '/work');
-  await expect(page.locator('#capabilities')).toBeVisible();
+  await expect(hero.getByRole('heading', { name: 'Build the useful thing. Understand why it works.' })).toBeVisible();
+  await expect(hero).toContainText('interfaces, APIs, and data');
+  await expect(hero.getByRole('link', { name: 'Explore the project', exact: true })).toHaveAttribute('href', '/work');
+  await expect(page.locator('#working-examples')).toBeVisible();
   await expect(page.locator('#featured-work')).toBeVisible();
   await expect(page.locator('main > section')).toHaveCount(4);
-  await expect(hero.getByRole('link', { name: 'Start a conversation' })).toHaveAttribute('href', '/contact');
+  await expect(hero.getByRole('link', { name: 'Try the working examples' })).toHaveAttribute('href', '/examples');
+  await expect(hero.getByRole('combobox').first()).toBeVisible();
 });
 
 test('homepage previews lead to their full pages', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#capabilities').getByRole('link', { name: 'Explore capabilities' })).toHaveAttribute('href', '/services');
+  await expect(page.locator('#working-examples').getByRole('link', { name: /An interface you can use/ })).toHaveAttribute('href', '/examples#react');
   await expect(page.locator('#featured-work').getByRole('link', { name: 'Explore selected work' })).toHaveAttribute('href', '/work');
 });
 
@@ -140,18 +142,19 @@ test('capabilities and work show the technical range', async ({ page }) => {
   await page.goto('/work');
   const work = page.getByRole('main');
   await expect(work.getByRole('heading', { name: 'NeedThisDone', exact: true })).toBeVisible();
-  await expect(work.getByRole('heading', { name: 'Content workflow', exact: true })).toBeVisible();
-  await expect(work.locator('article.studio-case-study')).toHaveCount(2);
-  await expect(work.getByRole('link', { name: 'Read the system note', exact: true })).toHaveAttribute('href', '/system');
+  await expect(work.locator('#case-studies article')).toHaveCount(1);
+  await expect(work).toContainText('NeedThisDone is my own project.');
+  await expect(work).toContainText('a complete live worker workflow remains unproven');
+  await expect(work.getByRole('link', { name: 'Background on the paused system experiment' })).toHaveAttribute('href', '/system');
   await expect(work.getByRole('link', { name: 'Open the code', exact: true })).toHaveAttribute('href', 'https://github.com/AbeJitsu/Need_This_Done');
 });
 
 test('contact keeps the message path concise and preserves offer aliases', async ({ page }) => {
   await page.goto('/contact?offer=website-fix');
-  await expect(page.getByRole('heading', { name: 'Bring the technical problem as it is.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: "Let's talk about the next step." })).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Website work', exact: true })).toBeChecked();
   await expect(page.getByRole('textbox', { name: /^Your message/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Start a conversation', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Contact Abe', exact: true })).toBeVisible();
 });
 
 test('desktop header and footer lead to the same full pages', async ({ page }, testInfo) => {
@@ -160,7 +163,8 @@ test('desktop header and footer lead to the same full pages', async ({ page }, t
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
   const footer = page.getByRole('navigation', { name: 'Footer navigation' });
   for (const [label, href] of [
-    ['Capabilities', '/services'],
+    ['Examples', '/examples'],
+    ['Approach', '/how-it-works'],
     ['Selected Work', '/work'],
     ['About', '/about'],
     ['Notes', '/blog'],
@@ -168,10 +172,10 @@ test('desktop header and footer lead to the same full pages', async ({ page }, t
     await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
     await expect(footer.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
   }
-  await navigation.getByRole('link', { name: 'Capabilities' }).click();
-  await expect(page).toHaveURL(/\/services$/);
-  await expect(page.getByRole('link', { name: 'Start a conversation', exact: true }).first()).toHaveAttribute('href', '/contact');
-  await expect(footer.getByRole('link', { name: 'Capabilities', exact: true })).toHaveAttribute('aria-current', 'page');
+  await navigation.getByRole('link', { name: 'Examples' }).click();
+  await expect(page).toHaveURL(/\/examples$/);
+  await expect(page.getByRole('link', { name: 'Contact Abe', exact: true }).first()).toHaveAttribute('href', '/contact');
+  await expect(footer.getByRole('link', { name: 'Examples', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(navigation.locator('a[href^="/dashboard"], a[href^="/employee"], a[href^="/prospecting"], a[href^="/admin"]')).toHaveCount(0);
 });
 

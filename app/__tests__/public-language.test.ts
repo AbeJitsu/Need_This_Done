@@ -24,36 +24,6 @@ import {
 const appRoot = resolve(__dirname, '..');
 const readApp = (path: string) => readFileSync(resolve(appRoot, path), 'utf8');
 
-const publicCompanyVoicePaths = [
-  'components/home/HomePageClient.tsx',
-  'components/home/sections/Hero.tsx',
-  'components/services/ServicesPageClient.tsx',
-  'components/work/WorkPageClient.tsx',
-  'components/public/OfferPage.tsx',
-  'components/public/ServiceIllustration.tsx',
-  'components/public/PublicClosing.tsx',
-  'components/public/PublicChrome.tsx',
-  'components/public/PublicHeader.tsx',
-  'app/about/page.tsx',
-  'app/ada-compliance/page.tsx',
-  'app/blog/page.tsx',
-  'app/blog/[slug]/page.tsx',
-  'app/contact/page.tsx',
-  'app/faq/page.tsx',
-  'app/how-it-works/page.tsx',
-  'app/managed-automation/page.tsx',
-  'app/pricing/page.tsx',
-  'app/privacy/page.tsx',
-  'app/services/page.tsx',
-  'app/system/page.tsx',
-  'app/terms/page.tsx',
-  'app/website-fix/page.tsx',
-  'app/work/page.tsx',
-  'lib/public-article-copy.ts',
-  'lib/public-capabilities.ts',
-  'lib/public-offers.ts',
-] as const;
-
 function textValues(value: unknown): string[] {
   if (typeof value === 'string') return [value];
   if (Array.isArray(value)) return value.flatMap(textValues);
@@ -64,7 +34,7 @@ function textValues(value: unknown): string[] {
 describe('public language contract', () => {
   it('keeps the brand-led core promise centralized and within the sentence target', () => {
     expect(PUBLIC_CORE_PROMISE).toBe(
-      'NeedThisDone builds practical software across the stack: React and Next.js interfaces, backends, databases, APIs, integrations, and automation.',
+      'Abe Reyes builds web applications with React and Next.js, connecting interfaces, APIs, and data. Explore working examples and his approach to troubleshooting and testing.',
     );
     expect(isPublicCopyWithinLimit(PUBLIC_CORE_PROMISE)).toBe(true);
   });
@@ -86,11 +56,14 @@ describe('public language contract', () => {
     expect(activePublicSources).not.toContain(retiredPromise);
   });
 
-  it('keeps public marketing copy brand-led and appropriately collective', () => {
-    const publicCompanyCopy = publicCompanyVoicePaths.map(readApp).join('\n');
-    expect(publicCompanyCopy).toContain('NeedThisDone builds');
-    expect(publicCompanyCopy).toContain('We agree');
-    expect(publicCompanyCopy).not.toMatch(/\b(?:I|I['’]m|I['’]ll|I['’]ve|my|me)\b/);
+  it('uses a personal developer voice without inventing an agency or client work', () => {
+    const home = readApp('components/home/HomePageClient.tsx');
+    const about = readApp('app/about/page.tsx');
+    const work = readApp('components/work/WorkPageClient.tsx');
+    expect(home).toContain('I build web applications');
+    expect(about).toContain('I use AI-assisted development tools');
+    expect(work).toContain('NeedThisDone is my own project.');
+    expect([home, about, work].join('\n')).not.toMatch(/Meet the team|Our clients|Trusted by|We are an agency/i);
   });
 
   it('rejects trust-undermining disclaimer copy on public-facing surfaces', () => {
@@ -138,7 +111,7 @@ describe('public language contract', () => {
       .map((pattern) => pattern.source);
 
     expect(matches, 'Public copy must describe real capability and evidence directly.').toEqual([]);
-    expect(publicCopy).toContain('NeedThisDone builds practical software across the stack');
+    expect(publicCopy).toContain('NeedThisDone is my own project.');
   });
 
   it('keeps the future-work reassurance in the FAQ defaults', () => {
@@ -248,7 +221,7 @@ describe('public language contract', () => {
 
   it('keeps the contact form focused and avoids duplicate invitation copy', () => {
     const contact = readApp('app/contact/page.tsx');
-    const invitation = 'Bring the technical problem as it is.';
+    const invitation = 'the next step.';
     expect(contact.split(invitation).length - 1).toBe(1);
     expect(contact).toContain('Is there a useful starting point?');
     expect(contact).toContain('Your name');

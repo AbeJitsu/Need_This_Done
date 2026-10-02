@@ -65,7 +65,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /(retained-core-smoke|ai-employee-product|browser-harness)\.spec\.ts/,
+      testMatch: /(retained-core-smoke|ai-employee-product|portfolio-examples|browser-harness)\.spec\.ts/,
     },
 
     {
@@ -74,7 +74,7 @@ export default defineConfig({
         ...devices['iPhone 12'],
         browserName: 'chromium',
       },
-      testMatch: /(retained-core-smoke|ai-employee-product)\.spec\.ts/,
+      testMatch: /(retained-core-smoke|ai-employee-product|portfolio-examples)\.spec\.ts/,
     },
 
     // No saved state: these specs create real local Supabase sessions or mock

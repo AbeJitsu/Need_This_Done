@@ -1,17 +1,17 @@
 import { fireEvent, render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import PublicHeader from '@/components/public/PublicHeader';
-const route = vi.hoisted(() => ({ pathname: '/services' }));
+const route = vi.hoisted(() => ({ pathname: '/examples' }));
 vi.mock('next/navigation', () => ({ usePathname: () => route.pathname }));
 expect.extend(toHaveNoViolations);
 
 it('marks the current route, returns focus on Escape, and closes on route changes', async () => {
-  route.pathname = '/services';
+  route.pathname = '/examples';
   const view = render(<PublicHeader />);
   const trigger = view.getByRole('button', { name: 'Open navigation menu' });
   fireEvent.click(trigger);
-  expect(view.getAllByRole('link', { name: 'Capabilities' }).every(link => link.getAttribute('aria-current') === 'page')).toBe(true);
-  view.getAllByRole('link', { name: 'Capabilities' })[1].focus();
+  expect(view.getAllByRole('link', { name: 'Examples' }).every(link => link.getAttribute('aria-current') === 'page')).toBe(true);
+  view.getAllByRole('link', { name: 'Examples' })[1].focus();
   fireEvent.keyDown(window, { key: 'Escape' });
   expect(trigger).toHaveFocus();
   expect(view.queryByRole('navigation', { name: 'Mobile navigation' })).toBeNull();
