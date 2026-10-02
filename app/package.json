@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:clean": "rm -rf .next && next dev --webpack",
-    "build": "NEXT_TSCONFIG=tsconfig.build.json next build --webpack",
+    "build": "npm run check:public-copy && NEXT_TSCONFIG=tsconfig.build.json next build --webpack",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "type-check": "tsc --noEmit -p tsconfig.typecheck.json",
@@ -54,7 +54,8 @@
     "supabase:stop": "cd .. && supabase stop",
     "supabase:status": "cd .. && supabase status",
     "supabase:reset": "cd .. && supabase db reset",
-    "test:emails": "npx tsx scripts/test-emails.ts"
+    "test:emails": "npx tsx scripts/test-emails.ts",
+    "check:public-copy": "node scripts/check-public-copy.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.43",

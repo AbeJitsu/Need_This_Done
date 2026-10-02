@@ -2,6 +2,32 @@
 
 **Last updated:** 2026-10-02
 
+## Production punctuation guard — 2026-10-02
+
+Branch: `fix/public-em-dash-2026-10-02`, based on dev at
+`d151f36ab2dbfba7d896951aaae395b19802809f`.
+
+Removed authored em dashes from shipped page copy, metadata, UI labels, and
+article content. `check:public-copy` recursively discovers source files and
+text assets instead of maintaining a page allowlist. TypeScript parsing checks
+decoded literals and JSX while excluding developer comments; text-asset checks
+cover SVG/HTML entities and CSS content. The build script runs the audit before
+Next.js, so a violation exits nonzero before a deployment can build. Generated
+public report copy containing em dashes uses its existing reviewed fallback.
+
+The first regression run failed on existing application copy while all 11
+detector fixtures passed. After cleanup, the required suite passed all 13
+punctuation tests, including build-script wiring. A temporary source fixture
+with an escaped Unicode em dash made the actual `npm run build` fail before
+Next.js started; the fixture was removed in a `finally` block. The final
+`verify:code` gate passed lint, type-check, 80 unit files / 442 tests (one
+existing skipped file and four skipped tests), five accessibility files / 52
+tests, and production build. `git diff --check` passed. Existing seed-dependent
+database checks remain outside this code gate (owner: site maintainer;
+follow-up: 2026-10-09). No provider, worker, schema, or hosted data change is
+claimed. Hosted deployment readiness is separate from this local evidence.
+Rollback is a reviewed forward Git revert.
+
 ## Hiring portfolio deployment verification — 2026-10-02
 
 Implementation commit: `11dd0dec7eee0447b3d25c7b61e75293eb1adb2f`.

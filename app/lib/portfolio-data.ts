@@ -142,7 +142,7 @@ export const processSteps = [
   {
     number: 1,
     title: 'Make the scope observable',
-    description: 'Start with the page, bottleneck, evidence, and desired result—not a broad promise to build everything.',
+    description: 'Start with the page, bottleneck, evidence, and desired result - not a broad promise to build everything.',
     color: 'emerald' as const,
   },
   {

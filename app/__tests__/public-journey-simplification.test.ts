@@ -143,7 +143,7 @@ describe('portfolio public journey', () => {
   });
 
   it('uses the developer identity in metadata and social sharing', () => {
-    expect(PUBLIC_BRAND_TITLE).toBe('Abe Reyes — Developer Portfolio');
+    expect(PUBLIC_BRAND_TITLE).toBe('Abe Reyes - Developer Portfolio');
     expect(source('app/layout.tsx')).toContain('PUBLIC_BRAND_TITLE');
     expect(source('public/og-image.svg')).toContain('Abe Reyes.');
     expect(seoConfig.description).toContain('React and Next.js');

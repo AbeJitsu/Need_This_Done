@@ -171,6 +171,8 @@ describe('public language contract', () => {
   });
 
   it('rejects unsafe or overlong generated report prose', () => {
+    expect(acceptPublicGeneratedCopy('Clear findings\u2014with next steps.', PUBLIC_REPORT_FALLBACK)).toBe(PUBLIC_REPORT_FALLBACK);
+    expect(acceptPublicGeneratedCopy('Clear findings&mdash;with next steps.', PUBLIC_REPORT_FALLBACK)).toBe(PUBLIC_REPORT_FALLBACK);
     const long = 'This sentence has more than twenty words because generated report copy must stay short and clear for owners reading a limited website snapshot today.';
     expect(findLongPublicSentences(long)[0].words).toBeGreaterThan(20);
     expect(acceptPublicGeneratedCopy(long, PUBLIC_REPORT_FALLBACK)).toBe(PUBLIC_REPORT_FALLBACK);

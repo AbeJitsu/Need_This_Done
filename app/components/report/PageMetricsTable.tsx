@@ -99,7 +99,7 @@ export default function PageMetricsTable({ metrics }: { metrics: PageMetric[] })
                           {altPct}%
                         </span>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-400">Unavailable</span>
                       )}
                     </td>
                   </tr>

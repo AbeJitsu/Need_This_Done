@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { EXAMPLE_FILE_SOURCE } from "@/lib/portfolio-examples";
 
 export const metadata: Metadata = {
-  title: "Development Approach — Abe Reyes",
+  title: "Development Approach - Abe Reyes",
   description:
     "Reproduce the problem, isolate the cause, make a focused change, and verify the result.",
   alternates: { canonical: "/how-it-works" },

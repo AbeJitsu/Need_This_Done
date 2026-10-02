@@ -7,7 +7,7 @@ import DebuggingLab from "@/components/examples/DebuggingLab";
 import { EXAMPLE_FILE_SOURCE } from "@/lib/portfolio-examples";
 
 export const metadata: Metadata = {
-  title: "Working Examples — Abe Reyes",
+  title: "Working Examples - Abe Reyes",
   description:
     "Try a React task board, call a real Next.js validation API, and explore a reproducible debugging example.",
   alternates: { canonical: "/examples" },

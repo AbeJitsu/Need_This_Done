@@ -129,6 +129,13 @@ The public [`/system` background](app/app/system/page.tsx) labels the original r
 
 ## Local development
 
+Application copy must not contain em dashes. `npm run check:public-copy` scans
+all application routes, components, shared libraries, content, and text assets.
+It checks decoded string literals, JSX, metadata, HTML entities, and CSS text
+while ignoring developer comments. The check runs before every production
+build; its regression tests run in the required unit suite. Generated public
+report prose containing an em dash falls back to reviewed deterministic copy.
+
 ```bash
 cd app
 npm install

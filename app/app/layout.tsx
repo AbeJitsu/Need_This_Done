@@ -116,7 +116,7 @@ export const metadata: Metadata = {
         url: `${seoConfig.baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-    alt: `${seoConfig.siteName} — ${PUBLIC_BRAND_PROMISE}`,
+    alt: `${seoConfig.siteName} - ${PUBLIC_BRAND_PROMISE}`,
       },
     ],
   },

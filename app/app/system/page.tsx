@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "A Paused System Experiment — Abe Reyes",
+  title: "A Paused System Experiment - Abe Reyes",
   description:
     "The original request-to-result experiment, its design goals, and why the current focus is the developer portfolio.",
   alternates: { canonical: "/system" },

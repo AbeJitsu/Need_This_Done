@@ -434,7 +434,7 @@ export default function AccountSettingsClient() {
                   onClick={() => setMcpRawToken(null)}
                   className="rounded-xl px-4 py-2 text-sm font-semibold text-amber-950 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
                 >
-                  I stored it — hide token
+                  I stored it - hide token
                 </button>
               </div>
             </div>

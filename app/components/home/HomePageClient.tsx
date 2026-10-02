@@ -62,7 +62,7 @@ export default function HomePageClient() {
           <p className="pf-lead">
             I build web applications and work through the problems between
             interfaces, APIs, and data. This is a place to explore what I can
-            build—and how I think.
+            build and how I think.
           </p>
           <div className="pf-actions">
             <Link href="/examples" className="pf-button pf-button--green">

@@ -1,9 +1,24 @@
 # NeedThisDone — Project Status
 
-**Branch:** `feature/hiring-portfolio-2026-10-02` (based on `dev` at `60ca362e537146a92b702d972fe0606b9081fe12`)
+**Branch:** `fix/public-em-dash-2026-10-02` (based on `dev` at `d151f36ab2dbfba7d896951aaae395b19802809f`)
 **Last updated:** 2026-10-02
 
 ## Latest change
+
+- On 2026-10-02, removed em dashes from authored application copy, including
+  the homepage, metadata, articles, and UI labels. Added an automatic source
+  audit for all routes, components, libraries, content, and text assets.
+  Decoded Unicode escapes, JSX, HTML entities, template fragments, and CSS
+  content are checked; developer comments are ignored. The audit runs before
+  every production build and has 13 regression tests in the required suite.
+  Generated public report copy containing an em dash uses the reviewed
+  fallback. The initial audit failed on the existing copy; the repaired audit
+  passed. A temporary escaped-dash probe stopped `npm run build` before Next.js
+  ran and was removed. The full code gate passed lint, type-check, 442 unit
+  tests (four existing skips), 52 accessibility tests, and production build.
+  No runtime, provider, schema, or hosted data change is involved. Production
+  readiness must be checked against this change's final committed SHA.
+  Rollback is a forward Git revert of this copy-and-build-guard commit.
 
 - On 2026-10-02, the public site was rebuilt as Abe Reyes's developer
   portfolio for hiring managers. A lighter paper/green design, personal

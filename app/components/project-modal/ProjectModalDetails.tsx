@@ -42,7 +42,7 @@ export default function ProjectModalDetails({
             Service
           </label>
           <p className="mt-2 text-gray-900 dark:text-gray-100">
-            {project.service || '—'}
+            {project.service || 'Not specified'}
           </p>
         </div>
       </div>

@@ -8,7 +8,7 @@ export const PUBLIC_CORE_PROMISE =
   'Abe Reyes builds web applications with React and Next.js, connecting interfaces, APIs, and data. Explore working examples and his approach to troubleshooting and testing.';
 
 export const PUBLIC_BRAND_PROMISE = 'The developer portfolio of Abe Reyes.';
-export const PUBLIC_BRAND_TITLE = 'Abe Reyes — Developer Portfolio';
+export const PUBLIC_BRAND_TITLE = 'Abe Reyes - Developer Portfolio';
 
 export const PUBLIC_SITE_DESCRIPTION = `${PUBLIC_CORE_PROMISE} ${PUBLIC_BRAND_PROMISE}`;
 export const PUBLIC_REPORT_FALLBACK =
@@ -19,6 +19,7 @@ export const PUBLIC_SENTENCE_HARD_LIMIT = 25;
 
 /** Terms that are not suitable for generated, owner-facing report copy. */
 export const PUBLIC_REPORT_BANNED_TERMS = [
+  /\u2014|&mdash;|&#(?:0*8212|x0*2014);/i,
   /\bAI[- ]powered\b/i,
   /\b(?:LLM|RLS|OpenClaw|Hermes|Codex|worktree)\b/i,
   /\b(?:lawsuit|legal risk)\b/i,
