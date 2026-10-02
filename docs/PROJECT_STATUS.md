@@ -22,10 +22,13 @@
   the focused FAQ recheck. Geometry passed 22 routes at 320px, 390px, and 1440px
   (66 checks), and eight complete rendered axe scans had no violations.
   Seed-dependent report scenarios remain excluded without disposable local
-  Supabase (owner: site maintainer; follow-up: 2026-10-09). The dated branch,
-  dev, and production publication sequence is authorized by the owner; check
-  Vercel readiness against the exact committed SHA at each stage. Rollback is
-  one reviewed forward Git revert; no schema or hosted migration is involved.
+  Supabase (owner: site maintainer; follow-up: 2026-10-09). The owner-authorized
+  dated branch, dev, and production promotion completed at implementation SHA
+  `11dd0dec7eee0447b3d25c7b61e75293eb1adb2f`; all three Vercel deployments
+  reported READY with that exact SHA. The live homepage and examples were
+  checked, including clean HTTP 200 and duplicate HTTP 422 import responses.
+  Deployment IDs and links are recorded in RELEASE_EVIDENCE. Rollback is one
+  reviewed forward Git revert; no schema or hosted migration is involved.
 
 - On 2026-10-02, the public portfolio received a hiring-focused design refresh
   while retaining the green, gold, cream, and serif identity. Home now introduces

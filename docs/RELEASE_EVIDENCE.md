@@ -1,6 +1,32 @@
 # NeedThisDone — Release Evidence
 
-**Last updated:** 2026-09-23
+**Last updated:** 2026-10-02
+
+## Hiring portfolio deployment verification — 2026-10-02
+
+Implementation commit: `11dd0dec7eee0447b3d25c7b61e75293eb1adb2f`.
+
+The owner-authorized dated branch, `dev`, and `production` were fast-forwarded
+to that exact implementation commit. Vercel reported all three deployments
+`READY`, with the expected Git ref and SHA in deployment metadata:
+
+| Ref | Verified deployment | Preview |
+| --- | --- | --- |
+| `feature/hiring-portfolio-2026-10-02` | `dpl_HJVGVkEGv2mxVBJWxPYx6eNaeYg9` | https://app-qlwff3mg7-vision2virtual.vercel.app |
+| `dev` | `dpl_6aRznTvBfdTgWxWKJPuXAXqrbRRG` | https://app-krcxwfsc9-vision2virtual.vercel.app |
+| `production` | `dpl_3nFWkdBCrGoXAaCg98MYXsBQh329` | https://app-1qz1hp7n8-vision2virtual.vercel.app |
+
+The live browser verified https://needthisdone.com/ displayed the new personal
+homepage and https://needthisdone.com/examples displayed the working examples.
+Submitting the fictional clean sample through the live import UI returned
+HTTP 200, two normalized contacts, and zero issues. The duplicate sample
+returned HTTP 422, one valid contact, and the row-two normalized-email duplicate
+issue. This proves the public interface and stateless Next.js route work together
+on Vercel. It does not claim hosted database, provider, or worker execution.
+No schema change, hosted migration, paid service, or worker activation occurred.
+This follow-up record changes documentation only; the application evidence
+above refers to the immutable implementation commit and deployments.
+
 
 | Claim | Status | Evidence / boundary |
 | --- | --- | --- |
